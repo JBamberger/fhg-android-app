@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/container_shadow"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Nachrichten zum Tag"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/vplan_motd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
+        android:textColor="@color/text_secondary" />
+</LinearLayout>

@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_bug"
+        android:orderInCategory="96"
+        android:title="@string/action_bug"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_feedback"
+        android:orderInCategory="97"
+        android:title="@string/action_feedback"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_classic_view"
+        android:orderInCategory="98"
+        android:title="@string/action_classic_view"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_credits"
+        android:orderInCategory="99"
+        android:title="@string/action_credits"
+        app:showAsAction="never" />
+</menu>

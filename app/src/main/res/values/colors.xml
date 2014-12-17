@@ -1,0 +1,18 @@
+<resources>
+
+    <color name="white">#ffffffff</color>
+    <color name="green">#259b24</color>
+    <color name="green_700">#0a7e07</color>
+    <color name="green_100">#a3e9a4</color>
+    <color name="red">#e51c23</color>
+
+    <!--black alpha 87%-->
+    <color name="text_primary">#de000000</color>
+    <!--black alpha 54%-->
+    <color name="text_secondary">#8a000000</color>
+    <!--black alpha 26%-->
+    <color name="text_hint">#42000000</color>
+    <!--black alpha 12%-->
+    <color name="text_devider">#1f000000</color>
+
+</resources>
