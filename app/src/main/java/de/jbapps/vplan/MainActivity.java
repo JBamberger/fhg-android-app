@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private VPlanAdapter mListAdapter;
     private VPlanLoader mLoader;
     private VPlanParser mParser;
-    ArrayAdapter<String> mSpinnerAdapter;
+    private ArrayAdapter<String> mSpinnerAdapter;
     private String vplan1;
     private String vplan2;
     private boolean mOnline = false;
@@ -135,6 +135,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             startActivity(intent);
             return true;
         }
+        if (id == R.id.action_vplan_hp) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.de"));
+            startActivity(intent);
+            return true;
+        }
         if (id == R.id.action_credits) {
             startActivity(new Intent(this, CreditsActivity.class));
             return true;
@@ -195,14 +200,18 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private void refresh() {
         if (mOnline) {
-            mSwipeRefreshLayout.setRefreshing(true);
+            if(mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
 
             if (mLoader == null) {
                 mLoader = new VPlanLoader(this);
                 mLoader.execute();
             }
         } else {
-            mSwipeRefreshLayout.setRefreshing(false);
+            if (mSwipeRefreshLayout != null) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
             Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
         }
     }
@@ -261,6 +270,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         public void netStateUpdate() {
             if (mOnline = isOnline()) {
                 mStatus.setVisibility(View.GONE);
+                if(vplan1 == null) {
+                    refresh();
+                }
             } else {
                 showError(getString(R.string.text_net_disconnected));
             }

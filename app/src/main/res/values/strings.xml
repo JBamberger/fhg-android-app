@@ -24,5 +24,6 @@
     <string name="text_credits_9">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
     <string name="text_credits_licence">Mit der Verwendung der Anwendung stimmen sie zu, dass sie die unten stehenden Bestimmungen gelesen und verstanden haben. Ich übernehme keine Haftung für jegliche Schäden, die durch die Anwendung entstanden sind. Die Anwendung wird so ausgeleifert wie sie ist. Es besteht kein Anspruch auf Funktionsfähigkeit und Zuverlässigkeit der Anwendung. In der Anwendung werden Daten der Website www.fhg-radolfzell.de verarbeitet und angezeigt. Diese Daten sind geistiges Eigentum des Friedrich-Hecker-Gymnasium Radolfzell und stehen nicht unter meiner Kontrolle, daher bin ich nicht für deren Inhalte verantwortlich.</string>
     <string name="hello_world">Hello world!</string>
+    <string name="action_vplan_hp">VPlan Homepage</string>
 
 </resources>
