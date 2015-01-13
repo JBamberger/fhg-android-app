@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -147,6 +149,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             startActivity(new Intent(this, CreditsActivity.class));
             return true;
         }
+        if (id == R.id.action_get_version) {
+            try {
+                PackageInfo info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+                Toast.makeText(this, "Version " + info.versionName, Toast.LENGTH_LONG).show();
+            } catch (PackageManager.NameNotFoundException e) {
+                Toast.makeText(this, "Fehler im Packagename!", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }

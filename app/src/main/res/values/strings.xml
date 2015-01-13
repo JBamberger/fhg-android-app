@@ -32,5 +32,6 @@
 
 
     <string name="action_vplan_hp">VPlan Update-Seite</string>
+    <string name="action_get_version">Version anzeigen</string>
 
 </resources>
