@@ -54,9 +54,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         mContext = this;
         mStatus = (TextView) findViewById(R.id.status);
-        mNetworkStateReceiver.netStateUpdate();
+
 
         //setup ActionBar
         final ActionBar actionBar = getSupportActionBar();
@@ -82,6 +83,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         mList = (ListView) findViewById(R.id.vplan_list);
         mListAdapter = new VPlanAdapter(this);
         mList.setAdapter(mListAdapter);
+
+        mNetworkStateReceiver.netStateUpdate();
 
         if (savedInstanceState == null || savedInstanceState.getBoolean("refresh", true)) {
             refresh();
@@ -200,18 +203,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private void refresh() {
         if (mOnline) {
-            if(mSwipeRefreshLayout != null) {
-                mSwipeRefreshLayout.setRefreshing(true);
-            }
+            mSwipeRefreshLayout.setRefreshing(true);
 
             if (mLoader == null) {
                 mLoader = new VPlanLoader(this);
                 mLoader.execute();
             }
         } else {
-            if (mSwipeRefreshLayout != null) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+            mSwipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
         }
     }
@@ -270,7 +269,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         public void netStateUpdate() {
             if (mOnline = isOnline()) {
                 mStatus.setVisibility(View.GONE);
-                if(vplan1 == null) {
+                if (vplan1 == null) {
                     refresh();
                 }
             } else {
