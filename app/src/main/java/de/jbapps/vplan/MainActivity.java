@@ -139,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             return true;
         }
         if (id == R.id.action_vplan_hp) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.de"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/pages/VPlan-App-FHG/808086192561672"));
             startActivity(intent);
             return true;
         }
