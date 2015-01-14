@@ -28,8 +28,6 @@ public class VPlanLoader extends AsyncTask<Void, Void, Void> {
         try {
             vplan1 = load("http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm");
             vplan2 = load("http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm");
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
