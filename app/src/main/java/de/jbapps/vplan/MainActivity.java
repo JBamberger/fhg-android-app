@@ -25,8 +25,12 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import de.jbapps.vplan.data.VPlan;
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.VPlanAdapter;
+import de.jbapps.vplan.util.VPlanHTJParser;
+import de.jbapps.vplan.util.VPlanHeaderLoader;
+import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader;
 import de.jbapps.vplan.util.VPlanParser;
 
@@ -58,6 +62,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
 
         mContext = this;
+        mPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         mStatus = (TextView) findViewById(R.id.status);
 
 
@@ -170,6 +175,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(PREFS_CGRADE, position);
         editor.apply();
+        //TODO: improve...
         parse();
         return true;
     }
@@ -218,10 +224,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         if (mOnline) {
             mSwipeRefreshLayout.setRefreshing(true);
 
-            if (mLoader == null) {
+            new VPlanHeaderLoader().execute();
+
+            /*if (mLoader == null) {
                 mLoader = new VPlanLoader(this);
                 mLoader.execute();
-            }
+            }*/
         } else {
             mSwipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
@@ -234,6 +242,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             if (vplan1 != null || vplan2 != null) {
                 mParser = new VPlanParser(this, getGrade(), vplan1, vplan2);
                 mParser.execute();
+                //new VPlanHTJParser(vplan1, vplan2).execute();
+
             }
         }
     }
@@ -290,4 +300,67 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             }
         }
     }
+
+//##################################################################################################
+
+    private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
+    private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
+    private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
+    private static final String PREFS_KEY_VPLAN_CONTENT_2 = "vplan_content_2";
+
+
+    private String mVPlanHeader1;
+    private String mVPlanHeader2;
+    private VPlan mVPlan1;
+    private VPlan mVPlan2;
+    private ProgressBar mBackgroundProgress;
+    private SharedPreferences mPreferences;
+
+    private VPlanHeaderLoader mVPlanHeaderLoader;
+    private VPlanLoader mVPlanLoader;
+    private VPlanHTJParser mVPlanHTJParser;
+    private VPlanJSONParser mVPlanJSONParser;
+
+    private void loadVPlanHeader() {
+        mVPlanHeader1 = mPreferences.getString(PREFS_KEY_VPLAN_HEADER_1, null);
+        mVPlanHeader2 = mPreferences.getString(PREFS_KEY_VPLAN_HEADER_2, null);
+    }
+
+    private void writeVPlanHeader() {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(PREFS_KEY_VPLAN_HEADER_1, mVPlanHeader1);
+        editor.putString(PREFS_KEY_VPLAN_HEADER_1, mVPlanHeader2);
+        editor.apply();
+    }
+
+    private void loadVPlanContent() {
+        mVPlan1 = new VPlan(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_1, null));//TODO: fix constructor
+        mVPlan2 = new VPlan(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_2, null));//TODO: fix constructor
+    }
+
+    private void writeVPlanContent() {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(PREFS_KEY_VPLAN_CONTENT_1, mVPlan1.toString());//TODO: fix toString()
+        editor.putString(PREFS_KEY_VPLAN_CONTENT_2, mVPlan2.toString());//TODO: fix toString()
+        editor.apply();
+    }
+
+    private void invokeHeaderDownload() {}
+
+    private void invokeDownload() {}
+
+    private void invokeHTMLParser() {}
+
+    private void invokeJSONParser() {}
+
+
+
+
+
+
+
+
+
+
+
 }
