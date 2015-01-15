@@ -29,7 +29,7 @@ import de.jbapps.vplan.data.VPlan;
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanHTJParser;
-import de.jbapps.vplan.util.VPlanHeaderLoader;
+import de.jbapps.vplan.util.VPlanLoader2;
 import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader;
 import de.jbapps.vplan.util.VPlanParser;
@@ -116,7 +116,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         outState.putString("v2", vplan2);
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -224,12 +223,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         if (mOnline) {
             mSwipeRefreshLayout.setRefreshing(true);
 
-            new VPlanHeaderLoader().execute();
-
-            /*if (mLoader == null) {
+            if (mLoader == null) {
                 mLoader = new VPlanLoader(this);
                 mLoader.execute();
-            }*/
+            }
         } else {
             mSwipeRefreshLayout.setRefreshing(false);
             Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
@@ -316,7 +313,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private ProgressBar mBackgroundProgress;
     private SharedPreferences mPreferences;
 
-    private VPlanHeaderLoader mVPlanHeaderLoader;
+    private VPlanLoader2 mVPlanHeaderLoader;
     private VPlanLoader mVPlanLoader;
     private VPlanHTJParser mVPlanHTJParser;
     private VPlanJSONParser mVPlanJSONParser;
