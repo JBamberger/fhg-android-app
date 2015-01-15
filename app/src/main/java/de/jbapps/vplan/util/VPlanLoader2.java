@@ -8,7 +8,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -57,12 +56,12 @@ public class VPlanLoader2 extends AsyncTask<Boolean, Void, Void> {
     protected Void doInBackground(Boolean... params) {
         onlyHeader = params[0];
         try {
-            if(onlyHeader) {
-                vPlanHeader1 = (Header[]) load(VPLAN1_URL, true);
-                vPlanHeader2 = (Header[]) load(VPLAN2_URL, true);
+            if (onlyHeader) {
+                load(VPLAN1_URL, vPlanHeader1);
+                load(VPLAN2_URL, vPlanHeader2);
             } else {
-                vPlan1 = (JSONObject) load(VPLAN1_URL, false);
-                vPlan2 = (JSONObject) load(VPLAN2_URL, false);
+                load(VPLAN1_URL, vPlan1, vPlanHeader1);
+                load(VPLAN2_URL, vPlan2, vPlanHeader2);
             }
         } catch (ClientProtocolException | JSONException e) {
             Log.d("VPlanLoader: EXCEPTION", e.getMessage());//TODO: notify User maybe...
@@ -72,51 +71,51 @@ public class VPlanLoader2 extends AsyncTask<Boolean, Void, Void> {
         return null;
     }
 
-    private Object load(String url, Boolean onlyHeader) throws IOException, JSONException {
-        if(onlyHeader) {
-            Header[] cleanHeaders = new Header[2];
 
-            HttpHead httpHead = new HttpHead(url);
-            HttpResponse response =  mClient.execute(httpHead);
+    private void load(String url, Header[] header) throws IOException, JSONException {
+        HttpHead httpHead = new HttpHead(url);
+        HttpResponse response = mClient.execute(httpHead);
+        header = getHeader(response);
+    }
 
-            Header[] headers = response.getAllHeaders();
-            for (Header header : headers) {
-                System.out.println("Key : " + header.getName()
-                        + " ,Value : " + header.getValue());
+    private void load(String url, JSONObject vplan, Header[] header) throws IOException, JSONException {
+        HttpGet httpGet = new HttpGet(url);
+        HttpResponse response = mClient.execute(httpGet);
+        header = getHeader(response);
+        String vPlan = getVPlan(response);
 
-                if(header.getName().contains("Last-Mofified")) {
-                    cleanHeaders[0] = header;
-                }
-                if(header.getName().contains("Content-Length")) {
-                    cleanHeaders[1] = header;
-                }
-            }
-            System.out.println("############################################");
-            return cleanHeaders;
+        if (vPlan != null) {
+            vplan = parse(vPlan);
         } else {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
+            //should never happen...
+            throw new ClientProtocolException("Empty response content");
+        }
+    }
 
-            String vPlan = httpclient.execute(httpGet, new ResponseHandler<String>() {
-                public String handleResponse(final HttpResponse response) throws IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
+    private String getVPlan(HttpResponse response) throws IOException {
+        int status = response.getStatusLine().getStatusCode();
+        if (status >= 200 && status < 300) {
+            HttpEntity entity = response.getEntity();
 
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            });
+            return entity != null ? EntityUtils.toString(entity) : null;
+        } else {
+            throw new ClientProtocolException("Unexpected response status: " + status);
+        }
+    }
 
-            if(vPlan != null) {
-                    return parse(vPlan);
-            } else {
-                //should never happen...
-                throw new ClientProtocolException("Empty response content");
+    private Header[] getHeader(HttpResponse response) {
+        Header[] cleanHeaders = new Header[2];
+        Header[] headers = response.getAllHeaders();
+        for (Header header : headers) {
+            System.out.println("Key : " + header.getName() + " ,Value : " + header.getValue());
+            if (header.getName().contains("Last-Mofified")) {
+                cleanHeaders[0] = header;
+            }
+            if (header.getName().contains("Content-Length")) {
+                cleanHeaders[1] = header;
             }
         }
+        return cleanHeaders;
     }
 
     private JSONObject parse(String vplan) throws JSONException {
@@ -171,27 +170,29 @@ public class VPlanLoader2 extends AsyncTask<Boolean, Void, Void> {
     @Override
     protected void onPostExecute(Void v) {
         if (mListener != null) {
-            if(onlyHeader) {
-                if (vPlanHeader1 != null || vPlanHeader2 != null) {
+            if (onlyHeader) {
+                if (vPlanHeader1 != null && vPlanHeader2 != null) {
                     mListener.onVPlanHeaderLoaded(vPlanHeader1, vPlanHeader2);
                 } else {
                     mListener.onVPlanHeaderLoadingFailed();
                 }
             } else {
-                if (vPlan1 != null || vPlan2 != null) {
-                    mListener.onVPlanLoaded(vPlan1, vPlan2);
+                if (vPlan1 != null && vPlan2 != null && vPlanHeader1 != null && vPlanHeader2 != null) {
+                    mListener.onVPlanLoaded(vPlan1, vPlan2, vPlanHeader1, vPlanHeader2);
                 } else {
                     mListener.onVPlanLoadingFailed();
                 }
             }
-
         }
     }
 
     public interface IOnFinishedLoading {
         public void onVPlanHeaderLoaded(Header[] vPlanHeader1, Header[] vPlanHeader2);
+
         public void onVPlanHeaderLoadingFailed();
-        public void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2);
+
+        public void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2, Header[] vPlanHeader1, Header[] vPlanHeader2);
+
         public void onVPlanLoadingFailed();
     }
 }

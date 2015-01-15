@@ -23,19 +23,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
-import de.jbapps.vplan.data.VPlan;
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanHTJParser;
-import de.jbapps.vplan.util.VPlanLoader2;
 import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader;
+import de.jbapps.vplan.util.VPlanLoader2;
 import de.jbapps.vplan.util.VPlanParser;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanParser.IOnFinishedLoading {
+public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanParser.IOnFinishedLoading, VPlanLoader2.IOnFinishedLoading {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     private static final String PREFS = "vplan_preferences";
@@ -305,59 +309,95 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
     private static final String PREFS_KEY_VPLAN_CONTENT_2 = "vplan_content_2";
 
+    private static final String JSON_KEY_HEADER_LAST_MODIFIED = "Last-Modified";
+    private static final String JSON_KEY_HEADER_CONTENT_LENGTH = "Content-Length";
 
-    private String mVPlanHeader1;
-    private String mVPlanHeader2;
-    private VPlan mVPlan1;
-    private VPlan mVPlan2;
+
+    private Header[] mVPlanHeader1 = new Header[2];
+    private Header[] mVPlanHeader2 = new Header[2];
+    private JSONObject mVPlan1;
+    private JSONObject mVPlan2;
     private ProgressBar mBackgroundProgress;
     private SharedPreferences mPreferences;
 
-    private VPlanLoader2 mVPlanHeaderLoader;
-    private VPlanLoader mVPlanLoader;
+    private VPlanLoader2 mVPlanLoader;
     private VPlanHTJParser mVPlanHTJParser;
     private VPlanJSONParser mVPlanJSONParser;
 
-    private void loadVPlanHeader() {
-        mVPlanHeader1 = mPreferences.getString(PREFS_KEY_VPLAN_HEADER_1, null);
-        mVPlanHeader2 = mPreferences.getString(PREFS_KEY_VPLAN_HEADER_2, null);
+    private void loadVPlanHeader() throws JSONException {
+        JSONObject h1 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_HEADER_1, null));
+        JSONObject h2 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_HEADER_2, null));
+        mVPlanHeader1[0] = new BasicHeader(JSON_KEY_HEADER_LAST_MODIFIED, h1.getString(JSON_KEY_HEADER_LAST_MODIFIED));
+        mVPlanHeader1[1] = new BasicHeader(JSON_KEY_HEADER_CONTENT_LENGTH, h1.getString(JSON_KEY_HEADER_CONTENT_LENGTH));
+        mVPlanHeader2[0] = new BasicHeader(JSON_KEY_HEADER_LAST_MODIFIED, h2.getString(JSON_KEY_HEADER_LAST_MODIFIED));
+        mVPlanHeader2[1] = new BasicHeader(JSON_KEY_HEADER_CONTENT_LENGTH, h2.getString(JSON_KEY_HEADER_CONTENT_LENGTH));
     }
 
-    private void writeVPlanHeader() {
+    private void writeVPlanHeader() throws JSONException {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(PREFS_KEY_VPLAN_HEADER_1, mVPlanHeader1);
-        editor.putString(PREFS_KEY_VPLAN_HEADER_1, mVPlanHeader2);
+
+        JSONObject h1 = new JSONObject();
+        h1.put(JSON_KEY_HEADER_LAST_MODIFIED, mVPlanHeader1[0].getValue());
+        h1.put(JSON_KEY_HEADER_CONTENT_LENGTH, mVPlanHeader1[1].getValue());
+        JSONObject h2 = new JSONObject();
+        h2.put(JSON_KEY_HEADER_LAST_MODIFIED, mVPlanHeader2[0].getValue());
+        h2.put(JSON_KEY_HEADER_CONTENT_LENGTH, mVPlanHeader2[1].getValue());
+
+        editor.putString(PREFS_KEY_VPLAN_HEADER_1, h1.toString());
+        editor.putString(PREFS_KEY_VPLAN_HEADER_2, h2.toString());
         editor.apply();
     }
 
-    private void loadVPlanContent() {
-        mVPlan1 = new VPlan(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_1, null));//TODO: fix constructor
-        mVPlan2 = new VPlan(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_2, null));//TODO: fix constructor
+    private void loadVPlanContent() throws JSONException {
+        mVPlan1 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_1, null));
+        mVPlan2 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_2, null));
     }
 
     private void writeVPlanContent() {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(PREFS_KEY_VPLAN_CONTENT_1, mVPlan1.toString());//TODO: fix toString()
-        editor.putString(PREFS_KEY_VPLAN_CONTENT_2, mVPlan2.toString());//TODO: fix toString()
+        editor.putString(PREFS_KEY_VPLAN_CONTENT_1, mVPlan1.toString());
+        editor.putString(PREFS_KEY_VPLAN_CONTENT_2, mVPlan2.toString());
         editor.apply();
     }
 
-    private void invokeHeaderDownload() {}
+    private void invokeVPlanDownload(boolean onlyHeader) {
+        if (mVPlanLoader != null) {
+            mVPlanLoader.cancel(true);
+            mVPlanLoader = null;
+        }
+        mVPlanLoader = new VPlanLoader2(this);
+        mVPlanLoader.execute(onlyHeader);
+    }
 
-    private void invokeDownload() {}
+    private void invokeJSONParser() {
+    }
 
-    private void invokeHTMLParser() {}
+    @Override
+    public void onVPlanHeaderLoaded(Header[] vPlanHeader1, Header[] vPlanHeader2) {
+        try {
+            if (mVPlanHeader1[0].getValue().equals(vPlanHeader1[0].getValue()) &&
+                    mVPlanHeader2[0].getValue().equals(vPlanHeader2[0].getValue())) {
+                if (mVPlanHeader1[1].getValue().equals(vPlanHeader1[1].getValue()) &&
+                        mVPlanHeader2[1].getValue().equals(vPlanHeader2[1].getValue())) {
+                    loadVPlanContent();
+                    onVPlanLoaded(mVPlan1, mVPlan2, mVPlanHeader1, mVPlanHeader2);
+                }
+            } else {
+                invokeVPlanDownload(false);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void invokeJSONParser() {}
+    @Override
+    public void onVPlanHeaderLoadingFailed() {
 
+    }
 
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2, Header[] vPlanHeader1, Header[] vPlanHeader2) {
+        //TODO: apply vplan to List
+        //TODO: write vplan & headers
+    }
 }

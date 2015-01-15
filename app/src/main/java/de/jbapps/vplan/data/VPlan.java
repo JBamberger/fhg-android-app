@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class VPlan {
+public class VPlan{
 
     private List<Row> mRows;
     public static final String MOTD = "Nachrichten zum Tag";
@@ -43,10 +43,6 @@ public class VPlan {
     public VPlan.Row getRowAtPosition(int position) {
         return mRows.get(position);
     }
-
-
-
-
 
 
 
