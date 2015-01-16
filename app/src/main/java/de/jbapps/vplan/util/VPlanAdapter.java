@@ -1,7 +1,6 @@
 package de.jbapps.vplan.util;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +107,6 @@ public class VPlanAdapter extends BaseAdapter {
                 } else {
                     vplanholder.room.setText(vItemData.room);
                 }
-                Log.d("", "#" + vItemData.content + "#");
                 if (vItemData.content != null && (vItemData.content.length() > 1)) {
                     vplanholder.content.setText(vItemData.content);
                     vplanholder.content.setVisibility(View.VISIBLE);
