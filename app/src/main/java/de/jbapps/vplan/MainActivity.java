@@ -33,7 +33,6 @@ import java.util.List;
 
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.VPlanAdapter;
-import de.jbapps.vplan.util.VPlanHTJParser;
 import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader2;
 
@@ -54,6 +53,28 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private RefreshListener mRefreshListener = new RefreshListener();
     private NetReceiver mNetworkStateReceiver = new NetReceiver();
     private Context mContext;
+
+//##################################################################################################
+// FIELDS II
+//##################################################################################################
+
+    private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
+    private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
+    private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
+    private static final String PREFS_KEY_VPLAN_CONTENT_2 = "vplan_content_2";
+
+    private static final String JSON_KEY_HEADER_LAST_MODIFIED = "Last-Modified";
+    private static final String JSON_KEY_HEADER_CONTENT_LENGTH = "Content-Length";
+
+    private Header[] mVPlanHeader1 = new Header[2];
+    private Header[] mVPlanHeader2 = new Header[2];
+    private JSONObject mVPlan1;
+    private JSONObject mVPlan2;
+    private ProgressBar mBackgroundProgress;
+    private SharedPreferences mPreferences;
+
+    private VPlanLoader2 mVPlanLoader;
+    private VPlanJSONParser mVPlanJSONParser;
 
 //##################################################################################################
 // LIFECYCLE
@@ -228,11 +249,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         mStatus.setVisibility(View.VISIBLE);
     }
 
-
-//##################################################################################################
-// UNFINISHED
-//##################################################################################################
-
     private void applyVPlan(List<VPlanBaseData> data) {
         mListAdapter.setData(data);
         mSwipeRefreshLayout.setRefreshing(false);
@@ -265,28 +281,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
     }
 
-//##################################################################################################
-// FIELDS II
-//##################################################################################################
 
-    private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
-    private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
-    private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
-    private static final String PREFS_KEY_VPLAN_CONTENT_2 = "vplan_content_2";
-
-    private static final String JSON_KEY_HEADER_LAST_MODIFIED = "Last-Modified";
-    private static final String JSON_KEY_HEADER_CONTENT_LENGTH = "Content-Length";
-
-    private Header[] mVPlanHeader1 = new Header[2];
-    private Header[] mVPlanHeader2 = new Header[2];
-    private JSONObject mVPlan1;
-    private JSONObject mVPlan2;
-    private ProgressBar mBackgroundProgress;
-    private SharedPreferences mPreferences;
-
-    private VPlanLoader2 mVPlanLoader;
-    private VPlanHTJParser mVPlanHTJParser;
-    private VPlanJSONParser mVPlanJSONParser;
 
 //##################################################################################################
 
@@ -435,5 +430,5 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
 //##################################################################################################
 
-    //FIXME: simplify data structure by including header into vplan json
+//FIXME: simplify data structure by including header into vplan json
 }
