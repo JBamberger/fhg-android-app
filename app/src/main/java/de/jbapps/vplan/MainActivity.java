@@ -34,10 +34,10 @@ import java.util.List;
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanJSONParser;
-import de.jbapps.vplan.util.VPlanLoader2;
+import de.jbapps.vplan.util.VPlanLoader;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader2.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
+public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
 
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     private static final String PREFS = "vplan_preferences";
@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private ProgressBar mBackgroundProgress;
     private SharedPreferences mPreferences;
 
-    private VPlanLoader2 mVPlanLoader;
+    private VPlanLoader mVPlanLoader;
     private VPlanJSONParser mVPlanJSONParser;
 
 //##################################################################################################
@@ -344,7 +344,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                 mVPlanLoader.cancel(true);
                 mVPlanLoader = null;
             }
-            mVPlanLoader = new VPlanLoader2(this);
+            mVPlanLoader = new VPlanLoader(this);
             mVPlanLoader.execute(onlyHeader);
 
         } else {
