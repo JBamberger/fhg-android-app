@@ -69,7 +69,7 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
             for(int j = 0; j < length2; j++) {
                 buffer.append(temp2.getString(j));
                 if(j >= 1) {
-                    buffer.append(" : ");
+                    buffer.append(" ");
                 }
             }
             buffer.append("\n");
@@ -82,12 +82,14 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
         for (int i = 0; i < length; i++) {
             JSONObject temp2 = temp.getJSONObject(i);
                 VPlanItemData row;
+            if(temp2.getString(GRADE).matches(gradePattern)) {
                 if (gradePattern.equals(".*")) {
                     row = new VPlanItemData(temp2.getString(HOUR), temp2.getString(CONTENT), temp2.getString(GRADE) + ": " + temp2.getString(SUBJECT), temp2.getString(ROOM), temp2.getBoolean(OMITTED));
                 } else {
                     row = new VPlanItemData(temp2.getString(HOUR), temp2.getString(CONTENT), temp2.getString(SUBJECT), temp2.getString(ROOM), temp2.getBoolean(OMITTED));
                 }
                 mData.add(row);
+            }
         }
     }
 

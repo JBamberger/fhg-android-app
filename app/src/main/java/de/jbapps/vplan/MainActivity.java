@@ -39,24 +39,10 @@ import de.jbapps.vplan.util.VPlanLoader;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
 
+    private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     private static final String PREFS = "vplan_preferences";
     private static final String PREFS_CGRADE = "selected_grade";
-
-    private ListView mList;
-    private TextView mStatus;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private VPlanAdapter mListAdapter;
-
-    private ArrayAdapter<String> mSpinnerAdapter;
-    private boolean mOnline = false;
-    private RefreshListener mRefreshListener = new RefreshListener();
-    private NetReceiver mNetworkStateReceiver = new NetReceiver();
-    private Context mContext;
-
-//##################################################################################################
-// FIELDS II
-//##################################################################################################
 
     private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
     private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
@@ -66,19 +52,29 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private static final String JSON_KEY_HEADER_LAST_MODIFIED = "Last-Modified";
     private static final String JSON_KEY_HEADER_CONTENT_LENGTH = "Content-Length";
 
+    private ListView mList;
+    private TextView mStatus;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ProgressBar mBackgroundProgress;
+    private VPlanAdapter mListAdapter;
+
+    private ArrayAdapter<String> mSpinnerAdapter;
+    private boolean mOnline = false;
+    private RefreshListener mRefreshListener = new RefreshListener();
+    private NetReceiver mNetworkStateReceiver = new NetReceiver();
+    private Context mContext;
+    private SharedPreferences mPreferences;
+
     private Header[] mVPlanHeader1 = new Header[2];
     private Header[] mVPlanHeader2 = new Header[2];
     private JSONObject mVPlan1;
     private JSONObject mVPlan2;
-    private ProgressBar mBackgroundProgress;
-    private SharedPreferences mPreferences;
+
 
     private VPlanLoader mVPlanLoader;
     private VPlanJSONParser mVPlanJSONParser;
 
-//##################################################################################################
 // LIFECYCLE
-//##################################################################################################
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +86,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
         mStatus = (TextView) findViewById(R.id.status);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
+        mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
         mList = (ListView) findViewById(R.id.vplan_list);
 
         setupActionBar();
@@ -97,8 +94,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         setupListView();
 
         mNetworkStateReceiver.netStateUpdate();
-        invokeVPlanDownload(true);
-        if (savedInstanceState == null || savedInstanceState.getBoolean("refresh", true)) ;
+
+        if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
+            reload();
+        } else {
+            restore(false);
+        }
     }
 
     @Override
@@ -114,7 +115,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         if (mNetworkStateReceiver != null) {
             unregisterReceiver(mNetworkStateReceiver);
         }
-        //TODO: stop all Loader
+        if (mVPlanJSONParser != null) {
+            mVPlanJSONParser.cancel(true);
+            mVPlanJSONParser = null;
+        }
+        if (mVPlanLoader != null) {
+            mVPlanLoader.cancel(true);
+            mVPlanLoader = null;
+        }
     }
 
     private void setupActionBar() {
@@ -144,16 +152,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         mList.setAdapter(mListAdapter);
     }
 
-//##################################################################################################
 // INSTANCE STATE
-//##################################################################################################
-/*
+
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-
-        vplan1 = savedInstanceState.getString("v1");
-        vplan2 = savedInstanceState.getString("v2");
-        parse();
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
             getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
@@ -161,15 +163,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("refresh", false);
-        outState.putString("v1", vplan1);
-        outState.putString("v2", vplan2);
+        if (mListAdapter.getCount() > 0) {
+            outState.putBoolean(STATE_SHOULD_REFRESH, false);
+        }
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
     }
-*/
-//##################################################################################################
+
 // MENU
-//##################################################################################################
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,6 +181,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        if (id == R.id.action_force_reload) {
+            forceReload();
+            return true;
+        }
         if (id == R.id.action_bug) {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:vplanbugreport@gmail.com"));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Bugreport");
@@ -222,20 +226,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
-//##################################################################################################
-// REWORK
-//##################################################################################################
+// NAVIGATION
 
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
         writeGrade(position);
-        invokeVPlanDownload(true);
+        restore(false);
         return true;
     }
 
-//##################################################################################################
-// REWORK
-//##################################################################################################
+// METHODS
 
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -251,18 +251,43 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private void applyVPlan(List<VPlanBaseData> data) {
         mListAdapter.setData(data);
-        mSwipeRefreshLayout.setRefreshing(false);
-        ((ProgressBar) findViewById(R.id.progressBar)).setVisibility(View.GONE);
+        toggleLoading(false);
     }
 
-//##################################################################################################
+    private void toggleLoading(boolean on) {
+        if (mSwipeRefreshLayout.isRefreshing() != on) {
+            mSwipeRefreshLayout.setRefreshing(on);
+        }
+        if (on) {
+            if (mListAdapter.getCount() == 0) {
+                mBackgroundProgress.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mBackgroundProgress.setVisibility(View.GONE);
+        }
+    }
+
+    private void reload() {
+        toggleLoading(true);
+        invokeVPlanDownload(true);
+    }
+
+    private void forceReload() {
+        toggleLoading(true);
+        invokeVPlanDownload(false);
+    }
+
+    private void restore(boolean notifiyUser) {
+        toggleLoading(true);
+        invokeVPlanCacheRestore(notifiyUser);
+    }
+
 // INNER CLASSES
-//##################################################################################################
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            invokeVPlanDownload(true);
+            reload();
         }
     }
 
@@ -280,7 +305,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             }
         }
     }
-
 
 
 //##################################################################################################
@@ -338,8 +362,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private void invokeVPlanDownload(boolean onlyHeader) {
         if (mOnline) {
-            mSwipeRefreshLayout.setRefreshing(true);
-
             if (mVPlanLoader != null) {
                 mVPlanLoader.cancel(true);
                 mVPlanLoader = null;
@@ -348,12 +370,45 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             mVPlanLoader.execute(onlyHeader);
 
         } else {
-            mSwipeRefreshLayout.setRefreshing(false);
-            Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
+            if (mListAdapter.getCount() == 0) {
+                invokeVPlanCacheRestore(true);
+            } else {
+                toggleLoading(false);
+                Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-//    private void invokeJSONParser() {}
+    private void invokeVPlanCacheRestore(boolean notifiyUser) {
+        try {
+            readVPlanHeader();
+            readVPlanContent();
+            if (mVPlan1 != null || mVPlan2 != null || mVPlanHeader1[0] != null || mVPlanHeader2[0] != null) {
+                onVPlanLoaded(mVPlan1, mVPlan2, mVPlanHeader1, mVPlanHeader2);
+                if (notifiyUser) {
+                    Toast.makeText(mContext, "vPlan aus Cache wiederhergestellt.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(mContext, "Keine lokale Kopie vorhanden.", Toast.LENGTH_LONG).show();
+                toggleLoading(false);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(mContext, "Fehler beim Verarbeiten der lokalen Kopie.", Toast.LENGTH_LONG).show();
+            toggleLoading(false);
+        }
+    }
+
+    private void invokeJSONParser() {
+        if (mVPlanJSONParser != null) {
+            mVPlanJSONParser.cancel(true);
+            mVPlanJSONParser = null;
+        }
+        if (mVPlan1 != null || mVPlan2 != null) {
+            mVPlanJSONParser = new VPlanJSONParser(this, readGrade(), mVPlan1, mVPlan2);
+            mVPlanJSONParser.execute();
+        }
+    }
 
 //##################################################################################################
 
@@ -363,8 +418,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             readVPlanHeader();
             if (mVPlanHeader1[0].getValue().equals(vPlanHeader1[0].getValue()) && mVPlanHeader2[0].getValue().equals(vPlanHeader2[0].getValue())) {
                 if (mVPlanHeader1[1].getValue().equals(vPlanHeader1[1].getValue()) && mVPlanHeader2[1].getValue().equals(vPlanHeader2[1].getValue())) {
-                    readVPlanContent();
-                    onVPlanLoaded(mVPlan1, mVPlan2, mVPlanHeader1, mVPlanHeader2);
+                    invokeVPlanCacheRestore(false);
                     return;
                 }
             }
@@ -372,63 +426,51 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         } catch (Exception e) {
             invokeVPlanDownload(false);
         }
-        Log.d("", "vplanheader loaded");
+        Log.i("MainActivity#onVPlanHeaderLoaded()", "VPlan header loading finished");
     }
 
     @Override
     public synchronized void onVPlanHeaderLoadingFailed() {
-
+        Log.w("MainActivity#onVPlanHeaderLoadingFailed()", "VPlan header loading failed");
+        restore(true);
     }
 
     @Override
     public synchronized void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2, Header[] vPlanHeader1, Header[] vPlanHeader2) {
+
         mVPlanHeader1 = vPlanHeader1;
         mVPlanHeader2 = vPlanHeader2;
         mVPlan1 = vPlan1;
         mVPlan2 = vPlan2;
 
+        invokeJSONParser();
 
-
-        if (!mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(true);
-        }
-        if (mVPlanJSONParser != null) {
-            mVPlanJSONParser.cancel(true);
-            mVPlanJSONParser = null;
-        }
-        if (mVPlan1 != null || mVPlan2 != null) {
-            mVPlanJSONParser = new VPlanJSONParser(this, readGrade(), mVPlan1, mVPlan2);
-            mVPlanJSONParser.execute();
-        }
         try {
             writeVPlanHeader();
             writeVPlanContent();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("", "vplanloading finished");
+        Log.i("MainActivity#onVPlanLoaded()", "VPlanLoading finished");
     }
 
     @Override
     public synchronized void onVPlanLoadingFailed() {
-        //TODO: improve
-        Toast.makeText(mContext, "Daten konnten nicht geladen werden.", Toast.LENGTH_LONG).show();
-        ((ProgressBar) findViewById(R.id.progressBar)).setVisibility(View.GONE);
+        restore(true);
+        Log.w("MainActivity#onVPlanLoaded()", "VPlanLoading failed");
     }
 
     @Override
     public void onVPlanParsed(List<VPlanBaseData> dataList) {
         applyVPlan(dataList);
-        Log.d("", "vplan parsed and applied");
+        toggleLoading(false);
+        Log.i("MainActivity#onVPlanParsed()", "VPlan parsed and applied");
     }
 
     @Override
     public void onVPlanParsingFailed() {
-        Toast.makeText(mContext, "Daten konnten nicht geladen werden.", Toast.LENGTH_LONG).show();
-        ((ProgressBar) findViewById(R.id.progressBar)).setVisibility(View.GONE);
+        Toast.makeText(mContext, "Daten konnten nicht verarbeitet werden.", Toast.LENGTH_LONG).show();
+        toggleLoading(false);
+        Log.w("MainActivity#onVPlanParsed()", "VPlan parsing failed");
     }
-
-//##################################################################################################
-
-//FIXME: simplify data structure by including header into vplan json
 }

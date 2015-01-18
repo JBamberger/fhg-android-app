@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
+        android:id="@+id/action_force_reload"
+        android:orderInCategory="95"
+        android:title="@string/action_force_reload"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_bug"
         android:orderInCategory="96"
         android:title="@string/action_bug"

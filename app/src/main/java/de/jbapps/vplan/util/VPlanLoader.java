@@ -68,7 +68,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
                 if (vp1 != null) {
                     vPlan1 = parse(vp1);
                 } else {
-                    //should never happen...
+                    Log.wtf("VPlanLoader#doInBackground()", "response1 == null");
                     throw new ClientProtocolException("Empty response content");
                 }
 
@@ -78,7 +78,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
                 if (vp2 != null) {
                     vPlan2 = parse(vp2);
                 } else {
-                    //should never happen...
+                    Log.wtf("VPlanLoader#doInBackground()", "response2 == null");
                     throw new ClientProtocolException("Empty response content");
                 }
 
