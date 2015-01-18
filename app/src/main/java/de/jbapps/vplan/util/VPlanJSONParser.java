@@ -66,9 +66,9 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
         for (int i = 0; i < length; i++) {
             JSONArray temp2 = temp.getJSONArray(i);
             int length2 = temp2.length();
-            for(int j = 0; j < length2; j++) {
+            for (int j = 0; j < length2; j++) {
                 buffer.append(temp2.getString(j));
-                if(j >= 1) {
+                if (j >= 1) {
                     buffer.append(" ");
                 }
             }
@@ -81,8 +81,8 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
         length = temp.length();
         for (int i = 0; i < length; i++) {
             JSONObject temp2 = temp.getJSONObject(i);
-                VPlanItemData row;
-            if(temp2.getString(GRADE).matches(gradePattern)) {
+            VPlanItemData row;
+            if (temp2.getString(GRADE).matches(gradePattern)) {
                 if (gradePattern.equals(".*")) {
                     row = new VPlanItemData(temp2.getString(HOUR), temp2.getString(CONTENT), temp2.getString(GRADE) + ": " + temp2.getString(SUBJECT), temp2.getString(ROOM), temp2.getBoolean(OMITTED));
                 } else {

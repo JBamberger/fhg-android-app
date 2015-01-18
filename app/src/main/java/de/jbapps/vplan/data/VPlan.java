@@ -5,10 +5,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class VPlan{
+public class VPlan {
 
-    private List<Row> mRows;
     public static final String MOTD = "Nachrichten zum Tag";
+    private List<Row> mRows;
     private String motd;
     private String date;
 
@@ -45,11 +45,13 @@ public class VPlan{
     }
 
 
-
-
 //##################################################################################################
 
-    class Row  implements IJSONable {
+    public interface IJSONable {
+        public JSONObject toJSON() throws JSONException;
+    }
+
+    class Row implements IJSONable {
         public String subject;
         public String room;
         public String hour;
@@ -74,10 +76,5 @@ public class VPlan{
             data.put("subject", subject);
             return data;
         }
-    }
-
-
-    public interface IJSONable {
-        public JSONObject toJSON() throws JSONException;
     }
 }

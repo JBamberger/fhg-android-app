@@ -1,8 +1,8 @@
 package de.jbapps.vplan;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -20,6 +20,10 @@ public class VPlanIntentService extends IntentService {
     // TODO: Rename parameters
     private static final String EXTRA_PARAM1 = "de.jbapps.vplan.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "de.jbapps.vplan.extra.PARAM2";
+
+    public VPlanIntentService() {
+        super("VPlanIntentService");
+    }
 
     /**
      * Starts this service to perform action Foo with the given parameters. If
@@ -49,10 +53,6 @@ public class VPlanIntentService extends IntentService {
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
         context.startService(intent);
-    }
-
-    public VPlanIntentService() {
-        super("VPlanIntentService");
     }
 
     @Override

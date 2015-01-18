@@ -41,9 +41,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+
     private static final String PREFS = "vplan_preferences";
     private static final String PREFS_CGRADE = "selected_grade";
-
     private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
     private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
     private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
@@ -58,7 +58,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
 
-    private ArrayAdapter<String> mSpinnerAdapter;
     private boolean mOnline = false;
     private RefreshListener mRefreshListener = new RefreshListener();
     private NetReceiver mNetworkStateReceiver = new NetReceiver();
@@ -70,11 +69,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private JSONObject mVPlan1;
     private JSONObject mVPlan2;
 
-
     private VPlanLoader mVPlanLoader;
     private VPlanJSONParser mVPlanJSONParser;
-
-// LIFECYCLE
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,19 +122,19 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     private void setupActionBar() {
-//setup ActionBar
+        //setup ActionBar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
         //setup ActionBarSpinner
-        mSpinnerAdapter = new ArrayAdapter<>(
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 actionBar.getThemedContext(),
                 R.layout.spinner_item,
                 android.R.id.text1,
                 getResources().getStringArray(R.array.listGrades));
-        mSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actionBar.setListNavigationCallbacks(mSpinnerAdapter, this);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        actionBar.setListNavigationCallbacks(spinnerAdapter, this);
         actionBar.setSelectedNavigationItem(readGradeID());
     }
 
@@ -151,8 +147,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         mListAdapter = new VPlanAdapter(this);
         mList.setAdapter(mListAdapter);
     }
-
-// INSTANCE STATE
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -168,8 +162,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
         outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
     }
-
-// MENU
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -226,16 +218,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
-// NAVIGATION
-
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
         writeGrade(position);
         restore(false);
         return true;
     }
-
-// METHODS
 
     public boolean isOnline() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -281,33 +269,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         toggleLoading(true);
         invokeVPlanCacheRestore(notifiyUser);
     }
-
-// INNER CLASSES
-
-    private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
-        @Override
-        public void onRefresh() {
-            reload();
-        }
-    }
-
-    private class NetReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            netStateUpdate();
-        }
-
-        public void netStateUpdate() {
-            if (mOnline = isOnline()) {
-                mStatus.setVisibility(View.GONE);
-            } else {
-                showError(getString(R.string.text_net_disconnected));
-            }
-        }
-    }
-
-
-//##################################################################################################
 
     private void readVPlanHeader() throws JSONException {
         JSONObject h1 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_HEADER_1, null));
@@ -410,8 +371,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
     }
 
-//##################################################################################################
-
     @Override
     public synchronized void onVPlanHeaderLoaded(Header[] vPlanHeader1, Header[] vPlanHeader2) {
         try {
@@ -472,5 +431,27 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         Toast.makeText(mContext, "Daten konnten nicht verarbeitet werden.", Toast.LENGTH_LONG).show();
         toggleLoading(false);
         Log.w("MainActivity#onVPlanParsed()", "VPlan parsing failed");
+    }
+
+    private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            reload();
+        }
+    }
+
+    private class NetReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            netStateUpdate();
+        }
+
+        public void netStateUpdate() {
+            if (mOnline = isOnline()) {
+                mStatus.setVisibility(View.GONE);
+            } else {
+                showError(getString(R.string.text_net_disconnected));
+            }
+        }
     }
 }
