@@ -379,13 +379,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
     }
 
-    private void invokeVPlanCacheRestore(boolean notifiyUser) {
+    private void invokeVPlanCacheRestore(boolean notifyUser) {
         try {
             readVPlanHeader();
             readVPlanContent();
             if (mVPlan1 != null || mVPlan2 != null || mVPlanHeader1[0] != null || mVPlanHeader2[0] != null) {
                 onVPlanLoaded(mVPlan1, mVPlan2, mVPlanHeader1, mVPlanHeader2);
-                if (notifiyUser) {
+                if (notifyUser) {
                     Toast.makeText(mContext, "vPlan aus Cache wiederhergestellt.", Toast.LENGTH_LONG).show();
                 }
             } else {

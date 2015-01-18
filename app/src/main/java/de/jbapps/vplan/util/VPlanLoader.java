@@ -84,7 +84,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
             }
         } catch (ClientProtocolException | JSONException e) {
-            Log.e("VPlanLoader: EXCEPTION", e.getMessage());//TODO: notify User maybe...
+            Log.e("VPlanLoader: EXCEPTION", e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
