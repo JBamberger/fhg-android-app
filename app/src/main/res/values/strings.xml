@@ -2,9 +2,6 @@
 <resources>
 
     <string name="app_name">VPlan</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">S</string>
     <string name="action_settings">Einstellungen</string>
     <string name="action_classic_view">Website anzeigen</string>
     <string name="action_credits">Credits</string>
@@ -20,17 +17,9 @@
     <string name="text_credits_5">The jsoup code-base (include source and compiled packages) are distributed under the open source MIT license as described below.</string>
     <string name="text_credits_6">The MIT License</string>
     <string name="text_credits_7">Copyright © 2009 – 2014 Jonathan Hedley (jonathan@hedley.net)</string>
-
-
     <string name="text_credits_8">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</string>
-
-
     <string name="text_credits_9">THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
-
-
-    <string name="text_credits_licence">Mit der Verwendung der Anwendung stimmen Sie zu, dass Sie die unten stehenden Bestimmungen gelesen und verstanden haben. Ich übernehme keine Haftung für jegliche Schäden, die durch die Anwendung entstanden sind. Die Anwendung wird so ausgeleifert wie sie ist. Es besteht kein Anspruch auf Funktionsfähigkeit und Zuverlässigkeit der Anwendung. In der Anwendung werden Daten der Website www.fhg-radolfzell.de verarbeitet und angezeigt. Diese Daten sind geistiges Eigentum des Friedrich-Hecker-Gymnasium Radolfzell. Sie stehen nicht unter meiner Kontrolle, daher übernehme ich keine Verantwortung für die angezeigten Inhalte.</string>
-
-
+    <string name="text_credits_licence">In der Anwendung werden Daten der Website www.fhg-radolfzell.de verarbeitet und angezeigt. Diese Daten sind geistiges Eigentum des Friedrich-Hecker-Gymnasium Radolfzell. Diese stehen nicht unter meiner Kontrolle.</string>
     <string name="action_vplan_hp">VPlan Update-Seite</string>
     <string name="action_get_version">Version anzeigen</string>
     <string name="action_force_reload">Neu Laden</string>
