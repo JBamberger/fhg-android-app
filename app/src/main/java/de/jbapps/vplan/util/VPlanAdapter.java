@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,6 +133,31 @@ public class VPlanAdapter extends BaseAdapter {
         }
         return convertView;
     }
+
+    private boolean isVPlanOld(String titleString) {
+        for(int i = 0; i < titleString.length(); i++) {
+            if(titleString.charAt(i) == ' ') {
+                String date = titleString.substring(0,i);
+                try {
+                    long time = DateFormat.getDateInstance().parse(date).getTime();
+
+                    if(System.currentTimeMillis() < time) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+            }
+        }
+
+        return false;
+    }
+
 
     private static class VPlanHolder {
         TextView subject;
