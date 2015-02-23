@@ -307,8 +307,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     private String readGrade() {
-        String[] patterns = getResources().getStringArray(R.array.listGradePatterns);
-        return patterns[getSupportActionBar().getSelectedNavigationIndex()];
+        return getResources().getStringArray(R.array.listGradePatterns)[getSupportActionBar().getSelectedNavigationIndex()];
     }
 
     private int readGradeID() {
