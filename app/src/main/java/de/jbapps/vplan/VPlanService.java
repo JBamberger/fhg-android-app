@@ -1,27 +1,44 @@
 package de.jbapps.vplan;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.Messenger;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.util.List;
+import java.io.IOException;
 
-import de.jbapps.vplan.data.VPlanBaseData;
-import de.jbapps.vplan.util.VPlanJSONParser;
-import de.jbapps.vplan.util.VPlanLoader;
+import de.jbapps.vplan.util.StorageManager;
 
-public class VPlanService extends Service implements VPlanLoader.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
+public class VPlanService extends Service {
 
     private static final String TAG = "VPlanService";
+
+    private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+    private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+
+    private static final int NOTIFICATION_ID = 300;
+
+    private static final int INIT_CLIENT = 0;
+    private static final int RELOAD = 1;
+    private static final int FORCE_RELOAD = 2;
+    private static final int LOAD_HEADER_ONLY = 3;
+
+    private Handler mTimer = new Handler();
+    private HttpClient mClient;
+    private StorageManager mStorage;
 
     //TODO: private Messenger mSensorService;
     //TODO: private final Messenger mServer = new Messenger(new IncomingHandler());
@@ -32,7 +49,7 @@ public class VPlanService extends Service implements VPlanLoader.IOnFinishedLoad
         return null;//TODO: mServer.getBinder(); //return the communication channel
     }
 
-    private void sendMessage(Messenger client, int value) {
+    private void sendMessage() {
         //TODO: implement
     }
 
@@ -40,78 +57,13 @@ public class VPlanService extends Service implements VPlanLoader.IOnFinishedLoad
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "Service Started.");
-
-        //start and bind consumed Services
-        //TODO: startService(new Intent(this, SensorService.class));
-        //TODO: bindSensorService();
-
+        mClient = new DefaultHttpClient();
+        //mTimer.p
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY; //TODO: make sticky
-    }
-
-    @Override
-    public synchronized void onVPlanHeaderLoaded(Header[] vPlanHeader1, Header[] vPlanHeader2) {
-        try {
-            readVPlanHeader();
-            if (mVPlanHeader1[0].getValue().equals(vPlanHeader1[0].getValue()) && mVPlanHeader2[0].getValue().equals(vPlanHeader2[0].getValue())) {
-                if (mVPlanHeader1[1].getValue().equals(vPlanHeader1[1].getValue()) && mVPlanHeader2[1].getValue().equals(vPlanHeader2[1].getValue())) {
-                    invokeVPlanCacheRestore(false);
-                    return;
-                }
-            }
-            invokeVPlanDownload(false);
-        } catch (Exception e) {
-            invokeVPlanDownload(false);
-        }
-        Log.i("MainActivity#onVPlanHeaderLoaded()", "VPlan header loading finished");
-    }
-
-    @Override
-    public synchronized void onVPlanHeaderLoadingFailed() {
-        Log.w("MainActivity#onVPlanHeaderLoadingFailed()", "VPlan header loading failed");
-        restore(true);
-    }
-
-    @Override
-    public synchronized void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2, Header[] vPlanHeader1, Header[] vPlanHeader2) {
-
-        mVPlanHeader1 = vPlanHeader1;
-        mVPlanHeader2 = vPlanHeader2;
-        mVPlan1 = vPlan1;
-        mVPlan2 = vPlan2;
-
-        invokeJSONParser();
-
-        try {
-            writeVPlanHeader();
-            writeVPlanContent();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i("MainActivity#onVPlanLoaded()", "VPlanLoading finished");
-    }
-
-    @Override
-    public synchronized void onVPlanLoadingFailed() {
-        restore(true);
-        Log.w("MainActivity#onVPlanLoaded()", "VPlanLoading failed");
-    }
-
-    @Override
-    public void onVPlanParsed(List<VPlanBaseData> dataList) {
-        applyVPlan(dataList);
-        toggleLoading(false);
-        Log.i("MainActivity#onVPlanParsed()", "VPlan parsed and applied");
-    }
-
-    @Override
-    public void onVPlanParsingFailed() {
-        Toast.makeText(mContext, "Daten konnten nicht verarbeitet werden.", Toast.LENGTH_LONG).show();
-        toggleLoading(false);
-        Log.w("MainActivity#onVPlanParsed()", "VPlan parsing failed");
+        return START_STICKY;
     }
 
     /*void bindSensorService() {
@@ -146,4 +98,58 @@ public class VPlanService extends Service implements VPlanLoader.IOnFinishedLoad
             }
         }
     }*/
+
+    private class CheckVPlan implements Runnable {
+        @Override
+        public void run() {
+
+            try {
+                String[] newHeaders = new String[2];
+                newHeaders[0] = getHeader(VPLAN1_URL);
+                newHeaders[1] = getHeader(VPLAN2_URL);
+                String[] oldHeaders = mStorage.readHeaders();
+                if (!newHeaders[0].equals(oldHeaders[0]) || !newHeaders[1].equals(oldHeaders[1])) {
+                    showNotification();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Can't load headers");
+            }
+        }
+
+        private String getHeader(String url) throws IOException {
+            HttpHead httpHead = new HttpHead(url);
+            HttpResponse response = mClient.execute(httpHead);
+            Header[] headers = response.getAllHeaders();
+            for (Header header : headers) {
+                if (header.getName().contains("Last-Modified")) {
+                    Log.i("VPlanLoader#getHeader()", header.getName() + " : " + header.getValue());
+                    return header.getValue();
+                }
+            }
+            return null;
+        }
+    }
+
+    private void showNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("VPlan aktualisiert")
+                        .setContentText("Der Vertretungsplan wurde aktualisiert.");
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent resultPendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            resultPendingIntent = PendingIntent.getBroadcast(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
 }

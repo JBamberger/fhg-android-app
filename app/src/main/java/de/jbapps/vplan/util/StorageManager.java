@@ -14,12 +14,12 @@ public class StorageManager {
     private static final String DATA_VPLAN_1 = "vplan_1";
     private static final String DATA_VPLAN_2 = "vplan_2";
 
-    private Context mContext;
+    //private Context mContext;
     private SharedPreferences mPreferences;
 
 
     public StorageManager(Context context) {
-        this.mContext = context;
+        //this.mContext = context;
         mPreferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
     }
 
