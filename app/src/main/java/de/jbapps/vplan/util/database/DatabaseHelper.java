@@ -17,16 +17,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INTEGER = " INTEGER PRIMARY KEY";
 
     private static final String SQL_CREATE_VPLAN_TABLE = CREATE_TABLE +
-            VPlanContract.TABLE_NAME                 + " ("  +
-            VPlanContract._ID            + INTEGER   + COMMA +
-            VPlanContract.COLUMN_GRADE   + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_COURSE  + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_CONTENT + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_ROOM    + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_TIME    + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_OMITTED + TEXT_TYPE + COMMA +
-            VPlanContract.COLUMN_DAY     + TEXT_TYPE + ")";
-    private static final String SQL_DELETE_VPLAN_TABLE = DROP_TABLE + VPlanContract.TABLE_NAME;
+            VPlanTable.TABLE_NAME                 + " ("  +
+            VPlanTable._ID            + INTEGER   + COMMA +
+            VPlanTable.COLUMN_GRADE   + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_COURSE  + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_CONTENT + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_ROOM    + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_TIME    + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_OMITTED + TEXT_TYPE + COMMA +
+            VPlanTable.COLUMN_DAY     + TEXT_TYPE + ")";
+    private static final String SQL_DELETE_VPLAN_TABLE = DROP_TABLE + VPlanTable.TABLE_NAME;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

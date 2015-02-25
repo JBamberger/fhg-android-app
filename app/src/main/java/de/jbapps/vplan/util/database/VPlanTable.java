@@ -2,7 +2,7 @@ package de.jbapps.vplan.util.database;
 
 import android.provider.BaseColumns;
 
-public class VPlanContract implements BaseColumns {
+public class VPlanTable implements BaseColumns {
     public static final String TABLE_NAME = "vplan";
 
     public static final String COLUMN_GRADE = "grade";

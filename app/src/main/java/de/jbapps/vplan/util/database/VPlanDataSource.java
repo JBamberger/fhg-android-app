@@ -15,14 +15,14 @@ public class VPlanDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
     private String[] allColumns = {
-            VPlanContract._ID,
-            VPlanContract.COLUMN_GRADE,
-            VPlanContract.COLUMN_COURSE,
-            VPlanContract.COLUMN_CONTENT,
-            VPlanContract.COLUMN_ROOM,
-            VPlanContract.COLUMN_TIME,
-            VPlanContract.COLUMN_OMITTED,
-            VPlanContract.COLUMN_DAY
+            VPlanTable._ID,
+            VPlanTable.COLUMN_GRADE,
+            VPlanTable.COLUMN_COURSE,
+            VPlanTable.COLUMN_CONTENT,
+            VPlanTable.COLUMN_ROOM,
+            VPlanTable.COLUMN_TIME,
+            VPlanTable.COLUMN_OMITTED,
+            VPlanTable.COLUMN_DAY
     };
 
     public VPlanDataSource(Context context) {
@@ -39,17 +39,17 @@ public class VPlanDataSource {
 
     public VPlanModel createVItem(String grade, String course, String content, String room, String time, String omitted, String day) {
         ContentValues values = new ContentValues();
-        values.put(VPlanContract.COLUMN_GRADE, grade);
-        values.put(VPlanContract.COLUMN_COURSE, course);
-        values.put(VPlanContract.COLUMN_CONTENT, content);
-        values.put(VPlanContract.COLUMN_ROOM, room);
-        values.put(VPlanContract.COLUMN_TIME, time);
-        values.put(VPlanContract.COLUMN_OMITTED, omitted);
-        values.put(VPlanContract.COLUMN_DAY, day);
-        long insertId = database.insert(VPlanContract.TABLE_NAME, null,
+        values.put(VPlanTable.COLUMN_GRADE, grade);
+        values.put(VPlanTable.COLUMN_COURSE, course);
+        values.put(VPlanTable.COLUMN_CONTENT, content);
+        values.put(VPlanTable.COLUMN_ROOM, room);
+        values.put(VPlanTable.COLUMN_TIME, time);
+        values.put(VPlanTable.COLUMN_OMITTED, omitted);
+        values.put(VPlanTable.COLUMN_DAY, day);
+        long insertId = database.insert(VPlanTable.TABLE_NAME, null,
                 values);
-        Cursor cursor = database.query(VPlanContract.TABLE_NAME,
-                allColumns, VPlanContract._ID + " = " + insertId, null,
+        Cursor cursor = database.query(VPlanTable.TABLE_NAME,
+                allColumns, VPlanTable._ID + " = " + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         VPlanModel newVPlan = cursorToVPlan(cursor);
@@ -59,14 +59,14 @@ public class VPlanDataSource {
 
     public void deleteItem(VPlanModel item) {
         long id = item.getId();
-        database.delete(VPlanContract.TABLE_NAME, VPlanContract._ID
+        database.delete(VPlanTable.TABLE_NAME, VPlanTable._ID
                 + " = " + id, null);
     }
 
     public List<VPlanModel> getAllComments() {
         List<VPlanModel> comments = new ArrayList<>();
 
-        Cursor cursor = database.query(VPlanContract.TABLE_NAME,
+        Cursor cursor = database.query(VPlanTable.TABLE_NAME,
                 allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
