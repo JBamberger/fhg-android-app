@@ -37,9 +37,15 @@ public class VPlanDataSource {
         dbHelper.close();
     }
 
-    public VPlanModel createVItem(String vplan) {
+    public VPlanModel createVItem(String grade, String course, String content, String room, String time, String omitted, String day) {
         ContentValues values = new ContentValues();
-        //TODO:  !!!!!!!values.put(VPlanContract.COLUMN_COMMENT, vplan);
+        values.put(VPlanContract.COLUMN_GRADE, grade);
+        values.put(VPlanContract.COLUMN_COURSE, course);
+        values.put(VPlanContract.COLUMN_CONTENT, content);
+        values.put(VPlanContract.COLUMN_ROOM, room);
+        values.put(VPlanContract.COLUMN_TIME, time);
+        values.put(VPlanContract.COLUMN_OMITTED, omitted);
+        values.put(VPlanContract.COLUMN_DAY, day);
         long insertId = database.insert(VPlanContract.TABLE_NAME, null,
                 values);
         Cursor cursor = database.query(VPlanContract.TABLE_NAME,
