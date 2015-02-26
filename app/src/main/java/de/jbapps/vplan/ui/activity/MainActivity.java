@@ -1,4 +1,4 @@
-package de.jbapps.vplan;
+package de.jbapps.vplan.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,8 +31,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import de.jbapps.vplan.R;
 import de.jbapps.vplan.data.VPlanBaseData;
-import de.jbapps.vplan.util.VPlanAdapter;
+import de.jbapps.vplan.ui.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader;
 
@@ -173,6 +174,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
         if (id == R.id.action_force_reload) {
             forceReload();
             return true;

@@ -1,0 +1,28 @@
+<resources>
+
+    <string name="pref_category_view">Ansicht</string>
+    <string name="pref_view_posts_title">Postings anzeigen</string>
+    <string name="pref_view_update_vplan">VPlan automatisch aktualisieren</string>
+
+    <string name="pref_category_notification">Benachrichtigungen</string>
+    <string name="pref_notification_notification_title">Benachrichtigen</string>
+    <string name="pref_notification_vibrate_title">Vibrieren</string>
+    <string name="pref_notification_light_title">Benachrichtigungslicht</string>
+    <string name="pref_notification_ringtone_title">Klingelton</string>
+    <string name="pref_notification_fullscreen_alert_title">Fullscreen Alert</string>
+
+    <string-array name="listColors">
+        <item>Aus</item>
+        <item>Rot</item>
+        <item>Grün</item>
+        <item>Blau</item>
+    </string-array>
+
+    <string-array name="listColorValues">
+        <item />
+        <item>#FF0000</item>
+        <item>#00FF00</item>
+        <item>#0000FF</item>
+    </string-array>
+
+</resources>

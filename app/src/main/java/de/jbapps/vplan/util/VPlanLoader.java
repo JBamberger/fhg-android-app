@@ -24,6 +24,8 @@ import java.io.IOException;
 
 public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
+    private static final String TAG = "VPlanLoader";
+
     private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
     private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
@@ -57,18 +59,18 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         onlyHeader = params[0];
         try {
             if (onlyHeader) {
-                Log.i("VPlanLoader#doInBackground()", "Loading VPlanHeader");
+                Log.i(TAG, "Loading VPlanHeader");
                 vPlanHeader1 = hHead(VPLAN1_URL);
                 vPlanHeader2 = hHead(VPLAN2_URL);
             } else {
-                Log.i("VPlanLoader#doInBackground()", "Loading VPlan");
+                Log.i(TAG, "Loading VPlan");
                 HttpResponse res1 = hGET(VPLAN1_URL);
                 vPlanHeader1 = getHeader(res1);
                 String vp1 = getVPlan(res1);
                 if (vp1 != null) {
                     vPlan1 = parse(vp1);
                 } else {
-                    Log.wtf("VPlanLoader#doInBackground()", "response1 == null");
+                    Log.wtf(TAG, "response1 == null");
                     throw new ClientProtocolException("Empty response content");
                 }
 
@@ -78,13 +80,13 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
                 if (vp2 != null) {
                     vPlan2 = parse(vp2);
                 } else {
-                    Log.wtf("VPlanLoader#doInBackground()", "response2 == null");
+                    Log.wtf(TAG, "response2 == null");
                     throw new ClientProtocolException("Empty response content");
                 }
 
             }
         } catch (ClientProtocolException | JSONException e) {
-            Log.e("VPlanLoader: EXCEPTION", e.getMessage());
+            Log.e(TAG, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +108,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         int status = response.getStatusLine().getStatusCode();
         if (status >= 200 && status < 300) {
             HttpEntity entity = response.getEntity();
-            Log.i("VPlanLoader#getVPlan()", "VPlan loaded");
+            Log.i(TAG, "VPlan loaded");
             return entity != null ? EntityUtils.toString(entity) : null;
         } else {
             throw new ClientProtocolException("Unexpected response status: " + status);
@@ -119,11 +121,11 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         for (Header header : headers) {
             if (header.getName().contains("Last-Modified")) {
                 cleanHeaders[0] = header;
-                Log.i("VPlanLoader#getHeader()", header.getName() + " : " + header.getValue());
+                Log.i(TAG, header.getName() + " : " + header.getValue());
             }
             if (header.getName().contains("Content-Length")) {
                 cleanHeaders[1] = header;
-                Log.i("VPlanLoader#getHeader()", header.getName() + " : " + header.getValue());
+                Log.i(TAG, header.getName() + " : " + header.getValue());
             }
         }
         return cleanHeaders;
@@ -151,7 +153,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
                 temp2.get(0);
                 temp.put(temp2);
             } catch (JSONException e) {
-                Log.w("HTML to JSON", "Unknown empty element discarded...");
+                Log.w(TAG, "HTML to JSON: Unknown empty element discarded...");
             }
         }
         jPlan.put(MOTD, temp);
@@ -173,7 +175,7 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
             }
         }
         jPlan.put(VPLAN, temp);
-        Log.i("VPlanLoader#parse()", "VPlan parsed");
+        Log.i(TAG, "VPlan parsed");
         return jPlan;
     }
 
@@ -181,15 +183,15 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
     protected void onPostExecute(Void v) {
         if (mListener != null) {
             if (onlyHeader) {
-                Log.d("Loader", "onVPlanHeaderLoaded() executed");
+                Log.d(TAG, "onVPlanHeaderLoaded() executed");
                 if (vPlanHeader1 != null && vPlanHeader2 != null) {
                     mListener.onVPlanHeaderLoaded(vPlanHeader1, vPlanHeader2);
                 } else {
                     mListener.onVPlanHeaderLoadingFailed();
                 }
             } else {
-                Log.d("Loader", "onVPlanLoaded() executed");
-                Log.d("Loader", "#############################################################################################################################");
+                Log.d(TAG, "onVPlanLoaded() executed");
+                Log.d(TAG, "#############################################################################################################################");
                 if (vPlan1 != null && vPlan2 != null && vPlanHeader1 != null && vPlanHeader2 != null) {
                     mListener.onVPlanLoaded(vPlan1, vPlan2, vPlanHeader1, vPlanHeader2);
                 } else {

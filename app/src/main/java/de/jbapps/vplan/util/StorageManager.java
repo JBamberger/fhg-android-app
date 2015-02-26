@@ -14,6 +14,9 @@ public class StorageManager {
     private static final String DATA_VPLAN_1 = "vplan_1";
     private static final String DATA_VPLAN_2 = "vplan_2";
 
+    private static final String DATA_MOTD_1 = "motd_1";
+    private static final String DATA_MOTD_2 = "motd_2";
+
     //private Context mContext;
     private SharedPreferences mPreferences;
 
@@ -34,6 +37,16 @@ public class StorageManager {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(DATA_HEADER_1, headers[0]);
         editor.putString(DATA_HEADER_2, headers[1]);
+        editor.apply();
+    }
+
+    public void writeMOTD(String motd, boolean dayOne) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        if (dayOne) {
+            editor.putString(DATA_MOTD_1, motd);
+        } else {
+            editor.putString(DATA_MOTD_2, motd);
+        }
         editor.apply();
     }
 

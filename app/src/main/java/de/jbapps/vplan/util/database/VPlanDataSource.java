@@ -5,13 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class VPlanDataSource {
 
-    // Database fields
+    private static final String TAG = "VPlanDataSource";
+
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
     private String[] allColumns = {
@@ -55,6 +57,20 @@ public class VPlanDataSource {
         VPlanModel newVPlan = cursorToVPlan(cursor);
         cursor.close();
         return newVPlan;
+    }
+
+    public void writeVItem(String grade, String course, String content, String room, String time, String omitted, String day) {
+        ContentValues values = new ContentValues();
+        values.put(VPlanTable.COLUMN_GRADE, grade);
+        values.put(VPlanTable.COLUMN_COURSE, course);
+        values.put(VPlanTable.COLUMN_CONTENT, content);
+        values.put(VPlanTable.COLUMN_ROOM, room);
+        values.put(VPlanTable.COLUMN_TIME, time);
+        values.put(VPlanTable.COLUMN_OMITTED, omitted);
+        values.put(VPlanTable.COLUMN_DAY, day);
+        long insertId = database.insert(VPlanTable.TABLE_NAME, null,
+                values);
+        Log.i(TAG, "The id is " + insertId);
     }
 
     public void deleteItem(VPlanModel item) {

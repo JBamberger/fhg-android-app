@@ -6,9 +6,16 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -20,9 +27,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 
+import de.jbapps.vplan.ui.activity.MainActivity;
 import de.jbapps.vplan.util.StorageManager;
+import de.jbapps.vplan.util.net.VPlanUpdater;
 
-public class VPlanService extends Service {
+public class VPlanService extends Service implements VPlanUpdater.IOnFinishedLoading {
 
     private static final String TAG = "VPlanService";
 
@@ -30,27 +39,26 @@ public class VPlanService extends Service {
     private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
     private static final int NOTIFICATION_ID = 300;
+    public static final int INIT_CLIENT = 0;
+    public static final int RELOAD = 1;
+    public static final int FORCE_RELOAD = 2;
+    public static final int CHECK_HEADER = 3;
 
-    private static final int INIT_CLIENT = 0;
-    private static final int RELOAD = 1;
-    private static final int FORCE_RELOAD = 2;
-    private static final int LOAD_HEADER_ONLY = 3;
+    public static final int LOADING_FINISHED = 100;
+
+    private static final long DELAY_TIME = 5 * 60 * 1000;
 
     private Handler mTimer = new Handler();
     private HttpClient mClient;
+    private Context mContext;
+    private VPlanUpdater mUpdater;
     private StorageManager mStorage;
-
-    //TODO: private Messenger mSensorService;
-    //TODO: private final Messenger mServer = new Messenger(new IncomingHandler());
-    //TODO: private ServiceConnection mSensorConnection = new SensorConnection();
+    private Messenger mActivity;
+    private final Messenger mServer = new Messenger(new IncomingHandler());
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;//TODO: mServer.getBinder(); //return the communication channel
-    }
-
-    private void sendMessage() {
-        //TODO: implement
+        return mServer.getBinder();
     }
 
     @Override
@@ -58,7 +66,14 @@ public class VPlanService extends Service {
         super.onCreate();
         Log.i(TAG, "Service Started.");
         mClient = new DefaultHttpClient();
-        //mTimer.p
+        mStorage = new StorageManager(this);
+        mTimer.postDelayed(new CheckVPlan(), DELAY_TIME);
+        mContext = this;
+    }
+
+    private void reloadVplan() {
+        mUpdater = new VPlanUpdater(this, this);
+        mUpdater.execute();
     }
 
     @Override
@@ -66,38 +81,23 @@ public class VPlanService extends Service {
         return START_STICKY;
     }
 
-    /*void bindSensorService() {
-        bindService(new Intent(this, SensorService.class), mSensorConnection, Context.BIND_AUTO_CREATE);
-        Log.i(TAG, "SensorService bound");
-    }
-
-    private class SensorConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mSensorService = new Messenger(service);
-            try {
-                Message msg = Message.obtain(null, COM_REGISTER_CLIENT);
-                msg.replyTo = mServer;
-                mSensorService.send(msg);
-            } catch (RemoteException e) {
-                Log.e(TAG, "SensorService unreachable");
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            Log.e(TAG, "SensorService crashed");
-            mSensorService = null;
-        }
-    }
-
     private class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case INIT_CLIENT:
+                    mActivity = msg.replyTo;
+                    break;
+                case RELOAD:
+                    reloadVplan();
+                    break;
+                case CHECK_HEADER:
+                    break;
                 default:
                     super.handleMessage(msg);
             }
         }
-    }*/
+    }
 
     private class CheckVPlan implements Runnable {
         @Override
@@ -115,6 +115,8 @@ public class VPlanService extends Service {
                 e.printStackTrace();
                 Log.e(TAG, "Can't load headers");
             }
+            if (PreferenceManager.getDefaultSharedPreferences(getBaseContext()).getBoolean("checkbox_update", true))
+                mTimer.postDelayed(new CheckVPlan(), DELAY_TIME);
         }
 
         private String getHeader(String url) throws IOException {
@@ -123,7 +125,7 @@ public class VPlanService extends Service {
             Header[] headers = response.getAllHeaders();
             for (Header header : headers) {
                 if (header.getName().contains("Last-Modified")) {
-                    Log.i("VPlanLoader#getHeader()", header.getName() + " : " + header.getValue());
+                    Log.i(TAG, header.getName() + " : " + header.getValue());
                     return header.getValue();
                 }
             }
@@ -132,7 +134,7 @@ public class VPlanService extends Service {
     }
 
     private void showNotification() {
-        NotificationCompat.Builder mBuilder =
+        /*NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle("VPlan aktualisiert")
@@ -150,6 +152,64 @@ public class VPlanService extends Service {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());*/
+
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if (pref.getBoolean("checkbox_notification", true)) {
+
+            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle("VPlan aktualisiert")
+                    .setContentText("Der Vertretungsplan wurde aktualisiert.")
+                    .setTicker("Der Vertretungsplan wurde aktualisiert.")
+                    .setSound(Uri.parse(pref.getString("notification_ringtone", "DEFAULT_SOUND")))
+                    .setContentIntent(contentIntent);
+
+            if (pref.getBoolean("checkbox_vibrate", true)) {
+                long[] pattern = {500, 500, 400, 650};
+                mBuilder.setVibrate(pattern);
+            }
+            String color = pref.getString("notification_color", "#00ff00");
+            switch (color) {
+                case "#FF0000":
+                    mBuilder.setLights(Color.RED, 1000, 1000);
+                    break;
+                case "#00FF00":
+                    mBuilder.setLights(Color.GREEN, 1000, 1000);
+                    break;
+                case "#0000FF":
+                    mBuilder.setLights(Color.BLUE, 1000, 1000);
+                    break;
+            }
+
+            Intent resultIntent = new Intent(this, MainActivity.class);
+            PendingIntent resultPendingIntent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addParentStack(MainActivity.class);
+                stackBuilder.addNextIntent(resultIntent);
+                resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                resultPendingIntent = PendingIntent.getBroadcast(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
+    }
+
+    @Override
+    public void onVPlanLoaded(boolean success) {
+        //TODO: implement
+        Message msg = new Message();
+        msg.what = LOADING_FINISHED;
+        try {
+            mActivity.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

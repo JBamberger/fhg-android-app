@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbapps.vplan.ui;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

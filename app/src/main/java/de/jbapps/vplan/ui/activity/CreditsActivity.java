@@ -1,7 +1,9 @@
-package de.jbapps.vplan;
+package de.jbapps.vplan.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import de.jbapps.vplan.R;
 
 
 public class CreditsActivity extends ActionBarActivity {
