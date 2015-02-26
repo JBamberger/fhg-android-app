@@ -5,10 +5,10 @@ android {
     buildToolsVersion '21.1.2'
     defaultConfig {
         applicationId "de.jbapps.vplan"
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 21
-        versionCode 8
-        versionName '1.1.0.4'
+        versionCode 9
+        versionName '1.1.1'
     }
     buildTypes {
         release {
@@ -25,4 +25,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/jsoup-1.7.2.jar')
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
 }
