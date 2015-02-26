@@ -11,8 +11,8 @@ public class StorageManager {
 
     private static final String DATA_HEADER_1 = "header_1";
     private static final String DATA_HEADER_2 = "header_2";
-    private static final String DATA_VPLAN_1 = "vplan_1";
-    private static final String DATA_VPLAN_2 = "vplan_2";
+    private static final String DATA_VPLAN_TITLE_1 = "vplan_title_1";
+    private static final String DATA_VPLAN_TITLE_2 = "vplan_title_2";
 
     private static final String DATA_MOTD_1 = "motd_1";
     private static final String DATA_MOTD_2 = "motd_2";
@@ -40,9 +40,18 @@ public class StorageManager {
         editor.apply();
     }
 
-    public void writeMOTD(String motd, boolean dayOne) {
+    public void writeHeader(String headers, boolean first) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        if (dayOne) {
+        if (first)
+            editor.putString(DATA_HEADER_1, headers);
+        else
+            editor.putString(DATA_HEADER_2, headers);
+        editor.apply();
+    }
+
+    public void writeMOTD(String motd, boolean first) {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        if (first) {
             editor.putString(DATA_MOTD_1, motd);
         } else {
             editor.putString(DATA_MOTD_2, motd);
@@ -50,25 +59,27 @@ public class StorageManager {
         editor.apply();
     }
 
-    public String[] readVPlan() {
+    public String[] readVPlanTitles() {
         String[] plans = new String[2];
-        plans[0] = mPreferences.getString(DATA_VPLAN_1, "");
-        plans[1] = mPreferences.getString(DATA_VPLAN_2, "");
+        plans[0] = mPreferences.getString(DATA_VPLAN_TITLE_1, "");
+        plans[1] = mPreferences.getString(DATA_VPLAN_TITLE_2, "");
         return plans;
     }
 
-    public void writeVPlan(String[] plans) {
+    public void writeVPlanTitle(String title, boolean first) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(DATA_VPLAN_1, plans[0]);
-        editor.putString(DATA_VPLAN_2, plans[1]);
+        if (first)
+            editor.putString(DATA_VPLAN_TITLE_1, title);
+        else
+            editor.putString(DATA_VPLAN_TITLE_2, title);
         editor.apply();
     }
 
-    private int readGradeIndex() {
+    public int readGradeIndex() {
         return mPreferences.getInt(UI_GRADE_INDEX, 0);
     }
 
-    private void writeGradeIndex(int index) {
+    public void writeGradeIndex(int index) {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt(UI_GRADE_INDEX, index);
         editor.apply();

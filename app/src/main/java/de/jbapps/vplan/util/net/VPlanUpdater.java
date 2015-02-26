@@ -2,17 +2,15 @@ package de.jbapps.vplan.util.net;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,45 +43,64 @@ public class VPlanUpdater extends AsyncTask<Boolean, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Boolean... params) {
-        try {
-            Log.i(TAG, "Loading VPlan");
-            HttpResponse res = hGET(VPLAN1_URL);
-            String vp = getVPlan(res);
-            if (vp != null) {
-                parse(vp, getHeader(res), true);
-            } else {
-                throw new ClientProtocolException("Empty response content");
+        if (params[0]) {
+            String[] oldHeader = mStorageManager.readHeaders();
+            String[] newHeader = new String[2];
+            try {
+                newHeader[0] = getHeader(executeHEAD(VPLAN1_URL));
+                newHeader[1] = getHeader(executeHEAD(VPLAN2_URL));
+                if (!oldHeader[0].equals(newHeader[0]) || !oldHeader[1].equals(newHeader[1]))
+                    return updateFullVPlan();
+                else
+                    return true;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            res = hGET(VPLAN2_URL);
-            vp = getVPlan(res);
-            if (vp != null) {
-                parse(vp, getHeader(res), false);
-            } else {
-                throw new ClientProtocolException("Empty response content");
+        } else {
+            try {
+                return updateFullVPlan();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (ClientProtocolException | JSONException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
-    private HttpResponse hGET(String url) throws IOException, JSONException {
+    private boolean updateFullVPlan() throws IOException {
+        return loadVPlan(true) && loadVPlan(false);
+    }
+
+    private boolean loadVPlan(boolean first) {
+        String url;
+        if (first)
+            url = VPLAN1_URL;
+        else
+            url = VPLAN2_URL;
+        try {
+            HttpResponse response = executeGET(url);
+            int status = response.getStatusLine().getStatusCode();
+            if (status >= 200 && status < 300) {
+                HttpEntity entity = response.getEntity();
+                String header = getHeader(response);
+
+                String vp = EntityUtils.toString(entity);
+                parse(vp, header, first);
+                return true;
+            }
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private HttpResponse executeGET(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
         return mClient.execute(httpGet);
     }
 
-    private String getVPlan(HttpResponse response) throws IOException {
-        int status = response.getStatusLine().getStatusCode();
-        if (status >= 200 && status < 300) {
-            HttpEntity entity = response.getEntity();
-            Log.i(TAG, "VPlan loaded");
-            return entity != null ? EntityUtils.toString(entity) : null;
-        } else {
-            throw new ClientProtocolException("Unexpected response status: " + status);
-        }
+    private Header[] executeHEAD(String url) throws IOException {
+        HttpHead httpHead = new HttpHead(url);
+        return mClient.execute(httpHead).getAllHeaders();
     }
 
     private String getHeader(HttpResponse response) {
@@ -96,14 +113,21 @@ public class VPlanUpdater extends AsyncTask<Boolean, Void, Boolean> {
         return null;
     }
 
-    private boolean parse(String vplan, String header, boolean dayOne) throws JSONException {
+    private String getHeader(Header[] headers) {
+        for (Header header : headers) {
+            if (header.getName().contains("Last-Modified")) {
+                return header.getValue();
+            }
+        }
+        return null;
+    }
+
+    private void parse(String vplan, String header, boolean first) {
         mSource.open();
         Document doc = Jsoup.parse(vplan);
 
-        //get date and day name
-        //TODO: jPlan.put(DATE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
+        mStorageManager.writeVPlanTitle(doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text(), first);
 
-        //get "Nachrichten zum Tag"
         Elements infoRows = doc.getElementsByClass("info").select("tr");
         StringBuilder motd = new StringBuilder();
         for (Element line : infoRows) {
@@ -114,18 +138,16 @@ public class VPlanUpdater extends AsyncTask<Boolean, Void, Boolean> {
             }
             motd.append("\n");
         }
-        mStorageManager.writeMOTD(motd.toString(), dayOne);
+        mStorageManager.writeMOTD(motd.toString(), first);
 
-        //get vplan rows
         Elements listRows = doc.getElementsByClass("list").select("tr");
         for (Element line : listRows) {
             Elements cells = line.children();
             if (cells.select("th").size() == 0) {
-                mSource.writeVItem(cells.get(0).text(),cells.get(3).text(),cells.get(2).text(),cells.get(4).text(),cells.get(1).text(),cells.get(5).text(), header);
+                mSource.writeVItem(cells.get(0).text(), cells.get(3).text(), cells.get(2).text(), cells.get(4).text(), cells.get(1).text(), cells.get(5).text(), header);
             }
         }
-        Log.i(TAG, "VPlan parsed and persisted");
-        return true;
+        mStorageManager.writeHeader(header, first);
     }
 
     @Override

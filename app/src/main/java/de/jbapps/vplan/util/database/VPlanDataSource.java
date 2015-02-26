@@ -59,7 +59,19 @@ public class VPlanDataSource {
         return newVPlan;
     }
 
+    public void bulkWriteVItems(List<ContentValues> data) {
+        for(ContentValues cv : data ) {
+            database.insert(VPlanTable.TABLE_NAME, null, cv);
+        }
+    }
+
     public void writeVItem(String grade, String course, String content, String room, String time, String omitted, String day) {
+        ContentValues values = dataToCV(grade, course, content, room, time, omitted, day);
+        long insertId = database.insert(VPlanTable.TABLE_NAME, null, values);
+        Log.i(TAG, "The id is " + insertId);
+    }
+
+    public ContentValues dataToCV(String grade, String course, String content, String room, String time, String omitted, String day) {
         ContentValues values = new ContentValues();
         values.put(VPlanTable.COLUMN_GRADE, grade);
         values.put(VPlanTable.COLUMN_COURSE, course);
@@ -68,9 +80,7 @@ public class VPlanDataSource {
         values.put(VPlanTable.COLUMN_TIME, time);
         values.put(VPlanTable.COLUMN_OMITTED, omitted);
         values.put(VPlanTable.COLUMN_DAY, day);
-        long insertId = database.insert(VPlanTable.TABLE_NAME, null,
-                values);
-        Log.i(TAG, "The id is " + insertId);
+        return values;
     }
 
     public void deleteItem(VPlanModel item) {
@@ -79,8 +89,8 @@ public class VPlanDataSource {
                 + " = " + id, null);
     }
 
-    public List<VPlanModel> getAllComments() {
-        List<VPlanModel> comments = new ArrayList<>();
+    public List<VPlanModel> getAllVItems() {
+        List<VPlanModel> vItems = new ArrayList<>();
 
         Cursor cursor = database.query(VPlanTable.TABLE_NAME,
                 allColumns, null, null, null, null, null);
@@ -88,12 +98,12 @@ public class VPlanDataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             VPlanModel item = cursorToVPlan(cursor);
-            comments.add(item);
+            vItems.add(item);
             cursor.moveToNext();
         }
         // make sure to close the cursor
         cursor.close();
-        return comments;
+        return vItems;
     }
 
     private VPlanModel cursorToVPlan(Cursor cursor) {
