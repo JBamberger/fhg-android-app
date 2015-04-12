@@ -29,16 +29,19 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
     private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
     private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
-    private static final String DATE = "date";
-    private static final String MOTD = "motd";
-    private static final String VPLAN = "vplan";
+    public static final String HEADER = "header";
+    public static final String MOTD = "motd";
+    public static final String VPLAN = "vplan";
 
-    private static final String SUBJECT = "subject";
-    private static final String OMITTED = "omitted";
-    private static final String HOUR = "hour";
-    private static final String ROOM = "room";
-    private static final String CONTENT = "content";
-    private static final String GRADE = "grade";
+    public static final String HEADER_TITLE = "header_title";
+    public static final String HEADER_STATUS = "header_status";
+
+    public static final String SUBJECT = "subject";
+    public static final String OMITTED = "omitted";
+    public static final String HOUR = "hour";
+    public static final String ROOM = "room";
+    public static final String CONTENT = "content";
+    public static final String GRADE = "grade";
 
 
     IOnFinishedLoading mListener;
@@ -137,7 +140,18 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         JSONArray temp = new JSONArray();
 
         //get date and day name
-        jPlan.put(DATE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
+        JSONObject header = new JSONObject();
+        try{
+            String status = vplan.split("</head>")[1];
+            status = status.split("<p>")[0].replace("\n", "").replace("\r", "");
+            header.put(HEADER_STATUS, status);
+            header.put(HEADER_TITLE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
+        }catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+            header.put(HEADER_STATUS, "The VPlan-file is corrupted.");
+            header.put(HEADER_TITLE, "~ please contact the support");
+        }
+        jPlan.put(HEADER, header);
 
         //get "Nachrichten zum Tag"
         Elements infoRows = doc.getElementsByClass("info").select("tr");

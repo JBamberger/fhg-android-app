@@ -122,11 +122,13 @@ public class VPlanAdapter extends BaseAdapter {
                     convertView = mInflater.inflate(R.layout.vplan_header, null);
                     headerholder = new HeaderHolder();
                     headerholder.title = (TextView) convertView.findViewById(R.id.vplan_text);
+                    headerholder.status = (TextView) convertView.findViewById(R.id.vplan_status);
                     convertView.setTag(headerholder);
                 } else {
                     headerholder = (HeaderHolder) convertView.getTag();
                 }
                 headerholder.title.setText(((VPlanHeader) children).title);
+                headerholder.status.setText(((VPlanHeader) children).status);
                 break;
         }
         return convertView;
@@ -145,5 +147,6 @@ public class VPlanAdapter extends BaseAdapter {
 
     private static class HeaderHolder {
         TextView title;
+        TextView status;
     }
 }

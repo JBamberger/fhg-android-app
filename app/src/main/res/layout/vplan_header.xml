@@ -25,9 +25,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/text_hint"
         android:textStyle="italic"
-        android:text="Stand: XX.XX.XXXX XX:XX"
-        android:id="@+id/textView"
-        android:layout_below="@+id/vplan_text"
+        android:text="Stand: not implemented"
+        android:id="@+id/vplan_status"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 

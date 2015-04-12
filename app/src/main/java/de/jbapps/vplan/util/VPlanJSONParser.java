@@ -56,7 +56,8 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
     private void parse(JSONObject vplan) throws JSONException {
 
         //get date and day name
-        mData.add(new VPlanHeader(vplan.getString(DATE)));
+        JSONObject header = vplan.getJSONObject(VPlanLoader.HEADER);
+        mData.add(new VPlanHeader(header.getString(VPlanLoader.HEADER_TITLE), header.getString(VPlanLoader.HEADER_STATUS)));
 
 
         //get "Nachrichten zum Tag"
