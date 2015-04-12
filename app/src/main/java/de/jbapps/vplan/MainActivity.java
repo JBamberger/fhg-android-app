@@ -61,8 +61,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private VPlanAdapter mListAdapter;
 
     private boolean mOnline = false;
-    private RefreshListener mRefreshListener = new RefreshListener();
-    private NetReceiver mNetworkStateReceiver = new NetReceiver();
+    private final RefreshListener mRefreshListener = new RefreshListener();
+    private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private Context mContext;
     private SharedPreferences mPreferences;
 
@@ -267,9 +267,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         invokeVPlanDownload(false);
     }
 
-    private void restore(boolean notifiyUser) {
+    private void restore(boolean notifyUser) {
         toggleLoading(true);
-        invokeVPlanCacheRestore(notifiyUser);
+        invokeVPlanCacheRestore(notifyUser);
     }
 
     private void readVPlanHeader() throws JSONException {

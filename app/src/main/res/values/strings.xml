@@ -2,12 +2,10 @@
 <resources>
 
     <string name="app_name">VPlan</string>
-    <string name="action_settings">Einstellungen</string>
     <string name="action_classic_view">Website anzeigen</string>
     <string name="action_credits">Credits</string>
     <string name="action_bug">Fehler melden</string>
     <string name="action_feedback">Feedback/Frage</string>
-    <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_credits">Credits</string>
     <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
     <string name="text_credits_1">Die vPlan-App</string>

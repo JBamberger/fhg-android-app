@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 public abstract class VPlanBaseData {
 
-    public Type type;
+    public final Type type;
 
     public VPlanBaseData(Type type) {
         this.type = type;

@@ -18,12 +18,12 @@ import de.jbapps.vplan.data.VPlanMotd;
 
 public class VPlanAdapter extends BaseAdapter {
 
-    public LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private List<VPlanBaseData> mData;
 
     public VPlanAdapter(Activity context) {
         mInflater = context.getLayoutInflater();
-        mData = new ArrayList<VPlanBaseData>();
+        mData = new ArrayList<>();
     }
 
     @Override

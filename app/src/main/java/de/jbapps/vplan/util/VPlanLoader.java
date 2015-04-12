@@ -96,13 +96,13 @@ public class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         return null;
     }
 
-    private Header[] hHead(String url) throws IOException, JSONException {
+    private Header[] hHead(String url) throws IOException {
         HttpHead httpHead = new HttpHead(url);
         HttpResponse response = mClient.execute(httpHead);
         return getHeader(response);
     }
 
-    private HttpResponse hGET(String url) throws IOException, JSONException {
+    private HttpResponse hGET(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
         return mClient.execute(httpGet);
     }

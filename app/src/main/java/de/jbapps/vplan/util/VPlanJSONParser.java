@@ -106,8 +106,8 @@ public class VPlanJSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> 
     }
 
     public interface IOnFinishedLoading {
-        public void onVPlanParsed(List<VPlanBaseData> dataList);
+        void onVPlanParsed(List<VPlanBaseData> dataList);
 
-        public void onVPlanParsingFailed();
+        void onVPlanParsingFailed();
     }
 }
