@@ -115,7 +115,6 @@ public class VPlanAdapter extends BaseAdapter {
                 } else {
                     vplanholder.content.setVisibility(View.GONE);
                 }
-
                 break;
 
             case HEADER:

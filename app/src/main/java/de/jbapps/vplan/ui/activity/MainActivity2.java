@@ -39,9 +39,10 @@ import de.jbapps.vplan.VPlanService;
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.ui.VPlanAdapter;
 import de.jbapps.vplan.util.StorageManager;
+import de.jbapps.vplan.util.net.VPlanUpdater;
 
-public class MainActivity2 extends ActionBarActivity implements ActionBar.OnNavigationListener {
-
+public class MainActivity2 {//extends ActionBarActivity implements ActionBar.OnNavigationListener {
+/*
     private static final String TAG = "MainActivity";
 
     StorageManager mStorageManager;
@@ -59,16 +60,13 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.OnNavi
     private Context mContext;
     private SharedPreferences mPreferences;
 
-    private Messenger mVPlanService;
-    private final Messenger mServer = new Messenger(new IncomingHandler());
-    private ServiceConnection mVPlanConnection = new VPlanConnection();
+    private VPlanUpdater mVPlanUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startService(new Intent(this, VPlanService.class));
-        bindVPlanService();
 
         mContext = this;
         mStorageManager = new StorageManager(this);
@@ -96,7 +94,6 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.OnNavi
     @Override
     protected void onPause() {
         super.onPause();
-        unbindVPlanService();
     }
 
     private void setupActionBar() {
@@ -224,66 +221,6 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.OnNavi
 
 //##################################################################################################
 
-    private void bindVPlanService() {
-        bindService(new Intent(this, VPlanService.class), mVPlanConnection, Context.BIND_AUTO_CREATE);
-        Log.i(TAG, "SensorService bound");
-    }
-
-    private void unbindVPlanService() {
-        unbindService(mVPlanConnection);
-        Log.i(TAG, "SensorService unbound");
-    }
-
-    private void requestUpdate() {
-        sendRequest(VPlanService.FORCE_RELOAD);
-    }
-
-    private void requestHeader() {
-        sendRequest(VPlanService.CHECK_HEADER);
-    }
-
-    private void sendRequest(int action) {
-        Message msg = new Message();
-        msg.replyTo = mServer;
-        msg.what = action;
-        try {
-            mVPlanService.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-//##################################################################################################
-
-    private class VPlanConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mVPlanService = new Messenger(service);
-            try {
-                Message msg = Message.obtain(null, VPlanService.INIT_CLIENT);
-                msg.replyTo = mServer;
-                mVPlanService.send(msg);
-            } catch (RemoteException e) {
-                Log.e(TAG, "SensorService unreachable");
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            Log.e(TAG, "SensorService crashed");
-            mVPlanService = null;
-        }
-    }
-
-    private class IncomingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                //TODO: implement
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
-
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
@@ -305,5 +242,5 @@ public class MainActivity2 extends ActionBarActivity implements ActionBar.OnNavi
             }
         }
     }
-//##################################################################################################
+//##################################################################################################*/
 }
