@@ -39,6 +39,8 @@ import de.jbapps.vplan.util.VPlanLoader;
 
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
 
+    private static final String TAG = "MainActivity";
+
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -384,12 +386,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         } catch (Exception e) {
             invokeVPlanDownload(false);
         }
-        Log.i("MainActivity#onVPlanHeaderLoaded()", "VPlan header loading finished");
+        Log.i(TAG, "VPlan header loading finished");
     }
 
     @Override
     public synchronized void onVPlanHeaderLoadingFailed() {
-        Log.w("MainActivity#onVPlanHeaderLoadingFailed()", "VPlan header loading failed");
+        Log.w(TAG, "VPlan header loading failed");
         restore(true);
     }
 
@@ -409,27 +411,27 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i("MainActivity#onVPlanLoaded()", "VPlanLoading finished");
+        Log.i(TAG, "VPlanLoading finished");
     }
 
     @Override
     public synchronized void onVPlanLoadingFailed() {
         restore(true);
-        Log.w("MainActivity#onVPlanLoaded()", "VPlanLoading failed");
+        Log.w(TAG, "VPlanLoading failed");
     }
 
     @Override
     public void onVPlanParsed(List<VPlanBaseData> dataList) {
         applyVPlan(dataList);
         toggleLoading(false);
-        Log.i("MainActivity#onVPlanParsed()", "VPlan parsed and applied");
+        Log.i(TAG, "VPlan parsed and applied");
     }
 
     @Override
     public void onVPlanParsingFailed() {
         Toast.makeText(mContext, "Daten konnten nicht verarbeitet werden.", Toast.LENGTH_LONG).show();
         toggleLoading(false);
-        Log.w("MainActivity#onVPlanParsed()", "VPlan parsing failed");
+        Log.w(TAG, "VPlan parsing failed");
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
