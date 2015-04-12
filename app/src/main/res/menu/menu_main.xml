@@ -5,27 +5,29 @@
     <item
         android:id="@+id/action_force_reload"
         android:orderInCategory="95"
+        android:icon="@drawable/ic_action_refresh"
         android:title="@string/action_force_reload"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_vplan_hp"
+        android:orderInCategory="96"
+        android:icon="@drawable/ic_action_app_update"
+        android:title="@string/action_vplan_hp"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_classic_view"
+        android:orderInCategory="97"
+        android:title="@string/action_classic_view"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_bug"
-        android:orderInCategory="96"
+        android:orderInCategory="98"
         android:title="@string/action_bug"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_feedback"
-        android:orderInCategory="97"
-        android:title="@string/action_feedback"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_classic_view"
-        android:orderInCategory="98"
-        android:title="@string/action_classic_view"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_vplan_hp"
         android:orderInCategory="99"
-        android:title="@string/action_vplan_hp"
+        android:title="@string/action_feedback"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_get_version"
