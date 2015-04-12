@@ -11,7 +11,7 @@
     <string name="title_activity_credits">Credits</string>
     <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
     <string name="text_credits_1">Die vPlan-App</string>
-    <string name="text_credits_2">Copyright © 2012 – 2014 Jannik Bamberger</string>
+    <string name="text_credits_2">Copyright © 2012 – 2015 Jannik Bamberger</string>
     <string name="text_credits_3">Verwendete Bibliotheken:</string>
     <string name="text_credits_4">jsoup:</string>
     <string name="text_credits_5">The jsoup code-base (include source and compiled packages) are distributed under the open source MIT license as described below.</string>
