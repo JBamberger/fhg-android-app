@@ -28,9 +28,6 @@
                 android:value="de.jbapps.vplan.MainActivity" />
         </activity>
 
-        <service
-            android:name=".VPlanIntentService"
-            android:exported="false"></service>
     </application>
 
 </manifest>
