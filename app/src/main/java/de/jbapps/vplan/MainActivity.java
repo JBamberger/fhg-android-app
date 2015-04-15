@@ -60,6 +60,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private static final String TAG = "MainActivity";
 
+    private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
+    private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
+    private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
+
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
@@ -229,9 +233,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     //TODO async
-    private void doPost() throws IOException {
+    private String doPost(String URL) throws IOException {
         HttpsURLConnection mConnection = null;
-        URL address = new URL("");
+        URL address = new URL(URL);
         mConnection = (HttpsURLConnection) address.openConnection();
         mConnection.setReadTimeout(10000);
         mConnection.setConnectTimeout(15000);
@@ -239,7 +243,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         mConnection.setDoInput(true);
         mConnection.setDoOutput(true);
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("", ""));
         nameValuePairs.add(new BasicNameValuePair("", ""));
 
@@ -251,7 +255,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         os.close();
         mConnection.connect();
         InputStream in = mConnection.getInputStream();
-        String content = IOUtils.toString(in, "UTF-8");
+        return IOUtils.toString(in, "UTF-8");
     }
 
 
