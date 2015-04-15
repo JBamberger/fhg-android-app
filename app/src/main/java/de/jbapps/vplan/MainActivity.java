@@ -29,16 +29,28 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
+import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import de.jbapps.vplan.data.VPlanBaseData;
+import de.jbapps.vplan.util.NetUtils;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanJSONParser;
 import de.jbapps.vplan.util.VPlanLoader;
@@ -214,6 +226,32 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
     private void sendRegistrationIdToBackend(String regId) {
         // Your implementation here.
+    }
+
+    //TODO async
+    private void doPost() throws IOException {
+        HttpsURLConnection mConnection = null;
+        URL address = new URL("");
+        mConnection = (HttpsURLConnection) address.openConnection();
+        mConnection.setReadTimeout(10000);
+        mConnection.setConnectTimeout(15000);
+        mConnection.setRequestMethod("POST");
+        mConnection.setDoInput(true);
+        mConnection.setDoOutput(true);
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("", ""));
+        nameValuePairs.add(new BasicNameValuePair("", ""));
+
+        OutputStream os = mConnection.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(NetUtils.getQuery(nameValuePairs));
+        writer.flush();
+        writer.close();
+        os.close();
+        mConnection.connect();
+        InputStream in = mConnection.getInputStream();
+        String content = IOUtils.toString(in, "UTF-8");
     }
 
 
