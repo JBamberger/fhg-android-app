@@ -80,9 +80,6 @@ public class Loader {
 
     private class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
-        /**
-         * parsing constants
-         */
         public static final String HEADER = "header";
         public static final String MOTD = "motd";
         public static final String VPLAN = "vplan";

@@ -15,7 +15,7 @@ public class VPlanSet {
 
     private static final String TAG = "VPlanSet";
 
-    private static final String PREFERENCES_NAME = "vplan_data";
+    private static final String PROPERTY = "vplan_data";
     private static final String PROPERTY_VPLAN_1 = "vplan1";
     private static final String PROPERTY_VPLAN_2 = "vplan2";
     private static final String PROPERTY_HEADER_1 = "header1";
@@ -28,7 +28,7 @@ public class VPlanSet {
     private SharedPreferences mPreferences;
 
     public VPlanSet(Context context) {
-        mPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        mPreferences = context.getSharedPreferences(PROPERTY, Context.MODE_PRIVATE);
     }
 
     public String getHeader1() {

@@ -55,23 +55,32 @@ import de.jbapps.vplan.util.VPlanAdapter;
 
 public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, Loader.IVPlanLoader, JSONParser.IItemsParsed {
 
-    public static final String PROPERTY_REG_ID = "registration_id";
-    public static final String PROPERTY_VPLAN_ID = "vplan_id";
     private static final String TAG = "MainActivity";
+
+    private static final String PROPERTY = "vplan_preferences";
+    private static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_VPLAN_ID = "vplan_id";
+    private static final String PROPERTY_GRADE = "selected_grade";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+
+
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
+
     private static final String URL_MAIL_BUG_REPORT = "mailto:vplanbugreport@gmail.com";
     private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
     private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
+
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-    private static final String PREFS = "vplan_preferences";
-    private static final String PREFS_CGRADE = "selected_grade";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
+
+
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
+
     String regid;
     private ListView mList;
     private TextView mStatus;
@@ -322,7 +331,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        mPreferences = getSharedPreferences(PROPERTY, Context.MODE_PRIVATE);
         context = getApplicationContext();
 
         mStatus = (TextView) findViewById(R.id.status);
@@ -522,12 +531,12 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
     }
 
     private int readGradeID() {
-        return mPreferences.getInt(PREFS_CGRADE, 0);
+        return mPreferences.getInt(PROPERTY_GRADE, 0);
     }
 
     private void writeGrade(int position) {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(PREFS_CGRADE, position);
+        editor.putInt(PROPERTY_GRADE, position);
         editor.apply();
     }
 
