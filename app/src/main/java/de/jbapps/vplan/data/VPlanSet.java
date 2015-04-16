@@ -31,38 +31,36 @@ public class VPlanSet {
         mPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-
+    public String getHeader1() {
+        return mHeader1;
+    }
 
     public void setHeader1(String header) {
         mHeader1 = header;
-    }
-
-    public void setHeader2(String header) {
-        mHeader2 = header;
-    }
-
-    public void setVPlan1(JSONObject vplan) {
-        mVPlan1 = vplan;
-    }
-
-    public void setVPlan2(JSONObject vplan) {
-        mVPlan2 = vplan;
-    }
-
-    public String getHeader1() {
-        return mHeader1;
     }
 
     public String getHeader2() {
         return mHeader2;
     }
 
+    public void setHeader2(String header) {
+        mHeader2 = header;
+    }
+
     public JSONObject getVPlan1() {
         return mVPlan1;
     }
 
+    public void setVPlan1(JSONObject vplan) {
+        mVPlan1 = vplan;
+    }
+
     public JSONObject getVPlan2() {
         return mVPlan2;
+    }
+
+    public void setVPlan2(JSONObject vplan) {
+        mVPlan2 = vplan;
     }
 
     /**
@@ -83,7 +81,7 @@ public class VPlanSet {
         try {
             mVPlan1 = new JSONObject(mPreferences.getString(PROPERTY_VPLAN_1, null));
             mVPlan2 = new JSONObject(mPreferences.getString(PROPERTY_VPLAN_2, null));
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return false;
         }

@@ -28,16 +28,15 @@ import de.jbapps.vplan.data.VPlanSet;
 /**
  * This class manages the whole loading and caching process for the MainActivity
  */
-public abstract class Loader {
+public class Loader {
 
     private static final String TAG = "";
-
-    private VPlanSet mVPlanSet;
-
     /**
      * receives callbacks for specific actions
      */
     private final IVPlanLoader mListener;
+    private VPlanSet mVPlanSet;
+    private VPlanLoader mVPlanLoader;
 
     public Loader(Context context, IVPlanLoader listener) {
         mVPlanSet = new VPlanSet(context);
@@ -45,7 +44,15 @@ public abstract class Loader {
     }
 
     public void getVPlan(boolean forceLoad) {
-        new VPlanLoader(mVPlanSet).execute(forceLoad);
+        mVPlanLoader = new VPlanLoader(mVPlanSet);
+        mVPlanLoader.execute(forceLoad);
+    }
+
+    public void cancel() {
+        if (mVPlanLoader != null) {
+            mVPlanLoader.cancel(true);
+            mVPlanLoader = null;
+        }
     }
 
     public void getCachedVPlan() {
@@ -58,9 +65,11 @@ public abstract class Loader {
     }
 
     public void loaderFinished(boolean loadCache) {
+        mVPlanLoader = null;
         if(loadCache) {
             getCachedVPlan();
         } else {
+            mVPlanSet.writeAll();
             mListener.vPlanLoaded(mVPlanSet);
         }
     }
@@ -71,28 +80,23 @@ public abstract class Loader {
 
     private class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
-        private static final String TAG = "VPlanLoader";
-
-        private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
-        private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
-
         /**
          * parsing constants
          */
         public static final String HEADER = "header";
         public static final String MOTD = "motd";
         public static final String VPLAN = "vplan";
-
         public static final String HEADER_TITLE = "header_title";
         public static final String HEADER_STATUS = "header_status";
-
         public static final String SUBJECT = "subject";
         public static final String OMITTED = "omitted";
         public static final String HOUR = "hour";
         public static final String ROOM = "room";
         public static final String CONTENT = "content";
         public static final String GRADE = "grade";
-
+        private static final String TAG = "VPlanLoader";
+        private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+        private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
         HttpClient mClient;
         VPlanSet mVPlanSet;
         boolean loadCache = false;

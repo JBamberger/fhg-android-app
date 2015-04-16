@@ -30,9 +30,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,18 +44,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import de.jbapps.vplan.data.VPlanBaseData;
+import de.jbapps.vplan.data.VPlanSet;
+import de.jbapps.vplan.util.JSONParser;
+import de.jbapps.vplan.util.Loader;
 import de.jbapps.vplan.util.NetUtils;
 import de.jbapps.vplan.util.VPlanAdapter;
-import de.jbapps.vplan.util.VPlanJSONParser;
-import de.jbapps.vplan.util.VPlanLoader;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, VPlanLoader.IOnFinishedLoading, VPlanJSONParser.IOnFinishedLoading {
+public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, Loader.IVPlanLoader, JSONParser.IItemsParsed {
 
-    public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     public static final String PROPERTY_VPLAN_ID = "vplan_id";
     private static final String TAG = "MainActivity";
@@ -71,12 +68,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
     private static final String PREFS = "vplan_preferences";
     private static final String PREFS_CGRADE = "selected_grade";
-    private static final String PREFS_KEY_VPLAN_HEADER_1 = "vplan_header_1";
-    private static final String PREFS_KEY_VPLAN_HEADER_2 = "vplan_header_2";
-    private static final String PREFS_KEY_VPLAN_CONTENT_1 = "vplan_content_1";
-    private static final String PREFS_KEY_VPLAN_CONTENT_2 = "vplan_content_2";
-    private static final String JSON_KEY_HEADER_LAST_MODIFIED = "Last-Modified";
-    private static final String JSON_KEY_HEADER_CONTENT_LENGTH = "Content-Length";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final RefreshListener mRefreshListener = new RefreshListener();
@@ -87,18 +78,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
-    private boolean mOnline = false;
-    private Context mContext;
     private SharedPreferences mPreferences;
-    private Header[] mVPlanHeader1 = new Header[2];
-    private Header[] mVPlanHeader2 = new Header[2];
-    private JSONObject mVPlan1;
-    private JSONObject mVPlan2;
-    private VPlanLoader mVPlanLoader;
-    private VPlanJSONParser mVPlanJSONParser;
+    private Loader mLoader;
+    private JSONParser mJSONParser;
     private String SENDER_ID = "913892810147";
     private GoogleCloudMessaging gcm;
-    private AtomicInteger msgId = new AtomicInteger();
     private Context context;
 
     private static int getAppVersion(Context context) {
@@ -211,46 +195,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }.execute(null, null, null);
     }
 
-    /**
-     * FIXME: NEVER USED...
-     * */
-    public void sendGcmMessage(String head) {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    Bundle data = new Bundle();
-                    data.putString("my_message", "Hello World");
-                    data.putString("my_action", "com.google.android.gcm.demo.app.ECHO_NOW");
-                    String id = Integer.toString(msgId.incrementAndGet());
-                    gcm.send(SENDER_ID + "@gcm.googleapis.com", id, data);
-                    msg = "Sent message";
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                }
-                return msg;
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-            }
-        }.execute(null, null, null);
-    }
-
     private SharedPreferences getGcmPreferences() {
-        return getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     private void sendRegistrationIdToBackend(String regId) {
-        List<NameValuePair> nvp = new ArrayList<>();
-        nvp.add(new BasicNameValuePair("gcm", regId));
-        try {
-            String response = doPost(API_ADD, nvp);
-            Log.d(TAG, "Response: " + response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        doAdd(regId);
     }
 
     private void doTrigger() {
@@ -267,18 +217,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    if(connection != null) connection.disconnect();
+                    if (connection != null) connection.disconnect();
                 }
                 return null;
             }
         }.execute();
 
 
-
     }
 
     private void doPing(final String id) {
-
+        Log.i(TAG, "Pinging with id: " + id);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -312,7 +261,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     private void doAdd(final String gcmId) {
-        Log.d(TAG, gcmId);
+        Log.d(TAG, "Adding gcmId: " + gcmId);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -334,9 +283,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                     String content = IOUtils.toString(in, "UTF-8");
                     Log.d(TAG, "Add Response: " + content);
                     JSONObject json = new JSONObject(content);
-                    switch(Integer.parseInt(json.getString("status"))) {
+                    switch (Integer.parseInt(json.getString("status"))) {
                         case 0:
-                            Log.e(TAG,"Adding failed: " + json.getString("error"));
+                            Log.e(TAG, "Adding failed: " + json.getString("error"));
                             break;
                         case 1:
                             String vId = json.getString("insert");
@@ -368,26 +317,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         return connection;
     }
 
-    //TODO async
-    private String doPost(String URL, List<NameValuePair> nameValuePairs) throws IOException {
-        HttpURLConnection mConnection = getDefaultURLConnection(URL);
-        OutputStream os = mConnection.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-        writer.write(NetUtils.getQuery(nameValuePairs));
-        writer.flush();
-        writer.close();
-        os.close();
-        mConnection.connect();
-        InputStream in = mConnection.getInputStream();
-        return IOUtils.toString(in, "UTF-8");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mContext = this;
         mPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         context = getApplicationContext();
 
@@ -401,13 +335,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         setupListView();
         setupGcm();
 
+        mLoader = new Loader(this, this);
+
         mNetworkStateReceiver.netStateUpdate();
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
-            reload();
+            reload(false);
         } else {
-            restore(false);
+            restore();
         }
+        doPing(getVPlanId());
     }
 
     @Override
@@ -424,14 +361,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         if (mNetworkStateReceiver != null) {
             unregisterReceiver(mNetworkStateReceiver);
         }
-        if (mVPlanJSONParser != null) {
-            mVPlanJSONParser.cancel(true);
-            mVPlanJSONParser = null;
+        if (mJSONParser != null) {
+            mJSONParser.cancel(true);
+            mJSONParser = null;
         }
-        if (mVPlanLoader != null) {
-            mVPlanLoader.cancel(true);
-            mVPlanLoader = null;
-        }
+        mLoader.cancel();
+
     }
 
     private void setupActionBar() {
@@ -487,7 +422,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         int id = item.getItemId();
 
         if (id == R.id.action_force_reload) {
-            forceReload();
+            reload(true);
             return true;
         }
         if (id == R.id.action_bug) {
@@ -503,8 +438,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             return true;
         }
         if (id == R.id.action_classic_view) {
-            Intent intent = new Intent(this, VPlanActivity.class);
-            //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME));
             startActivity(intent);
             return true;
         }
@@ -549,25 +483,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     @Override
     public boolean onNavigationItemSelected(int position, long id) {
         writeGrade(position);
-        restore(false);
+        restore();
         return true;
     }
 
-    public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
 
     private void showError(String message) {
         mStatus.setText(message);
         mStatus.setBackgroundResource(R.color.red);
         mStatus.setVisibility(View.VISIBLE);
-    }
-
-    private void applyVPlan(List<VPlanBaseData> data) {
-        mListAdapter.setData(data);
-        toggleLoading(false);
     }
 
     private void toggleLoading(boolean on) {
@@ -583,55 +507,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
     }
 
-    private void reload() {
+    private void reload(boolean forceLoad) {
         toggleLoading(true);
-        invokeVPlanDownload(true);
+        mLoader.getVPlan(forceLoad);
     }
 
-    private void forceReload() {
+    private void restore() {
         toggleLoading(true);
-        invokeVPlanDownload(false);
-    }
-
-    private void restore(boolean notifyUser) {
-        toggleLoading(true);
-        invokeVPlanCacheRestore(notifyUser);
-    }
-
-    private void readVPlanHeader() throws JSONException {
-        JSONObject h1 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_HEADER_1, "{}"));
-        JSONObject h2 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_HEADER_2, "{}"));
-        mVPlanHeader1[0] = new BasicHeader(JSON_KEY_HEADER_LAST_MODIFIED, h1.getString(JSON_KEY_HEADER_LAST_MODIFIED));
-        mVPlanHeader1[1] = new BasicHeader(JSON_KEY_HEADER_CONTENT_LENGTH, h1.getString(JSON_KEY_HEADER_CONTENT_LENGTH));
-        mVPlanHeader2[0] = new BasicHeader(JSON_KEY_HEADER_LAST_MODIFIED, h2.getString(JSON_KEY_HEADER_LAST_MODIFIED));
-        mVPlanHeader2[1] = new BasicHeader(JSON_KEY_HEADER_CONTENT_LENGTH, h2.getString(JSON_KEY_HEADER_CONTENT_LENGTH));
-    }
-
-    private void writeVPlanHeader() throws JSONException {
-        SharedPreferences.Editor editor = mPreferences.edit();
-
-        JSONObject h1 = new JSONObject();
-        h1.put(JSON_KEY_HEADER_LAST_MODIFIED, mVPlanHeader1[0].getValue());
-        h1.put(JSON_KEY_HEADER_CONTENT_LENGTH, mVPlanHeader1[1].getValue());
-        JSONObject h2 = new JSONObject();
-        h2.put(JSON_KEY_HEADER_LAST_MODIFIED, mVPlanHeader2[0].getValue());
-        h2.put(JSON_KEY_HEADER_CONTENT_LENGTH, mVPlanHeader2[1].getValue());
-
-        editor.putString(PREFS_KEY_VPLAN_HEADER_1, h1.toString());
-        editor.putString(PREFS_KEY_VPLAN_HEADER_2, h2.toString());
-        editor.apply();
-    }
-
-    private void readVPlanContent() throws JSONException {
-        mVPlan1 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_1, "{}"));
-        mVPlan2 = new JSONObject(mPreferences.getString(PREFS_KEY_VPLAN_CONTENT_2, "{}"));
-    }
-
-    private void writeVPlanContent() {
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(PREFS_KEY_VPLAN_CONTENT_1, mVPlan1.toString());
-        editor.putString(PREFS_KEY_VPLAN_CONTENT_2, mVPlan2.toString());
-        editor.apply();
+        mLoader.getCachedVPlan();
     }
 
     private String readGrade() {
@@ -648,121 +531,34 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         editor.apply();
     }
 
-    private void invokeVPlanDownload(boolean onlyHeader) {
-        if (mOnline) {
-            if (mVPlanLoader != null) {
-                mVPlanLoader.cancel(true);
-                mVPlanLoader = null;
+    @Override
+    public void vPlanLoaded(VPlanSet vplanset) {
+        if (vplanset != null) {
+            if (mJSONParser != null) {
+                mJSONParser.cancel(true);
+                mJSONParser = null;
             }
-            mVPlanLoader = new VPlanLoader(this);
-            mVPlanLoader.execute(onlyHeader);
-
+            if (vplanset != null) {
+                mJSONParser = new JSONParser(this, readGrade(), vplanset);
+                mJSONParser.execute();
+            }
         } else {
-            if (mListAdapter.getCount() == 0) {
-                invokeVPlanCacheRestore(true);
-            } else {
-                toggleLoading(false);
-                Toast.makeText(this, "Internetverbindung fehlt.", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void invokeVPlanCacheRestore(boolean notifyUser) {
-        try {
-            readVPlanHeader();
-            readVPlanContent();
-            if (mVPlan1 != null || mVPlan2 != null || mVPlanHeader1[0] != null || mVPlanHeader2[0] != null) {
-                onVPlanLoaded(mVPlan1, mVPlan2, mVPlanHeader1, mVPlanHeader2);
-                if (notifyUser) {
-                    Toast.makeText(mContext, "vPlan aus Cache wiederhergestellt.", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(mContext, "Keine lokale Kopie vorhanden.", Toast.LENGTH_LONG).show();
-                toggleLoading(false);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(mContext, "Fehler beim Verarbeiten der lokalen Kopie.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "I've fucked it up...", Toast.LENGTH_LONG).show();
+            //TODO: display Error
             toggleLoading(false);
         }
     }
 
-    private void invokeJSONParser() {
-        if (mVPlanJSONParser != null) {
-            mVPlanJSONParser.cancel(true);
-            mVPlanJSONParser = null;
-        }
-        if (mVPlan1 != null && mVPlan2 != null) {
-            mVPlanJSONParser = new VPlanJSONParser(this, readGrade(), mVPlan1, mVPlan2);
-            mVPlanJSONParser.execute();
-        }
-    }
-
     @Override
-    public synchronized void onVPlanHeaderLoaded(Header[] vPlanHeader1, Header[] vPlanHeader2) {
-        try {
-            readVPlanHeader();
-            if (mVPlanHeader1[0].getValue().equals(vPlanHeader1[0].getValue()) && mVPlanHeader2[0].getValue().equals(vPlanHeader2[0].getValue())) {
-                invokeVPlanCacheRestore(false);
-                return;
-            }
-            invokeVPlanDownload(false);
-            //TODO: ping server with vPlanHeader[0]
-        } catch (Exception e) {
-            invokeVPlanDownload(false);
-        }
-        Log.i(TAG, "VPlan header loading finished");
-    }
-
-    @Override
-    public synchronized void onVPlanHeaderLoadingFailed() {
-        Log.w(TAG, "VPlan header loading failed");
-        restore(true);
-    }
-
-    @Override
-    public synchronized void onVPlanLoaded(JSONObject vPlan1, JSONObject vPlan2, Header[] vPlanHeader1, Header[] vPlanHeader2) {
-
-        mVPlanHeader1 = vPlanHeader1;
-        mVPlanHeader2 = vPlanHeader2;
-        mVPlan1 = vPlan1;
-        mVPlan2 = vPlan2;
-
-        invokeJSONParser();
-
-        try {
-            writeVPlanHeader();
-            writeVPlanContent();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, "VPlanLoading finished");
-    }
-
-    @Override
-    public synchronized void onVPlanLoadingFailed() {
-        restore(true);
-        Log.w(TAG, "VPlanLoading failed");
-    }
-
-    @Override
-    public void onVPlanParsed(List<VPlanBaseData> dataList) {
-        applyVPlan(dataList);
+    public void onItemsParsed(List<VPlanBaseData> dataList) {
+        mListAdapter.setData(dataList);
         toggleLoading(false);
-        Log.i(TAG, "VPlan parsed and applied");
-    }
-
-    @Override
-    public void onVPlanParsingFailed() {
-        Toast.makeText(mContext, "Daten konnten nicht verarbeitet werden.", Toast.LENGTH_LONG).show();
-        toggleLoading(false);
-        Log.w(TAG, "VPlan parsing failed");
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            reload();
+            reload(false);
         }
     }
 
@@ -773,11 +569,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
 
         public void netStateUpdate() {
-            if (mOnline = isOnline()) {
+            if (isOnline()) {
                 mStatus.setVisibility(View.GONE);
             } else {
                 showError(getString(R.string.text_net_disconnected));
             }
+        }
+
+        public boolean isOnline() {
+            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            return (networkInfo != null && networkInfo.isConnected());
         }
     }
 }
