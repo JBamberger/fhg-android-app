@@ -65,7 +65,7 @@ public class GcmIntentService extends IntentService {
     // a GCM message.
     private void sendNotification(String msg) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        if (pref.getBoolean("checkbox_notification", true)) {
+        if (pref.getBoolean("notification_enabled", true)) {
 
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, VPlanActivity.class), 0);
@@ -78,7 +78,7 @@ public class GcmIntentService extends IntentService {
                     .setSound(Uri.parse(pref.getString("notification_ringtone", "DEFAULT_SOUND")))
                     .setContentIntent(contentIntent);
 
-            if (pref.getBoolean("checkbox_vibrate", true)) {
+            if (pref.getBoolean("notification_vibrate", true)) {
                 long[] pattern = {500, 500, 400, 650};
                 mBuilder.setVibrate(pattern);
             }
