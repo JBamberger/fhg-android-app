@@ -248,6 +248,10 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             }
             return true;
         }
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, CreditsActivity.class));
+            return true;
+        }
 
 
         if (id == R.id.action_add) {

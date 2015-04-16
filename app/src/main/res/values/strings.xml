@@ -6,7 +6,9 @@
     <string name="action_credits">Credits</string>
     <string name="action_bug">Fehler melden</string>
     <string name="action_feedback">Feedback/Frage</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="title_activity_credits">Credits</string>
+    <string name="title_activity_settings">Einstellungen</string>
     <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
     <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
     <string name="action_vplan_hp">VPlan Update-Seite</string>

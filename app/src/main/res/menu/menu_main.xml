@@ -4,14 +4,14 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_force_reload"
-        android:orderInCategory="95"
         android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="95"
         android:title="@string/action_force_reload"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_vplan_hp"
-        android:orderInCategory="96"
         android:icon="@drawable/ic_action_app_update"
+        android:orderInCategory="96"
         android:title="@string/action_vplan_hp"
         app:showAsAction="ifRoom" />
     <item
@@ -38,6 +38,11 @@
         android:id="@+id/action_credits"
         android:orderInCategory="101"
         android:title="@string/action_credits"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="102"
+        android:title="@string/action_settings"
         app:showAsAction="never" />
 
     <item

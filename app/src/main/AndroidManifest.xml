@@ -35,6 +35,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.jbapps.vplan.VPlanActivity" />
         </activity>
+        <activity
+            android:name="de.jbapps.vplan.preference.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="de.jbapps.vplan.VPlanActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.jbapps.vplan.VPlanActivity" />
+        </activity>
 
         <receiver
             android:name=".GcmBroadcastReceiver"
