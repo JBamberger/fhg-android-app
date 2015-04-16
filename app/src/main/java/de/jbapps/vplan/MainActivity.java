@@ -42,12 +42,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.util.NetUtils;
@@ -63,6 +62,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
+
+    private static final String URL_MAIL_BUG_REPORT = "mailto:vplanbugreport@gmail.com";
+    private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
+    private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
@@ -97,9 +100,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     private VPlanLoader mVPlanLoader;
     private VPlanJSONParser mVPlanJSONParser;
 
-
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
+    public static final String PROPERTY_VPLAN_ID = "vplan_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private String SENDER_ID = "913892810147";
@@ -138,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGcmPreferences(context);
+        final SharedPreferences prefs = getGcmPreferences();
         int appVersion = getAppVersion(context);
         Log.i(TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
@@ -148,7 +151,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
     }
 
     private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getGcmPreferences(context);
+        final SharedPreferences prefs = getGcmPreferences();
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
@@ -161,6 +164,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             return "";
         }
         return registrationId;
+    }
+
+    private String getVPlanId() {
+        final SharedPreferences prefs = getGcmPreferences();
+        String vplanID = prefs.getString(PROPERTY_VPLAN_ID, "");
+        if (vplanID.isEmpty()) {
+            Log.i(TAG, "VPlanID not found.");
+            return "";
+        } else {
+            return vplanID;
+        }
+    }
+
+    private void storeVPlanId(String vplanId) {
+        final SharedPreferences prefs = getGcmPreferences();
+        Log.i(TAG, "Saving vplanId");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_VPLAN_ID, vplanId);
+        editor.commit();
     }
 
     private void registerInBackground() {
@@ -189,6 +211,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }.execute(null, null, null);
     }
 
+    /**
+     * FIXME: NEVER USED...
+     * */
     public void sendGcmMessage(String head) {
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -224,29 +249,140 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         }
     }
 
-    private SharedPreferences getGcmPreferences(Context context) {
+    private SharedPreferences getGcmPreferences() {
         return getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     private void sendRegistrationIdToBackend(String regId) {
-        // Your implementation here.
+        List<NameValuePair> nvp = new ArrayList<>();
+        nvp.add(new BasicNameValuePair("gcm", regId));
+        try {
+            String response = doPost(API_ADD, nvp);
+            Log.d(TAG, "Response: " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doTrigger() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_TRIGGER);
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.d(TAG, "Trigger Response: " + content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if(connection != null) connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+
+
+
+    }
+
+    private void doPing(final String id) {
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_PING);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    nameValuePairs.add(new BasicNameValuePair("id", id));
+
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(NetUtils.getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.d(TAG, "Ping Response: " + content);
+                    //TODO: use content
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void doAdd(final String gcmId) {
+        Log.d(TAG, gcmId);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_ADD);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
+
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(NetUtils.getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.d(TAG, "Add Response: " + content);
+                    JSONObject json = new JSONObject(content);
+                    ;
+                    switch(Integer.parseInt(json.getString("status"))) {
+                        case 0:
+                            Log.e(TAG,"Adding failed: " + json.getString("error"));
+                            break;
+                        case 1:
+                            String vId = json.getString("insert");
+                            storeVPlanId(vId);
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
+        HttpURLConnection connection;
+        URL address = new URL(URL);
+        connection = (HttpURLConnection) address.openConnection();
+        connection.setReadTimeout(10000);
+        connection.setConnectTimeout(15000);
+        connection.setRequestMethod("GET");
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
     }
 
     //TODO async
-    private String doPost(String URL) throws IOException {
-        HttpsURLConnection mConnection = null;
-        URL address = new URL(URL);
-        mConnection = (HttpsURLConnection) address.openConnection();
-        mConnection.setReadTimeout(10000);
-        mConnection.setConnectTimeout(15000);
-        mConnection.setRequestMethod("POST");
-        mConnection.setDoInput(true);
-        mConnection.setDoOutput(true);
-
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("", ""));
-        nameValuePairs.add(new BasicNameValuePair("", ""));
-
+    private String doPost(String URL, List<NameValuePair> nameValuePairs) throws IOException {
+        HttpURLConnection mConnection = getDefaultURLConnection(URL);
         OutputStream os = mConnection.getOutputStream();
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
         writer.write(NetUtils.getQuery(nameValuePairs));
@@ -257,7 +393,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         InputStream in = mConnection.getInputStream();
         return IOUtils.toString(in, "UTF-8");
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,24 +503,24 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             return true;
         }
         if (id == R.id.action_bug) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:vplanbugreport@gmail.com"));
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_BUG_REPORT));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Bugreport");
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_feedback) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:vplanbugreport@gmail.com"));
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_BUG_REPORT));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Feedback/Frage");
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_classic_view) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME));
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_vplan_hp) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/pages/VPlan-App-FHG/808086192561672"));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME));
             startActivity(intent);
             return true;
         }
@@ -401,6 +536,20 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
                 Toast.makeText(this, "Fehler im Packagename!", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
+            return true;
+        }
+
+
+        if (id == R.id.action_add) {
+            doAdd(getRegistrationId(context));
+            return true;
+        }
+        if (id == R.id.action_trigger) {
+            doTrigger();
+            return true;
+        }
+        if (id == R.id.action_ping) {
+            doPing(getVPlanId());//TODO
             return true;
         }
 
@@ -554,7 +703,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
             mVPlanJSONParser.cancel(true);
             mVPlanJSONParser = null;
         }
-        if (mVPlan1 != null || mVPlan2 != null) {
+        if (mVPlan1 != null && mVPlan2 != null) {
             mVPlanJSONParser = new VPlanJSONParser(this, readGrade(), mVPlan1, mVPlan2);
             mVPlanJSONParser.execute();
         }
@@ -565,12 +714,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
         try {
             readVPlanHeader();
             if (mVPlanHeader1[0].getValue().equals(vPlanHeader1[0].getValue()) && mVPlanHeader2[0].getValue().equals(vPlanHeader2[0].getValue())) {
-                if (mVPlanHeader1[1].getValue().equals(vPlanHeader1[1].getValue()) && mVPlanHeader2[1].getValue().equals(vPlanHeader2[1].getValue())) {
-                    invokeVPlanCacheRestore(false);
-                    return;
-                }
+                invokeVPlanCacheRestore(false);
+                return;
             }
             invokeVPlanDownload(false);
+            //TODO: ping server with vPlanHeader[0]
         } catch (Exception e) {
             invokeVPlanDownload(false);
         }
