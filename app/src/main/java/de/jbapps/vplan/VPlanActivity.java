@@ -55,14 +55,13 @@ import de.jbapps.vplan.util.VPlanAdapter;
 
 public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, Loader.IVPlanLoader, JSONParser.IItemsParsed {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "VPlanActivity";
 
     private static final String PROPERTY = "vplan_preferences";
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_VPLAN_ID = "vplan_id";
     private static final String PROPERTY_GRADE = "selected_grade";
     private static final String PROPERTY_APP_VERSION = "appVersion";
-
 
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
@@ -103,227 +102,6 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             Log.wtf(TAG, "Could not get package name: " + e);
             throw new RuntimeException("Could not get package name: " + e);
         }
-    }
-
-    private void setupGcm() {
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
-        }
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGcmPreferences();
-        int appVersion = getAppVersion(context);
-        Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
-    }
-
-    private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getGcmPreferences();
-        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
-            return "";
-        }
-        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
-        if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
-            return "";
-        }
-        return registrationId;
-    }
-
-    private String getVPlanId() {
-        final SharedPreferences prefs = getGcmPreferences();
-        String vplanID = prefs.getString(PROPERTY_VPLAN_ID, "");
-        if (vplanID.isEmpty()) {
-            Log.i(TAG, "VPlanID not found.");
-            return "";
-        } else {
-            return vplanID;
-        }
-    }
-
-    private void storeVPlanId(String vplanId) {
-        final SharedPreferences prefs = getGcmPreferences();
-        Log.i(TAG, "Saving vplanId");
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_VPLAN_ID, vplanId);
-        editor.commit();
-    }
-
-    private void registerInBackground() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
-                    }
-                    regid = gcm.register(SENDER_ID);
-                    Log.i(TAG, "Device registered, registration ID=" + regid);
-
-                    sendRegistrationIdToBackend(regid);
-                    storeRegistrationId(context, regid);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO notify user
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-            }
-        }.execute(null, null, null);
-    }
-
-    private SharedPreferences getGcmPreferences() {
-        return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-    }
-
-    private void sendRegistrationIdToBackend(String regId) {
-        doAdd(regId);
-    }
-
-    private void doTrigger() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_TRIGGER);
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.d(TAG, "Trigger Response: " + content);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null) connection.disconnect();
-                }
-                return null;
-            }
-        }.execute();
-
-
-    }
-
-    private void doPing(final String id) {
-        Log.i(TAG, "Pinging with id: " + id);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_PING);
-
-                    List<NameValuePair> nameValuePairs = new ArrayList<>();
-                    nameValuePairs.add(new BasicNameValuePair("id", id));
-
-                    OutputStream os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(NetUtils.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.d(TAG, "Ping Response: " + content);
-                    //TODO: use content
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null)
-                        connection.disconnect();
-                }
-                return null;
-            }
-        }.execute();
-    }
-
-    private void doAdd(final String gcmId) {
-        Log.d(TAG, "Adding gcmId: " + gcmId);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_ADD);
-
-                    List<NameValuePair> nameValuePairs = new ArrayList<>();
-                    nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
-
-                    OutputStream os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(NetUtils.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.d(TAG, "Add Response: " + content);
-                    JSONObject json = new JSONObject(content);
-                    switch (Integer.parseInt(json.getString("status"))) {
-                        case 0:
-                            Log.e(TAG, "Adding failed: " + json.getString("error"));
-                            break;
-                        case 1:
-                            String vId = json.getString("insert");
-                            storeVPlanId(vId);
-                            break;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null)
-                        connection.disconnect();
-                }
-                return null;
-            }
-        }.execute();
-    }
-
-    private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
-        HttpURLConnection connection;
-        URL address = new URL(URL);
-        connection = (HttpURLConnection) address.openConnection();
-        connection.setReadTimeout(10000);
-        connection.setConnectTimeout(15000);
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        return connection;
     }
 
     @Override
@@ -481,7 +259,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             return true;
         }
         if (id == R.id.action_ping) {
-            doPing(getVPlanId());//TODO
+            doPing(getVPlanId());
             return true;
         }
 
@@ -495,7 +273,6 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         restore();
         return true;
     }
-
 
     private void showError(String message) {
         mStatus.setText(message);
@@ -547,13 +324,10 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
                 mJSONParser.cancel(true);
                 mJSONParser = null;
             }
-            if (vplanset != null) {
-                mJSONParser = new JSONParser(this, readGrade(), vplanset);
-                mJSONParser.execute();
-            }
+            mJSONParser = new JSONParser(this, readGrade(), vplanset);
+            mJSONParser.execute();
         } else {
-            Toast.makeText(this, "I've fucked it up...", Toast.LENGTH_LONG).show();
-            //TODO: display Error
+            Toast.makeText(this, getString(R.string.text_no_vplan), Toast.LENGTH_LONG).show();
             toggleLoading(false);
         }
     }
@@ -562,6 +336,223 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
     public void onItemsParsed(List<VPlanBaseData> dataList) {
         mListAdapter.setData(dataList);
         toggleLoading(false);
+    }
+
+    private void setupGcm() {
+        if (checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = getRegistrationId(context);
+
+            if (regid.isEmpty()) {
+                registerInBackground();
+            }
+        } else {
+            Log.i(TAG, "No valid Google Play Services APK found.");
+        }
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private void storeRegistrationId(Context context, String regId) {
+        final SharedPreferences prefs = getGcmPreferences();
+        int appVersion = getAppVersion(context);
+        Log.i(TAG, "Saving regId on app version " + appVersion);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_REG_ID, regId);
+        editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.apply();
+    }
+
+    private String getRegistrationId(Context context) {
+        final SharedPreferences prefs = getGcmPreferences();
+        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+        if (registrationId.isEmpty()) {
+            Log.i(TAG, "Registration not found.");
+            return "";
+        }
+        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int currentVersion = getAppVersion(context);
+        if (registeredVersion != currentVersion) {
+            Log.i(TAG, "App version changed.");
+            return "";
+        }
+        return registrationId;
+    }
+
+    private String getVPlanId() {
+        final SharedPreferences prefs = getGcmPreferences();
+        String vplanID = prefs.getString(PROPERTY_VPLAN_ID, "");
+        if (vplanID.isEmpty()) {
+            Log.i(TAG, "VPlanID not found.");
+            return "";
+        } else {
+            return vplanID;
+        }
+    }
+
+    private void storeVPlanId(String vplanId) {
+        final SharedPreferences prefs = getGcmPreferences();
+        Log.i(TAG, "Saving vplanId");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_VPLAN_ID, vplanId);
+        editor.apply();
+    }
+
+    private void registerInBackground() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(context);
+                    }
+                    regid = gcm.register(SENDER_ID);
+                    Log.i(TAG, "Device registered, registration ID=" + regid);
+
+                    sendRegistrationIdToBackend(regid);
+                    storeRegistrationId(context, regid);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+            }
+        }.execute(null, null, null);
+    }
+
+    private SharedPreferences getGcmPreferences() {
+        return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+    }
+
+    private void sendRegistrationIdToBackend(String regId) {
+        doAdd(regId);
+    }
+
+    private void doTrigger() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_TRIGGER);
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.i(TAG, "Trigger Response: " + content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+
+
+    }
+
+    private void doPing(final String id) {
+        Log.i(TAG, "Pinging with id: " + id);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_PING);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    nameValuePairs.add(new BasicNameValuePair("id", id));
+
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(NetUtils.getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.i(TAG, "Ping Response: " + content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private void doAdd(final String gcmId) {
+        Log.i(TAG, "Adding gcmId: " + gcmId);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_ADD);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
+
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(NetUtils.getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.i(TAG, "Add Response: " + content);
+                    JSONObject json = new JSONObject(content);
+                    switch (Integer.parseInt(json.getString("status"))) {
+                        case 0:
+                            Log.e(TAG, "Adding failed: " + json.getString("error"));
+                            break;
+                        case 1:
+                            String vId = json.getString("insert");
+                            storeVPlanId(vId);
+                            break;
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
+        HttpURLConnection connection;
+        URL address = new URL(URL);
+        connection = (HttpURLConnection) address.openConnection();
+        connection.setReadTimeout(10000);
+        connection.setConnectTimeout(15000);
+        connection.setRequestMethod("GET");
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        return connection;
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {

@@ -8,6 +8,7 @@
     <string name="action_feedback">Feedback/Frage</string>
     <string name="title_activity_credits">Credits</string>
     <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
+    <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
     <string name="action_vplan_hp">VPlan Update-Seite</string>
     <string name="action_get_version">Version anzeigen</string>
     <string name="action_force_reload">Neu Laden</string>

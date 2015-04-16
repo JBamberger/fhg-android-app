@@ -13,11 +13,10 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GcmIntentService extends IntentService {
-    private static final String TAG = "GcmIntentService";
-
     public static final int NOTIFICATION_ID = 1;
-    private NotificationManager mNotificationManager;
+    private static final String TAG = "GcmIntentService";
     NotificationCompat.Builder builder;
+    private NotificationManager mNotificationManager;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -75,7 +74,7 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+                new Intent(this, VPlanActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
