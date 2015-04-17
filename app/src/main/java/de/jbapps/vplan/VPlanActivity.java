@@ -225,13 +225,11 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             return true;
         }
         if (id == R.id.action_classic_view) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME));
-            startActivity(intent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME)));
             return true;
         }
         if (id == R.id.action_vplan_hp) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME));
-            startActivity(intent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME)));
             return true;
         }
         if (id == R.id.action_credits) {

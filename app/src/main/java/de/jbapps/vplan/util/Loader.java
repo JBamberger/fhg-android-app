@@ -44,6 +44,7 @@ public class Loader {
     }
 
     public void getVPlan(boolean forceLoad) {
+        cancel();
         mVPlanLoader = new VPlanLoader(mVPlanSet);
         mVPlanLoader.execute(forceLoad);
     }
@@ -124,6 +125,8 @@ public class Loader {
                 HttpResponse res2 = loadPage(VPLAN2_URL);
                 mVPlanSet.setHeader2(getHeader(res2));
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
+
+                new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
 
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
