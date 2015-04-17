@@ -76,6 +76,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
 
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String SENDER_ID = "913892810147";
 
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
@@ -89,7 +90,6 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
     private SharedPreferences mPreferences;
     private Loader mLoader;
     private JSONParser mJSONParser;
-    private String SENDER_ID = "913892810147";
     private GoogleCloudMessaging gcm;
     private Context context;
 
