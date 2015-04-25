@@ -148,13 +148,15 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE) + ": " + temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
-                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED));
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED),
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_MARKED_NEW));
                 } else {
                     row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
-                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED));
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED),
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_MARKED_NEW));
                 }
                 mData.add(row);
             }

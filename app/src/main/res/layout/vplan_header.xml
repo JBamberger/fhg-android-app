@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/container_shadow"
+    android:background="@color/grey_light"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="12dp">
@@ -11,22 +11,22 @@
         android:id="@+id/vplan_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:text="Title"
         android:textAppearance="?android:attr/textAppearanceLargeInverse"
         android:textColor="@color/text_primary"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/vplan_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/vplan_text"
+        android:layout_centerHorizontal="true"
+        android:text="not implemented"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/text_hint"
-        android:textStyle="italic"
-        android:text="not implemented"
-        android:id="@+id/vplan_status"
-        android:layout_below="@+id/vplan_text"
-        android:layout_centerHorizontal="true" />
+        android:textStyle="italic" />
 
 </RelativeLayout>

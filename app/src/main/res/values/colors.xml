@@ -4,6 +4,8 @@
     <color name="green">#259b24</color>
     <color name="green_100">#a3e9a4</color>
     <color name="red">#e51c23</color>
+    <color name="green_light">#00ff00</color>
+    <color name="grey_light">#cccccc</color>
 
     <!--black alpha 87%-->
     <color name="text_primary">#de000000</color>

@@ -10,15 +10,17 @@ public class VPlanItemData extends VPlanBaseData {
     public String hour;
     public String content;
     public boolean omitted;
+    public boolean marked_new;
 
 
-    public VPlanItemData(String hour, String content, String subject, String room, boolean omitted) {
+    public VPlanItemData(String hour, String content, String subject, String room, boolean omitted, boolean marked_new) {
         super(Type.ITEM);
         this.subject = subject;
         this.room = room;
         this.hour = hour;
         this.content = content;
         this.omitted = omitted;
+        this.marked_new = marked_new;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class VPlanItemData extends VPlanBaseData {
         data.put("hour", hour);
         data.put("room", room);
         data.put("subject", subject);
+        data.put("marked_new", marked_new);
         return data;
     }
 }

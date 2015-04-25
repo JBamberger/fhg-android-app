@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class VPlanAdapter extends BaseAdapter {
                 if (convertView == null) {
                     convertView = mInflater.inflate(R.layout.vplan_item, null);
                     vplanholder = new VPlanHolder();
+                    vplanholder.layout = (RelativeLayout) convertView.findViewById(R.id.item_layout);
                     vplanholder.subject = (TextView) convertView.findViewById(R.id.vplan_subject);
                     vplanholder.room = (TextView) convertView.findViewById(R.id.vplan_room);
                     vplanholder.hour = (TextView) convertView.findViewById(R.id.vplan_hour);
@@ -98,6 +100,9 @@ public class VPlanAdapter extends BaseAdapter {
                 } else {
                     vplanholder = (VPlanHolder) convertView.getTag();
                 }
+
+                vplanholder.layout.setBackgroundResource(vItemData.marked_new ? R.color.green_light : R.color.grey_light);
+
 
                 vplanholder.subject.setText(vItemData.subject);
                 vplanholder.hour.setText(vItemData.hour);
@@ -135,6 +140,7 @@ public class VPlanAdapter extends BaseAdapter {
     }
 
     private static class VPlanHolder {
+        RelativeLayout layout;
         TextView subject;
         TextView room;
         TextView hour;

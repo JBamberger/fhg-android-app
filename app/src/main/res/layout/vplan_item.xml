@@ -3,7 +3,6 @@
     android:id="@+id/item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/container_shadow"
     android:padding="12dp">
 
     <TextView

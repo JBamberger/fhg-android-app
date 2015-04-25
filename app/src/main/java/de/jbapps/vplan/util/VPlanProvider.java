@@ -92,6 +92,7 @@ public class VPlanProvider {
         public static final String JSON_VPLAN_ROOM = "room";
         public static final String JSON_VPLAN_CONTENT = "content";
         public static final String JSON_VPLAN_GRADE = "grade";
+        public static final String JSON_VPLAN_MARKED_NEW = "marked_new";
         /**
          * Used for logging
          */
@@ -224,6 +225,8 @@ public class VPlanProvider {
                     row.put(JSON_VPLAN_CONTENT, cells.get(2).text());
                     row.put(JSON_VPLAN_ROOM, cells.get(4).text());
                     row.put(JSON_VPLAN_OMITTED, cells.get(5).text().contains("x"));
+                    row.put(JSON_VPLAN_MARKED_NEW, cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
+                    Log.d(TAG, "" + cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
                     temp.put(row);
                 }
             }
