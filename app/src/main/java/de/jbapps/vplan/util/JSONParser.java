@@ -21,18 +21,6 @@ import de.jbapps.vplan.ui.VPlanMotd;
  */
 public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
 
-
-    private static final String DATE = "date";
-    private static final String MOTD = "motd";
-    private static final String VPLAN = "vplan";
-
-    private static final String SUBJECT = "subject";
-    private static final String OMITTED = "omitted";
-    private static final String HOUR = "hour";
-    private static final String ROOM = "room";
-    private static final String CONTENT = "content";
-    private static final String GRADE = "grade";
-
     private static final String[] PATTERNS = {
             "(.*5[^0-9]*[aA].*)",
             "(.*5[^0-9]*[bB].*)",
@@ -133,7 +121,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
 
         //get "Nachrichten zum Tag"
         StringBuilder buffer = new StringBuilder();
-        JSONArray temp = vplan.getJSONArray(MOTD);
+        JSONArray temp = vplan.getJSONArray(VPlanProvider.VPlanLoader.JSON_MOTD);
         int length = temp.length();
         for (int i = 0; i < length; i++) {
             JSONArray temp2 = temp.getJSONArray(i);
@@ -149,16 +137,24 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         mData.add(new VPlanMotd(buffer.toString()));
 
         //get vplan rows
-        temp = vplan.getJSONArray(VPLAN);
+        temp = vplan.getJSONArray(VPlanProvider.VPlanLoader.JSON_VPLAN);
         length = temp.length();
         for (int i = 0; i < length; i++) {
             JSONObject temp2 = temp.getJSONObject(i);
             VPlanItemData row;
-            if (temp2.getString(GRADE).matches(gradePattern)) {
+            if (temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE).matches(gradePattern)) {
                 if (multipleGrades) {
-                    row = new VPlanItemData(temp2.getString(HOUR), temp2.getString(CONTENT), temp2.getString(GRADE) + ": " + temp2.getString(SUBJECT), temp2.getString(ROOM), temp2.getBoolean(OMITTED));
+                    row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE) + ": " + temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED));
                 } else {
-                    row = new VPlanItemData(temp2.getString(HOUR), temp2.getString(CONTENT), temp2.getString(SUBJECT), temp2.getString(ROOM), temp2.getBoolean(OMITTED));
+                    row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
+                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
+                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED));
                 }
                 mData.add(row);
             }
