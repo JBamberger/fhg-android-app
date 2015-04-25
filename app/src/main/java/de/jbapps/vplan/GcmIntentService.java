@@ -1,21 +1,6 @@
 package de.jbapps.vplan;
 
-import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-public class GcmIntentService extends IntentService {
+public class GcmIntentService {/*extends IntentService {
     public static final int NOTIFICATION_ID_VPLAN = 1;
     public static final int NOTIFICATION_ID_APP_UPDATE = 2;
     private static final String TAG = "GcmIntentService";
@@ -81,5 +66,5 @@ public class GcmIntentService extends IntentService {
             }
             mNotificationManager.notify(Id, mBuilder.build());
         }
-    }
+    }*/
 }

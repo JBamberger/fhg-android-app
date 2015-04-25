@@ -10,11 +10,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.vplan.data.VPlanBaseData;
-import de.jbapps.vplan.data.VPlanHeader;
-import de.jbapps.vplan.data.VPlanItemData;
-import de.jbapps.vplan.data.VPlanMotd;
 import de.jbapps.vplan.data.VPlanSet;
+import de.jbapps.vplan.ui.VPlanBaseData;
+import de.jbapps.vplan.ui.VPlanHeader;
+import de.jbapps.vplan.ui.VPlanItemData;
+import de.jbapps.vplan.ui.VPlanMotd;
 
 /**
  * parses a VPlanSet asynchronously to a List of VPlanBaseData
@@ -127,8 +127,8 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
     private void parse(JSONObject vplan) throws JSONException {
 
         //get date and day name
-        JSONObject header = vplan.getJSONObject(VPlanLoader.HEADER);
-        mData.add(new VPlanHeader(header.getString(VPlanLoader.HEADER_TITLE), header.getString(VPlanLoader.HEADER_STATUS)));
+        JSONObject header = vplan.getJSONObject(VPlanProvider.VPlanLoader.JSON_HEADER);
+        mData.add(new VPlanHeader(header.getString(VPlanProvider.VPlanLoader.JSON_HEADER_TITLE), header.getString(VPlanProvider.VPlanLoader.JSON_HEADER_STATUS)));
 
 
         //get "Nachrichten zum Tag"

@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.jbapps.vplan.R;
-import de.jbapps.vplan.data.VPlanBaseData;
-import de.jbapps.vplan.data.VPlanHeader;
-import de.jbapps.vplan.data.VPlanItemData;
-import de.jbapps.vplan.data.VPlanMotd;
+import de.jbapps.vplan.ui.VPlanBaseData;
+import de.jbapps.vplan.ui.VPlanHeader;
+import de.jbapps.vplan.ui.VPlanItemData;
+import de.jbapps.vplan.ui.VPlanMotd;
 
 public class VPlanAdapter extends BaseAdapter {
 

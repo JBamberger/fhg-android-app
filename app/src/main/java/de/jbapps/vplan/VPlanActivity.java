@@ -24,18 +24,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import java.util.List;
 
-import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.data.VPlanSet;
+import de.jbapps.vplan.ui.VPlanBaseData;
 import de.jbapps.vplan.util.JSONParser;
-import de.jbapps.vplan.util.Loader;
 import de.jbapps.vplan.util.VPlanAdapter;
+import de.jbapps.vplan.util.VPlanProvider;
+
+//import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 
-public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNavigationListener,*/ Loader.IVPlanLoader, JSONParser.IItemsParsed {
+public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNavigationListener,*/ VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {
 
     private static final String TAG = "VPlanActivity";
 
@@ -70,10 +70,11 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
     private SharedPreferences mPreferences;
-    private Loader mLoader;
+    private VPlanProvider mVPlanProvider;
     private JSONParser mJSONParser;
-    private GoogleCloudMessaging gcm;
+    // private GoogleCloudMessaging gcm;
     private Context context;
+    private String gradeState;
 
     private static int getAppVersion(Context context) {
         try {
@@ -98,13 +99,13 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
         mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
         mList = (ListView) findViewById(R.id.vplan_list);
-
+        gradeState = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
         setupActionBar();
         setupSwipeRefreshLayout();
         setupListView();
         //TODO: setupGcm();
 
-        mLoader = new Loader(this, this);
+        mVPlanProvider = new VPlanProvider(this, this);
 
         mNetworkStateReceiver.netStateUpdate();
 
@@ -119,6 +120,10 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     @Override
     protected void onResume() {
         super.onResume();
+        if (!gradeState.equals(PreferenceManager.getDefaultSharedPreferences(this).getString("grades", ""))) {
+            setupActionBar();
+            restore();
+        }
         //TODO: checkPlayServices();
         IntentFilter mNetworkStateFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkStateReceiver, mNetworkStateFilter);
@@ -134,7 +139,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
             mJSONParser.cancel(true);
             mJSONParser = null;
         }
-        mLoader.cancel();
+        mVPlanProvider.cancel();
 
     }
 
@@ -283,12 +288,12 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
 
     private void reload(boolean forceLoad) {
         toggleLoading(true);
-        mLoader.getVPlan(forceLoad);
+        mVPlanProvider.getVPlan(forceLoad);
     }
 
     private void restore() {
         toggleLoading(true);
-        mLoader.getCachedVPlan();
+        mVPlanProvider.getCachedVPlan();
     }
 
     private String readGrade() {

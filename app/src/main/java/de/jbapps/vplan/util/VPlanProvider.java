@@ -28,9 +28,9 @@ import de.jbapps.vplan.data.VPlanSet;
 /**
  * This class manages the whole loading and caching process for the MainActivity
  */
-public class Loader {
+public class VPlanProvider {
 
-    private static final String TAG = "";
+    private static final String TAG = "VPlanProvider";
     /**
      * receives callbacks for specific actions
      */
@@ -38,7 +38,7 @@ public class Loader {
     private VPlanSet mVPlanSet;
     private VPlanLoader mVPlanLoader;
 
-    public Loader(Context context, IVPlanLoader listener) {
+    public VPlanProvider(Context context, IVPlanLoader listener) {
         mVPlanSet = new VPlanSet(context);
         mListener = listener;
     }
@@ -67,7 +67,7 @@ public class Loader {
 
     public void loaderFinished(boolean loadCache) {
         mVPlanLoader = null;
-        if(loadCache) {
+        if (loadCache) {
             getCachedVPlan();
         } else {
             mVPlanSet.writeAll();
@@ -79,25 +79,29 @@ public class Loader {
         void vPlanLoaded(VPlanSet vplanset);
     }
 
-    private class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
+    protected class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
-        public static final String HEADER = "header";
-        public static final String MOTD = "motd";
-        public static final String VPLAN = "vplan";
-        public static final String HEADER_TITLE = "header_title";
-        public static final String HEADER_STATUS = "header_status";
-        public static final String SUBJECT = "subject";
-        public static final String OMITTED = "omitted";
-        public static final String HOUR = "hour";
-        public static final String ROOM = "room";
-        public static final String CONTENT = "content";
-        public static final String GRADE = "grade";
+        public static final String JSON_MOTD = "motd";
+        public static final String JSON_HEADER = "header";
+        public static final String JSON_HEADER_TITLE = "header_title";
+        public static final String JSON_HEADER_STATUS = "header_status";
+        public static final String JSON_VPLAN = "vplan";
+        public static final String JSON_VPLAN_SUBJECT = "subject";
+        public static final String JSON_VPLAN_OMITTED = "omitted";
+        public static final String JSON_VPLAN_HOUR = "hour";
+        public static final String JSON_VPLAN_ROOM = "room";
+        public static final String JSON_VPLAN_CONTENT = "content";
+        public static final String JSON_VPLAN_GRADE = "grade";
+        /**
+         * Used for logging
+         */
         private static final String TAG = "VPlanLoader";
-        private static final String VPLAN1_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
-        private static final String VPLAN2_URL = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
-        HttpClient mClient;
-        VPlanSet mVPlanSet;
-        boolean loadCache = false;
+        private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+        private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+
+        private HttpClient mClient;
+        private VPlanSet mVPlanSet;
+        private boolean loadCache = false;
 
         public VPlanLoader(VPlanSet vPlanSet) {
             mClient = new DefaultHttpClient();
@@ -110,19 +114,19 @@ public class Loader {
             try {
                 //Load the headers first to check if cache is current
                 if (!forceLoad && mVPlanSet.readHeader()) {
-                    String header1 = loadHeader(VPLAN1_URL);
-                    String header2 = loadHeader(VPLAN2_URL);
+                    String header1 = loadHeader(URL_VPLAN1);
+                    String header2 = loadHeader(URL_VPLAN2);
 
                     if (mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2)) {
                         loadCache = true;
                         return null;
                     }
                 }
-                HttpResponse res1 = loadPage(VPLAN1_URL);
+                HttpResponse res1 = loadPage(URL_VPLAN1);
                 mVPlanSet.setHeader1(getHeader(res1));
                 mVPlanSet.setVPlan1(parse(getVPlan(res1)));
 
-                HttpResponse res2 = loadPage(VPLAN2_URL);
+                HttpResponse res2 = loadPage(URL_VPLAN2);
                 mVPlanSet.setHeader2(getHeader(res2));
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
 
@@ -179,14 +183,14 @@ public class Loader {
             try {
                 String status = vplan.split("</head>")[1];
                 status = status.split("<p>")[0].replace("\n", "").replace("\r", "");
-                header.put(HEADER_STATUS, status);
-                header.put(HEADER_TITLE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
+                header.put(JSON_HEADER_STATUS, status);
+                header.put(JSON_HEADER_TITLE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
             } catch (ArrayIndexOutOfBoundsException e) {
                 e.printStackTrace();
-                header.put(HEADER_STATUS, "The VPlan-file is corrupted.");
-                header.put(HEADER_TITLE, "~ please contact the support");
+                header.put(JSON_HEADER_STATUS, "The VPlan-file is corrupted.");
+                header.put(JSON_HEADER_TITLE, "~ please contact the support");
             }
-            jPlan.put(HEADER, header);
+            jPlan.put(JSON_HEADER, header);
 
             //get "Nachrichten zum Tag"
             Elements infoRows = doc.getElementsByClass("info").select("tr");
@@ -205,7 +209,7 @@ public class Loader {
                     Log.w(TAG, "HTML to JSON: Unknown empty element discarded...");
                 }
             }
-            jPlan.put(MOTD, temp);
+            jPlan.put(JSON_MOTD, temp);
             temp = new JSONArray();
 
             //get vplan rows
@@ -214,16 +218,16 @@ public class Loader {
                 Elements cells = line.children();
                 if (cells.select("th").size() == 0) {
                     JSONObject row = new JSONObject();
-                    row.put(SUBJECT, cells.get(3).text());
-                    row.put(HOUR, cells.get(1).text());
-                    row.put(GRADE, cells.get(0).text());
-                    row.put(CONTENT, cells.get(2).text());
-                    row.put(ROOM, cells.get(4).text());
-                    row.put(OMITTED, cells.get(5).text().contains("x"));
+                    row.put(JSON_VPLAN_SUBJECT, cells.get(3).text());
+                    row.put(JSON_VPLAN_HOUR, cells.get(1).text());
+                    row.put(JSON_VPLAN_GRADE, cells.get(0).text());
+                    row.put(JSON_VPLAN_CONTENT, cells.get(2).text());
+                    row.put(JSON_VPLAN_ROOM, cells.get(4).text());
+                    row.put(JSON_VPLAN_OMITTED, cells.get(5).text().contains("x"));
                     temp.put(row);
                 }
             }
-            jPlan.put(VPLAN, temp);
+            jPlan.put(JSON_VPLAN, temp);
             Log.i(TAG, "VPlan parsed");
             return jPlan;
         }

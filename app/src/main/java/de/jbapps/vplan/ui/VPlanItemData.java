@@ -1,4 +1,4 @@
-package de.jbapps.vplan.data;
+package de.jbapps.vplan.ui;
 
 import org.json.JSONException;
 import org.json.JSONObject;

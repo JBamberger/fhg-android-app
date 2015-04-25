@@ -106,7 +106,11 @@ public class VPlanSet {
     }
 
     private boolean allFieldsSet() {
-        return headersSet() && mVPlan1 != null && mVPlan2 != null;
+        return headersSet() && vPlanSet();
+    }
+
+    private boolean vPlanSet() {
+        return mVPlan1 != null && mVPlan2 != null;
     }
 
     private boolean headersSet() {
