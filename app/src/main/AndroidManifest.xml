@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!--TODO: <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
@@ -12,7 +12,7 @@
         android:name="de.jbapps.vplan.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="de.jbapps.vplan.permission.C2D_MESSAGE" />
+    <uses-permission android:name="de.jbapps.vplan.permission.C2D_MESSAGE" /> -->
 
     <application
         android:allowBackup="true"
@@ -31,14 +31,6 @@
         <activity
             android:name=".CreditsActivity"
             android:label="@string/title_activity_credits"
-            android:parentActivityName=".VPlanActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.jbapps.vplan.VPlanActivity" />
-        </activity>
-        <activity
-            android:name=".preference.SettingsActivity"
-            android:label="@string/title_activity_settings"
             android:parentActivityName=".VPlanActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

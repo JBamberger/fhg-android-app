@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -25,31 +24,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.jbapps.vplan.data.VPlanBaseData;
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.util.JSONParser;
 import de.jbapps.vplan.util.Loader;
-import de.jbapps.vplan.util.NetUtils;
 import de.jbapps.vplan.util.VPlanAdapter;
 
 
@@ -120,7 +102,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         setupActionBar();
         setupSwipeRefreshLayout();
         setupListView();
-        setupGcm();
+        //TODO: setupGcm();
 
         mLoader = new Loader(this, this);
 
@@ -131,13 +113,13 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         } else {
             restore();
         }
-        doPing(getVPlanId());
+        //TODO: doPing(getVPlanId());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkPlayServices();
+        //TODO: checkPlayServices();
         IntentFilter mNetworkStateFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkStateReceiver, mNetworkStateFilter);
     }
@@ -246,12 +228,12 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             }
             return true;
         }
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
-
+        //TODO
         if (id == R.id.action_add) {
             doAdd(getRegistrationId(context));
             return true;
@@ -263,7 +245,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         if (id == R.id.action_ping) {
             doPing(getVPlanId());
             return true;
-        }
+        }*/
 
 
         return super.onOptionsItemSelected(item);
@@ -340,6 +322,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         toggleLoading(false);
     }
 
+    /*
     private void setupGcm() {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
@@ -556,6 +539,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         connection.setDoOutput(true);
         return connection;
     }
+    */
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
