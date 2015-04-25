@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -138,8 +139,12 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     }
 
     private void setupActionBar() {
-        /*//setup ActionBar
         final ActionBar actionBar = getSupportActionBar();
+        String title = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
+        if (title != null && title.equals("")) title = "Alles";
+        actionBar.setTitle("VPlan - " + title);
+        /*//setup ActionBar
+
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
