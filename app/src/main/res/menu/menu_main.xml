@@ -39,13 +39,13 @@
         android:orderInCategory="101"
         android:title="@string/action_credits"
         app:showAsAction="never" />
-    <!--TODO: <item
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="102"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 
-    <item
+    <!--TODO: <item
         android:id="@+id/action_add"
         android:orderInCategory="101"
         android:title="add"

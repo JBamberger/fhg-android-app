@@ -11,14 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,7 +34,7 @@ import de.jbapps.vplan.util.Loader;
 import de.jbapps.vplan.util.VPlanAdapter;
 
 
-public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavigationListener, Loader.IVPlanLoader, JSONParser.IItemsParsed {
+public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNavigationListener,*/ Loader.IVPlanLoader, JSONParser.IItemsParsed {
 
     private static final String TAG = "VPlanActivity";
 
@@ -139,7 +138,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
     }
 
     private void setupActionBar() {
-        //setup ActionBar
+        /*//setup ActionBar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -152,7 +151,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
                 getResources().getStringArray(R.array.listGrades));
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         actionBar.setListNavigationCallbacks(spinnerAdapter, this);
-        actionBar.setSelectedNavigationItem(readGradeID());
+        actionBar.setSelectedNavigationItem(readGradeID());*/
     }
 
     private void setupSwipeRefreshLayout() {
@@ -165,19 +164,19 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         mList.setAdapter(mListAdapter);
     }
 
-    @Override
+    /*@Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
             getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
         }
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mListAdapter.getCount() > 0) {
             outState.putBoolean(STATE_SHOULD_REFRESH, false);
         }
-        outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
+        //outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
     }
 
     @Override
@@ -228,11 +227,11 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
             }
             return true;
         }
-        /*if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-
+/*
         //TODO
         if (id == R.id.action_add) {
             doAdd(getRegistrationId(context));
@@ -251,12 +250,12 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public boolean onNavigationItemSelected(int position, long id) {
         writeGrade(position);
         restore();
         return true;
-    }
+    }*/
 
     private void showError(String message) {
         mStatus.setText(message);
@@ -288,10 +287,11 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
     }
 
     private String readGrade() {
-        return getResources().getStringArray(R.array.listGradePatterns)[getSupportActionBar().getSelectedNavigationIndex()];
+        return PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
+        //return getResources().getStringArray(R.array.listGradePatterns)[getSupportActionBar().getSelectedNavigationIndex()];
     }
 
-    private int readGradeID() {
+    /*private int readGradeID() {
         return mPreferences.getInt(PROPERTY_GRADE, 0);
     }
 
@@ -299,7 +299,7 @@ public class VPlanActivity extends ActionBarActivity implements ActionBar.OnNavi
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt(PROPERTY_GRADE, position);
         editor.apply();
-    }
+    }*/
 
     @Override
     public void vPlanLoaded(VPlanSet vplanset) {
