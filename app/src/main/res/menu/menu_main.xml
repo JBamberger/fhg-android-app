@@ -4,13 +4,13 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_force_reload"
-        android:icon="@drawable/ic_action_refresh"
+        android:icon="@drawable/ic_action_navigation_refresh"
         android:orderInCategory="95"
         android:title="@string/action_force_reload"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_vplan_hp"
-        android:icon="@drawable/ic_action_app_update"
+        android:icon="@drawable/ic_action_action_get_app"
         android:orderInCategory="96"
         android:title="@string/action_vplan_hp"
         app:showAsAction="ifRoom" />
