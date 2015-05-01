@@ -26,7 +26,8 @@ import java.io.IOException;
 import de.jbapps.vplan.data.VPlanSet;
 
 /**
- * This class manages the whole loading and caching process for the MainActivity
+ * This class manages the whole loading and caching process for the MainActivity.
+ * Some work is delegated to other classes.
  */
 public class VPlanProvider {
 
@@ -226,7 +227,7 @@ public class VPlanProvider {
                     row.put(JSON_VPLAN_ROOM, cells.get(4).text());
                     row.put(JSON_VPLAN_OMITTED, cells.get(5).text().contains("x"));
                     row.put(JSON_VPLAN_MARKED_NEW, cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
-                    Log.d(TAG, "" + cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
+                    //Log.d(TAG, "" + cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
                     temp.put(row);
                 }
             }

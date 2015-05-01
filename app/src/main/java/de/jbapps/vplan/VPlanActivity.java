@@ -49,7 +49,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
 
-    private static final String URL_MAIL_BUG_REPORT = "mailto:vplanbugreport@gmail.com";
+    private static final String URL_MAIL_DEVELOPER = "mailto:vplanbugreport@gmail.com";
     private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
     private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
 
@@ -204,13 +204,13 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
             return true;
         }
         if (id == R.id.action_bug) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_BUG_REPORT));
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Bugreport");
             startActivity(intent);
             return true;
         }
         if (id == R.id.action_feedback) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_BUG_REPORT));
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
             intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Feedback/Frage");
             startActivity(intent);
             return true;
