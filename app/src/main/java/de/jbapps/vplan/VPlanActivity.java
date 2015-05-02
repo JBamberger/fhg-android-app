@@ -57,8 +57,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private static final String TAG = "VPlanActivity";
 
-
-
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
@@ -75,6 +73,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private final Property mProperty = new Property();
+    private final API_v1 mAPI = new API_v1();
 
     private String regid;
     private ListView mList;
@@ -124,7 +123,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         } else {
             restore();
         }
-        doPing(mProperty.getClientId());
+        mAPI.doPing(mProperty.getClientId());
     }
 
     @Override
@@ -168,6 +167,19 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private void setupListView() {
         mListAdapter = new VPlanAdapter(this);
         mList.setAdapter(mListAdapter);
+    }
+
+    private void setupGcm() {
+        if (checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = mProperty.getRegistrationId(context);
+
+            if (regid.isEmpty()) {
+                registerInBackground();
+            }
+        } else {
+            Log.i(TAG, "No valid Google Play Services APK found.");
+        }
     }
 
     @Override
@@ -231,15 +243,15 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            doAdd(mProperty.getRegistrationId(context));
+            mAPI.doAdd(mProperty.getRegistrationId(context));
             return true;
         }
         if (id == R.id.action_trigger) {
-            doTrigger();
+            mAPI.doTrigger();
             return true;
         }
         if (id == R.id.action_ping) {
-            doPing(mProperty.getClientId());
+            mAPI.doPing(mProperty.getClientId());
             return true;
         }
 
@@ -276,8 +288,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mVPlanProvider.getCachedVPlan();
     }
 
-
-
     @Override
     public void vPlanLoaded(VPlanSet vplanset) {
         if (vplanset != null) {
@@ -297,19 +307,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     public void onItemsParsed(List<VPlanBaseData> dataList) {
         mListAdapter.setData(dataList);
         toggleLoading(false);
-    }
-
-    private void setupGcm() {
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = mProperty.getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
-        }
     }
 
     private boolean checkPlayServices() {
@@ -353,118 +350,124 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     }
 
     private void sendRegistrationIdToBackend(String regId) {
-        doAdd(regId);
+        mAPI.doAdd(regId);
     }
 
-    private void doTrigger() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_TRIGGER);
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.i(TAG, "Trigger Response: " + content);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null) connection.disconnect();
-                }
-                return null;
-            }
-        }.execute();
-
-
-    }
-
-    private void doPing(final String id) {
-        Log.i(TAG, "Pinging with id: " + id);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_PING);
-
-                    List<NameValuePair> nameValuePairs = new ArrayList<>();
-                    nameValuePairs.add(new BasicNameValuePair("id", id));
-
-                    OutputStream os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(NetUtils.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.i(TAG, "Ping Response: " + content);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null)
-                        connection.disconnect();
-                }
-                return null;
-            }
-        }.execute();
-    }
-
-    private void doAdd(final String gcmId) {
-        Log.i(TAG, "Adding gcmId: " + gcmId);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                HttpURLConnection connection = null;
-                try {
-                    connection = getDefaultURLConnection(API_ADD);
-
-                    List<NameValuePair> nameValuePairs = new ArrayList<>();
-                    nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
-
-                    OutputStream os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(NetUtils.getQuery(nameValuePairs));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    connection.connect();
-                    InputStream in = connection.getInputStream();
-                    String content = IOUtils.toString(in, "UTF-8");
-                    Log.i(TAG, "Add Response: " + content);
-                    JSONObject json = new JSONObject(content);
-                    switch (Integer.parseInt(json.getString("status"))) {
-                        case 0:
-                            Log.e(TAG, "Adding failed: " + json.getString("error"));
-                            break;
-                        case 1:
-                            String vId = json.getString("insert");
-                            mProperty.storeClientId(vId);
-                            break;
+    /**
+     * This class represents the API in version 1.0
+     * It contains the corresponding methods to 'add', 'ping' and 'trigger'
+     */
+    private class API_v1 {
+        private void doTrigger() {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    HttpURLConnection connection = null;
+                    try {
+                        connection = getDefaultURLConnection(API_TRIGGER);
+                        connection.connect();
+                        InputStream in = connection.getInputStream();
+                        String content = IOUtils.toString(in, "UTF-8");
+                        Log.i(TAG, "Trigger Response: " + content);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (connection != null) connection.disconnect();
                     }
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null)
-                        connection.disconnect();
+                    return null;
                 }
-                return null;
-            }
-        }.execute();
-    }
+            }.execute();
 
-    private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
-        HttpURLConnection connection;
-        URL address = new URL(URL);
-        connection = (HttpURLConnection) address.openConnection();
-        connection.setReadTimeout(10000);
-        connection.setConnectTimeout(15000);
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        return connection;
+
+        }
+
+        private void doPing(final String id) {
+            Log.i(TAG, "Pinging with id: " + id);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    HttpURLConnection connection = null;
+                    try {
+                        connection = getDefaultURLConnection(API_PING);
+
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("id", id));
+
+                        OutputStream os = connection.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(NetUtils.getQuery(nameValuePairs));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        connection.connect();
+                        InputStream in = connection.getInputStream();
+                        String content = IOUtils.toString(in, "UTF-8");
+                        Log.i(TAG, "Ping Response: " + content);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (connection != null)
+                            connection.disconnect();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+
+        private void doAdd(final String gcmId) {
+            Log.i(TAG, "Adding gcmId: " + gcmId);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    HttpURLConnection connection = null;
+                    try {
+                        connection = getDefaultURLConnection(API_ADD);
+
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
+
+                        OutputStream os = connection.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(NetUtils.getQuery(nameValuePairs));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        connection.connect();
+                        InputStream in = connection.getInputStream();
+                        String content = IOUtils.toString(in, "UTF-8");
+                        Log.i(TAG, "Add Response: " + content);
+                        JSONObject json = new JSONObject(content);
+                        switch (Integer.parseInt(json.getString("status"))) {
+                            case 0:
+                                Log.e(TAG, "Adding failed: " + json.getString("error"));
+                                break;
+                            case 1:
+                                String vId = json.getString("insert");
+                                mProperty.storeClientId(vId);
+                                break;
+                        }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (connection != null)
+                            connection.disconnect();
+                    }
+                    return null;
+                }
+            }.execute();
+        }
+
+        private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
+            HttpURLConnection connection;
+            URL address = new URL(URL);
+            connection = (HttpURLConnection) address.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            return connection;
+        }
     }
 
     /**
