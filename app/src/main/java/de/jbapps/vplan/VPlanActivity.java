@@ -71,14 +71,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
 
-
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "913892810147";
 
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
 
-    String regid;
+    private String regid;
     private ListView mList;
     private TextView mStatus;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -119,7 +118,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         setupGcm();
 
         mVPlanProvider = new VPlanProvider(this, this);
-
         mNetworkStateReceiver.netStateUpdate();
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
@@ -303,7 +301,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mListAdapter.setData(dataList);
         toggleLoading(false);
     }
-
 
     private void setupGcm() {
         if (checkPlayServices()) {
