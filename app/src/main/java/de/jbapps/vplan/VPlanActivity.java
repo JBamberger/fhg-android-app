@@ -76,7 +76,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private final API_v1 mAPI = new API_v1();
 
     private String regid;
-    private ListView mList;
     private TextView mStatus;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mBackgroundProgress;
@@ -93,7 +92,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.wtf(TAG, "Could not get package name: " + e);
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
@@ -104,24 +102,19 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
-
-        mStatus = (TextView) findViewById(R.id.status);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
-        mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
-        mList = (ListView) findViewById(R.id.vplan_list);
         gradeState = mProperty.readGrade();
+        mVPlanProvider = new VPlanProvider(this, this);
+
         setupActionBar();
-        setupSwipeRefreshLayout();
-        setupListView();
+        setupUI();
         setupGcm();
 
-        mVPlanProvider = new VPlanProvider(this, this);
         mNetworkStateReceiver.netStateUpdate();
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
-            reload(false);
+            loadVPlan(false);
         } else {
-            restore();
+            loadCachedVPlan();
         }
         mAPI.doPing(mProperty.getClientId());
     }
@@ -130,8 +123,9 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     protected void onResume() {
         super.onResume();
         if (!gradeState.equals(mProperty.readGrade())) {
+            gradeState = mProperty.readGrade();
             setupActionBar();
-            restore();
+            loadCachedVPlan();
         }
         checkPlayServices();
         IntentFilter mNetworkStateFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -152,21 +146,24 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     }
 
-    private void setupActionBar() {
-        final ActionBar actionBar = getSupportActionBar();
-        String title = mProperty.readGrade();
-        if (title != null && title.equals("")) title = "Alles";
-        actionBar.setTitle("VPlan - " + title);
-    }
+    private void setupUI() {
+        mStatus = (TextView) findViewById(R.id.status);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
+        mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
+        ListView list = (ListView) findViewById(R.id.vplan_list);
 
-    private void setupSwipeRefreshLayout() {
         mSwipeRefreshLayout.setOnRefreshListener(mRefreshListener);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.green_100, R.color.green, R.color.green_100);
+
+        mListAdapter = new VPlanAdapter(this);
+        list.setAdapter(mListAdapter);
     }
 
-    private void setupListView() {
-        mListAdapter = new VPlanAdapter(this);
-        mList.setAdapter(mListAdapter);
+    private void setupActionBar() {
+        final ActionBar actionBar = getSupportActionBar();
+        String title = gradeState;
+        if (title != null && title.equals("")) title = "Alles";
+        actionBar.setTitle("VPlan - " + title);
     }
 
     private void setupGcm() {
@@ -200,7 +197,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         int id = item.getItemId();
 
         if (id == R.id.action_force_reload) {
-            reload(true);
+            loadVPlan(true);
             return true;
         }
         if (id == R.id.action_bug) {
@@ -278,12 +275,12 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
     }
 
-    private void reload(boolean forceLoad) {
+    private void loadVPlan(boolean forceLoad) {
         toggleLoading(true);
         mVPlanProvider.getVPlan(forceLoad);
     }
 
-    private void restore() {
+    private void loadCachedVPlan() {
         toggleLoading(true);
         mVPlanProvider.getCachedVPlan();
     }
@@ -507,7 +504,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         private String getRegistrationId(Context context) {
             final SharedPreferences prefs = getMainPreferences();
             String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-            if (registrationId.isEmpty()) {
+            if (registrationId == null || registrationId.isEmpty()) {
                 Log.i(TAG, "Registration not found.");
                 return "";
             }
@@ -522,20 +519,20 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
         private String getClientId() {
             final SharedPreferences prefs = getMainPreferences();
-            String vplanID = prefs.getString(PROPERTY_CLIENT_ID, "");
-            if (vplanID.isEmpty()) {
+            String clientId = prefs.getString(PROPERTY_CLIENT_ID, "");
+            if (clientId == null || clientId.isEmpty()) {
                 Log.i(TAG, "VPlanID not found.");
                 return "";
             } else {
-                return vplanID;
+                return clientId;
             }
         }
 
-        private void storeClientId(String vplanId) {
+        private void storeClientId(String clientId) {
             final SharedPreferences prefs = getMainPreferences();
             Log.i(TAG, "Saving vplanId");
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PROPERTY_CLIENT_ID, vplanId);
+            editor.putString(PROPERTY_CLIENT_ID, clientId);
             editor.apply();
         }
 
@@ -550,7 +547,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            reload(false);
+            loadVPlan(false);
         }
     }
 
