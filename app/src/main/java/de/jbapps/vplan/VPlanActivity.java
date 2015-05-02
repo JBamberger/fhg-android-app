@@ -111,7 +111,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
         mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
         mList = (ListView) findViewById(R.id.vplan_list);
-        gradeState = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
+        gradeState = readGrade();
         setupActionBar();
         setupSwipeRefreshLayout();
         setupListView();
@@ -131,7 +131,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     @Override
     protected void onResume() {
         super.onResume();
-        if (!gradeState.equals(PreferenceManager.getDefaultSharedPreferences(this).getString("grades", ""))) {
+        if (!gradeState.equals(readGrade())) {
             setupActionBar();
             restore();
         }
@@ -156,7 +156,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private void setupActionBar() {
         final ActionBar actionBar = getSupportActionBar();
-        String title = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
+        String title = readGrade();
         if (title != null && title.equals("")) title = "Alles";
         actionBar.setTitle("VPlan - " + title);
     }
