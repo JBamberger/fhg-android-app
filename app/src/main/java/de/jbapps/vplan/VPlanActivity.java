@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,15 +25,32 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.ui.VPlanBaseData;
 import de.jbapps.vplan.util.JSONParser;
+import de.jbapps.vplan.util.NetUtils;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanProvider;
-
-//import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 
 public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNavigationListener,*/ VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {
@@ -72,7 +90,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     private SharedPreferences mPreferences;
     private VPlanProvider mVPlanProvider;
     private JSONParser mJSONParser;
-    // private GoogleCloudMessaging gcm;
+    private GoogleCloudMessaging gcm;
     private Context context;
     private String gradeState;
 
@@ -103,7 +121,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         setupActionBar();
         setupSwipeRefreshLayout();
         setupListView();
-        //TODO: setupGcm();
+        setupGcm();
 
         mVPlanProvider = new VPlanProvider(this, this);
 
@@ -114,7 +132,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         } else {
             restore();
         }
-        //TODO: doPing(getVPlanId());
+        doPing(getVPlanId());
     }
 
     @Override
@@ -148,12 +166,12 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         String title = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
         if (title != null && title.equals("")) title = "Alles";
         actionBar.setTitle("VPlan - " + title);
-        /*//setup ActionBar
+        //setup ActionBar
 
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-        //setup ActionBarSpinner
+        /*//setup ActionBarSpinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 actionBar.getThemedContext(),
                 R.layout.spinner_item,
@@ -241,8 +259,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-/*
-        //TODO
+
         if (id == R.id.action_add) {
             doAdd(getRegistrationId(context));
             return true;
@@ -254,7 +271,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         if (id == R.id.action_ping) {
             doPing(getVPlanId());
             return true;
-        }*/
+        }
 
 
         return super.onOptionsItemSelected(item);
@@ -332,7 +349,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         toggleLoading(false);
     }
 
-    /*
+
     private void setupGcm() {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
@@ -549,7 +566,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         connection.setDoOutput(true);
         return connection;
     }
-    */
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
