@@ -53,14 +53,12 @@ import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanProvider;
 
 
-public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNavigationListener,*/ VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {
+public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {
 
     private static final String TAG = "VPlanActivity";
 
-    private static final String PROPERTY = "vplan_preferences";
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_VPLAN_ID = "vplan_id";
-    private static final String PROPERTY_GRADE = "selected_grade";
     private static final String PROPERTY_APP_VERSION = "appVersion";
 
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
@@ -72,7 +70,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
-    private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
 
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -87,7 +84,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
-    private SharedPreferences mPreferences;
     private VPlanProvider mVPlanProvider;
     private JSONParser mJSONParser;
     private GoogleCloudMessaging gcm;
@@ -110,7 +106,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPreferences = getSharedPreferences(PROPERTY, Context.MODE_PRIVATE);
         context = getApplicationContext();
 
         mStatus = (TextView) findViewById(R.id.status);
@@ -166,20 +161,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         String title = PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
         if (title != null && title.equals("")) title = "Alles";
         actionBar.setTitle("VPlan - " + title);
-        //setup ActionBar
-
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-        /*//setup ActionBarSpinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
-                actionBar.getThemedContext(),
-                R.layout.spinner_item,
-                android.R.id.text1,
-                getResources().getStringArray(R.array.listGrades));
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        actionBar.setListNavigationCallbacks(spinnerAdapter, this);
-        actionBar.setSelectedNavigationItem(readGradeID());*/
     }
 
     private void setupSwipeRefreshLayout() {
@@ -192,19 +173,11 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         mList.setAdapter(mListAdapter);
     }
 
-    /*@Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-            getSupportActionBar().setSelectedNavigationItem(savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }
-    }*/
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (mListAdapter.getCount() > 0) {
             outState.putBoolean(STATE_SHOULD_REFRESH, false);
         }
-        //outState.putInt(STATE_SELECTED_NAVIGATION_ITEM, getSupportActionBar().getSelectedNavigationIndex());
     }
 
     @Override
@@ -277,13 +250,6 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public boolean onNavigationItemSelected(int position, long id) {
-        writeGrade(position);
-        restore();
-        return true;
-    }*/
-
     private void showError(String message) {
         mStatus.setText(message);
         mStatus.setBackgroundResource(R.color.red);
@@ -315,18 +281,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
 
     private String readGrade() {
         return PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
-        //return getResources().getStringArray(R.array.listGradePatterns)[getSupportActionBar().getSelectedNavigationIndex()];
     }
-
-    /*private int readGradeID() {
-        return mPreferences.getInt(PROPERTY_GRADE, 0);
-    }
-
-    private void writeGrade(int position) {
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putInt(PROPERTY_GRADE, position);
-        editor.apply();
-    }*/
 
     @Override
     public void vPlanLoaded(VPlanSet vplanset) {
