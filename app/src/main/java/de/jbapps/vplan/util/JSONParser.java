@@ -66,7 +66,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         this.vplan1 = vPlanSet.getVPlan1();
         this.vplan2 = vPlanSet.getVPlan2();
         this.mListener = listener;
-        this.gradePattern = generatePattern(grades);
+        this.gradePattern = generatePattern(grades); //TODO: delegate to background thread to avoid blocking the ui thread
         Log.e("PATTERN: ", gradePattern);
         mData = new ArrayList<>();
     }
@@ -75,7 +75,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         StringBuilder patternBuilder = new StringBuilder();
         boolean first = true;
         if (grades.equals("")) {
-            Log.e("matcher", "matched... fuu");
+            Log.e("matcher", "matched...");
             return ".*";
         }
         for (String pattern : PATTERNS) {

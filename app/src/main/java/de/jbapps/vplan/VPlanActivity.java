@@ -57,9 +57,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private static final String TAG = "VPlanActivity";
 
-    private static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_VPLAN_ID = "vplan_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
+
 
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
@@ -76,6 +74,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
+    private final Property mProperty = new Property();
 
     private String regid;
     private ListView mList;
@@ -111,7 +110,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
         mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
         mList = (ListView) findViewById(R.id.vplan_list);
-        gradeState = readGrade();
+        gradeState = mProperty.readGrade();
         setupActionBar();
         setupSwipeRefreshLayout();
         setupListView();
@@ -125,13 +124,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         } else {
             restore();
         }
-        doPing(getVPlanId());
+        doPing(mProperty.getClientId());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!gradeState.equals(readGrade())) {
+        if (!gradeState.equals(mProperty.readGrade())) {
             setupActionBar();
             restore();
         }
@@ -156,7 +155,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private void setupActionBar() {
         final ActionBar actionBar = getSupportActionBar();
-        String title = readGrade();
+        String title = mProperty.readGrade();
         if (title != null && title.equals("")) title = "Alles";
         actionBar.setTitle("VPlan - " + title);
     }
@@ -232,7 +231,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            doAdd(getRegistrationId(context));
+            doAdd(mProperty.getRegistrationId(context));
             return true;
         }
         if (id == R.id.action_trigger) {
@@ -240,7 +239,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             return true;
         }
         if (id == R.id.action_ping) {
-            doPing(getVPlanId());
+            doPing(mProperty.getClientId());
             return true;
         }
 
@@ -277,9 +276,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mVPlanProvider.getCachedVPlan();
     }
 
-    private String readGrade() {
-        return PreferenceManager.getDefaultSharedPreferences(this).getString("grades", "");
-    }
+
 
     @Override
     public void vPlanLoaded(VPlanSet vplanset) {
@@ -288,7 +285,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                 mJSONParser.cancel(true);
                 mJSONParser = null;
             }
-            mJSONParser = new JSONParser(this, readGrade(), vplanset);
+            mJSONParser = new JSONParser(this, mProperty.readGrade(), vplanset);
             mJSONParser.execute();
         } else {
             Toast.makeText(this, getString(R.string.text_no_vplan), Toast.LENGTH_LONG).show();
@@ -305,7 +302,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private void setupGcm() {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
-            regid = getRegistrationId(context);
+            regid = mProperty.getRegistrationId(context);
 
             if (regid.isEmpty()) {
                 registerInBackground();
@@ -330,51 +327,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         return true;
     }
 
-    private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGcmPreferences();
-        int appVersion = getAppVersion(context);
-        Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.apply();
-    }
-
-    private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getGcmPreferences();
-        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
-            return "";
-        }
-        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
-        if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
-            return "";
-        }
-        return registrationId;
-    }
-
-    private String getVPlanId() {
-        final SharedPreferences prefs = getGcmPreferences();
-        String vplanID = prefs.getString(PROPERTY_VPLAN_ID, "");
-        if (vplanID.isEmpty()) {
-            Log.i(TAG, "VPlanID not found.");
-            return "";
-        } else {
-            return vplanID;
-        }
-    }
-
-    private void storeVPlanId(String vplanId) {
-        final SharedPreferences prefs = getGcmPreferences();
-        Log.i(TAG, "Saving vplanId");
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_VPLAN_ID, vplanId);
-        editor.apply();
-    }
-
     private void registerInBackground() {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -387,7 +339,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                     Log.i(TAG, "Device registered, registration ID=" + regid);
 
                     sendRegistrationIdToBackend(regid);
-                    storeRegistrationId(context, regid);
+                    mProperty.storeRegistrationId(context, regid);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -398,10 +350,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             protected void onPostExecute(Void v) {
             }
         }.execute(null, null, null);
-    }
-
-    private SharedPreferences getGcmPreferences() {
-        return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     private void sendRegistrationIdToBackend(String regId) {
@@ -493,7 +441,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                             break;
                         case 1:
                             String vId = json.getString("insert");
-                            storeVPlanId(vId);
+                            mProperty.storeClientId(vId);
                             break;
                     }
                 } catch (IOException | JSONException e) {
@@ -517,6 +465,83 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         connection.setDoInput(true);
         connection.setDoOutput(true);
         return connection;
+    }
+
+    /**
+     * This class provides access to the applications SharedPreferences
+     */
+    private class Property {
+
+        private static final String PROPERTY_GRADES = "grades";
+        private static final String PROPERTY_REG_ID = "registration_id";
+        private static final String PROPERTY_CLIENT_ID = "client_id";
+        private static final String PROPERTY_APP_VERSION = "appVersion";
+
+        /**
+         * These preferences belong to the MainActivity, in this case VPlanActivity
+         */
+        private SharedPreferences getMainPreferences() {
+            return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        }
+
+        /**
+         * These preferences belong to the Application and represent the values stored via Settings-API
+         */
+        private SharedPreferences getSettingsPreferences() {
+            return PreferenceManager.getDefaultSharedPreferences(context);
+        }
+
+        private void storeRegistrationId(Context context, String regId) {
+            final SharedPreferences prefs = getMainPreferences();
+            int appVersion = getAppVersion(context);
+            Log.i(TAG, "Saving regId on app version " + appVersion);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(PROPERTY_REG_ID, regId);
+            editor.putInt(PROPERTY_APP_VERSION, appVersion);
+            editor.apply();
+        }
+
+        private String getRegistrationId(Context context) {
+            final SharedPreferences prefs = getMainPreferences();
+            String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+            if (registrationId.isEmpty()) {
+                Log.i(TAG, "Registration not found.");
+                return "";
+            }
+            int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+            int currentVersion = getAppVersion(context);
+            if (registeredVersion != currentVersion) {
+                Log.i(TAG, "App version changed.");
+                return "";
+            }
+            return registrationId;
+        }
+
+        private String getClientId() {
+            final SharedPreferences prefs = getMainPreferences();
+            String vplanID = prefs.getString(PROPERTY_CLIENT_ID, "");
+            if (vplanID.isEmpty()) {
+                Log.i(TAG, "VPlanID not found.");
+                return "";
+            } else {
+                return vplanID;
+            }
+        }
+
+        private void storeClientId(String vplanId) {
+            final SharedPreferences prefs = getMainPreferences();
+            Log.i(TAG, "Saving vplanId");
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(PROPERTY_CLIENT_ID, vplanId);
+            editor.apply();
+        }
+
+        /**
+         * This method retrieves the 'grades' value stored in the SettingsActivity
+         */
+        private String readGrade() {
+            return getSettingsPreferences().getString(PROPERTY_GRADES, "");
+        }
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
