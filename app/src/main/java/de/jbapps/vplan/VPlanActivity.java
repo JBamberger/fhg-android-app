@@ -142,7 +142,7 @@ public class VPlanActivity extends ActionBarActivity implements /*ActionBar.OnNa
             setupActionBar();
             restore();
         }
-        //TODO: checkPlayServices();
+        checkPlayServices();
         IntentFilter mNetworkStateFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkStateReceiver, mNetworkStateFilter);
     }
