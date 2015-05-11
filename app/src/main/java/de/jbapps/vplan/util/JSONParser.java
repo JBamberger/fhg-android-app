@@ -78,14 +78,18 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
             Log.e("matcher", "matched... fuu");
             return ".*";
         }
+        String[] gradeArray = grades.split(",");
+
         for (String pattern : PATTERNS) {
-            if (grades.matches(pattern)) {
-                if (first) {
-                    patternBuilder.append(pattern);
-                    first = false;
-                } else {
-                    patternBuilder.append("|");
-                    patternBuilder.append(pattern);
+            for(String temp : gradeArray) {
+                if (temp.matches(pattern)) {
+                    if (first) {
+                        patternBuilder.append(pattern);
+                        first = false;
+                    } else {
+                        patternBuilder.append("|");
+                        patternBuilder.append(pattern);
+                    }
                 }
             }
         }
