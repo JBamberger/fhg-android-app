@@ -28,6 +28,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.NameValuePair;
@@ -153,7 +155,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         ListView list = (ListView) findViewById(R.id.vplan_list);
 
         mSwipeRefreshLayout.setOnRefreshListener(mRefreshListener);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.green, R.color.green_100, R.color.green, R.color.green_100);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.material_blue_A700, R.color.material_blue_A400, R.color.material_blue_A200, R.color.material_blue_A100);
 
         mListAdapter = new VPlanAdapter(this);
         list.setAdapter(mListAdapter);
@@ -240,7 +242,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            mAPI.doAdd(mProperty.getRegistrationId(context));
+            SnackbarManager.show(Snackbar.with(getApplicationContext())
+                    .text("Snackbar jay :)")
+                    .colorResource(R.color.red)
+                    .duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
+                    .swipeToDismiss(false), this);
+
+            //mAPI.doAdd(mProperty.getRegistrationId(context));
             return true;
         }
         if (id == R.id.action_trigger) {
