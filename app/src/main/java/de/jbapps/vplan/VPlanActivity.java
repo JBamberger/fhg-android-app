@@ -306,7 +306,9 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                     regid = gcm.register(SENDER_ID);
                     Log.i(TAG, "Device registered, registration ID=" + regid);
 
-                    sendRegistrationIdToBackend(regid);
+                    //send registration id to backend
+                    mAPI.doAdd(regid, mProperty);
+
                     mProperty.storeRegistrationId(context, regid);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -318,10 +320,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             protected void onPostExecute(Void v) {
             }
         }.execute(null, null, null);
-    }
-
-    private void sendRegistrationIdToBackend(String regId) {
-        mAPI.doAdd(regId, mProperty);
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
