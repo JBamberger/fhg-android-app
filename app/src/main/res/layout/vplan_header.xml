@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/grey_light"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="12dp">
@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Title"
-        android:textAppearance="?android:attr/textAppearanceLargeInverse"
-        android:textColor="@color/text_primary"
-        android:textStyle="bold" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/material_text_inverse_100"
+        android:textStyle="bold"
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/vplan_status"
@@ -24,9 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/vplan_text"
         android:layout_centerHorizontal="true"
-        android:text="not implemented"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/text_hint"
-        android:textStyle="italic" />
+        android:textColor="@color/material_text_inverse_30"
+        android:textStyle="italic"
+        tools:text="last updated" />
 
 </RelativeLayout>

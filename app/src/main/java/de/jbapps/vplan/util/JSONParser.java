@@ -61,7 +61,6 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
     JSONObject vplan1;
     JSONObject vplan2;
     private String gradePattern;
-    private boolean multipleGrades = true;
 
     public JSONParser(IItemsParsed listener, String grades, VPlanSet vPlanSet) {
         this.vplan1 = vPlanSet.getVPlan1();
@@ -95,9 +94,6 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
             }
         }
         String result = patternBuilder.toString();
-        if (!result.contains("|") && !result.equals("")) {
-            multipleGrades = false;
-        }
 
         if (result.equals("")) {
             return ".*";
@@ -152,21 +148,13 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
             JSONObject temp2 = temp.getJSONObject(i);
             VPlanItemData row;
             if (temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE).matches(gradePattern)) {
-                if (multipleGrades) {
-                    row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
+                row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE),
+                        temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
-                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_GRADE) + ": " + temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
+                        temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
                             temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
                             temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED),
                             temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_MARKED_NEW));
-                } else {
-                    row = new VPlanItemData(temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_HOUR),
-                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_CONTENT),
-                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_SUBJECT),
-                            temp2.getString(VPlanProvider.VPlanLoader.JSON_VPLAN_ROOM),
-                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_OMITTED),
-                            temp2.getBoolean(VPlanProvider.VPlanLoader.JSON_VPLAN_MARKED_NEW));
-                }
                 mData.add(row);
             }
         }

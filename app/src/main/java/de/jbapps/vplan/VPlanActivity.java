@@ -172,6 +172,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         int id = item.getItemId();
 
         if (id == R.id.action_force_reload) {
+            Log.d(TAG, "FORCE RELOAD");
             loadVPlan(true);
             return true;
         }
