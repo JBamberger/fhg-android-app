@@ -130,7 +130,7 @@ public class VPlanProvider {
                 mVPlanSet.setHeader2(getHeader(res2));
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
 
-                //VPlan updated: notify cloud TODO
+                //TODO: VPlan updated: notify cloud
                 new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
 
             } catch (JSONException e) {
