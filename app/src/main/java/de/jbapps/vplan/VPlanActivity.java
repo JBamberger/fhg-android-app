@@ -138,7 +138,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         final ActionBar actionBar = getSupportActionBar();
         String title = gradeState;
         if (title != null && title.equals("")) title = "Alles";
-        actionBar.setTitle("VPlan - " + title);
+        if (actionBar != null) actionBar.setTitle("VPlan - " + title);
     }
 
     private void setupGcm() {
