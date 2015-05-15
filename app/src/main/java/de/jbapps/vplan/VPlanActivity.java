@@ -1,5 +1,6 @@
 package de.jbapps.vplan;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -78,7 +78,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private final API_v1 mAPI = new API_v1();
 
     private String regid;
-    private TextView mStatus;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
@@ -87,6 +86,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private GoogleCloudMessaging gcm;
     private Context context;
     private String gradeState;
+    private Activity mActivity;
 
     private static int getAppVersion(Context context) {
         try {
@@ -103,6 +103,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mActivity = this;
         context = getApplicationContext();
         gradeState = mProperty.readGrade();
         mVPlanProvider = new VPlanProvider(this, this);
@@ -149,7 +150,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     }
 
     private void setupUI() {
-        mStatus = (TextView) findViewById(R.id.status);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
         mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
         ListView list = (ListView) findViewById(R.id.vplan_list);
@@ -242,13 +242,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            SnackbarManager.show(Snackbar.with(getApplicationContext())
-                    .text("Snackbar jay :)")
-                    .colorResource(R.color.red)
-                    .duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
-                    .swipeToDismiss(false), this);
-
-            //mAPI.doAdd(mProperty.getRegistrationId(context));
+            mAPI.doAdd(mProperty.getRegistrationId(context));
             return true;
         }
         if (id == R.id.action_trigger) {
@@ -262,12 +256,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showError(String message) {
-        mStatus.setText(message);
-        mStatus.setBackgroundResource(R.color.red);
-        mStatus.setVisibility(View.VISIBLE);
     }
 
     private void toggleLoading(boolean on) {
@@ -567,9 +555,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
         public void netStateUpdate() {
             if (isOnline()) {
-                mStatus.setVisibility(View.GONE);
+                SnackbarManager.dismiss();
             } else {
-                showError(getString(R.string.text_net_disconnected));
+                SnackbarManager.show(Snackbar.with(getApplicationContext())
+                        .text(getString(R.string.text_net_disconnected))
+                        .colorResource(R.color.material_red_500)
+                        .duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
+                        .swipeToDismiss(false), mActivity);
             }
         }
 
