@@ -32,6 +32,7 @@ public class API_v1 {
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
 
     public void doTrigger() {
+        Log.i(TAG, "Invoking trigger");
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {

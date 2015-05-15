@@ -101,7 +101,7 @@ public class VPlanAdapter extends BaseAdapter {
                     vplanholder = (VPlanHolder) convertView.getTag();
                 }
 
-                vplanholder.layout.setBackgroundResource(vItemData.marked_new ? R.color.green_light : R.color.grey_light);
+                vplanholder.layout.setBackgroundResource(vItemData.marked_new ? R.color.material_green_400 : R.color.grey_light);
 
 
                 vplanholder.subject.setText(vItemData.subject);

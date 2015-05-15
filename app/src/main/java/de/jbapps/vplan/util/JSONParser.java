@@ -21,6 +21,7 @@ import de.jbapps.vplan.ui.VPlanMotd;
  */
 public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
 
+    private static final String TAG = "JSONParser";
     private static final String[] PATTERNS = {
             "(.*5[^0-9]*[aA].*)",
             "(.*5[^0-9]*[bB].*)",
@@ -67,7 +68,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         this.vplan2 = vPlanSet.getVPlan2();
         this.mListener = listener;
         this.gradePattern = generatePattern(grades); //TODO: delegate to background thread to avoid blocking the ui thread
-        Log.e("PATTERN: ", gradePattern);
+        Log.i(TAG, "The generated regex-pattern is:" + gradePattern);
         mData = new ArrayList<>();
     }
 
@@ -75,7 +76,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         StringBuilder patternBuilder = new StringBuilder();
         boolean first = true;
         if (grades.equals("")) {
-            Log.e("matcher", "matched...");
+            Log.i(TAG, "grades empty - using default pattern");
             return ".*";
         }
         String[] gradeArray = grades.split(",");
@@ -108,8 +109,12 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
     @Override
     protected List<VPlanBaseData> doInBackground(Void... params) {
         try {
+            Log.i(TAG, "Parsing VPlan1 started");
             parse(vplan1);
+            Log.i(TAG, "Parsing VPlan1 finished");
+            Log.i(TAG, "Parsing VPlan2 started");
             parse(vplan2);
+            Log.i(TAG, "Parsing VPlan2 finished");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,8 +176,10 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
     protected void onPostExecute(final List<VPlanBaseData> list) {
         if (mListener != null) {
             if (list != null) {
+                Log.i(TAG, "Parsing completed - returning filled list");
                 mListener.onItemsParsed(list);
             } else {
+                Log.i(TAG, "Parsing error occured - returning empty list");
                 mListener.onItemsParsed(null);
             }
         }

@@ -58,13 +58,13 @@ public class GcmIntentService extends IntentService {
                     .setSound(Uri.parse(pref.getString("notification_ringtone", "DEFAULT_SOUND")));
 
 
-            if (Id == NOTIFICATION_ID_VPLAN) {
-                PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, VPlanActivity.class), 0);
+            //if (Id == NOTIFICATION_ID_VPLAN) {
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, VPlanActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
                 mBuilder.setContentIntent(contentIntent);
-            } else if (Id == NOTIFICATION_ID_APP_UPDATE) {
+            /*} else if (Id == NOTIFICATION_ID_APP_UPDATE) {
                 PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.de/")), 0); //TODO: VPlan update page
                 mBuilder.setContentIntent(contentIntent);
-            }
+            }*/
 
             if (pref.getBoolean("notification_vibrate", true)) {
                 long[] pattern = {500, 500, 400, 650};
