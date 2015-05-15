@@ -14,5 +14,7 @@
     <string name="action_get_version">Version anzeigen</string>
     <string name="action_force_reload">Neu Laden</string>
     <string name="text_motd">Nachrichten zum Tag</string>
+    <string name="action_contact_developer">Entwickler kontaktieren</string>
+    <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
 
 </resources>

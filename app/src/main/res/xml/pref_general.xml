@@ -5,4 +5,8 @@
         android:summary="@string/pref_summary_grades"
         android:title="@string/pref_title_grades" />
 
+    <Preference
+        android:key="version"
+        android:title="@string/pref_title_version" />
+
 </PreferenceScreen>

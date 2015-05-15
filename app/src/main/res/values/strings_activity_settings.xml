@@ -11,6 +11,8 @@
     <string name="pref_title_grades">Anzuzeigende Klassen</string>
     <string name="pref_summary_grades">Klassen mit Komma getrennt, um alles anzuzeigen leer lassen</string>
 
+    <string name="pref_title_version">Version</string>
+
     <string name="pref_title_new_message_notifications">Benachrichtigungen</string>
 
     <string name="pref_title_ringtone">Benachrichtigungston</string>

@@ -3,10 +3,9 @@ package de.jbapps.vplan;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -176,20 +176,34 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             loadVPlan(true);
             return true;
         }
-        if (id == R.id.action_bug) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
-            intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Bugreport");
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.action_feedback) {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
-            intent.putExtra(Intent.EXTRA_SUBJECT, "[VPlan-App] Feedback/Frage");
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.action_classic_view) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_FHG_HOME)));
+        if (id == R.id.action_contact_developer) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.text_dialog_contact_developer)
+                    .setItems(R.array.mail_subjects, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String subject;
+                            switch (which) {
+                                case 0:
+                                    subject = "[VPlan-App] question";
+                                    break;
+                                case 1:
+                                    subject = "[VPlan-App] feedback";
+                                    break;
+                                case 2:
+                                    subject = "[VPlan-App] bugreport";
+                                    break;
+                                default:
+                                    subject = "[VPlan-App] general";
+                                    break;
+                            }
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
+                            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                            startActivity(intent);
+                        }
+                    });
+            builder.create().show();
+
             return true;
         }
         if (id == R.id.action_vplan_hp) {
@@ -198,16 +212,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
         if (id == R.id.action_credits) {
             startActivity(new Intent(this, CreditsActivity.class));
-            return true;
-        }
-        if (id == R.id.action_get_version) {
-            try {
-                PackageInfo info = getPackageManager().getPackageInfo(this.getPackageName(), 0);
-                Toast.makeText(this, "Version " + info.versionName, Toast.LENGTH_LONG).show();
-            } catch (PackageManager.NameNotFoundException e) {
-                Toast.makeText(this, "Fehler im Packagename!", Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
             return true;
         }
         if (id == R.id.action_settings) {

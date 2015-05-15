@@ -70,4 +70,11 @@
         <item>.*K.*1.*</item>
         <item>.*K.*2.*</item>
     </string-array>
+
+    <string-array name="mail_subjects">
+        <item>Frage stellen</item>
+        <item>Feedback geben</item>
+        <item>Fehler melden</item>
+        <item>anderes</item>
+    </string-array>
 </resources>
