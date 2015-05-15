@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -13,7 +12,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -31,26 +29,14 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.ui.VPlanBaseData;
+import de.jbapps.vplan.util.API_v1;
 import de.jbapps.vplan.util.JSONParser;
-import de.jbapps.vplan.util.NetUtils;
+import de.jbapps.vplan.util.Property;
 import de.jbapps.vplan.util.VPlanAdapter;
 import de.jbapps.vplan.util.VPlanProvider;
 
@@ -58,10 +44,6 @@ import de.jbapps.vplan.util.VPlanProvider;
 public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {
 
     private static final String TAG = "VPlanActivity";
-
-    private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
-    private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
-    private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
 
     private static final String URL_MAIL_DEVELOPER = "mailto:vplanbugreport@gmail.com";
     private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
@@ -74,7 +56,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
-    private final Property mProperty = new Property();
+    private final Property mProperty = new Property(this);
     private final API_v1 mAPI = new API_v1();
 
     private String regid;
@@ -88,22 +70,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private String gradeState;
     private Activity mActivity;
 
-    private static int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mActivity = this;
+
         context = getApplicationContext();
         gradeState = mProperty.readGrade();
         mVPlanProvider = new VPlanProvider(this, this);
@@ -242,7 +215,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            mAPI.doAdd(mProperty.getRegistrationId(context));
+            mAPI.doAdd(mProperty.getRegistrationId(context), mProperty);
             return true;
         }
         if (id == R.id.action_trigger) {
@@ -343,201 +316,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     }
 
     private void sendRegistrationIdToBackend(String regId) {
-        mAPI.doAdd(regId);
-    }
-
-    /**
-     * This class represents the API in version 1.0
-     * It contains the corresponding methods to 'add', 'ping' and 'trigger'
-     */
-    private class API_v1 {
-        private void doTrigger() {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    HttpURLConnection connection = null;
-                    try {
-                        connection = getDefaultURLConnection(API_TRIGGER);
-                        connection.connect();
-                        InputStream in = connection.getInputStream();
-                        String content = IOUtils.toString(in, "UTF-8");
-                        Log.i(TAG, "Trigger Response: " + content);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (connection != null) connection.disconnect();
-                    }
-                    return null;
-                }
-            }.execute();
-
-
-        }
-
-        private void doPing(final String id) {
-            Log.i(TAG, "Pinging with id: " + id);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    HttpURLConnection connection = null;
-                    try {
-                        connection = getDefaultURLConnection(API_PING);
-
-                        List<NameValuePair> nameValuePairs = new ArrayList<>();
-                        nameValuePairs.add(new BasicNameValuePair("id", id));
-
-                        OutputStream os = connection.getOutputStream();
-                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                        writer.write(NetUtils.getQuery(nameValuePairs));
-                        writer.flush();
-                        writer.close();
-                        os.close();
-                        connection.connect();
-                        InputStream in = connection.getInputStream();
-                        String content = IOUtils.toString(in, "UTF-8");
-                        Log.i(TAG, "Ping Response: " + content);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (connection != null)
-                            connection.disconnect();
-                    }
-                    return null;
-                }
-            }.execute();
-        }
-
-        private void doAdd(final String gcmId) {
-            Log.i(TAG, "Adding gcmId: " + gcmId);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
-                    HttpURLConnection connection = null;
-                    try {
-                        connection = getDefaultURLConnection(API_ADD);
-
-                        List<NameValuePair> nameValuePairs = new ArrayList<>();
-                        nameValuePairs.add(new BasicNameValuePair("gcm", gcmId));
-
-                        OutputStream os = connection.getOutputStream();
-                        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                        writer.write(NetUtils.getQuery(nameValuePairs));
-                        writer.flush();
-                        writer.close();
-                        os.close();
-                        connection.connect();
-                        InputStream in = connection.getInputStream();
-                        String content = IOUtils.toString(in, "UTF-8");
-                        Log.i(TAG, "Add Response: " + content);
-                        JSONObject json = new JSONObject(content);
-                        switch (Integer.parseInt(json.getString("status"))) {
-                            case 0:
-                                Log.e(TAG, "Adding failed: " + json.getString("error"));
-                                break;
-                            case 1:
-                                String vId = json.getString("insert");
-                                mProperty.storeClientId(vId);
-                                break;
-                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (connection != null)
-                            connection.disconnect();
-                    }
-                    return null;
-                }
-            }.execute();
-        }
-
-        private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
-            HttpURLConnection connection;
-            URL address = new URL(URL);
-            connection = (HttpURLConnection) address.openConnection();
-            connection.setReadTimeout(10000);
-            connection.setConnectTimeout(15000);
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            return connection;
-        }
-    }
-
-    /**
-     * This class provides access to the applications SharedPreferences
-     */
-    private class Property {
-
-        private static final String PROPERTY_GRADES = "grades";
-        private static final String PROPERTY_REG_ID = "registration_id";
-        private static final String PROPERTY_CLIENT_ID = "client_id";
-        private static final String PROPERTY_APP_VERSION = "appVersion";
-
-        /**
-         * These preferences belong to the MainActivity, in this case VPlanActivity
-         */
-        private SharedPreferences getMainPreferences() {
-            return getSharedPreferences(VPlanActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-        }
-
-        /**
-         * These preferences belong to the Application and represent the values stored via Settings-API
-         */
-        private SharedPreferences getSettingsPreferences() {
-            return PreferenceManager.getDefaultSharedPreferences(context);
-        }
-
-        private void storeRegistrationId(Context context, String regId) {
-            final SharedPreferences prefs = getMainPreferences();
-            int appVersion = getAppVersion(context);
-            Log.i(TAG, "Saving regId on app version " + appVersion);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PROPERTY_REG_ID, regId);
-            editor.putInt(PROPERTY_APP_VERSION, appVersion);
-            editor.apply();
-        }
-
-        private String getRegistrationId(Context context) {
-            final SharedPreferences prefs = getMainPreferences();
-            String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-            if (registrationId == null || registrationId.isEmpty()) {
-                Log.i(TAG, "Registration not found.");
-                return "";
-            }
-            int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-            int currentVersion = getAppVersion(context);
-            if (registeredVersion != currentVersion) {
-                Log.i(TAG, "App version changed.");
-                return "";
-            }
-            return registrationId;
-        }
-
-        private String getClientId() {
-            final SharedPreferences prefs = getMainPreferences();
-            String clientId = prefs.getString(PROPERTY_CLIENT_ID, "");
-            if (clientId == null || clientId.isEmpty()) {
-                Log.i(TAG, "VPlanID not found.");
-                return "";
-            } else {
-                return clientId;
-            }
-        }
-
-        private void storeClientId(String clientId) {
-            final SharedPreferences prefs = getMainPreferences();
-            Log.i(TAG, "Saving vplanId");
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(PROPERTY_CLIENT_ID, clientId);
-            editor.apply();
-        }
-
-        /**
-         * This method retrieves the 'grades' value stored in the SettingsActivity
-         */
-        private String readGrade() {
-            return getSettingsPreferences().getString(PROPERTY_GRADES, "");
-        }
+        mAPI.doAdd(regId, mProperty);
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {

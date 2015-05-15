@@ -94,9 +94,7 @@ public class VPlanProvider {
         public static final String JSON_VPLAN_CONTENT = "content";
         public static final String JSON_VPLAN_GRADE = "grade";
         public static final String JSON_VPLAN_MARKED_NEW = "marked_new";
-        /**
-         * Used for logging
-         */
+
         private static final String TAG = "VPlanLoader";
         private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
         private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
@@ -132,6 +130,7 @@ public class VPlanProvider {
                 mVPlanSet.setHeader2(getHeader(res2));
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
 
+                //VPlan updated: notify cloud TODO
                 new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
 
             } catch (JSONException e) {
