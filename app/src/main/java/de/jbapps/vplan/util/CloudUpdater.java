@@ -8,6 +8,7 @@ import android.util.Log;
  * params[0] = header1
  * params[1] = header2
  */
+@SuppressWarnings("propably unused")
 public class CloudUpdater extends AsyncTask<String, Void, Void> {
 
     private static final String TAG = "CloudUpdater";

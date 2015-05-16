@@ -75,7 +75,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         setContentView(R.layout.activity_main);
 
         mActivity = this;
-
         context = getApplicationContext();
         gradeState = mProperty.readGrade();
         mVPlanProvider = new VPlanProvider(this, this);
@@ -87,17 +86,19 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mNetworkStateReceiver.netStateUpdate();
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
+            //initial startup
             loadVPlan(false);
+            API_v1.doPing(mProperty.getClientId());
         } else {
             loadCachedVPlan();
         }
-        API_v1.doPing(mProperty.getClientId());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (!gradeState.equals(mProperty.readGrade())) {
+            //returning from settings, update title and list
             gradeState = mProperty.readGrade();
             setupActionBar();
             loadCachedVPlan();
@@ -148,16 +149,16 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             if (regid.isEmpty()) {
                 registerInBackground();
             }
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (mListAdapter.getCount() > 0) {
-            outState.putBoolean(STATE_SHOULD_REFRESH, false);
-        }
+        outState.putBoolean(STATE_SHOULD_REFRESH, isListEmpty());
+    }
+
+    private boolean isListEmpty() {
+        return !(mListAdapter.getCount() > 0);
     }
 
     @Override
@@ -171,7 +172,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         int id = item.getItemId();
 
         if (id == R.id.action_force_reload) {
-            Log.d(TAG, "FORCE RELOAD");
+            Log.d(TAG, "invoked force reload");
             loadVPlan(true);
             return true;
         }
@@ -217,7 +218,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-
         if (id == R.id.action_add) {
             API_v1.doAdd(mProperty.getRegistrationId(context), mProperty);
             return true;
@@ -230,8 +230,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             API_v1.doPing(mProperty.getClientId());
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -276,6 +274,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     @Override
     public void onItemsParsed(List<VPlanBaseData> dataList) {
         mListAdapter.setData(dataList);
+        mListAdapter.notifyDataSetChanged();
         toggleLoading(false);
     }
 
@@ -283,14 +282,15 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Log.i(TAG, "This device is not supported.");
                 finish();
             }
+            Log.i(TAG, "No valid Google Play Services APK found.");
             return false;
         }
+        Log.i(TAG, "Google Play Services APK available.");
         return true;
     }
 

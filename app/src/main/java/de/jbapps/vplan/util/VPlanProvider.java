@@ -132,13 +132,15 @@ public class VPlanProvider {
                 HttpResponse res2 = loadPage(URL_VPLAN2);
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
                 String header2 = getHeader(res2);
-
-                if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
-                    Log.i(TAG, "headers different, trigger executed");
-                    //TODO: VPlan updated: notify cloud
-                    //API_v1.doTrigger2("");
-                    //new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
+                if (mVPlanSet.readHeader()) {
+                    if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
+                        Log.i(TAG, "headers different, trigger executed");
+                        //TODO: VPlan updated: notify cloud
+                        //API_v1.doTrigger2("");
+                        //new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
+                    }
                 }
+
                 mVPlanSet.setHeader1(header1);
                 mVPlanSet.setHeader2(header2);
                 mVPlanSet.writeAll();
