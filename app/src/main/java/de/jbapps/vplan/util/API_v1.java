@@ -55,6 +55,41 @@ public class API_v1 {
 
     }
 
+    public static void doTrigger2(final String updatedAt) {
+        Log.i(TAG, "Invoking trigger");
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                HttpURLConnection connection = null;
+                try {
+                    connection = getDefaultURLConnection(API_TRIGGER);
+
+                    List<NameValuePair> nameValuePairs = new ArrayList<>();
+                    nameValuePairs.add(new BasicNameValuePair("updated_at", "Sat, 16 May 2015 12:47:04 GMT"));
+
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(NetUtils.getQuery(nameValuePairs));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+
+                    connection.connect();
+                    InputStream in = connection.getInputStream();
+                    String content = IOUtils.toString(in, "UTF-8");
+                    Log.i(TAG, "Trigger Response: " + content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (connection != null) connection.disconnect();
+                }
+                return null;
+            }
+        }.execute();
+
+
+    }
+
     public static void doPing(final String id) {
         Log.i(TAG, "Pinging with id: " + id);
         new AsyncTask<Void, Void, Void>() {

@@ -131,7 +131,7 @@ public class VPlanProvider {
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
 
                 //TODO: VPlan updated: notify cloud
-                API_v1.doTrigger();
+                //API_v1.doTrigger2("");
                 new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
 
             } catch (JSONException e) {
