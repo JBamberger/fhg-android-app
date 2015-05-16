@@ -57,7 +57,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private final Property mProperty = new Property(this);
-    private final API_v1 mAPI = new API_v1();
 
     private String regid;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -92,7 +91,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         } else {
             loadCachedVPlan();
         }
-        mAPI.doPing(mProperty.getClientId());
+        API_v1.doPing(mProperty.getClientId());
     }
 
     @Override
@@ -220,15 +219,15 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         if (id == R.id.action_add) {
-            mAPI.doAdd(mProperty.getRegistrationId(context), mProperty);
+            API_v1.doAdd(mProperty.getRegistrationId(context), mProperty);
             return true;
         }
         if (id == R.id.action_trigger) {
-            mAPI.doTrigger();
+            API_v1.doTrigger();
             return true;
         }
         if (id == R.id.action_ping) {
-            mAPI.doPing(mProperty.getClientId());
+            API_v1.doPing(mProperty.getClientId());
             return true;
         }
 
@@ -307,7 +306,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                     Log.i(TAG, "Device registered, registration ID=" + regid);
 
                     //send registration id to backend
-                    mAPI.doAdd(regid, mProperty);
+                    API_v1.doAdd(regid, mProperty);
 
                     mProperty.storeRegistrationId(context, regid);
                 } catch (IOException e) {

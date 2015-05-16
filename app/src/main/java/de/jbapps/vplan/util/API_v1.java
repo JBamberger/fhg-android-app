@@ -31,7 +31,7 @@ public class API_v1 {
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
 
-    public void doTrigger() {
+    public static void doTrigger() {
         Log.i(TAG, "Invoking trigger");
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -55,7 +55,7 @@ public class API_v1 {
 
     }
 
-    public void doPing(final String id) {
+    public static void doPing(final String id) {
         Log.i(TAG, "Pinging with id: " + id);
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -88,7 +88,7 @@ public class API_v1 {
         }.execute();
     }
 
-    public void doAdd(final String gcmId, final Property property) {
+    public static void doAdd(final String gcmId, final Property property) {
         Log.i(TAG, "Adding gcmId: " + gcmId);
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -131,7 +131,7 @@ public class API_v1 {
         }.execute();
     }
 
-    private HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
+    private static HttpURLConnection getDefaultURLConnection(String URL) throws IOException {
         HttpURLConnection connection;
         java.net.URL address = new URL(URL);
         connection = (HttpURLConnection) address.openConnection();
