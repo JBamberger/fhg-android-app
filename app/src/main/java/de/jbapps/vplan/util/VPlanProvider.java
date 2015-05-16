@@ -44,17 +44,17 @@ public class VPlanProvider {
         mListener = listener;
     }
 
-    public void getVPlan(boolean forceLoad) {
-        cancel();
-        mVPlanLoader = new VPlanLoader(mVPlanSet);
-        mVPlanLoader.execute(forceLoad);
-    }
-
     public void cancel() {
         if (mVPlanLoader != null) {
             mVPlanLoader.cancel(true);
             mVPlanLoader = null;
         }
+    }
+
+    public void getVPlan(boolean forceLoad) {
+        cancel();
+        mVPlanLoader = new VPlanLoader(mVPlanSet);
+        mVPlanLoader.execute(forceLoad);
     }
 
     public void getCachedVPlan() {
@@ -71,11 +71,14 @@ public class VPlanProvider {
         if (loadCache) {
             getCachedVPlan();
         } else {
-            mVPlanSet.writeAll();
+
             mListener.vPlanLoaded(mVPlanSet);
         }
     }
 
+    /**
+     * This interface is the connection to the given Activity
+     */
     public interface IVPlanLoader {
         void vPlanLoaded(VPlanSet vplanset);
     }
@@ -112,7 +115,7 @@ public class VPlanProvider {
         protected Void doInBackground(Boolean... params) {
             boolean forceLoad = params[0];
             try {
-                //Load the headers first to check if cache is current
+                //Load the headers first to check if cache is up to date
                 if (!forceLoad && mVPlanSet.readHeader()) {
                     String header1 = loadHeader(URL_VPLAN1);
                     String header2 = loadHeader(URL_VPLAN2);
@@ -123,16 +126,22 @@ public class VPlanProvider {
                     }
                 }
                 HttpResponse res1 = loadPage(URL_VPLAN1);
-                mVPlanSet.setHeader1(getHeader(res1));
                 mVPlanSet.setVPlan1(parse(getVPlan(res1)));
+                String header1 = getHeader(res1);
 
                 HttpResponse res2 = loadPage(URL_VPLAN2);
-                mVPlanSet.setHeader2(getHeader(res2));
                 mVPlanSet.setVPlan2(parse(getVPlan(res2)));
+                String header2 = getHeader(res2);
 
-                //TODO: VPlan updated: notify cloud
-                //API_v1.doTrigger2("");
-                new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
+                if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
+                    Log.i(TAG, "headers different, trigger executed");
+                    //TODO: VPlan updated: notify cloud
+                    //API_v1.doTrigger2("");
+                    //new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
+                }
+                mVPlanSet.setHeader1(header1);
+                mVPlanSet.setHeader2(header2);
+                mVPlanSet.writeAll();
 
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
