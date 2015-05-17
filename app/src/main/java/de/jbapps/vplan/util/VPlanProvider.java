@@ -17,24 +17,15 @@ public class VPlanProvider implements VPlanLoader.IOnLoadingFinished {
      */
     private final IVPlanLoader mListener;
     private VPlanSet mVPlanSet;
-    private VPlanLoader mVPlanLoader;
 
     public VPlanProvider(Context context, IVPlanLoader listener) {
         mVPlanSet = new VPlanSet(context);
         mListener = listener;
     }
 
-    public void cancel() {
-        if (mVPlanLoader != null) {
-            mVPlanLoader.cancel(true);
-            mVPlanLoader = null;
-        }
-    }
 
     public void getVPlan(boolean forceLoad) {
-        cancel();
-        mVPlanLoader = new VPlanLoader(this, mVPlanSet);
-        mVPlanLoader.execute(forceLoad);
+        new VPlanLoader(this, mVPlanSet).execute(forceLoad);
     }
 
     public void getCachedVPlan() {
@@ -48,7 +39,6 @@ public class VPlanProvider implements VPlanLoader.IOnLoadingFinished {
 
     @Override
     public void loaderFinished(boolean loadCache) {
-        mVPlanLoader = null;
         if (loadCache) {
             getCachedVPlan();
         } else {

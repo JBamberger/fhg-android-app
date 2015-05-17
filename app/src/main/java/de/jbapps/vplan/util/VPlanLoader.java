@@ -56,7 +56,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
     @Override
     protected Void doInBackground(Boolean... params) {
-        Log.i(TAG, "doInBackground invoked");
+        Log.e(TAG, "doInBackground invoked");
         boolean forceLoad = params[0];
         try {
             //Load the headers first to check if cache is up to date
@@ -66,7 +66,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
                 if (mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2)) {
                     loadCache = true;
-                    Log.d(TAG, "loadCache" + loadCache);
+                    Log.d(TAG, "loadCache: " + loadCache);
                     return null;
                 }
             }
@@ -193,7 +193,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
     @Override
     protected void onPostExecute(Void v) {
-        Log.i(TAG, "onPostExecuted invoked");
+        Log.e(TAG, "onPostExecuted invoked");
         if (mListener != null) {
             mListener.loaderFinished(loadCache);
         }

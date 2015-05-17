@@ -118,7 +118,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             mJSONParser.cancel(true);
             mJSONParser = null;
         }
-        mVPlanProvider.cancel();
 
     }
 
