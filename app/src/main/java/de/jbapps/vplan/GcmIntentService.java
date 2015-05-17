@@ -15,6 +15,12 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import de.jbapps.vplan.data.VPlanSet;
+
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID_VPLAN = 1;
     public static final int NOTIFICATION_ID_APP_UPDATE = 2;
@@ -37,8 +43,34 @@ public class GcmIntentService extends IntentService {
                 Log.i(TAG, "Deleted messages on server: " + extras.toString());
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
-                sendNotification(NOTIFICATION_ID_VPLAN, "VPlan aktualisiert", "Received: " + extras.toString());
-                Log.i(TAG, "Received: " + extras.toString());
+                Log.i(TAG, "GCM received: " + extras.toString());
+
+                String hint = extras.getString("hint");
+                Log.i(TAG, "hint: " + hint);
+                if (hint.equals("possible_update")) {
+                    String version = extras.getString("version");
+                    VPlanSet set = new VPlanSet(this);
+                    set.readHeader();
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+
+                    try {
+                        long time1 = sdf.parse(set.getHeader1()).getTime();
+                        long time2 = sdf.parse(set.getHeader2()).getTime();
+                        sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
+                        long versionTime = sdf.parse(version).getTime();
+                        Log.i(TAG, "header1: " + set.getHeader1() + " time: " + time2);
+                        Log.i(TAG, "header2: " + set.getHeader1() + " time: " + time1);
+                        Log.i(TAG, "received header: " + version + " time: " + versionTime);
+
+                        if (versionTime > time1 || versionTime > time2) {
+                            sendNotification(NOTIFICATION_ID_VPLAN, "VPlan aktualisiert", "Received: " + extras.toString());
+                        } else {
+                            Log.i(TAG, "Notification aborted, received header not current");
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -61,7 +93,7 @@ public class GcmIntentService extends IntentService {
 
             //if (Id == NOTIFICATION_ID_VPLAN) {
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, VPlanActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.setContentIntent(contentIntent);
+            mBuilder.setContentIntent(contentIntent);
             /*} else if (Id == NOTIFICATION_ID_APP_UPDATE) {
                 PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.de/")), 0); //TODO: VPlan update page
                 mBuilder.setContentIntent(contentIntent);

@@ -1,7 +1,6 @@
 package de.jbapps.vplan.util;
 
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -114,11 +113,12 @@ public class API_v1 {
     private static void handleTrigger(String response) throws JSONException {
         if (response == null) return;
         JSONObject res = new JSONObject(response);
-        String status = res.getString("status");
-        String output64 = res.getString("output64");
-        Log.i(TAG, "Status: " + status);
-        Log.i(TAG, new String(Base64.decode(output64, Base64.DEFAULT)));
-        //TODO: evaluate data
+        int status = res.getInt("status");
+        Log.i(TAG, "Trigger response status: " + status);
+        if (status == 0) {
+            String error = res.getString("error");
+            Log.e(TAG, "Error: " + error);
+        }
     }
 
     public static void doPing(final String id) {
