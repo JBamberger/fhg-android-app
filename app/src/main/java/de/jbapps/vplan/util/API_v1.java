@@ -1,6 +1,7 @@
 package de.jbapps.vplan.util;
 
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -16,8 +17,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This class represents the API in version 1.0
@@ -30,8 +35,9 @@ public class API_v1 {
     private static final String API_ADD = "http://fhg42-vplanapp.rhcloud.com/add";
     private static final String API_PING = "http://fhg42-vplanapp.rhcloud.com/ping";
     private static final String API_TRIGGER = "http://fhg42-vplanapp.rhcloud.com/trigger";
+    private static final String API_TRIGGER_DEBUG = "http://fhg42-vplanapp.rhcloud.com/trigger/1";
 
-    public static void doTrigger() {
+    /*public static void doTrigger() {
         Log.i(TAG, "Invoking trigger");
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -51,11 +57,9 @@ public class API_v1 {
                 return null;
             }
         }.execute();
+    }*/
 
-
-    }
-
-    public static void doTrigger2(final String updatedAt) {
+    public static void doTrigger(final String header1, final String header2) {
         Log.i(TAG, "Invoking trigger");
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -64,9 +68,10 @@ public class API_v1 {
                 try {
                     connection = getDefaultURLConnection(API_TRIGGER);
 
+                    String header = getRecentHeader(header1, header2);
                     List<NameValuePair> nameValuePairs = new ArrayList<>();
-                    nameValuePairs.add(new BasicNameValuePair("updated_at", "Sat, 16 May 2015 12:47:04 GMT"));
-
+                    nameValuePairs.add(new BasicNameValuePair("updated_at", header));
+                    Log.i(TAG, "Sending invoke trigger with \"" + header + "\"");
                     OutputStream os = connection.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
                     writer.write(NetUtils.getQuery(nameValuePairs));
@@ -78,7 +83,12 @@ public class API_v1 {
                     InputStream in = connection.getInputStream();
                     String content = IOUtils.toString(in, "UTF-8");
                     Log.i(TAG, "Trigger Response: " + content);
+                    handleTrigger(content);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
                     e.printStackTrace();
                 } finally {
                     if (connection != null) connection.disconnect();
@@ -88,6 +98,27 @@ public class API_v1 {
         }.execute();
 
 
+    }
+
+    private static String getRecentHeader(String h1, String h2) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        Date d1 = format.parse(h1);
+        Date d2 = format.parse(h2);
+        if (d1.getTime() > d2.getTime()) {
+            return h1;
+        } else {
+            return h2;
+        }
+    }
+
+    private static void handleTrigger(String response) throws JSONException {
+        if (response == null) return;
+        JSONObject res = new JSONObject(response);
+        String status = res.getString("status");
+        String output64 = res.getString("output64");
+        Log.i(TAG, "Status: " + status);
+        Log.i(TAG, new String(Base64.decode(output64, Base64.DEFAULT)));
+        //TODO: evaluate data
     }
 
     public static void doPing(final String id) {

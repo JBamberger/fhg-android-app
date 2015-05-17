@@ -136,8 +136,7 @@ public class VPlanProvider {
                     if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
                         Log.i(TAG, "headers different, trigger executed");
                         //TODO: VPlan updated: notify cloud
-                        //API_v1.doTrigger2("");
-                        //new CloudUpdater().execute(mVPlanSet.getHeader1(), mVPlanSet.getHeader2());
+                        API_v1.doTrigger(header1, header2);
                     }
                 }
 
