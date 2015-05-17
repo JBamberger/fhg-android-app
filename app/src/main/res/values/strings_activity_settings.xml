@@ -5,7 +5,7 @@
 
     <!-- Example General settings -->
     <string name="pref_header_general">Allgemein</string>
-    <string name="pref_header_notifications">Benachrichtigungen (in Entwicklung)</string>
+    <string name="pref_header_notifications">Benachrichtigungen</string>
 
 
     <string name="pref_title_grades">Anzuzeigende Klassen</string>

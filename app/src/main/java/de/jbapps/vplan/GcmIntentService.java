@@ -50,6 +50,7 @@ public class GcmIntentService extends IntentService {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setAutoCancel(true)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle(title)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
