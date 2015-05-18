@@ -58,6 +58,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
     protected Void doInBackground(Boolean... params) {
         Log.e(TAG, "doInBackground invoked");
         boolean forceLoad = params[0];
+        Log.i(TAG, "force loading on:" + forceLoad);
         try {
             //Load the headers first to check if cache is up to date
             if (!forceLoad && mVPlanSet.readHeader()) {
@@ -66,7 +67,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 
                 if (mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2)) {
                     loadCache = true;
-                    Log.d(TAG, "loadCache: " + loadCache);
+                    Log.d(TAG, "loadCache: true");
                     return null;
                 }
             }
@@ -77,10 +78,10 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
             HttpResponse res2 = loadPage(URL_VPLAN2);
             mVPlanSet.setVPlan2(parse(getVPlan(res2)));
             String header2 = getHeader(res2);
+
             if (mVPlanSet.readHeader()) {
                 if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
                     Log.i(TAG, "headers different, trigger executed");
-                    //TODO: VPlan updated: notify cloud
                     API_v1.doTrigger(header1, header2);
                 }
             }

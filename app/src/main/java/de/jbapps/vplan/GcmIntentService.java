@@ -55,15 +55,15 @@ public class GcmIntentService extends IntentService {
 
                     try {
                         long time1 = sdf.parse(set.getHeader1()).getTime();
+                        Log.i(TAG, "header1: " + set.getHeader1() + " time: " + time1);
                         long time2 = sdf.parse(set.getHeader2()).getTime();
-                        sdf.applyPattern("yyyy-MM-dd HH:mm:ss");
+                        Log.i(TAG, "header2: " + set.getHeader2() + " time: " + time2);
                         long versionTime = sdf.parse(version).getTime();
-                        Log.i(TAG, "header1: " + set.getHeader1() + " time: " + time2);
-                        Log.i(TAG, "header2: " + set.getHeader1() + " time: " + time1);
-                        Log.i(TAG, "received header: " + version + " time: " + versionTime);
+                        Log.i(TAG, "rHeader: " + version + " time: " + versionTime);
 
                         if (versionTime > time1 || versionTime > time2) {
                             sendNotification(NOTIFICATION_ID_VPLAN, "VPlan aktualisiert", "Received: " + extras.toString());
+                            Log.i(TAG, "Notification published.");
                         } else {
                             Log.i(TAG, "Notification aborted, received header not current");
                         }

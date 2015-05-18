@@ -257,6 +257,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     @Override
     public void vPlanLoaded(VPlanSet vplanset) {
+        Log.i(TAG, "vPlanLoaded executed");
         if (vplanset != null) {
             if (mJSONParser != null) {
                 mJSONParser.cancel(true);
@@ -272,8 +273,10 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     @Override
     public void onItemsParsed(List<VPlanBaseData> dataList) {
+        Log.i(TAG, "JSON parsed");
         mListAdapter.setData(dataList);
         mListAdapter.notifyDataSetChanged();
+        Log.i(TAG, "Data supplied to ListView");
         toggleLoading(false);
     }
 
