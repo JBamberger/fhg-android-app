@@ -141,7 +141,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     private void setupActionBar() {
         final ActionBar actionBar = getSupportActionBar();
         String title = gradeState;
-        if (title != null && title.equals("")) title = "Alles";
+        if (title != null && title.equals("")) title = "Alles";//FIXME: possible bug
         if (actionBar != null) actionBar.setTitle("VPlan - " + title);
     }
 
@@ -268,18 +268,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
-        if (id == R.id.action_add) {
-            API_v1.doAdd(mProperty.getRegistrationId(context), mProperty);
-            return true;
-        }
-        if (id == R.id.action_trigger) {
-            API_v1.doTrigger("Sun, 17 May 2015 23:55:38 GMT", "Wed, 09 Apr 2008 23:55:38 GMT");
-            return true;
-        }
-        if (id == R.id.action_ping) {
-            API_v1.doPing(mProperty.getClientId());
             return true;
         }
         return super.onOptionsItemSelected(item);
