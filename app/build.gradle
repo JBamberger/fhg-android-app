@@ -9,8 +9,8 @@ android {
         applicationId "de.jbapps.vplan"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 23
-        versionName '1.2.4'
+        versionCode 24
+        versionName '1.2.5'
     }
     buildTypes {
         release {

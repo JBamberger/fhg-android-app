@@ -183,7 +183,11 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                             output.append(",");
                         }
                         String grades = output.toString();
-                        grades = grades.substring(0, grades.length() - 1);
+                        if (grades.length() > 0) {
+                            grades = grades.substring(0, grades.length() - 1);
+                        } else {
+                            grades = "";
+                        }
                         mProperty.storeGrade(grades);
                         mProperty.setShowGradePicker(false);
                         gradeState = grades;
