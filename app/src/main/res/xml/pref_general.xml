@@ -6,6 +6,10 @@
         android:title="@string/pref_title_grades" />
 
     <Preference
+        android:key="grade"
+        android:title="Klasse" />
+
+    <Preference
         android:key="version"
         android:title="@string/pref_title_version" />
 
