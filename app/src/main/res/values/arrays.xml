@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="listGrades">
-        <item>Alle Klassen</item>
         <item>5a</item>
         <item>5b</item>
         <item>5c</item>
@@ -36,7 +35,6 @@
         <item>K2</item>
     </string-array>
     <string-array name="listGradePatterns">
-        <item>.*</item>
         <item>.*5[^0-9]*a.*</item>
         <item>.*5[^0-9]*b.*</item>
         <item>.*5[^0-9]*c.*</item>

@@ -16,5 +16,9 @@
     <string name="text_motd">Nachrichten zum Tag</string>
     <string name="action_contact_developer">Entwickler kontaktieren</string>
     <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
+    <string name="text_dialog_pick_grade">Anzuzeigende Klassen</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_all">alle anzeigen</string>
 
 </resources>

@@ -30,6 +30,7 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.jbapps.vplan.data.VPlanSet;
@@ -84,6 +85,10 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         setupGcm();
 
         mNetworkStateReceiver.netStateUpdate();
+        if (mProperty.getShowGradePicker()) {
+            showGradePicker();
+        }
+
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
             //initial startup
@@ -149,6 +154,54 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                 registerInBackground();
             }
         }
+    }
+
+    public void showGradePicker() {
+        final List<Integer> selected = new ArrayList<>();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.text_dialog_pick_grade)
+                .setMultiChoiceItems(R.array.listGrades, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which,
+                                                boolean isChecked) {
+                                if (isChecked) {
+                                    selected.add(which);
+                                } else if (selected.contains(which)) {
+                                    selected.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        String[] list = getResources().getStringArray(R.array.listGrades);
+                        StringBuilder output = new StringBuilder();
+                        for (int i : selected) {
+                            output.append(list[i]);
+                            output.append(",");
+                        }
+                        String grades = output.toString();
+                        grades = grades.substring(0, grades.length() - 1);
+                        mProperty.storeGrade(grades);
+                        mProperty.setShowGradePicker(false);
+                        gradeState = grades;
+                        setupActionBar();
+                        loadCachedVPlan();
+                    }
+                })
+                .setNegativeButton(R.string.select_all, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        mProperty.storeGrade("");
+                        mProperty.setShowGradePicker(false);
+                        gradeState = "";
+                        setupActionBar();
+                        loadCachedVPlan();
+                    }
+                });
+
+        builder.create().show();
     }
 
     @Override

@@ -16,6 +16,7 @@ public class Property {
 
     private static final String TAG = "Property";
     private static final String PROPERTY_GRADES = "grades";
+    private static final String PROPERTY_SHOW_GRADE_PICKER = "show_grade_picker";
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_CLIENT_ID = "client_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -99,5 +100,25 @@ public class Property {
      */
     public String readGrade() {
         return getSettingsPreferences().getString(PROPERTY_GRADES, "");
+    }
+
+    public void storeGrade(String grades) {
+        final SharedPreferences prefs = getSettingsPreferences();
+        Log.i(TAG, "Saving grades");
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_GRADES, grades);
+        editor.apply();
+    }
+
+    public boolean getShowGradePicker() {
+        return getMainPreferences().getBoolean(PROPERTY_SHOW_GRADE_PICKER, true);
+    }
+
+    public void setShowGradePicker(boolean show) {
+        final SharedPreferences prefs = getMainPreferences();
+        Log.i(TAG, "Saving showgradepicker: " + show);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PROPERTY_SHOW_GRADE_PICKER, show);
+        editor.apply();
     }
 }
