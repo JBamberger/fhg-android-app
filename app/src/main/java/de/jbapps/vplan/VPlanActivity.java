@@ -57,7 +57,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
-    private final Property mProperty = new Property(this);
+    private Property mProperty;
 
     private String regid;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -76,6 +76,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         setContentView(R.layout.activity_main);
 
         mActivity = this;
+        mProperty = new Property(this);
         context = getApplicationContext();
         gradeState = mProperty.readGrade();
         mVPlanProvider = new VPlanProvider(this, this);

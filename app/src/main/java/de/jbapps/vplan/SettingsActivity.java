@@ -24,6 +24,8 @@ import de.jbapps.vplan.util.Property;
 
 public class SettingsActivity extends PreferenceActivity {
 
+    final static String ACTION_PREFS_GENERAL = "de.jbapps.prefs.PREFS_GENERAL";
+    final static String ACTION_PREFS_NOTIFICATION = "de.jbapps.prefs.PREFS_NOTIFICATION";
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -56,8 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         }
     };
-
-    static Preference.OnPreferenceClickListener gradeListener = new Preference.OnPreferenceClickListener() {
+    private static Preference.OnPreferenceClickListener gradeListener = new Preference.OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(final Preference preference) {
             final List<Integer> selected = new ArrayList<>();
@@ -107,9 +108,6 @@ public class SettingsActivity extends PreferenceActivity {
                 PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
     }
 
-    final static String ACTION_PREFS_GENERAL = "de.jbapps.prefs.PREFS_GENERAL";
-    final static String ACTION_PREFS_NOTIFICATION = "de.jbapps.prefs.PREFS_NOTIFICATION";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,16 +115,16 @@ public class SettingsActivity extends PreferenceActivity {
         String action = getIntent().getAction();
         if (action != null && action.equals(ACTION_PREFS_GENERAL)) {
             addPreferencesFromResource(R.xml.pref_general);
-            findPreference("grade").setOnPreferenceClickListener(gradeListener);
+            findPreference(getString(R.string.pref_key_grades)).setOnPreferenceClickListener(gradeListener);
             try {
-                findPreference("version").setSummary(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+                findPreference(getString(R.string.pref_key_version)).setSummary(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
         } else if (action != null && action.equals(ACTION_PREFS_NOTIFICATION)) {
             addPreferencesFromResource(R.xml.pref_notification);
-            bindPreferenceSummaryToValue(findPreference("notification_ringtone"));
-            bindPreferenceSummaryToValue(findPreference("notification_color"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_ringtone)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_light)));
         } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             addPreferencesFromResource(R.xml.pref_header_legacy);
         }
@@ -138,6 +136,10 @@ public class SettingsActivity extends PreferenceActivity {
         loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
+    protected boolean isValidFragment(String fragmentName) {
+        return GeneralPreferenceFragment.class.getName().equals(fragmentName) || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+    }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
@@ -145,9 +147,9 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
 
-            findPreference("grade").setOnPreferenceClickListener(gradeListener);
+            findPreference(getString(R.string.pref_key_grades)).setOnPreferenceClickListener(gradeListener);
             try {
-                findPreference("version").setSummary(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
+                findPreference(getString(R.string.pref_key_version)).setSummary(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -161,24 +163,8 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
 
-            bindPreferenceSummaryToValue(findPreference("notification_ringtone"));
-            bindPreferenceSummaryToValue(findPreference("notification_color"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_ringtone)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_light)));
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class NotificationPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_notification);
-
-            bindPreferenceSummaryToValue(findPreference("notification_ringtone"));
-            bindPreferenceSummaryToValue(findPreference("notification_color"));
-        }
-    }
-
-    protected boolean isValidFragment(String fragmentName) {
-        return GeneralPreferenceFragment.class.getName().equals(fragmentName) || NotificationPreferenceFragment.class.getName().equals(fragmentName);
     }
 }

@@ -1,16 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:defaultValue=""
-        android:key="grades"
-        android:summary="@string/pref_summary_grades"
+    <Preference
+        android:key="@string/pref_key_grades"
         android:title="@string/pref_title_grades" />
 
     <Preference
-        android:key="grade"
-        android:title="Klasse" />
-
-    <Preference
-        android:key="version"
+        android:key="@string/pref_key_version"
         android:title="@string/pref_title_version" />
 
 </PreferenceScreen>

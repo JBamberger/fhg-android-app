@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import de.jbapps.vplan.R;
 import de.jbapps.vplan.VPlanActivity;
 
 /**
@@ -15,15 +16,16 @@ import de.jbapps.vplan.VPlanActivity;
 public class Property {
 
     private static final String TAG = "Property";
-    private static final String PROPERTY_GRADES = "grades";
     private static final String PROPERTY_SHOW_GRADE_PICKER = "show_grade_picker";
     private static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_CLIENT_ID = "client_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private Context appContext;
+    private String PROPERTY_GRADES;
 
     public Property(Context appContext) {
         this.appContext = appContext;
+        PROPERTY_GRADES = appContext.getString(R.string.pref_key_grades);
     }
 
     private static int getAppVersion(Context context) {
