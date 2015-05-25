@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.jbapps.jutils.NetUtils;
+
 /**
  * This class represents the API in version 1.0
  * It contains the corresponding methods to 'add', 'ping' and 'trigger'

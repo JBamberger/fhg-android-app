@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbapps.jutils;
 
 import org.apache.http.NameValuePair;
 
