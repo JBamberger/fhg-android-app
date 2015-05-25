@@ -2,7 +2,6 @@ package de.jbapps.vplan;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -20,6 +19,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jbapps.jutils.MiscUtils;
 import de.jbapps.vplan.util.Property;
 
 public class SettingsActivity extends PreferenceActivity {
@@ -121,11 +121,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (action != null && action.equals(ACTION_PREFS_GENERAL)) {
             addPreferencesFromResource(R.xml.pref_general);
             findPreference(getString(R.string.pref_key_grades)).setOnPreferenceClickListener(gradeListener);
-            try {
-                findPreference(getString(R.string.pref_key_version)).setSummary(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            findPreference(getString(R.string.pref_key_version)).setSummary(MiscUtils.getVersionName(this));
         } else if (action != null && action.equals(ACTION_PREFS_NOTIFICATION)) {
             addPreferencesFromResource(R.xml.pref_notification);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_ringtone)));
@@ -151,13 +147,9 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
-
             findPreference(getString(R.string.pref_key_grades)).setOnPreferenceClickListener(gradeListener);
-            try {
-                findPreference(getString(R.string.pref_key_version)).setSummary(getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+            findPreference(getString(R.string.pref_key_version)).setSummary(MiscUtils.getVersionName(getActivity()));
+
         }
     }
 
