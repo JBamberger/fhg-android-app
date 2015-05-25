@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.ui.VPlanBaseData;
@@ -384,7 +384,7 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         }
 
         public void netStateUpdate() {
-            if (isOnline()) {
+            if (NetUtils.isNetworkAvailable(mActivity)) {
                 SnackbarManager.dismiss();
             } else {
                 SnackbarManager.show(Snackbar.with(getApplicationContext())
@@ -393,12 +393,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
                         .duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
                         .swipeToDismiss(false), mActivity);
             }
-        }
-
-        public boolean isOnline() {
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            return (networkInfo != null && networkInfo.isConnected());
         }
     }
 }
