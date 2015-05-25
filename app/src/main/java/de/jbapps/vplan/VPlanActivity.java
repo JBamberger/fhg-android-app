@@ -105,14 +105,13 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     protected void onResume() {
         super.onResume();
         if (!gradeState.equals(mProperty.readGrade())) {
-            //returning from settings, update title and list
+            //returning from settings: update title and list
             gradeState = mProperty.readGrade();
             setupActionBar();
             loadCachedVPlan();
         }
         checkPlayServices();
-        IntentFilter mNetworkStateFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mNetworkStateReceiver, mNetworkStateFilter);
+        registerReceiver(mNetworkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
