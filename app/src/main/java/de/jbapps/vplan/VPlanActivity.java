@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jbapps.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.ui.VPlanBaseData;
 import de.jbapps.vplan.util.API_v1;
@@ -128,9 +129,9 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
     }
 
     private void setupUI() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.vplan_refreshlayout);
-        mBackgroundProgress = (ProgressBar) findViewById(R.id.progressBar);
-        ListView list = (ListView) findViewById(R.id.vplan_list);
+        mSwipeRefreshLayout = ViewUtils.findViewById(this, R.id.vplan_refreshlayout);
+        mBackgroundProgress = ViewUtils.findViewById(this, R.id.progressBar);
+        ListView list = ViewUtils.findViewById(this, R.id.vplan_list);
 
         mSwipeRefreshLayout.setOnRefreshListener(mRefreshListener);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.material_blue_A700, R.color.material_blue_A400, R.color.material_blue_A200, R.color.material_blue_A100);
