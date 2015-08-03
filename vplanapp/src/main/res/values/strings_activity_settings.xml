@@ -1,0 +1,40 @@
+<resources>
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <!-- Preference Keys -->
+
+    <string name="pref_key_grades">pref_key_grades</string>
+    <string name="pref_key_version">pref_key_version</string>
+    <string name="pref_key_notification">pref_key_notification</string>
+    <string name="pref_key_notification_ringtone">pref_key_notification_ringtone</string>
+    <string name="pref_key_notification_light">pref_key_notification_light</string>
+    <string name="pref_key_notification_vibrate">pref_key_notification_vibrate</string>
+
+
+    <!-- Preference Headers -->
+    <string name="pref_header_general">Allgemein</string>
+    <string name="pref_header_notifications">Benachrichtigungen</string>
+
+    <!-- Preference General -->
+    <string name="pref_title_grades">Anzuzeigende Klassen</string>
+    <string name="pref_summary_grades">Klassen mit Komma getrennt, um alles anzuzeigen leer lassen</string>
+    <string name="pref_title_version">Version</string>
+
+    <!-- Preference Notification -->
+    <string name="pref_title_notification">Benachrichtigungen</string>
+    <string name="pref_title_notification_ringtone">Benachrichtigungston</string>
+    <string name="pref_ringtone_silent">Stumm</string>
+    <string name="pref_title_notification_vibrate">Vibrieren</string>
+    <string name="pref_title_notification_light">Benachrichtigungslicht</string>
+    <string-array name="pref_notification_color_titles">
+        <item>rot</item>
+        <item>grün</item>
+        <item>blau</item>
+    </string-array>
+    <string-array name="pref_notification_color_values">
+        <item>#FF0000</item>
+        <item>#00FF00</item>
+        <item>#0000FF</item>
+    </string-array>
+
+</resources>

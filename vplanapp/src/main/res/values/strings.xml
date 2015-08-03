@@ -1,6 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VPlanApp</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">VPlan</string>
+    <string name="action_classic_view">Website anzeigen</string>
+    <string name="action_credits">Credits</string>
+    <string name="action_bug">Fehler melden</string>
+    <string name="action_feedback">Feedback/Frage</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="title_activity_credits">Credits</string>
+    <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
+    <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
+    <string name="action_vplan_hp">VPlan Update-Seite</string>
+    <string name="action_get_version">Version anzeigen</string>
+    <string name="action_force_reload">Neu Laden</string>
+    <string name="text_motd">Nachrichten zum Tag</string>
+    <string name="action_contact_developer">Entwickler kontaktieren</string>
+    <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
+    <string name="text_dialog_pick_grade">Anzuzeigende Klassen</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_all">alle anzeigen</string>
+
 </resources>
