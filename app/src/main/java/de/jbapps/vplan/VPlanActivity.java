@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -22,13 +21,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +31,6 @@ import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;
 import de.jbapps.vplan.ui.VPlanBaseData;
-import de.jbapps.vplan.util.API_v1;
 import de.jbapps.vplan.util.JSONParser;
 import de.jbapps.vplan.util.Property;
 import de.jbapps.vplan.util.VPlanAdapter;
@@ -53,20 +47,15 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
 
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String SENDER_ID = "913892810147";
-
     private final RefreshListener mRefreshListener = new RefreshListener();
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private Property mProperty;
 
-    private String regid;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ProgressBar mBackgroundProgress;
     private VPlanAdapter mListAdapter;
     private VPlanProvider mVPlanProvider;
     private JSONParser mJSONParser;
-    private GoogleCloudMessaging gcm;
     private Context context;
     private String gradeState;
     private Activity mActivity;
@@ -84,7 +73,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
 
         setupActionBar();
         setupUI();
-        setupGcm();
 
         mNetworkStateReceiver.netStateUpdate();
         if (mProperty.getShowGradePicker()) {
@@ -95,7 +83,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
             //initial startup
             loadVPlan(false);
-            API_v1.doPing(mProperty.getClientId());
         } else {
             loadCachedVPlan();
         }
@@ -110,7 +97,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
             setupActionBar();
             loadCachedVPlan();
         }
-        checkPlayServices();
         registerReceiver(mNetworkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
@@ -144,17 +130,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         String title = gradeState;
         if (title != null && title.equals("")) title = "Alles";//FIXME: possible bug
         if (actionBar != null) actionBar.setTitle("VPlan - " + title);
-    }
-
-    private void setupGcm() {
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = mProperty.getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
-        }
     }
 
     public void showGradePicker() {
@@ -324,49 +299,6 @@ public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IV
         mListAdapter.notifyDataSetChanged();
         Log.i(TAG, "Data supplied to ListView");
         toggleLoading(false);
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-                finish();
-            }
-            Log.i(TAG, "No valid Google Play Services APK found.");
-            return false;
-        }
-        Log.i(TAG, "Google Play Services APK available.");
-        return true;
-    }
-
-    private void registerInBackground() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
-                    }
-                    regid = gcm.register(SENDER_ID);
-                    Log.i(TAG, "Device registered, registration ID=" + regid);
-
-                    //send registration id to backend
-                    API_v1.doAdd(regid, mProperty);
-
-                    mProperty.storeRegistrationId(context, regid);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void v) {
-            }
-        }.execute(null, null, null);
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {

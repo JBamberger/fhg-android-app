@@ -82,7 +82,6 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
             if (mVPlanSet.readHeader()) {
                 if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
                     Log.i(TAG, "headers different, trigger executed");
-                    API_v1.doTrigger(header1, header2);
                 }
             }
 
