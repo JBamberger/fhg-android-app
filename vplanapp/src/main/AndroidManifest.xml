@@ -21,23 +21,14 @@
         </activity>
 
 
-        <!--<activity
+        <activity
             android:name=".CreditsActivity"
             android:label="@string/title_activity_credits"
-            android:parentActivityName=".VPlanActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="xyz.jbapps.vplanapp.VPlanActivity" />
+                android:value="xyz.jbapps.vplanapp.MainActivity" />
         </activity>
-
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".VPlanActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="xyz.jbapps.vplanapp.VPlanActivity" />
-        </activity>-->
     </application>
 
 </manifest>
