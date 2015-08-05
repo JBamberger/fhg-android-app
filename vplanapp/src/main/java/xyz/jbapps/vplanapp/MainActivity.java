@@ -25,11 +25,14 @@ import com.nispok.snackbar.SnackbarManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplanapp.util.Property;
 import xyz.jbapps.vplanapp.util.VPlanAdapter;
+import xyz.jbapps.vplanapp.util.VPlanLoader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -108,7 +111,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
-            showGradePicker();
+            Executor runner = Executors.newSingleThreadExecutor();
+            runner.execute(new VPlanLoader());
+            //showGradePicker();
             return true;
         }
         return super.onOptionsItemSelected(item);
