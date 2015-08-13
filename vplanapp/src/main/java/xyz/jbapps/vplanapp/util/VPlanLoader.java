@@ -49,14 +49,23 @@ public class VPlanLoader implements Runnable {
 
     private SimpleDateFormat mDateParser;
 
-    public VPlanLoader() {
+    private final IOnLoadingFinished mListener;
+
+    public VPlanLoader(IOnLoadingFinished listener) {
         mDateParser = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+        mListener = listener;
     }
 
     @Override
     public void run() {
         System.out.println(loadVPlan(URL_VPLAN1));
         System.out.println(loadVPlan(URL_VPLAN2));
+    }
+
+    private void loadingFinished(String v1, String v2) {
+        synchronized (mListener) {
+            mListener.loaderFinished();
+        }
     }
 
     private String loadVPlan(String url) {
@@ -292,9 +301,9 @@ public class VPlanLoader implements Runnable {
         if (mListener != null) {
             mListener.loaderFinished(loadCache);
         }
-    }
+    }*/
 
     public interface IOnLoadingFinished {
-        void loaderFinished(boolean loadCache);
-    }*/
+        void loaderFinished();
+    }
 }

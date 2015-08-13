@@ -22,4 +22,9 @@
     <string name="cancel">Abbrechen</string>
     <string name="select_all">alle anzeigen</string>
 
+    <string name="text_subject_question">[VPlan-App] question</string>
+    <string name="text_subject_feedback">[VPlan-App] feedback</string>
+    <string name="text_subject_bug">[VPlan-App] bug</string>
+    <string name="text_subject_general">[VPlan-App] general</string>
+
 </resources>

@@ -81,16 +81,16 @@ public class MainActivity extends AppCompatActivity {
                             String subject;
                             switch (which) {
                                 case 0:
-                                    subject = "[VPlan-App] question";
+                                    subject = getString(R.string.text_subject_question);
                                     break;
                                 case 1:
-                                    subject = "[VPlan-App] feedback";
+                                    subject = getString(R.string.text_subject_feedback);
                                     break;
                                 case 2:
-                                    subject = "[VPlan-App] bugreport";
+                                    subject = getString(R.string.text_subject_bug);
                                     break;
                                 default:
-                                    subject = "[VPlan-App] general";
+                                    subject = getString(R.string.text_subject_general);
                                     break;
                             }
                             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
+            //TODO: change
             Executor runner = Executors.newSingleThreadExecutor();
             runner.execute(new VPlanLoader());
             //showGradePicker();
