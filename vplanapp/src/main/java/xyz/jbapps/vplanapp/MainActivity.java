@@ -12,12 +12,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.nispok.snackbar.Snackbar;
@@ -25,11 +25,10 @@ import com.nispok.snackbar.SnackbarManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
+import xyz.jbapps.vplanapp.data.VPlanData;
 import xyz.jbapps.vplanapp.util.Property;
 import xyz.jbapps.vplanapp.util.VPlanAdapter;
 import xyz.jbapps.vplanapp.util.VPlanLoader;
@@ -47,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int STATUS_NO_NETWORK = 3;
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
+    private final VPlanListener mVPlanListener = new VPlanListener();
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private int mStatus;
     private Property mProperty;
 
@@ -112,14 +112,12 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_settings) {
             //TODO: change
-            Executor runner = Executors.newSingleThreadExecutor();
-            runner.execute(new VPlanLoader());
+            mVPlanListener.loadVPlan();
             //showGradePicker();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,12 +168,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
 
         mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
-        mListView = ViewUtils.findViewById(this, R.id.vplan_list);
-
-        ListView list = ViewUtils.findViewById(this, R.id.vplan_list);
+        mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
 
         mListAdapter = new VPlanAdapter(this);
-        list.setAdapter(mListAdapter);
+        //TODO: rewrite adapter for recyclerview mRecyclerView.setAdapter(mListAdapter);
     }
 
     private void setupActionBar() {
@@ -262,6 +258,19 @@ public class MainActivity extends AppCompatActivity {
     private void loadCachedVPlan() {
         toggleLoading(true);
         //TODO: load cache
+    }
+
+
+    private class VPlanListener implements VPlanLoader.IOnLoadingFinished {
+        @Override
+        public synchronized void loaderFinished(VPlanData vplan1, VPlanData vplan2) {
+            toggleLoading(false);
+        }
+
+        public void loadVPlan() {
+            toggleLoading(true);
+            new VPlanLoader(this).execute();
+        }
     }
 
     private class NetReceiver extends BroadcastReceiver {

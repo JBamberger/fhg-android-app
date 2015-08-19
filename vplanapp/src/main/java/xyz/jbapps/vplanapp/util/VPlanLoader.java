@@ -1,5 +1,6 @@
 package xyz.jbapps.vplanapp.util;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -25,8 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import xyz.jbapps.vplanapp.VPlanException;
+import xyz.jbapps.vplanapp.data.VPlanData;
 
-public class VPlanLoader implements Runnable {
+public class VPlanLoader extends AsyncTask {
     public static final String JSON_MOTD = "motd";
     public static final String JSON_HEADER = "header";
     public static final String JSON_HEADER_TITLE = "header_title";
@@ -44,12 +46,10 @@ public class VPlanLoader implements Runnable {
     private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
     private static final String HEADER_LAST_MODIFIED = "Last-Modified";
-
+    private final IOnLoadingFinished mListener;
     private boolean loadCache = false;
-
     private SimpleDateFormat mDateParser;
 
-    private final IOnLoadingFinished mListener;
 
     public VPlanLoader(IOnLoadingFinished listener) {
         mDateParser = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
@@ -57,14 +57,16 @@ public class VPlanLoader implements Runnable {
     }
 
     @Override
-    public void run() {
+    protected Object doInBackground(Object[] params) {
         System.out.println(loadVPlan(URL_VPLAN1));
         System.out.println(loadVPlan(URL_VPLAN2));
+        return null;
     }
 
-    private void loadingFinished(String v1, String v2) {
-        synchronized (mListener) {
-            mListener.loaderFinished();
+    @Override
+    protected void onPostExecute(Object o) {
+        if (mListener != null) {
+            mListener.loaderFinished(null, null);
         }
     }
 
@@ -74,7 +76,7 @@ public class VPlanLoader implements Runnable {
             HttpURLConnection connection = (HttpURLConnection) vplan_url.openConnection();
             try {
                 connection.setRequestMethod("GET");
-                Map<String, List<String>> headers = connection.getHeaderFields();
+                //Map<String, List<String>> headers = connection.getHeaderFields();
                 //System.out.println(connection.getDate());
                 //System.out.println(getHeaderValue(headers, HEADER_LAST_MODIFIED));
                 int resCode = connection.getResponseCode();
@@ -140,101 +142,17 @@ public class VPlanLoader implements Runnable {
         }
     }
 
-    /*
-
-        private void listKeys(Map<String, List<String>> headers) {
-            for (String key : headers.keySet()) {
-                System.out.println(key);
-            }
-        }
-
-            @Override
-            protected Void doInBackground(Boolean... params) {
-                Log.e(TAG, "doInBackground invoked");
-                boolean forceLoad = params[0];
-                Log.i(TAG, "force loading on:" + forceLoad);
-                try {
-                    //Load the headers first to check if cache is up to date
-                    if (!forceLoad && mVPlanSet.readHeader()) {
-                        String header1 = loadHeader(URL_VPLAN1);
-                        String header2 = loadHeader(URL_VPLAN2);
-
-                        if (mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2)) {
-                            loadCache = true;
-                            Log.d(TAG, "loadCache: true");
-                            return null;
-                        }
-                    }
-                    HttpResponse res1 = loadPage(URL_VPLAN1);
-                    mVPlanSet.setVPlan1(parse(getVPlan(res1)));
-                    String header1 = getHeader(res1);
-
-                    HttpResponse res2 = loadPage(URL_VPLAN2);
-                    mVPlanSet.setVPlan2(parse(getVPlan(res2)));
-                    String header2 = getHeader(res2);
-
-                    if (mVPlanSet.readHeader()) {
-                        if (!(mVPlanSet.getHeader1().equals(header1) && mVPlanSet.getHeader2().equals(header2))) {
-                            Log.i(TAG, "headers different, trigger executed");
-                        }
-                    }
-
-                    mVPlanSet.setHeader1(header1);
-                    mVPlanSet.setHeader2(header2);
-                    mVPlanSet.writeAll();
-
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            private String loadHeader(String url) throws IOException {
-                HttpHead httpHead = new HttpHead(url);
-                HttpResponse response = mClient.execute(httpHead);
-                return getHeader(response);
-            }
-
-            private HttpResponse loadPage(String url) throws IOException {
-                HttpGet httpGet = new HttpGet(url);
-                return mClient.execute(httpGet);
-            }
-
-            private String getVPlan(HttpResponse response) throws IOException {
-                int status = response.getStatusLine().getStatusCode();
-                if (status >= 200 && status < 300) {
-                    HttpEntity entity = response.getEntity();
-                    Log.i(TAG, "VPlan loaded");
-                    return entity != null ? EntityUtils.toString(entity) : null;
-                } else {
-                    throw new ClientProtocolException("Unexpected response status: " + status);
-                }
-            }
-
-            private String getHeader(HttpResponse response) {
-                Header[] headers = response.getAllHeaders();
-                for (Header header : headers) {
-                    if (header.getName().contains("Last-Modified")) {
-                        Log.i(TAG, header.getName() + " : " + header.getValue());
-                        return header.getValue();
-                    }
-                }
-                return null;
-            }
-        */
     private JSONObject parseVPlan(String vplan) throws JSONException {
         JSONObject jPlan = new JSONObject();
         Document doc = Jsoup.parse(vplan);
-        jPlan.put(JSON_HEADER, readHeaderFromDocument(vplan, doc));
+        jPlan.put(JSON_HEADER, readVPlanHeaderFromDocument(vplan, doc));
         jPlan.put(JSON_MOTD, readMotdTable(doc.getElementsByClass("info").select("tr")));
         jPlan.put(JSON_VPLAN, readVPlanTable(doc.getElementsByClass("list").select("tr")));
         Log.i(TAG, "VPlan parsed");
         return jPlan;
     }
 
-    private JSONObject readHeaderFromDocument(String vplan, Document vplanDoc) throws JSONException {
+    private JSONObject readVPlanHeaderFromDocument(String vplan, Document vplanDoc) throws JSONException {
         JSONObject header = new JSONObject();
         try {
             String status = vplan.split("</head>")[1];
@@ -294,16 +212,7 @@ public class VPlanLoader implements Runnable {
         }
     }
 
-/*
-    @Override
-    protected void onPostExecute(Void v) {
-        Log.e(TAG, "onPostExecuted invoked");
-        if (mListener != null) {
-            mListener.loaderFinished(loadCache);
-        }
-    }*/
-
     public interface IOnLoadingFinished {
-        void loaderFinished();
+        void loaderFinished(VPlanData vplan1, VPlanData vplan2);
     }
 }
