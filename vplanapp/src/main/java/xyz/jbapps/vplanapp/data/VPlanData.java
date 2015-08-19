@@ -9,59 +9,60 @@ public class VPlanData {
 
     private static final String TAG = "VPlanData";
 
-
-    @SerializedName("last_updated")
-    private long lastUpdated = 0;
-    @SerializedName("vplan_header")
+    @SerializedName("vplan_header_row")
     private VPlanRow VPlanHeaderRow;
     @SerializedName("vplan_rows")
     private List<VPlanRow> mVPlanRows = new ArrayList<>();
-    @SerializedName("title_day")
-    private String title;
-    @SerializedName("last_updated")
-    private String status;
-    @SerializedName("message_of_the_day")
-    private String motd;
+    @SerializedName("vplan_header")
+    private VPlanHeader vPlanHeader;
 
 
     public VPlanData() {
-
+        vPlanHeader = new VPlanHeader();
     }
 
     public void addVPlanRow(VPlanRow vPlanRow) {
         mVPlanRows.add(vPlanRow);
     }
 
+    public VPlanRow getVPlanRowAtPosition(int position) throws ArrayIndexOutOfBoundsException {
+        return mVPlanRows.get(position);
+    }
+
+    public int getVPlanRowCount() {
+        return mVPlanRows.size();
+    }
+
     public long getLastUpdated() {
-        return lastUpdated;
+        return vPlanHeader.lastUpdated;
     }
 
     public void setLastUpdated(long lastUpdated) {
-        this.lastUpdated = lastUpdated;
+        this.vPlanHeader.lastUpdated = lastUpdated;
     }
 
     public String getMotd() {
-        return motd;
+        return vPlanHeader.motd;
     }
 
     public void setMotd(String motd) {
-        this.motd = motd;
+        this.vPlanHeader.motd = motd;
     }
 
     public String getStatus() {
-        return status;
+        return vPlanHeader.status;
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.vPlanHeader.status = status;
     }
 
     public String getTitle() {
-        return title;
+        return vPlanHeader.title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.vPlanHeader.title = title;
     }
 
     public VPlanRow getVPlanHeaderRow() {
@@ -72,6 +73,11 @@ public class VPlanData {
         this.VPlanHeaderRow = VPlanHeaderRow;
     }
 
+    public VPlanHeader getvPlanHeader() {
+        return vPlanHeader;
+    }
 
-
+    public void setvPlanHeader(VPlanHeader vPlanHeader) {
+        this.vPlanHeader = vPlanHeader;
+    }
 }

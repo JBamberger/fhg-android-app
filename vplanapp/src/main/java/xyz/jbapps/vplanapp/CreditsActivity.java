@@ -22,8 +22,9 @@ public class CreditsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_name));
             actionBar.setSubtitle(getString(R.string.app_copyright));//TODO: edit web page
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ((WebView) findViewById(R.id.webView)).loadUrl("http://jbamberger.hol.es/vplan/vplan_licence-v1.2.html");
+        ((WebView) findViewById(R.id.webView)).loadUrl("http://jbapps.xyz/vplan/vplan_licence-v1.2.html");
     }
 }

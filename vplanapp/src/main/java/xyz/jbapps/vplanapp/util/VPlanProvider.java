@@ -72,7 +72,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * url of second vplan fragment
      */
-    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+    private static final String URL_VPLAN2 = "http://intranet.sihg.edu-singen.de/untis_public/f1/subst_001.htm";//http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
     /**
      * http header last modified
@@ -87,17 +87,17 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * notified as soon as the operation terminates
      */
-    private IVPlanResultListener listener;
+    private final IVPlanResultListener listener;
 
     /**
      * provides access to vplan cache
      */
-    private VPlanCache vPlanCache;
+    private final VPlanCache vPlanCache;
 
     /**
      * type of operation
      */
-    private int type;
+    private final int type;
 
     /**
      * the desired output data of vplan 1
@@ -308,6 +308,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
             Log.i(TAG, "VPlan parsed");
             return vData;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IOException("parsing of vplan failed");
         }
     }
@@ -364,7 +365,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
             row.setContent(cells.get(2).text());
             row.setRoom(cells.get(4).text());
             row.setOmitted(cells.get(5).text().contains("x"));
-            row.setMarkedNew(cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
+            row.setMarkedNew(cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]40"));
             return row;
         } else {
             Log.i(TAG, "Given data contains table head");
@@ -374,7 +375,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
 
     public interface IVPlanResultListener {
         /**
-         * If the loading process failes in some case the listener will be notified so the UI can be
+         * If the loading process fails in some case the listener will be notified so the UI can be
          * updated accordingly.
          */
         void vPlanLoadingFailed();
@@ -389,8 +390,8 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
      * Temporary class to pass header and vplan as return value
      */
     private class VPlanObject {
-        String vplan;
-        long header;
+        final String vplan;
+        final long header;
 
         public VPlanObject(String vplan, long header) {
             this.vplan = vplan;

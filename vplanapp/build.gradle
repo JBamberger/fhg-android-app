@@ -24,6 +24,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.nispok:snackbar:2.10.+'
     compile project(':jutils')
     compile files('libs/jsoup-1.7.2.jar')

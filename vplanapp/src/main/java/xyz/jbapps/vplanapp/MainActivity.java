@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -29,9 +31,9 @@ import java.util.List;
 import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplanapp.data.VPlanData;
+import xyz.jbapps.vplanapp.ui.MultiVPlanAdapter;
 import xyz.jbapps.vplanapp.util.Property;
-import xyz.jbapps.vplanapp.util.VPlanAdapter;
-import xyz.jbapps.vplanapp.util.VPlanLoader;
+import xyz.jbapps.vplanapp.util.VPlanProvider;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private int mStatus;
     private Property mProperty;
-
-    private VPlanAdapter mListAdapter;
+    private VPlanProvider vPlanProvider;
+    private MultiVPlanAdapter multiVPlanAdapter;
     private String gradeState;
     private Activity mActivity;
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_force_reload) {
             Log.d(TAG, "invoked force reload");
-            //TODO: loadVPlan(true);
+            mVPlanListener.loadVPlan(VPlanProvider.TYPE_FORCE_LOAD);
             return true;
         }
         if (id == R.id.action_contact_developer) {
@@ -111,9 +113,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
-            //TODO: change
-            mVPlanListener.loadVPlan();
-            //showGradePicker();
+            showGradePicker();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
-            loadVPlan();
+            mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
         } else {
-            loadCachedVPlan();
+            mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
         }
     }
 
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
             //returning from settings: update title and list
             gradeState = mProperty.readGrade();
             setupActionBar();
-            loadCachedVPlan();
+            mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
         }
         registerReceiver(mNetworkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
@@ -170,15 +170,19 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
         mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
 
-        mListAdapter = new VPlanAdapter(this);
-        //TODO: rewrite adapter for recyclerview mRecyclerView.setAdapter(mListAdapter);
+        multiVPlanAdapter = new MultiVPlanAdapter();
+        mRecyclerView.setAdapter(multiVPlanAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setupActionBar() {
         final ActionBar actionBar = getSupportActionBar();
         String title = gradeState;
         if (title != null && title.equals("")) title = "Alles";//FIXME: possible bug
-        if (actionBar != null) actionBar.setSubtitle("VPlan - " + title);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setSubtitle("VPlan - " + title);
+        }
     }
 
     public void showGradePicker() {
@@ -216,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         mProperty.setShowGradePicker(false);
                         gradeState = grades;
                         setupActionBar();
-                        loadCachedVPlan();
+                        mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
                     }
                 })
                 .setNegativeButton(R.string.select_all, new DialogInterface.OnClickListener() {
@@ -226,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         mProperty.setShowGradePicker(false);
                         gradeState = "";
                         setupActionBar();
-                        loadCachedVPlan();
+                        mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
                     }
                 });
 
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isListEmpty() {
-        return !(mListAdapter.getCount() > 0);
+        return !(multiVPlanAdapter.getItemCount() > 0);
     }
 
     private void toggleLoading(boolean on) {
@@ -250,26 +254,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadVPlan() {
-        toggleLoading(true);
-        //TODO: load
-    }
 
-    private void loadCachedVPlan() {
-        toggleLoading(true);
-        //TODO: load cache
-    }
+    private class VPlanListener implements VPlanProvider.IVPlanResultListener {
 
-
-    private class VPlanListener implements VPlanLoader.IOnLoadingFinished {
         @Override
-        public synchronized void loaderFinished(VPlanData vplan1, VPlanData vplan2) {
+        public void vPlanLoadingFailed() {
             toggleLoading(false);
+            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG); //TODO: use resources
         }
 
-        public void loadVPlan() {
+        @Override
+        public void vPlanLoadingSucceeded(VPlanData vplan1, VPlanData vplan2) {
+            toggleLoading(false);
+            multiVPlanAdapter.setData(vplan1, vplan2);
+        }
+
+        public void loadVPlan(int method) {
             toggleLoading(true);
-            new VPlanLoader(this).execute();
+            vPlanProvider = new VPlanProvider(getApplicationContext(), method, this);
+            vPlanProvider.execute();
         }
     }
 

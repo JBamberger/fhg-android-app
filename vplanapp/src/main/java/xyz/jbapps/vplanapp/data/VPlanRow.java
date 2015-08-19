@@ -2,7 +2,7 @@ package xyz.jbapps.vplanapp.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class VPlanRow {
+public class VPlanRow extends VPlanElement {
 
     public static final int SUBJECT = 0;
     public static final int OMITTED = 1;
@@ -29,6 +29,7 @@ public class VPlanRow {
 
 
     public VPlanRow(String grade, String hour, String content, String subject, String room, boolean omitted, boolean marked_new) {
+        super(VPlanElement.TYPE_ROW);
         this.grade = grade;
         this.subject = subject;
         this.room = room;
@@ -39,6 +40,7 @@ public class VPlanRow {
     }
 
     public VPlanRow() {
+        super(VPlanElement.TYPE_ROW);
     }
 
     public boolean getMarkedNew() {
