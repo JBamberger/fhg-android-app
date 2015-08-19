@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.jbapps.jutils.ViewUtils;
@@ -52,6 +53,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 xyz.jbapps.vplanapp.data.VPlanHeader header = (xyz.jbapps.vplanapp.data.VPlanHeader)
                         vPlanDataWrapper.getItemAtPosition(position);
                 VPlanHeaderViewHolder headHolder = (VPlanHeaderViewHolder) holder;
+                headHolder.headlayout.setBackgroundResource(R.color.material_blue_grey_950);
                 headHolder.title.setText(header.getTitle());
                 headHolder.status.setText(header.getStatus());
                 headHolder.motdHeader.setText("Nachrichten zum Tag");//TODO: auslagern
@@ -65,8 +67,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 rowHolder.hour.setText(row.getHour());
                 rowHolder.subject.setText(row.getSubject());
                 rowHolder.roomOmitted.setText(row.getOmitted() ? "entfällt" : row.getRoom()); //TODO: auslagern
-                rowHolder.marked_new.setBackgroundResource(row.getMarkedNew() ? R.color.material_blue_A200
-                        : R.drawable.abc_item_background_holo_dark);//TODO: fix colors
+                rowHolder.marked_new.setBackgroundResource(
+                        ((position % 2) == 1) ? R.color.material_blue_grey_800 : R.color.material_blue_grey_900);
+                if (row.getMarkedNew()) {
+                    rowHolder.marked_new.setBackgroundResource(R.color.material_green_A400);
+                }
                 break;
         }
     }
@@ -107,9 +112,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
         public TextView title;
         public TextView motdHeader;
         public TextView motdContent;
+        public RelativeLayout headlayout;
 
         public VPlanHeaderViewHolder(View itemView) {
             super(itemView);
+            headlayout = ViewUtils.findViewById(itemView, R.id.header_layout);
             status = ViewUtils.findViewById(itemView, R.id.vplan_status);
             title = ViewUtils.findViewById(itemView, R.id.vplan_title);
             motdHeader = ViewUtils.findViewById(itemView, R.id.vplan_motd_header);
