@@ -31,14 +31,20 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/vplan_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:divider="@color/material_text_inverse_12"
-            android:dividerHeight="2dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp" />
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/vplan_refreshlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/vplan_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:divider="@color/material_text_inverse_12"
+                android:dividerHeight="2dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/vplan_reload"

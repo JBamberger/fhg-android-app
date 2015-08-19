@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private final VPlanListener mVPlanListener = new VPlanListener();
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private Property mProperty;
     private VPlanProvider vPlanProvider;
@@ -171,6 +173,16 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
         mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
+        mSwipeRefreshLayout = ViewUtils.findViewById(this, R.id.vplan_refreshlayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.material_blue_A700, R.color.material_blue_A400, R.color.material_blue_A200, R.color.material_blue_A100);
+
 
         multiVPlanAdapter = new MultiVPlanAdapter();
         mRecyclerView.setAdapter(multiVPlanAdapter);
@@ -255,6 +267,9 @@ public class MainActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.GONE);
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 

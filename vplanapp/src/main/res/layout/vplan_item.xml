@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/vplan_first"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
@@ -31,11 +31,10 @@
 
             <TextView
                 android:id="@+id/vplan_second"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/material_text_inverse_100"
                 tools:text="hour" />
@@ -57,22 +56,20 @@
 
             <TextView
                 android:id="@+id/vplan_third"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/material_text_inverse_100"
                 tools:text="subject" />
 
             <TextView
                 android:id="@+id/vplan_fourth"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/material_text_inverse_100"
                 tools:text="room" />
