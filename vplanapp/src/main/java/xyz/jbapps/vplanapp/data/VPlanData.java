@@ -33,6 +33,10 @@ public class VPlanData {
         return mVPlanRows.size();
     }
 
+    public void deleteVPlanRow(int position) {
+        mVPlanRows.remove(position);
+    }
+
     public long getLastUpdated() {
         return vPlanHeader.lastUpdated;
     }

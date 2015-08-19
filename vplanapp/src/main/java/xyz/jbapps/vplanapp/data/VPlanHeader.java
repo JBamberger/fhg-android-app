@@ -11,7 +11,7 @@ public class VPlanHeader extends VPlanElement {
     public long lastUpdated = 0;
 
     @SerializedName("title")
-    public String title = "";
+    public String title = "Noch keine Daten geladen!";
 
     @SerializedName("status")
     public String status = "";

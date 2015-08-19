@@ -66,7 +66,7 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
         this.vplan1 = vPlanSet.getVPlan1();
         this.vplan2 = vPlanSet.getVPlan2();
         this.mListener = listener;
-        this.gradePattern = generatePattern(grades); //TODO: delegate to background thread to avoid blocking the ui thread
+        this.gradePattern = generatePattern(grades);
         Log.i(TAG, "The generated regex-pattern is:" + gradePattern);
         mData = new ArrayList<>();
     }

@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplanapp.data.VPlanData;
 import xyz.jbapps.vplanapp.ui.MultiVPlanAdapter;
+import xyz.jbapps.vplanapp.util.GradeSorter;
 import xyz.jbapps.vplanapp.util.Property;
 import xyz.jbapps.vplanapp.util.VPlanProvider;
 
@@ -40,19 +42,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "VPlanApp v2";
 
     private static final String URL_MAIL_DEVELOPER = "mailto:vplanbugreport@gmail.com";
-    private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
     private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
-    private static final int STATUS_LOADING = 0;
-    private static final int STATUS_VISIBLE = 1;
-    private static final int STATUS_PARSING = 2;
-    private static final int STATUS_NO_NETWORK = 3;
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private final VPlanListener mVPlanListener = new VPlanListener();
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
-    private int mStatus;
     private Property mProperty;
     private VPlanProvider vPlanProvider;
     private MultiVPlanAdapter multiVPlanAdapter;
@@ -105,15 +101,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_set_grade) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME)));
+            showGradePicker();
+            //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME)));
             return true;
         }
         if (id == R.id.action_credits) {
             startActivity(new Intent(this, CreditsActivity.class));
-            return true;
-        }
-        if (id == R.id.action_settings) {
-            showGradePicker();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -128,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         mProperty = new Property(this);
         gradeState = mProperty.readGrade();
 
-        setupActionBar();
+
         setupUI();
 
         mNetworkStateReceiver.netStateUpdate();
@@ -166,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
     private void setupUI() {
         mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
         setSupportActionBar(mToolbar);
+        setupActionBar();
+
+        FloatingActionButton fab = ViewUtils.findViewById(this, R.id.vplan_reload);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
+            }
+        });
 
         mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
         mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
@@ -173,15 +175,17 @@ public class MainActivity extends AppCompatActivity {
         multiVPlanAdapter = new MultiVPlanAdapter();
         mRecyclerView.setAdapter(multiVPlanAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.hasFixedSize();
     }
 
     private void setupActionBar() {
         final ActionBar actionBar = getSupportActionBar();
-        String title = gradeState;
-        if (title != null && title.equals("")) title = "Alles";//FIXME: possible bug
+        String subtitle = gradeState;
+        if (subtitle != null && subtitle.equals("")) {
+            subtitle = "Alles";
+        }
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setSubtitle("VPlan - " + title);
+            actionBar.setSubtitle(subtitle);
         }
     }
 
@@ -254,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private class VPlanListener implements VPlanProvider.IVPlanResultListener {
 
         @Override
@@ -266,11 +269,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void vPlanLoadingSucceeded(VPlanData vplan1, VPlanData vplan2) {
             toggleLoading(false);
+            GradeSorter gSorter = new GradeSorter(gradeState);
+            vplan1 = gSorter.applyPatternToData(vplan1);
+            vplan2 = gSorter.applyPatternToData(vplan2);
             multiVPlanAdapter.setData(vplan1, vplan2);
         }
 
         public void loadVPlan(int method) {
             toggleLoading(true);
+            if (vPlanProvider != null) {
+                vPlanProvider.cancel(true);
+                vPlanProvider = null;
+            }
             vPlanProvider = new VPlanProvider(getApplicationContext(), method, this);
             vPlanProvider.execute();
         }

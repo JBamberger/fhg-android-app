@@ -64,8 +64,8 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 rowHolder.content.setText(row.getContent());
                 rowHolder.hour.setText(row.getHour());
                 rowHolder.subject.setText(row.getSubject());
-                rowHolder.roomOmitted.setText(row.getOmitted() ? "X" : row.getRoom()); //TODO: auslagern
-                rowHolder.marked_new.setBackgroundResource(row.getMarkedNew() ? R.color.material_green_700
+                rowHolder.roomOmitted.setText(row.getOmitted() ? "entfällt" : row.getRoom()); //TODO: auslagern
+                rowHolder.marked_new.setBackgroundResource(row.getMarkedNew() ? R.color.material_blue_A200
                         : R.drawable.abc_item_background_holo_dark);//TODO: fix colors
                 break;
         }

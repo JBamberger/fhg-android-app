@@ -14,21 +14,42 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:indeterminate="true"
-        android:visibility="gone" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/vplan_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@color/material_text_inverse_12"
-        android:dividerHeight="2dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp" />
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/vplan_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@color/material_text_inverse_12"
+            android:dividerHeight="2dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/vplan_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_action_refresh"
+            app:layout_anchor="@id/vplan_list"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_behavior="xyz.jbapps.vplanapp.ui.ScrollAwareFABBehavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>
