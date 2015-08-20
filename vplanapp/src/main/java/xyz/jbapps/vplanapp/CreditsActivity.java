@@ -25,6 +25,6 @@ public class CreditsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ((WebView) findViewById(R.id.webView)).loadUrl("http://jbapps.xyz/vplan/vplan_licence-v1.2.html");
+        ((WebView) findViewById(R.id.webView)).loadUrl("file:///android_asset/vplan_licence.txt");//.loadUrl("http://jbapps.xyz/vplan/vplan_licence-v1.2.html");
     }
 }

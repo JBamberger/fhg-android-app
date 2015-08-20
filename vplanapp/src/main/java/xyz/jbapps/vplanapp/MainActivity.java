@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private MultiVPlanAdapter multiVPlanAdapter;
     private String gradeState;
     private Activity mActivity;
+    private AdView mAdView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         if (!gradeState.equals(mProperty.readGrade())) {
             //returning from settings: update title and list
             gradeState = mProperty.readGrade();
@@ -152,10 +158,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
         super.onPause();
         if (mNetworkStateReceiver != null) {
             unregisterReceiver(mNetworkStateReceiver);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     private void setupUI() {
@@ -188,6 +205,21 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(multiVPlanAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.hasFixedSize();
+
+
+        // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
+        // values/strings.xml.
+        mAdView = (AdView) findViewById(R.id.ad_view);
+
+        // Create an ad request. Check logcat output for the hashed device ID to
+        // get test ads on a physical device. e.g.
+        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+        AdRequest adRequest = new AdRequest.Builder()
+                //TODO: for developing use this!!! .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest);
     }
 
     private void setupActionBar() {

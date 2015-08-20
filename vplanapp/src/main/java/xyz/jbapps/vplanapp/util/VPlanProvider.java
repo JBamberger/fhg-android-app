@@ -72,7 +72,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * url of second vplan fragment
      */
-    private static final String URL_VPLAN2 = "http://jbapps.xyz/vplan.txt";//http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
     /**
      * http header last modified
@@ -365,7 +365,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
             row.setContent(cells.get(2).text());
             row.setRoom(cells.get(4).text());
             row.setOmitted(cells.get(5).text().contains("x"));
-            row.setMarkedNew(cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]40"));
+            row.setMarkedNew(cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
             return row;
         } else {
             Log.i(TAG, "Given data contains table head");
