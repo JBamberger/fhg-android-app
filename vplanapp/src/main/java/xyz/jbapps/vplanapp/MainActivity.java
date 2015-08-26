@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         // get test ads on a physical device. e.g.
         // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
         AdRequest adRequest = new AdRequest.Builder()
-                //TODO: for developing use this!!! .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
 
         // Start loading the ad in the background.

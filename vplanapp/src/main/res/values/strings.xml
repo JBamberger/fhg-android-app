@@ -13,7 +13,7 @@
     <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
     <string name="action_set_grade">Klasse einstellen</string>
     <string name="action_get_version">Version anzeigen</string>
-    <string name="action_force_reload">Neu Laden</string>
+    <string name="action_force_reload">Aktualisieren</string>
     <string name="text_motd">Nachrichten zum Tag</string>
     <string name="action_contact_developer">Entwickler kontaktieren</string>
     <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
@@ -27,8 +27,8 @@
     <string name="text_subject_bug">[VPlan-App] bug</string>
     <string name="text_subject_general">[VPlan-App] general</string>
 
-    <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id.
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string> -->
-    <string name="banner_ad_unit_id">ca-app-pub-5920157148043268/2149177639</string>
+    <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id. -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- <string name="banner_ad_unit_id">ca-app-pub-5920157148043268/2149177639</string> -->
 
 </resources>
