@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private final VPlanListener mVPlanListener = new VPlanListener();
+    FloatingActionButton fab;
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -180,13 +182,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         setupActionBar();
 
-        FloatingActionButton fab = ViewUtils.findViewById(this, R.id.vplan_reload);
+        fab = ViewUtils.findViewById(this, R.id.vplan_reload);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
             }
         });
+        fab.setAnimation(AnimationUtils.loadAnimation(this, R.anim.fab_rotate_animation));
 
         mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
         mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
@@ -234,10 +237,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showGradePicker() {
+        GradeSorter gSorter = new GradeSorter(mProperty.readGrade());
+        String[] gradeList = getResources().getStringArray(R.array.listGrades);
+        boolean[] selectedItems = new boolean[gradeList.length];
+
+
+        if (gSorter.matchesEverything()) {
+            for (int i = gradeList.length - 1; i >= 0; i--) {
+                selectedItems[i] = false;
+            }
+        } else {
+            for (int i = gradeList.length - 1; i >= 0; i--) {
+                selectedItems[i] = gSorter.matchItem(gradeList[i]);
+            }
+        }
+
         final List<Integer> selected = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
         builder.setTitle(R.string.text_dialog_pick_grade)
-                .setMultiChoiceItems(R.array.listGrades, null,
+                .setMultiChoiceItems(R.array.listGrades, selectedItems,
                         new DialogInterface.OnMultiChoiceClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which,
@@ -297,8 +316,10 @@ public class MainActivity extends AppCompatActivity {
     private void toggleLoading(boolean on) {
         if (on) {
             mProgressBar.setVisibility(View.VISIBLE);
+            fab.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fab_rotate_animation));
         } else {
             mProgressBar.setVisibility(View.GONE);
+            fab.clearAnimation();
             if (mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(false);
             }

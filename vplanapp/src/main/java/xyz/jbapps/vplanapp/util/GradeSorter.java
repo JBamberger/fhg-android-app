@@ -8,6 +8,7 @@ import xyz.jbapps.vplanapp.data.VPlanData;
  */
 public class GradeSorter {
 
+    private static final String PATTERN_MATCHES_EVERYTHING = ".*";
     private static final String[] PATTERNS = {
             "(.*5[^0-9]*[aA].*)",
             "(.*5[^0-9]*[bB].*)",
@@ -57,11 +58,19 @@ public class GradeSorter {
         return data;
     }
 
+    public boolean matchesEverything() {
+        return gradePattern.equals(PATTERN_MATCHES_EVERYTHING);
+    }
+
+    public boolean matchItem(String item) {
+        return item.matches(gradePattern);
+    }
+
     private String generatePattern(String grades) {
         StringBuilder patternBuilder = new StringBuilder();
         boolean first = true;
         if (grades.equals("")) {
-            return ".*";
+            return PATTERN_MATCHES_EVERYTHING;
         }
         String[] gradeArray = grades.split(",");
 
@@ -81,7 +90,7 @@ public class GradeSorter {
         String result = patternBuilder.toString();
 
         if (result.equals("")) {
-            return ".*";
+            return PATTERN_MATCHES_EVERYTHING;
         } else {
             return result;
         }
