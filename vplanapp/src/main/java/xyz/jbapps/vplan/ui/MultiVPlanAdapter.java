@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.ui;
+package xyz.jbapps.vplan.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,11 +9,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.jbapps.jutils.ViewUtils;
-import xyz.jbapps.vplanapp.R;
-import xyz.jbapps.vplanapp.data.VPlanData;
-import xyz.jbapps.vplanapp.data.VPlanDataWrapper;
-import xyz.jbapps.vplanapp.data.VPlanElement;
-import xyz.jbapps.vplanapp.data.VPlanRow;
+import xyz.jbapps.vplan.R;
+import xyz.jbapps.vplan.data.VPlanData;
+import xyz.jbapps.vplan.data.VPlanDataWrapper;
+import xyz.jbapps.vplan.data.VPlanElement;
+import xyz.jbapps.vplan.data.VPlanRow;
 
 /**
  * @author Jannik Bamberger
@@ -50,7 +50,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (vPlanDataWrapper.getItemAtPosition(position).type) {
             case VPlanElement.TYPE_HEADER:
-                xyz.jbapps.vplanapp.data.VPlanHeader header = (xyz.jbapps.vplanapp.data.VPlanHeader)
+                xyz.jbapps.vplan.data.VPlanHeader header = (xyz.jbapps.vplan.data.VPlanHeader)
                         vPlanDataWrapper.getItemAtPosition(position);
                 VPlanHeaderViewHolder headHolder = (VPlanHeaderViewHolder) holder;
                 headHolder.headlayout.setBackgroundResource(R.color.material_blue_grey_950);

@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp;
+package xyz.jbapps.vplan;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

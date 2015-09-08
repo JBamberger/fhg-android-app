@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.util;
+package xyz.jbapps.vplan.util;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import xyz.jbapps.vplanapp.VPlanException;
-import xyz.jbapps.vplanapp.data.VPlanData;
+import xyz.jbapps.vplan.VPlanException;
+import xyz.jbapps.vplan.data.VPlanData;
 
 public class VPlanLoader extends AsyncTask {
     public static final String JSON_MOTD = "motd";

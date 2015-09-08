@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.util;
+package xyz.jbapps.vplan.util;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import xyz.jbapps.vplanapp.data.VPlanData;
-import xyz.jbapps.vplanapp.data.VPlanRow;
+import xyz.jbapps.vplan.data.VPlanData;
+import xyz.jbapps.vplan.data.VPlanRow;
 
 /**
  * This class is used to load vplan html parse it and cache it. Results are published using the
- * {@link xyz.jbapps.vplanapp.util.VPlanProvider.IVPlanResultListener}.
+ * {@link xyz.jbapps.vplan.util.VPlanProvider.IVPlanResultListener}.
  *
  * @author Jannik Bamberger
  * @version 1.0

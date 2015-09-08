@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.util;
+package xyz.jbapps.vplan.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import xyz.jbapps.vplanapp.data.VPlanData;
+import xyz.jbapps.vplan.data.VPlanData;
 
 /**
  * This class is used to save VPlan information to the cache directory definded by the Android OS.

@@ -65,7 +65,7 @@
             android:src="@drawable/ic_action_refresh"
             app:layout_anchor="@id/vplan_list"
             app:layout_anchorGravity="bottom|right|end"
-            app:layout_behavior="xyz.jbapps.vplanapp.ui.ScrollAwareFABBehavior" />
+            app:layout_behavior="xyz.jbapps.vplan.ui.ScrollAwareFABBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -1,6 +1,6 @@
-package xyz.jbapps.vplanapp.util;
+package xyz.jbapps.vplan.util;
 
-import xyz.jbapps.vplanapp.data.VPlanData;
+import xyz.jbapps.vplan.data.VPlanData;
 
 /**
  * @author Jannik Bamberger

@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.util;
+package xyz.jbapps.vplan.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import xyz.jbapps.vplanapp.MainActivity;
-import xyz.jbapps.vplanapp.R;
+import xyz.jbapps.vplan.MainActivity;
+import xyz.jbapps.vplan.R;
 
 /**
  * This class provides access to the applications SharedPreferences

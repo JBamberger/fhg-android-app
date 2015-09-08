@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp;
+package xyz.jbapps.vplan;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

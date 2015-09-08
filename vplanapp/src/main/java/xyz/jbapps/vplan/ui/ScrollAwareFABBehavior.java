@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.ui;
+package xyz.jbapps.vplan.ui;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,7 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
-import xyz.jbapps.vplanapp.R;
+import xyz.jbapps.vplan.R;
 
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();

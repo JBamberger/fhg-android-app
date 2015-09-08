@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp;
+package xyz.jbapps.vplan;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -35,11 +35,11 @@ import java.util.List;
 
 import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
-import xyz.jbapps.vplanapp.data.VPlanData;
-import xyz.jbapps.vplanapp.ui.MultiVPlanAdapter;
-import xyz.jbapps.vplanapp.util.GradeSorter;
-import xyz.jbapps.vplanapp.util.Property;
-import xyz.jbapps.vplanapp.util.VPlanProvider;
+import xyz.jbapps.vplan.data.VPlanData;
+import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
+import xyz.jbapps.vplan.util.GradeSorter;
+import xyz.jbapps.vplan.util.Property;
+import xyz.jbapps.vplan.util.VPlanProvider;
 
 public class MainActivity extends AppCompatActivity {
 

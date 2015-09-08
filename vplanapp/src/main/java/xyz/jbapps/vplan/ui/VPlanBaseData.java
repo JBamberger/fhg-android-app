@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.ui;
+package xyz.jbapps.vplan.ui;
 
 
 import org.json.JSONException;

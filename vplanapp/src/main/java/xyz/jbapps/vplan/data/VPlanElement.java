@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.data;
+package xyz.jbapps.vplan.data;
 
 /**
  * Created by Jannik on 19.08.2015.

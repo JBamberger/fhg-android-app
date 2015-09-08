@@ -1,4 +1,4 @@
-package xyz.jbapps.vplanapp.data;
+package xyz.jbapps.vplan.data;
 
 /**
  * @author Jannik Bamberger
