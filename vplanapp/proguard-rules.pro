@@ -15,3 +15,13 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+-verbose
+
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+-keep class xyz.jbapps.vplan.** {*;}
+-keep interface xyz.jbapps.vplan.** {*;}
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
