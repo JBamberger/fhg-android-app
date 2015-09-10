@@ -26,9 +26,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -225,8 +222,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final List<Integer> selected = new ArrayList<>();
-        for(int i = 0; i < selectedItems.length; i++) {
-            if(selectedItems[i]) {
+        for (int i = 0; i < selectedItems.length; i++) {
+            if (selectedItems[i]) {
                 selected.add(i);
             }
         }
@@ -309,8 +306,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void vPlanLoadingFailed() {
             toggleLoading(false);
-            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show();
-            // TODO: use resources
+            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
             reloadOnReconnect = true;
         }
 
@@ -344,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         public void netStateUpdate() {
             if (NetUtils.isNetworkAvailable(mActivity)) {
                 networkStatus.setVisibility(View.INVISIBLE);
-                if(reloadOnReconnect) {
+                if (reloadOnReconnect) {
                     mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
                 }
             } else {
