@@ -12,9 +12,6 @@ Verwendete Bibliotheken:
 -jsoup
 	MIT license	
 	Copyright 2009 - 2014 Jonathan Hedley (jonathan@hedley.net)
--nispok/snackbar
-	MIT license
-	Copyright 2015 William Mora
 -GSON
 	Apache 2.0 license
 	Copyright 2008 Google Inc.

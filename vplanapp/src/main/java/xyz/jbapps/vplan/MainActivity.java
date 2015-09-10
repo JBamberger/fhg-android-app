@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void vPlanLoadingFailed() {
             toggleLoading(false);
-            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show(); //
+            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show();
             // TODO: use resources
             reloadOnReconnect = true;
         }
