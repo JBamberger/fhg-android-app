@@ -23,12 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.jbapps.jutils.NetUtils;
@@ -43,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "VPlanApp v2";
 
-    private static final String URL_MAIL_DEVELOPER = "mailto:vplanbugreport@gmail.com";
     private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
     private static final String STATE_SHOULD_REFRESH = "refresh";
     private final NetReceiver mNetworkStateReceiver = new NetReceiver();
     private final VPlanListener mVPlanListener = new VPlanListener();
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
+    private boolean reloadOnReconnect = true;
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private MultiVPlanAdapter multiVPlanAdapter;
     private String gradeState;
     private Activity mActivity;
+    private TextView networkStatus;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                                     subject = getString(R.string.text_subject_general);
                                     break;
                             }
-                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
+                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + getString(R.string.mail_developer)));
                             intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                             startActivity(intent);
                         }
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
+        networkStatus = ViewUtils.findViewById(this, R.id.network_status);
         mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
         setSupportActionBar(mToolbar);
         setupActionBar();
@@ -184,10 +188,10 @@ public class MainActivity extends AppCompatActivity {
                 mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
             }
         });
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.material_blue_A700, R.color.material_blue_A400, R.color.material_blue_A200, R.color.material_blue_A100);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.brand_accent_light, R.color.brand_accent_dark, R.color.brand_accent_light, R.color.brand_accent_dark);
 
 
-        multiVPlanAdapter = new MultiVPlanAdapter();
+        multiVPlanAdapter = new MultiVPlanAdapter(this);
         mRecyclerView.setAdapter(multiVPlanAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.hasFixedSize();
@@ -221,7 +225,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         final List<Integer> selected = new ArrayList<>();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        for(int i = 0; i < selectedItems.length; i++) {
+            if(selectedItems[i]) {
+                selected.add(i);
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_Dialog);
 
         builder.setTitle(R.string.text_dialog_pick_grade)
                 .setMultiChoiceItems(R.array.listGrades, selectedItems,
@@ -241,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         String[] list = getResources().getStringArray(R.array.listGrades);
                         StringBuilder output = new StringBuilder();
+                        Collections.sort(selected);
                         for (int i : selected) {
                             output.append(list[i]);
                             output.append(",");
@@ -299,7 +309,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void vPlanLoadingFailed() {
             toggleLoading(false);
-            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG); //TODO: use resources
+            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show(); //
+            // TODO: use resources
+            reloadOnReconnect = true;
         }
 
         @Override
@@ -309,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
             vplan1 = gSorter.applyPatternToData(vplan1);
             vplan2 = gSorter.applyPatternToData(vplan2);
             multiVPlanAdapter.setData(vplan1, vplan2);
+            reloadOnReconnect = false;
         }
 
         public void loadVPlan(int method) {
@@ -330,13 +343,12 @@ public class MainActivity extends AppCompatActivity {
 
         public void netStateUpdate() {
             if (NetUtils.isNetworkAvailable(mActivity)) {
-                SnackbarManager.dismiss();
+                networkStatus.setVisibility(View.INVISIBLE);
+                if(reloadOnReconnect) {
+                    mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
+                }
             } else {
-                SnackbarManager.show(Snackbar.with(getApplicationContext())
-                        .text(getString(R.string.text_net_disconnected))
-                        .colorResource(R.color.material_red_500)
-                        .duration(Snackbar.SnackbarDuration.LENGTH_INDEFINITE)
-                        .swipeToDismiss(false), mActivity);
+                networkStatus.setVisibility(View.VISIBLE);
             }
         }
     }

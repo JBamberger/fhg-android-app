@@ -1,5 +1,6 @@
 package xyz.jbapps.vplan.ui;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,11 @@ import xyz.jbapps.vplan.data.VPlanRow;
 public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
     private VPlanDataWrapper vPlanDataWrapper;
+    private Context context;
 
-    public MultiVPlanAdapter() {
+    public MultiVPlanAdapter(Context context) {
         vPlanDataWrapper = new VPlanDataWrapper(new VPlanData(), new VPlanData());
+        this.context = context;
 
     }
 
@@ -53,10 +56,12 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 xyz.jbapps.vplan.data.VPlanHeader header = (xyz.jbapps.vplan.data.VPlanHeader)
                         vPlanDataWrapper.getItemAtPosition(position);
                 VPlanHeaderViewHolder headHolder = (VPlanHeaderViewHolder) holder;
-                headHolder.headlayout.setBackgroundResource(R.color.material_blue_grey_950);
+                headHolder.headlayout.setBackgroundResource(R.color.vplan_header);
                 headHolder.title.setText(header.getTitle());
                 headHolder.status.setText(header.getStatus());
-                headHolder.motdHeader.setText("Nachrichten zum Tag");//TODO: auslagern
+                if (!header.getMotd().isEmpty()) {
+                    headHolder.motdHeader.setText(context.getString(R.string.text_vplan_motd));
+                }
                 headHolder.motdContent.setText(header.getMotd());
                 break;
             case VPlanElement.TYPE_ROW:
@@ -66,11 +71,15 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 rowHolder.content.setText(row.getContent());
                 rowHolder.hour.setText(row.getHour());
                 rowHolder.subject.setText(row.getSubject());
-                rowHolder.roomOmitted.setText(row.getOmitted() ? "entfällt" : row.getRoom()); //TODO: auslagern
-                rowHolder.marked_new.setBackgroundResource(
-                        ((position % 2) == 1) ? R.color.material_blue_grey_800 : R.color.material_blue_grey_900);
+                rowHolder.background.setBackgroundResource(((position % 2) == 1) ? R.color.vplan_even : R.color.vplan_odd);
+                if (row.getOmitted()) {
+                    rowHolder.roomOmitted.setText(context.getString(R.string.text_vplan_omitted));
+                    rowHolder.background.setBackgroundResource(R.color.vplan_omitted);
+                } else {
+                    rowHolder.roomOmitted.setText(row.getRoom());
+                }
                 if (row.getMarkedNew()) {
-                    rowHolder.marked_new.setBackgroundResource(R.color.material_green_A400);
+                    rowHolder.background.setBackgroundResource(R.color.vplan_new);
                 }
                 break;
         }
@@ -92,7 +101,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
         public TextView subject;
         public TextView roomOmitted;
         public TextView content;
-        public LinearLayout marked_new;
+        public LinearLayout background;
 
         public VPlanRowViewHolder(View itemView) {
             super(itemView);
@@ -101,7 +110,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
             subject = ViewUtils.findViewById(itemView, R.id.vplan_third);
             roomOmitted = ViewUtils.findViewById(itemView, R.id.vplan_fourth);
             content = ViewUtils.findViewById(itemView, R.id.vplan_content);
-            marked_new = ViewUtils.findViewById(itemView, R.id.item_layout);
+            background = ViewUtils.findViewById(itemView, R.id.item_layout);
         }
 
     }

@@ -20,7 +20,6 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/material_text_inverse_100"
                 tools:text="grade" />
 
             <TextView
@@ -30,7 +29,6 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/material_text_inverse_100"
                 tools:text="hour" />
 
 
@@ -41,7 +39,6 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/material_text_inverse_100"
                 tools:text="subject" />
 
             <TextView
@@ -51,7 +48,6 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/material_text_inverse_100"
                 tools:text="room" />
     </LinearLayout>
 
@@ -61,8 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceSmallInverse"
-        android:textColor="@color/material_text_inverse_70"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         tools:text="content" />
 
 </LinearLayout>

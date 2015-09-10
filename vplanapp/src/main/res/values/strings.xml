@@ -21,14 +21,14 @@
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="select_all">alle anzeigen</string>
+    <string name="mail_developer">dev.jbamberger@gmail.com</string>
+
+    <string name="text_vplan_omitted">entfällt</string>
+    <string name="text_vplan_motd">Nachrichten zum Tag</string>
 
     <string name="text_subject_question">[VPlan-App] question</string>
     <string name="text_subject_feedback">[VPlan-App] feedback</string>
     <string name="text_subject_bug">[VPlan-App] bug</string>
     <string name="text_subject_general">[VPlan-App] general</string>
-
-    <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id.
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string> -->
-    <string name="banner_ad_unit_id">ca-app-pub-5920157148043268/2149177639</string>
 
 </resources>

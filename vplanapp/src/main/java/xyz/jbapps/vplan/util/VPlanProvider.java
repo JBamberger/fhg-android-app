@@ -72,7 +72,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * url of second vplan fragment
      */
-    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm"; //"http://jbapps.xyz/vplan.txt"
 
     /**
      * http header last modified

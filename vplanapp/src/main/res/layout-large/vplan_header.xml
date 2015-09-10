@@ -15,7 +15,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/material_text_inverse_100"
         android:textStyle="bold"
         tools:text="Title" />
 
@@ -26,7 +25,6 @@
         android:layout_below="@+id/vplan_title"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/material_text_inverse_30"
         android:textStyle="italic"
         tools:text="last updated" />
 
@@ -37,7 +35,6 @@
         android:layout_below="@+id/vplan_status"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/material_text_inverse_100"
         android:textStyle="bold"
         tools:text="Nachrichten zum Tag" />
 
@@ -48,7 +45,6 @@
         android:layout_below="@+id/vplan_motd_header"
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/material_text_inverse_70"
         android:textStyle="italic"
         tools:text="Blablable lorem ipsum coaizse jgsaza" />
 
