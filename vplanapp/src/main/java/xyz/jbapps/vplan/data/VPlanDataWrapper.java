@@ -3,8 +3,7 @@ package xyz.jbapps.vplan.data;
 /**
  * @author Jannik Bamberger
  * @version 1.0
- *          The VPlanDataWrapper contains two VPlanData objects and presents them as a List, so they can be
- *          used easily inside an ListAdapter
+ *          The VPlanDataWrapper contains two VPlanData objects and presents them as a List, so iterating through them is easy
  */
 public class VPlanDataWrapper {
 
@@ -21,7 +20,7 @@ public class VPlanDataWrapper {
             throw new ArrayIndexOutOfBoundsException();
         } else if (position == 0) {
             return vPlanData1.getvPlanHeader();
-        } else if (position < vPlanData1.getVPlanRowCount()) {
+        } else if (position <= vPlanData1.getVPlanRowCount()) {
             return vPlanData1.getVPlanRowAtPosition(position - 1);
         } else if (position == vPlanData1.getVPlanRowCount() + 1) {
             return vPlanData2.getvPlanHeader();
