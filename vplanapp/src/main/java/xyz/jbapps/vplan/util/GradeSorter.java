@@ -43,7 +43,7 @@ public class GradeSorter {
             "(.*[kK].*1.*)",
             "(.*[kK].*2.*)"};
 
-    private String gradePattern;
+    private final String gradePattern;
 
     public GradeSorter(String grades) {
         gradePattern = generatePattern(grades);

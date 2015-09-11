@@ -23,7 +23,7 @@ import xyz.jbapps.vplan.data.VPlanRow;
 public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
     private VPlanDataWrapper vPlanDataWrapper;
-    private Context context;
+    private final Context context;
 
     public MultiVPlanAdapter(Context context) {
         vPlanDataWrapper = new VPlanDataWrapper(new VPlanData(), new VPlanData());
@@ -96,12 +96,12 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
     }
 
     public static class VPlanRowViewHolder extends RecyclerView.ViewHolder {
-        public TextView grade;
-        public TextView hour;
-        public TextView subject;
-        public TextView roomOmitted;
-        public TextView content;
-        public LinearLayout background;
+        public final TextView grade;
+        public final TextView hour;
+        public final TextView subject;
+        public final TextView roomOmitted;
+        public final TextView content;
+        public final LinearLayout background;
 
         public VPlanRowViewHolder(View itemView) {
             super(itemView);
@@ -117,11 +117,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
     public class VPlanHeaderViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView status;
-        public TextView title;
-        public TextView motdHeader;
-        public TextView motdContent;
-        public RelativeLayout headlayout;
+        public final TextView status;
+        public final TextView title;
+        public final TextView motdHeader;
+        public final TextView motdContent;
+        public final RelativeLayout headlayout;
 
         public VPlanHeaderViewHolder(View itemView) {
             super(itemView);
