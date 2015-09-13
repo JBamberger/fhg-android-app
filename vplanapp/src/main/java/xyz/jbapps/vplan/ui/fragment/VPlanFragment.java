@@ -2,14 +2,10 @@ package xyz.jbapps.vplan.ui.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,15 +13,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
@@ -33,17 +26,12 @@ import xyz.jbapps.vplan.util.GradeSorter;
 import xyz.jbapps.vplan.util.Property;
 import xyz.jbapps.vplan.util.VPlanProvider;
 
-public class VPlanFragment extends BaseFragment {
+public class VPlanFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG = "VPlanFragment";
     private static final String STATE_SHOULD_REFRESH = "refresh";
 
     private final VPlanListener mVPlanListener = new VPlanListener();
-
-    private FloatingActionButton fab;
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
 
     private Property mProperty;
     private VPlanProvider vPlanProvider;
@@ -56,36 +44,28 @@ public class VPlanFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_vplan, container, false);
+        View view = super.onCreateView(inflater,container,savedInstanceState);
 
         setActionBarTitle(R.string.title_fragment_vplan);
 
 
-        fab = ViewUtils.findViewById(view, R.id.vplan_reload);
-        mProgressBar = ViewUtils.findViewById(view, R.id.progressBar);
-        mRecyclerView = ViewUtils.findViewById(view, R.id.vplan_list);
-        mSwipeRefreshLayout = ViewUtils.findViewById(view, R.id.vplan_refreshlayout);
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
             }
         });
-        fab.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
             }
         });
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.brand_accent_light, R.color.brand_accent_dark, R.color.brand_accent_light, R.color.brand_accent_dark);
-
         multiVPlanAdapter = new MultiVPlanAdapter(context);
-        mRecyclerView.setAdapter(multiVPlanAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.hasFixedSize();
+        recyclerView.setAdapter(multiVPlanAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.hasFixedSize();
         return view;
     }
 
@@ -239,19 +219,6 @@ public class VPlanFragment extends BaseFragment {
         return !(multiVPlanAdapter.getItemCount() > 0);
     }
 
-    private void toggleLoading(boolean on) {
-        if (on) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            fab.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
-        } else {
-            mProgressBar.setVisibility(View.GONE);
-            fab.clearAnimation();
-            if (mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }
-    }
-
     private class VPlanListener implements VPlanProvider.IVPlanResultListener {
 
         @Override
@@ -288,22 +255,4 @@ public class VPlanFragment extends BaseFragment {
             vPlanProvider.execute();
         }
     }
-
-    private boolean wifiConnected = false;
-    private boolean mobileConnected = false;
-
-    protected void updateNetworkFlags() {
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-        if (activeInfo != null && activeInfo.isConnected()) {
-            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
-            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-        } else {
-            wifiConnected = false;
-            mobileConnected = false;
-        }
-    }
-
 }
