@@ -1,20 +1,15 @@
 package xyz.jbapps.vplan.util;
 
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Jannik Bamberger
@@ -29,7 +24,7 @@ public class FHGFeedProvider extends AsyncTask<Object, Object, List<FHGFeedXmlPa
      */
     private static final String FHG_FEED_URL = "http://www.fhg-radolfzell.de/feed/atom";
 
-    private IFHGFeedResultListener listener;
+    private final IFHGFeedResultListener listener;
 
     public FHGFeedProvider(IFHGFeedResultListener listener) {
         this.listener = listener;
@@ -56,7 +51,7 @@ public class FHGFeedProvider extends AsyncTask<Object, Object, List<FHGFeedXmlPa
     @Nullable
     private List<FHGFeedXmlParser.FHGFeedItem> loadFeed() throws IOException, XmlPullParserException {
         URL url = new URL(FHG_FEED_URL);
-        List<FHGFeedXmlParser.FHGFeedItem> feed = null;
+        List<FHGFeedXmlParser.FHGFeedItem> feed;
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
             connection.setRequestMethod("GET");

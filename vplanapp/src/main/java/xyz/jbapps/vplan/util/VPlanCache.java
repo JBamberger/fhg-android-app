@@ -27,8 +27,8 @@ public class VPlanCache {
     public static final String FILE_VPLAN2 = "vplan2.txt";
     private static final String TAG = "VPlanCache";
     private static final String ENCODING = "ISO-8859-1";
-    private Context context;
-    private Gson gson;
+    private final Context context;
+    private final Gson gson;
 
 
     public VPlanCache(Context context) {

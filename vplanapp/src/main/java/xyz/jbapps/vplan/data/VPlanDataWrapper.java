@@ -7,8 +7,8 @@ package xyz.jbapps.vplan.data;
  */
 public class VPlanDataWrapper {
 
-    private VPlanData vPlanData1;
-    private VPlanData vPlanData2;
+    private final VPlanData vPlanData1;
+    private final VPlanData vPlanData2;
 
     public VPlanDataWrapper(VPlanData vPlanData1, VPlanData vPlanData2) {
         this.vPlanData1 = vPlanData1;

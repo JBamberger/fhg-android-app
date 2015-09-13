@@ -47,12 +47,6 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         loadFeed();

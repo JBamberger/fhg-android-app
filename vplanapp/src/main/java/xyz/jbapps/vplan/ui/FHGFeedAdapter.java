@@ -1,8 +1,6 @@
 package xyz.jbapps.vplan.ui;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
@@ -11,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +18,6 @@ import java.util.List;
 import de.jbapps.jutils.MiscUtils;
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
-import xyz.jbapps.vplan.data.VPlanData;
-import xyz.jbapps.vplan.data.VPlanDataWrapper;
-import xyz.jbapps.vplan.data.VPlanElement;
-import xyz.jbapps.vplan.data.VPlanRow;
-import xyz.jbapps.vplan.util.FHGFeedProvider;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 
 /**
@@ -38,7 +29,7 @@ public class FHGFeedAdapter extends RecyclerView.Adapter {
     private static final String TAG = "FHGFeedAdapter";
 
     private List<FHGFeedXmlParser.FHGFeedItem> feedItems;
-    private Activity activity;
+    private final Activity activity;
 
     public FHGFeedAdapter(Activity activity) {
         feedItems = new ArrayList<>();

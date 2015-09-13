@@ -9,6 +9,7 @@
 
 
     <ImageView
+        android:contentDescription="@string/text_fhg_logo_description"
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
         android:layout_height="wrap_content"
@@ -34,13 +35,11 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/text_write_mail"
-            android:onClick="writeMail"
             android:id="@+id/button_mail" />
 
         <Button
             android:layout_width="0px"
             android:layout_weight="1"
-            android:onClick="makeCall"
             android:layout_height="wrap_content"
             android:text="@string/text_call"
             android:id="@+id/button_call" />

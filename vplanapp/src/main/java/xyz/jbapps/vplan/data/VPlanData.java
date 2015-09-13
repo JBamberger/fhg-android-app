@@ -12,7 +12,7 @@ public class VPlanData {
     @SerializedName("vplan_header_row")
     private VPlanRow VPlanHeaderRow;
     @SerializedName("vplan_rows")
-    private List<VPlanRow> mVPlanRows = new ArrayList<>();
+    private final List<VPlanRow> mVPlanRows = new ArrayList<>();
     @SerializedName("vplan_header")
     private VPlanHeader vPlanHeader;
 
