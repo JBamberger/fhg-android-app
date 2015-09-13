@@ -92,7 +92,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * provides access to vplan cache
      */
-    private final VPlanCache vPlanCache;
+    private final PersistentCache persistentCache;
 
     /**
      * type of operation
@@ -118,7 +118,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
         this.dateParser = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
         this.listener = listener;
         this.type = type;
-        this.vPlanCache = new VPlanCache(context);
+        this.persistentCache = new PersistentCache(context);
     }
 
     /**
@@ -128,8 +128,8 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
      */
     private boolean typeCache() {
         try {
-            vPlanData1 = vPlanCache.readVPlan(VPlanCache.FILE_VPLAN1);
-            vPlanData2 = vPlanCache.readVPlan(VPlanCache.FILE_VPLAN2);
+            vPlanData1 = persistentCache.readVPlan(PersistentCache.FILE_VPLAN1);
+            vPlanData2 = persistentCache.readVPlan(PersistentCache.FILE_VPLAN2);
             return SUCCESS;
         } catch (IOException e) {
             e.printStackTrace();
@@ -146,8 +146,8 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
         try {
             vPlanData1 = parseVPlan(loadVPlanFromNet(URL_VPLAN1));
             vPlanData2 = parseVPlan(loadVPlanFromNet(URL_VPLAN2));
-            vPlanCache.writeVPlan(vPlanData1, VPlanCache.FILE_VPLAN1);
-            vPlanCache.writeVPlan(vPlanData2, VPlanCache.FILE_VPLAN2);
+            persistentCache.writeVPlan(vPlanData1, PersistentCache.FILE_VPLAN1);
+            persistentCache.writeVPlan(vPlanData2, PersistentCache.FILE_VPLAN2);
             return SUCCESS;
         } catch (IOException e) {
             e.printStackTrace();
@@ -163,8 +163,8 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
      */
     private boolean typeLoad() {
         try {
-            VPlanData vdata1 = vPlanCache.readVPlan(VPlanCache.FILE_VPLAN1);
-            VPlanData vdata2 = vPlanCache.readVPlan(VPlanCache.FILE_VPLAN2);
+            VPlanData vdata1 = persistentCache.readVPlan(PersistentCache.FILE_VPLAN1);
+            VPlanData vdata2 = persistentCache.readVPlan(PersistentCache.FILE_VPLAN2);
             long h1 = loadVPlanHeaderFromNet(URL_VPLAN1);
             long h2 = loadVPlanHeaderFromNet(URL_VPLAN2);
             long h1_cache = vdata1.getLastUpdated();

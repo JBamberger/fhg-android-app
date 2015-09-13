@@ -16,6 +16,8 @@ package xyz.jbapps.vplan.util;
 
 import android.util.Xml;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -70,12 +72,12 @@ public class FHGFeedXmlParser {
 
     private FHGFeedItem readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, ns, "entry");
-        String title = null;
-        String author = null;
-        String summary = null;
-        String link = null;
-        String updated_at = null;
-        String published_at = null;
+        String title = "";
+        String author = "";
+        String summary = "";
+        String link = "";
+        String updated_at = "";
+        String published_at = "";
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -106,7 +108,9 @@ public class FHGFeedXmlParser {
                     break;
             }
         }
-        return new FHGFeedItem(title, author, summary, link, updated_at, published_at);
+        FHGFeedItem item = new FHGFeedItem(title, author, summary, link, updated_at, published_at);
+        item.unescape();
+        return item;
     }
 
     private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
@@ -189,7 +193,7 @@ public class FHGFeedXmlParser {
 
     private String readSummary(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "summary");
-        String summary = StringEscapeUtils.unescapeHtml4(readText(parser));
+        String summary = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "summary");
         return summary;
     }
@@ -224,14 +228,32 @@ public class FHGFeedXmlParser {
      * This object contains a single fhg feed item
      */
     public class FHGFeedItem {
-        public final String title;
-        public final String author;
-        public final String link;
-        public final String summary;
-        public final String updated_at;
-        public final String published_at;
+        @SerializedName("feed_entry_title")
+        public String title;
+        @SerializedName("feed_entry_author")
+        public String author;
+        @SerializedName("feed_entry_link")
+        public String link;
+        @SerializedName("feed_entry_summary")
+        public String summary;
+        @SerializedName("feed_entry_updated_at")
+        public String updated_at;
+        @SerializedName("feed_entry_published_at")
+        public String published_at;
 
-        private FHGFeedItem(String title, String author, String summary, String link, String updated_at, String published_at) {
+        public void escape() {
+            summary = StringEscapeUtils.escapeHtml4(summary);
+            title = StringEscapeUtils.escapeHtml4(title);
+            author = StringEscapeUtils.escapeHtml4(author);
+        }
+
+        public void unescape() {
+            summary = StringEscapeUtils.unescapeHtml4(summary);
+            title = StringEscapeUtils.unescapeHtml4(title);
+            author = StringEscapeUtils.unescapeHtml4(author);
+        }
+
+        public FHGFeedItem(String title, String author, String summary, String link, String updated_at, String published_at) {
             this.title = title;
             this.author = author;
             this.summary = summary;

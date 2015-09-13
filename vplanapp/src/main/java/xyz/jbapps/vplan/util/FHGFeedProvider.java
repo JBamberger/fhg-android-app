@@ -1,68 +1,127 @@
 package xyz.jbapps.vplan.util;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import xyz.jbapps.vplan.data.FHGFeed;
 
 /**
  * @author Jannik Bamberger
  * @version 1.0
- *
- * The FHGFeedProvider loads and parses the FHG feed and returns the retrieved objects to the callback
- * */
-public class FHGFeedProvider extends AsyncTask<Object, Object, List<FHGFeedXmlParser.FHGFeedItem>> {
+ */
+public class FHGFeedProvider extends AsyncTask<Object, Object, Boolean> {
 
-    /**
-     * url of the fhg feed
-     */
+    public static final int TYPE_LOAD = 0;
+    public static final int TYPE_CACHE = 1;
+    public static final int TYPE_FORCE_LOAD = 2;
+    private static final String TAG = "FHGFeedProvider";
+    private static final boolean SUCCESS = true;
+    private static final boolean FAILURE = false;
     private static final String FHG_FEED_URL = "http://www.fhg-radolfzell.de/feed/atom";
-
+    private static final String HEADER_LAST_MODIFIED = "Last-Modified";
     private final IFHGFeedResultListener listener;
+    private final PersistentCache persistentCache;
+    private final SimpleDateFormat dateParser;
+    private final int type;
+    private FHGFeed fhgFeed;
 
-    public FHGFeedProvider(IFHGFeedResultListener listener) {
+    public FHGFeedProvider(Context context, int type, IFHGFeedResultListener listener) {
+        this.dateParser = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
         this.listener = listener;
+        this.type = type;
+        this.persistentCache = new PersistentCache(context);
+    }
+
+    private boolean typeCache() {
+        try {
+            fhgFeed = persistentCache.readFHGFeed(PersistentCache.FILE_FHG_FEED);
+            return SUCCESS;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return FAILURE;
+        }
+    }
+
+    private boolean typeForceLoad() {
+        try {
+            fhgFeed = loadFeedFromNet();
+            persistentCache.writeFHGFeed(fhgFeed, PersistentCache.FILE_FHG_FEED);
+            return SUCCESS;
+        } catch (IOException | XmlPullParserException e) {
+            e.printStackTrace();
+            return FAILURE;
+        }
+    }
+
+    private boolean typeLoad() {
+        try {
+            FHGFeed cachedFeed = persistentCache.readFHGFeed(PersistentCache.FILE_FHG_FEED);
+            long h1 = loadFeedHeaderFromNet();
+            long h1_cache = cachedFeed.lastUpdated;
+            if ((h1 == h1_cache)) {
+                fhgFeed = cachedFeed;
+                return SUCCESS;
+            } else {
+                return typeForceLoad();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return typeForceLoad();
+        }
     }
 
     @Override
-    @Nullable
-    protected List<FHGFeedXmlParser.FHGFeedItem> doInBackground(Object... params) {
-        List<FHGFeedXmlParser.FHGFeedItem> feed = null;
-        try {
-            feed = loadFeed();
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
+    protected Boolean doInBackground(Object[] params) {
+        switch (type) {
+            case TYPE_CACHE:
+                return typeCache();
+            case TYPE_LOAD:
+                return typeLoad();
+            case TYPE_FORCE_LOAD:
+                return typeForceLoad();
+            default:
+                return FAILURE;
         }
-        return feed;
     }
 
-    /**
-     * This method loads the given url and returns the given document as {@link String}
-     *
-     * @return document as string
-     * @throws IOException
-     */
+    @Override
+    protected void onPostExecute(Boolean o) {
+        if (listener != null) {
+            if (o) {
+                listener.feedLoadingSucceeded(fhgFeed.feedItems);
+            } else {
+                listener.feedLoadingFailed();
+            }
+        }
+    }
+
     @Nullable
-    private List<FHGFeedXmlParser.FHGFeedItem> loadFeed() throws IOException, XmlPullParserException {
-        URL url = new URL(FHG_FEED_URL);
-        List<FHGFeedXmlParser.FHGFeedItem> feed;
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    private FHGFeed loadFeedFromNet() throws IOException, XmlPullParserException {
+        FHGFeed feed = new FHGFeed();
+        URL feedUrl = new URL(FHG_FEED_URL);
+        HttpURLConnection connection = (HttpURLConnection) feedUrl.openConnection();
         try {
             connection.setRequestMethod("GET");
+            Map<String, List<String>> headers = connection.getHeaderFields();
+            feed.lastUpdated = getLastModified(headers);
             int resCode = connection.getResponseCode();
             if (resCode == HttpURLConnection.HTTP_OK) {
                 InputStream in = connection.getInputStream();
                 FHGFeedXmlParser feedParser = new FHGFeedXmlParser();
-                feed = feedParser.parse(in);
-
+                feed.feedItems = feedParser.parse(in);
                 return feed;
-
             } else {
                 throw new IOException("Networking error");
             }
@@ -71,29 +130,42 @@ public class FHGFeedProvider extends AsyncTask<Object, Object, List<FHGFeedXmlPa
         }
     }
 
-    @Override
-    protected void onPostExecute(List<FHGFeedXmlParser.FHGFeedItem> feed) {
-        super.onPostExecute(feed);
-        if(listener != null) {
-            if(feed != null && !feed.isEmpty()) {
-                listener.feedLoadingSucceeded(feed);
+    private long loadFeedHeaderFromNet() throws IOException {
+        URL feedUrl = new URL(FHG_FEED_URL);
+        HttpURLConnection connection = (HttpURLConnection) feedUrl.openConnection();
+        try {
+            connection.setRequestMethod("HEAD");
+            Map<String, List<String>> headers = connection.getHeaderFields();
+
+            int resCode = connection.getResponseCode();
+            if (resCode == HttpURLConnection.HTTP_OK) {
+                return getLastModified(headers);
             } else {
-                listener.feedLoadingFailed();
+                throw new IOException("http response not ok; response code is: " + resCode);
             }
+        } finally {
+            connection.disconnect();
         }
     }
 
+    private long getLastModified(Map<String, List<String>> headers) throws IOException {
+        if (headers.containsKey(HEADER_LAST_MODIFIED)) {
+            String lastModified = headers.get(HEADER_LAST_MODIFIED).get(0);
+            //Wed, 05 Aug 2015 10:21:47 GMT
+            try {
+                return dateParser.parse(lastModified).getTime();
+            } catch (ParseException e) {
+                throw new IOException("could not parse header date");
+            }
+        } else {
+            throw new IOException("header " + HEADER_LAST_MODIFIED + " not in given data set");
+        }
+    }
 
     public interface IFHGFeedResultListener {
-        /**
-         * If the loading process fails in some case the listener will be notified so the UI can be
-         * updated accordingly.
-         */
+
         void feedLoadingFailed();
 
-        /**
-         * If the loading process succeeded the listener will receive the feed data
-         */
         void feedLoadingSucceeded(List<FHGFeedXmlParser.FHGFeedItem> feed);
     }
 }

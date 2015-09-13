@@ -37,12 +37,6 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
                 loadFeed();
             }
         });
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         return v;
     }
 
@@ -52,10 +46,20 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
         loadFeed();
     }
 
+    private void loadCachedFeed() {
+        toggleLoading(true);
+        if (feedProvider != null) {
+            feedProvider.cancel(true);
+            feedProvider = null;
+        }
+        feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_CACHE, this);
+        feedProvider.execute();
+    }
+
     private void loadFeed() {
         updateNetworkFlags();
         if (!wifiConnected && !mobileConnected) {
-            toggleLoading(false);
+            loadCachedFeed();
             Toast.makeText(getActivity(), R.string.text_network_disconnected, Toast.LENGTH_LONG).show();
             return;
         }
@@ -64,7 +68,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
             feedProvider.cancel(true);
             feedProvider = null;
         }
-        feedProvider = new FHGFeedProvider(this);
+        feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_LOAD, this);
         feedProvider.execute();
     }
 

@@ -5,13 +5,17 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
+import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.data.VPlanData;
 
 /**
@@ -21,17 +25,18 @@ import xyz.jbapps.vplan.data.VPlanData;
  * @author Jannik Bamberger
  * @version 1.0
  */
-public class VPlanCache {
+public class PersistentCache {
 
     public static final String FILE_VPLAN1 = "vplan1.txt";
     public static final String FILE_VPLAN2 = "vplan2.txt";
-    private static final String TAG = "VPlanCache";
+    public static final String FILE_FHG_FEED = "fhg_feed.txt";
+    private static final String TAG = "PersistentCache";
     private static final String ENCODING = "ISO-8859-1";
     private final Context context;
     private final Gson gson;
 
 
-    public VPlanCache(Context context) {
+    public PersistentCache(Context context) {
         this.context = context;
         gson = new Gson();
     }
@@ -59,6 +64,34 @@ public class VPlanCache {
     @NonNull
     public VPlanData readVPlan(String fileName) throws IOException {
         return gson.fromJson(readCacheString(fileName), VPlanData.class);
+    }
+
+    /**
+     * This method uses GSON APIs to persist {@link VPlanData}
+     *
+     * @param fhgFeed {@link VPlanData} to be persisted
+     * @param fileName  name of the used cache file
+     * @throws IOException if operation failed
+     */
+    public void writeFHGFeed(FHGFeed fhgFeed, String fileName) throws IOException {
+        escapeFHGFeed(fhgFeed);
+        String feedString = gson.toJson(fhgFeed);
+        unescapeFHGFeed(fhgFeed);
+        writeCacheString(feedString, fileName);
+    }
+
+    /**
+     * This method reads a cache file to a {@link VPlanData} object using GSON APIs.
+     *
+     * @param fileName name of the used cache file
+     * @return Content of file as {@link VPlanData}
+     * @throws IOException if operation failed
+     */
+    @NonNull
+    public FHGFeed readFHGFeed(String fileName) throws IOException {
+        FHGFeed fhgFeed = gson.fromJson(readCacheString(fileName), FHGFeed.class);
+        unescapeFHGFeed(fhgFeed);
+        return fhgFeed;
     }
 
     /**
@@ -97,6 +130,18 @@ public class VPlanCache {
             return new String(buffer);
         } else {
             throw new IOException("The cache directory is invalid.");
+        }
+    }
+
+    private void escapeFHGFeed(FHGFeed feed) {
+        for(FHGFeedXmlParser.FHGFeedItem item : feed.feedItems) {
+            item.escape();
+        }
+    }
+
+    private void unescapeFHGFeed(FHGFeed feed) {
+        for(FHGFeedXmlParser.FHGFeedItem item : feed.feedItems) {
+            item.unescape();
         }
     }
 }
