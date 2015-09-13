@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.kulinu.ui.activities.BaseActivity">
+    tools:context="xyz.jbapps.vplan.ui.activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,64 +17,9 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <android.support.v4.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/vplan_refreshlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/vplan_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:divider="@color/white"
-                android:dividerHeight="0dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:indeterminate="true"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/vplan_reload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_action_refresh"
-            app:layout_anchor="@id/vplan_list"
-            app:layout_anchorGravity="bottom|right|end"
-            app:layout_behavior="xyz.jbapps.vplan.ui.ScrollAwareFABBehavior" />
-
-        <TextView
-            android:layout_gravity="center_horizontal|top"
-            android:gravity="center"
-            android:padding="6dp"
-            android:visibility="invisible"
-            tools:visibility="visible"
-            android:layout_width="match_parent"
-            android:background="@color/material_red_500"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_net_disconnected"
-            android:id="@+id/network_status" />
-
-    </android.support.design.widget.CoordinatorLayout>
-
-
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

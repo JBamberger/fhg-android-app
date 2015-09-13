@@ -3,32 +3,48 @@
 
     <string name="app_name">VPlan</string>
     <string name="app_copyright">&#169; Jannik Bamberger 2012 &#8211; 2015</string>
+
     <string name="action_classic_view">Website anzeigen</string>
     <string name="action_credits">Credits</string>
     <string name="action_bug">Fehler melden</string>
     <string name="action_feedback">Feedback/Frage</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="title_activity_credits">Credits</string>
-    <string name="text_net_disconnected">Bitte eine Internetverbindung herstellen.</string>
-    <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
     <string name="action_set_grade">Klasse einstellen</string>
     <string name="action_get_version">Version anzeigen</string>
     <string name="action_force_reload">Aktualisieren</string>
-    <string name="text_motd">Nachrichten zum Tag</string>
     <string name="action_contact_developer">Entwickler kontaktieren</string>
-    <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
-    <string name="text_dialog_pick_grade">Anzuzeigende Klassen</string>
+
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
-    <string name="select_all">alle anzeigen</string>
+    <string name="select_all">Alle anzeigen</string>
     <string name="mail_developer">dev.jbamberger@gmail.com</string>
 
+    <string name="text_motd">Nachrichten zum Tag</string>
+    <string name="text_dialog_contact_developer">Grund der Kontaktaufnahme</string>
+    <string name="text_dialog_pick_grade">Anzuzeigende Klassen</string>
     <string name="text_vplan_omitted">entfällt</string>
     <string name="text_vplan_motd">Nachrichten zum Tag</string>
-
+    <string name="text_network_disconnected">Bitte eine Internetverbindung herstellen.</string>
+    <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
     <string name="text_subject_question">[VPlan-App] question</string>
     <string name="text_subject_feedback">[VPlan-App] feedback</string>
     <string name="text_subject_bug">[VPlan-App] bug</string>
     <string name="text_subject_general">[VPlan-App] general</string>
+    <string name="text_write_mail">Mail schreiben</string>
+    <string name="text_call">Anrufen</string>
+
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_feed">FeedActivity</string>
+    <string name="title_activity_credits">Credits</string>
+
+    <string name="title_fragment_vplan">Vertretungsplan</string>
+    <string name="title_fragment_fhg_feed">FHG Feed</string>
+    <string name="title_fragment_contact">Kontakt</string>
+    <string name="title_fragment_credits">Credits</string>
+
+    <string name="text_fhg_contact_mail">mailto:schule@fhg-radolfzell.de</string>
+    <string name="text_fhg_contact_phone">tel:0049773294780</string>
+    <string name="text_fhg_contact">Friedrich-Hecker-Gymnasium\nMarkelfinger Str. 15\nD – 78315 Radolfzell\nTel: +49 (0) 77 32 / 94 78 0\nFax: +49 (0) 77 32 / 94 78 99\nE-Mail: schule@fhg-radolfzell.de\n</string>
+    <string name="text_fhg_contact_condensed">Friedrich-Hecker-Gymnasium\nMarkelfinger Str. 15\nD - 78315 Radolfzell</string>
 
 </resources>

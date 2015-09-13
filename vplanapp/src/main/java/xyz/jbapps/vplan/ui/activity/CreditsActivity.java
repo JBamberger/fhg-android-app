@@ -1,4 +1,4 @@
-package xyz.jbapps.vplan;
+package xyz.jbapps.vplan.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 
 import de.jbapps.jutils.ViewUtils;
+import xyz.jbapps.vplan.R;
 
 
 public class CreditsActivity extends AppCompatActivity {

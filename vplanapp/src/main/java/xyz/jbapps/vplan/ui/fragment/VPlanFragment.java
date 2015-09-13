@@ -1,68 +1,101 @@
-package xyz.jbapps.vplan;
+package xyz.jbapps.vplan.ui.fragment;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.Uri;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.jbapps.jutils.NetUtils;
 import de.jbapps.jutils.ViewUtils;
+import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
 import xyz.jbapps.vplan.util.GradeSorter;
 import xyz.jbapps.vplan.util.Property;
 import xyz.jbapps.vplan.util.VPlanProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class VPlanFragment extends BaseFragment {
 
-    private static final String TAG = "VPlanApp v2";
-
-    private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
+    private static final String TAG = "VPlanFragment";
     private static final String STATE_SHOULD_REFRESH = "refresh";
-    private final NetReceiver mNetworkStateReceiver = new NetReceiver();
+
     private final VPlanListener mVPlanListener = new VPlanListener();
+
     private FloatingActionButton fab;
-    private boolean reloadOnReconnect = true;
-    private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+
     private Property mProperty;
     private VPlanProvider vPlanProvider;
     private MultiVPlanAdapter multiVPlanAdapter;
+
     private String gradeState;
-    private Activity mActivity;
-    private TextView networkStatus;
+    private Context context;
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_vplan, container, false);
+
+        setActionBarTitle(R.string.title_fragment_vplan);
+
+
+        fab = ViewUtils.findViewById(view, R.id.vplan_reload);
+        mProgressBar = ViewUtils.findViewById(view, R.id.progressBar);
+        mRecyclerView = ViewUtils.findViewById(view, R.id.vplan_list);
+        mSwipeRefreshLayout = ViewUtils.findViewById(view, R.id.vplan_refreshlayout);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
+            }
+        });
+        fab.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
+            }
+        });
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.brand_accent_light, R.color.brand_accent_dark, R.color.brand_accent_light, R.color.brand_accent_dark);
+
+        multiVPlanAdapter = new MultiVPlanAdapter(context);
+        mRecyclerView.setAdapter(multiVPlanAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.hasFixedSize();
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_vplan, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -74,66 +107,39 @@ public class MainActivity extends AppCompatActivity {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_FORCE_LOAD);
             return true;
         }
-        if (id == R.id.action_contact_developer) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.text_dialog_contact_developer)
-                    .setItems(R.array.mail_subjects, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            String subject;
-                            switch (which) {
-                                case 0:
-                                    subject = getString(R.string.text_subject_question);
-                                    break;
-                                case 1:
-                                    subject = getString(R.string.text_subject_feedback);
-                                    break;
-                                case 2:
-                                    subject = getString(R.string.text_subject_bug);
-                                    break;
-                                default:
-                                    subject = getString(R.string.text_subject_general);
-                                    break;
-                            }
-                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + getString(R.string.mail_developer)));
-                            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                            startActivity(intent);
-                        }
-                    });
-            builder.create().show();
-
-            return true;
-        }
         if (id == R.id.action_set_grade) {
             showGradePicker();
-            //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_VPLAN_HOME)));
-            return true;
-        }
-        if (id == R.id.action_credits) {
-            startActivity(new Intent(this, CreditsActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onDetach() {
+        super.onDetach();
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        mActivity = this;
-        mProperty = new Property(this);
+        setHasOptionsMenu(true);
+        context = getActivity().getApplicationContext();
+        mProperty = new Property(context);
         gradeState = mProperty.readGrade();
+        stateShouldRefresh = savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true);
+    }
 
+    private boolean stateShouldRefresh = true;
 
-        setupUI();
-
-        mNetworkStateReceiver.netStateUpdate();
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateActionBar();
         if (mProperty.getShowGradePicker()) {
             showGradePicker();
         }
-
-        if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
+        if (stateShouldRefresh) {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
         } else {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
@@ -141,69 +147,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (!gradeState.equals(mProperty.readGrade())) {
             //returning from settings: update title and list
             gradeState = mProperty.readGrade();
-            setupActionBar();
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
         }
-        registerReceiver(mNetworkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mNetworkStateReceiver != null) {
-            unregisterReceiver(mNetworkStateReceiver);
-        }
-    }
-
-    private void setupUI() {
-        networkStatus = ViewUtils.findViewById(this, R.id.network_status);
-        mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        setupActionBar();
-
-        fab = ViewUtils.findViewById(this, R.id.vplan_reload);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
-            }
-        });
-        fab.setAnimation(AnimationUtils.loadAnimation(this, R.anim.fab_rotate_animation));
-
-        mProgressBar = ViewUtils.findViewById(this, R.id.progressBar);
-        mRecyclerView = ViewUtils.findViewById(this, R.id.vplan_list);
-        mSwipeRefreshLayout = ViewUtils.findViewById(this, R.id.vplan_refreshlayout);
-
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
-            }
-        });
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.brand_accent_light, R.color.brand_accent_dark, R.color.brand_accent_light, R.color.brand_accent_dark);
-
-
-        multiVPlanAdapter = new MultiVPlanAdapter(this);
-        mRecyclerView.setAdapter(multiVPlanAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.hasFixedSize();
-    }
-
-    private void setupActionBar() {
-        final ActionBar actionBar = getSupportActionBar();
+    private void updateActionBar() {
         String subtitle = gradeState;
         if (subtitle != null && subtitle.equals("")) {
             subtitle = "Alles";
         }
-        if (actionBar != null) {
-            actionBar.setSubtitle(subtitle);
-        }
+        setActionBarSubtitle(subtitle);
     }
+
 
     public void showGradePicker() {
         GradeSorter gSorter = new GradeSorter(mProperty.readGrade());
@@ -227,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 selected.add(i);
             }
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppTheme_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
 
         builder.setTitle(R.string.text_dialog_pick_grade)
                 .setMultiChoiceItems(R.array.listGrades, selectedItems,
@@ -261,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                         mProperty.storeGrade(grades);
                         mProperty.setShowGradePicker(false);
                         gradeState = grades;
-                        setupActionBar();
+                        updateActionBar();
                         mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
                     }
                 })
@@ -271,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                         mProperty.storeGrade("");
                         mProperty.setShowGradePicker(false);
                         gradeState = "";
-                        setupActionBar();
+                        updateActionBar();
                         mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
                     }
                 });
@@ -291,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
     private void toggleLoading(boolean on) {
         if (on) {
             mProgressBar.setVisibility(View.VISIBLE);
-            fab.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fab_rotate_animation));
+            fab.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
         } else {
             mProgressBar.setVisibility(View.GONE);
             fab.clearAnimation();
@@ -306,8 +266,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void vPlanLoadingFailed() {
             toggleLoading(false);
-            Toast.makeText(getApplicationContext(), "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
-            reloadOnReconnect = true;
+            Toast.makeText(context, "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
         }
 
         @Override
@@ -317,35 +276,43 @@ public class MainActivity extends AppCompatActivity {
             vplan1 = gSorter.applyPatternToData(vplan1);
             vplan2 = gSorter.applyPatternToData(vplan2);
             multiVPlanAdapter.setData(vplan1, vplan2);
-            reloadOnReconnect = false;
         }
 
         public void loadVPlan(int method) {
+            updateNetworkFlags();
+            if(!wifiConnected && !mobileConnected) {
+                toggleLoading(false);
+                Toast.makeText(context, R.string.text_network_disconnected, Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(method == VPlanProvider.TYPE_LOAD && wifiConnected) {
+                method = VPlanProvider.TYPE_FORCE_LOAD;
+            }
             toggleLoading(true);
             if (vPlanProvider != null) {
                 vPlanProvider.cancel(true);
                 vPlanProvider = null;
             }
-            vPlanProvider = new VPlanProvider(getApplicationContext(), method, this);
+            vPlanProvider = new VPlanProvider(context, method, this);
             vPlanProvider.execute();
         }
     }
 
-    private class NetReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            netStateUpdate();
-        }
+    private boolean wifiConnected = false;
+    private boolean mobileConnected = false;
 
-        public void netStateUpdate() {
-            if (NetUtils.isNetworkAvailable(mActivity)) {
-                networkStatus.setVisibility(View.INVISIBLE);
-                if (reloadOnReconnect) {
-                    mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
-                }
-            } else {
-                networkStatus.setVisibility(View.VISIBLE);
-            }
+    protected void updateNetworkFlags() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
+        if (activeInfo != null && activeInfo.isConnected()) {
+            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+        } else {
+            wifiConnected = false;
+            mobileConnected = false;
         }
     }
+
 }

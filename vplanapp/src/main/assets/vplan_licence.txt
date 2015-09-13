@@ -15,6 +15,9 @@ Verwendete Bibliotheken:
 -GSON
 	Apache 2.0 license
 	Copyright 2008 Google Inc.
+-org.apache.commons.lang3
+	Apache 2.0 license
+	Copyright The Apache Foundation
 
 Lizenzen
 

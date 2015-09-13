@@ -2,13 +2,9 @@ package xyz.jbapps.vplan.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import xyz.jbapps.vplan.MainActivity;
-import xyz.jbapps.vplan.R;
+import xyz.jbapps.vplan.ui.activity.MainActivity;
 
 /**
  * This class provides access to the applications SharedPreferences

@@ -72,7 +72,7 @@
             android:background="@color/material_red_500"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_net_disconnected"
+            android:text="@string/text_network_disconnected"
             android:id="@+id/network_status" />
 
     </android.support.design.widget.CoordinatorLayout>

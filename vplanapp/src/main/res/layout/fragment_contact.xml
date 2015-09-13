@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="xyz.jbapps.vplan.ui.fragment.ContactFragment"
+    android:background="@color/material_green_500"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:layout_height="wrap_content"
+        android:src="@drawable/header_logo"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:textAppearance="?android:attr/textAppearanceInverse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/text_fhg_contact" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/text_write_mail"
+            android:onClick="writeMail"
+            android:id="@+id/button_mail" />
+
+        <Button
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:onClick="makeCall"
+            android:layout_height="wrap_content"
+            android:text="@string/text_call"
+            android:id="@+id/button_call" />
+    </LinearLayout>
+
+</LinearLayout>
