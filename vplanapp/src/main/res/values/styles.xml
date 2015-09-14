@@ -10,7 +10,7 @@
         <item name="colorAccent">@color/brand_accent_dark</item>
     </style>
 
-    <style name="AppTheme_Toolbar" parent="AppTheme">
+    <style name="AppTheme.Toolbar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
         <item name="actionMenuTextColor">@color/abc_primary_text_material_dark</item>
         <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>

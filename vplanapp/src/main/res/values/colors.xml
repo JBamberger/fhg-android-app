@@ -8,7 +8,7 @@
 
     <color name="vplan_header">@color/material_grey_200</color>
     <color name="vplan_new">@color/material_light_green_500</color>
-    <color name="vplan_omitted">@color/material_grey_500</color>
+    <color name="vplan_omitted">@color/material_text_12</color>
     <color name="vplan_odd">@color/transparent</color>
     <color name="vplan_even">@color/material_text_12</color>
 
@@ -20,6 +20,7 @@
 
     <!-- Red -->
     <color name="material_red_500">#F44336</color>
+    <color name="material_red_A400">#FF5252</color>
 
     <!-- Light Green -->
     <color name="material_light_green_500">#8BC34A</color>

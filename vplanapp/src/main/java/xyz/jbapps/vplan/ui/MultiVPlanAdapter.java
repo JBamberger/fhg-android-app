@@ -65,17 +65,20 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 headHolder.motdContent.setText(header.getMotd());
                 break;
             case VPlanElement.TYPE_ROW:
+
                 VPlanRow row = (VPlanRow) vPlanDataWrapper.getItemAtPosition(position);
                 VPlanRowViewHolder rowHolder = (VPlanRowViewHolder) holder;
                 rowHolder.grade.setText(row.getGrade());
                 rowHolder.content.setText(row.getContent());
                 rowHolder.hour.setText(row.getHour());
                 rowHolder.subject.setText(row.getSubject());
-                rowHolder.background.setBackgroundResource(((position % 2) == 1) ? R.color.vplan_even : R.color.vplan_odd);
+                rowHolder.background.setBackgroundResource(R.color.transparent);
                 if (row.getOmitted()) {
+                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_red_A400));
                     rowHolder.roomOmitted.setText(context.getString(R.string.text_vplan_omitted));
                     rowHolder.background.setBackgroundResource(R.color.vplan_omitted);
                 } else {
+                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_text_54));
                     rowHolder.roomOmitted.setText(row.getRoom());
                 }
                 if (row.getMarkedNew()) {
