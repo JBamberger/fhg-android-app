@@ -56,8 +56,8 @@ public class VPlanSorter {
             if (!row.getGrade().matches(gradePattern)) {
                 data.deleteVPlanRow(i - 1);
             } else {
-                if(isGradeCourse(row)) {
-                    if(!row.getSubject().toLowerCase().matches(coursePattern)) {
+                if (isGradeCourse(row)) {
+                    if (!row.getSubject().toLowerCase().matches(coursePattern)) {
                         data.deleteVPlanRow(i - 1);
                     }
                 }
@@ -111,20 +111,16 @@ public class VPlanSorter {
             return PATTERN_MATCHES_EVERYTHING;
         }
         String[] courseArray = courses.split(",");
-            for (String course : courseArray) {
-
-                if (first) {
-                    patternBuilder.append(PATTERN_START);
-                    patternBuilder.append(course.toLowerCase());
-                    patternBuilder.append(PATTERN_END);
-                    first = false;
-                } else {
-                    patternBuilder.append("|");
-                    patternBuilder.append(PATTERN_START);
-                    patternBuilder.append(course.toLowerCase());
-                    patternBuilder.append(PATTERN_END);
-                }
+        for (String course : courseArray) {
+            if (first) {
+                first = false;
+            } else {
+                patternBuilder.append("|");
             }
+            patternBuilder.append(PATTERN_START);
+            patternBuilder.append(course.toLowerCase().trim());
+            patternBuilder.append(PATTERN_END);
+        }
 
         String result = patternBuilder.toString();
 
