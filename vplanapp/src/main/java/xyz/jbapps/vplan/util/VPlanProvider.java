@@ -343,7 +343,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
             }
             boolean highlightRow = size > 1 && cells.first().text().toLowerCase().contains("unterrichtsfrei");
             if(highlightRow) {
-                motd.append("<font color=#cc0029>");
+                motd.append("<font color=#FF5252>");
             }
             for (int i = 0; i < size; i++) {
                 Element cell = cells.get(i);
