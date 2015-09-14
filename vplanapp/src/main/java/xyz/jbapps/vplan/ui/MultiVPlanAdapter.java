@@ -2,6 +2,7 @@ package xyz.jbapps.vplan.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 if (!header.getMotd().isEmpty()) {
                     headHolder.motdHeader.setText(context.getString(R.string.text_vplan_motd));
                 }
-                headHolder.motdContent.setText(header.getMotd());
+                headHolder.motdContent.setText(Html.fromHtml(header.getMotd()));
                 break;
             case VPlanElement.TYPE_ROW:
 

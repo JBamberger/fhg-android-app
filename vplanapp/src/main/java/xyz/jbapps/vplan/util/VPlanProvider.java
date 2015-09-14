@@ -303,7 +303,7 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
             Document doc = Jsoup.parse(vplanString);
             vData.setStatus(readVPlanStatus(vplanString));
             vData.setTitle(readVPlanTitle(doc));
-            vData.setMotd(readMotdTable(doc.getElementsByClass("info").select("tr")));
+            vData.setMotd(readMotdTable(doc.getElementsByClass("info")));
             readVPlanTable(doc.getElementsByClass("list").select("tr"), vData);
             Log.i(TAG, "VPlan parsed");
             return vData;
@@ -332,17 +332,41 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     }
 
     @NonNull
-    private String readMotdTable(Elements motdTable) {
+    private String readMotdTable(Elements classInfo) {
+        Elements tableRows = classInfo.select("tr");
         StringBuilder motd = new StringBuilder();
-        for (Element line : motdTable) {
+        for (Element line : tableRows) {
             Elements cells = line.children().select("td");
-            for (Element cell : cells) {
-                motd.append(cell.text());
-                motd.append("\n");
+            int size = cells.size();
+            if(size == 0) {
+                continue;
             }
-        }
-        //TODO: remove last newline character
-        return motd.toString();
+            boolean highlightRow = size > 1 && cells.first().text().toLowerCase().contains("unterrichtsfrei");
+            if(highlightRow) {
+                motd.append("<font color=#cc0029>");
+            }
+            for (int i = 0; i < size; i++) {
+                Element cell = cells.get(i);
+                motd.append(cell.toString());
+                if(i < size - 2) {
+                    motd.append(" | ");
+                }
+            }
+            if(highlightRow) {
+                motd.append("</font>");
+            }
+            motd.append("<br />");
+        }String data =motd.toString();
+        Log.d(TAG, data);
+        Document dat = Jsoup.parse(data);
+        dat.select("html").unwrap();
+        dat.select("head").unwrap();
+        dat.select("body").unwrap();
+        dat.select("td").unwrap();
+        data = dat.toString();
+        Log.d(TAG, data);
+        return data;
+
     }
 
     private void readVPlanTable(Elements vPlanTable, VPlanData vData) {
