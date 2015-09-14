@@ -2,8 +2,13 @@ package xyz.jbapps.vplan.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.activity.MainActivity;
 
 /**
@@ -28,16 +33,33 @@ public class Property {
         return appContext.getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
-    public String readGrade() {
-        return getMainPreferences().getString(PROPERTY_GRADES, "");
+    private SharedPreferences getSettingsPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(appContext);
     }
 
-    public void storeGrade(String grades) {
-        final SharedPreferences prefs = getMainPreferences();
-        Log.i(TAG, "Saving grades");
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_GRADES, grades);
-        editor.apply();
+    public boolean readShowAll() {
+        return getSettingsPreferences().getBoolean(appContext.getString(R.string.preference_grade_show_all_key), true);
+    }
+
+    public String readGrades() {
+        Set<String> grades = getSettingsPreferences().getStringSet(appContext.getString(R.string.preference_grade_key), new HashSet<String>());
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+        for(String grade : grades) {
+            if (first) {
+                builder.append(grade);
+                first = false;
+            } else {
+                builder.append(",");
+                builder.append(grade);
+            }
+        }
+
+        return builder.toString();
+    }
+
+    public String readCourse() {
+        return getSettingsPreferences().getString(appContext.getString(R.string.preference_course_key), "");
     }
 
     public boolean getShowGradePicker() {

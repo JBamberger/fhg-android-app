@@ -16,9 +16,14 @@
             android:orderInCategory="30"
             android:title="@string/title_fragment_contact" />
         <item
-            android:id="@+id/drawer_credits"
-            android:orderInCategory="40"
-            android:title="@string/title_fragment_credits" />
+        android:id="@+id/drawer_credits"
+        android:orderInCategory="40"
+        android:title="@string/title_fragment_credits" />
+
+        <item
+            android:id="@+id/drawer_settings"
+            android:orderInCategory="50"
+            android:title="@string/title_fragment_settings" />
     </group>
 
 </menu>

@@ -9,10 +9,4 @@
         android:orderInCategory="95"
         android:title="@string/action_force_reload"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_set_grade"
-        android:icon="@drawable/ic_action_content_create"
-        android:orderInCategory="96"
-        android:title="@string/action_set_grade"
-        app:showAsAction="ifRoom" />
 </menu>

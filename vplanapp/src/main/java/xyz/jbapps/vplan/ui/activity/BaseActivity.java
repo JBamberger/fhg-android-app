@@ -23,6 +23,7 @@ import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
 import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
+import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
 import xyz.jbapps.vplan.ui.fragment.VPlanFragment;
 
 public class BaseActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class BaseActivity extends AppCompatActivity {
     private FHGFeedFragment fhgFeedFragment = null;
     private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
+    private SettingsFragment settingsFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +156,12 @@ public class BaseActivity extends AppCompatActivity {
                     creditsFragment = new CreditsFragment();
                 }
                 applyFragment(creditsFragment);
+                break;
+            case R.id.drawer_settings:
+                if (settingsFragment == null) {
+                settingsFragment = new SettingsFragment();
+                }
+                applyFragment(settingsFragment);
                 break;
             default:
                 return false;

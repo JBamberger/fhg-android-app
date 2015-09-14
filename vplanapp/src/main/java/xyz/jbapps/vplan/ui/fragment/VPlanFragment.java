@@ -25,6 +25,7 @@ import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
 import xyz.jbapps.vplan.util.GradeSorter;
 import xyz.jbapps.vplan.util.Property;
 import xyz.jbapps.vplan.util.VPlanProvider;
+import xyz.jbapps.vplan.util.VPlanSorter;
 
 public class VPlanFragment extends LoadingRecyclerViewFragment {
 
@@ -38,6 +39,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     private MultiVPlanAdapter multiVPlanAdapter;
 
     private String gradeState;
+    private String courseState;
     private Context context;
 
     @Override
@@ -84,10 +86,6 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_FORCE_LOAD);
             return true;
         }
-        if (id == R.id.action_set_grade) {
-            showGradePicker();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -97,7 +95,8 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
         mProperty = new Property(context);
-        gradeState = mProperty.readGrade();
+        gradeState = mProperty.readGrades();
+        courseState = mProperty.readCourse();
         stateShouldRefresh = savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true);
     }
 
@@ -108,7 +107,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         super.onStart();
         updateActionBar();
         if (mProperty.getShowGradePicker()) {
-            showGradePicker();
+            //TODO go to settings
         }
         if (stateShouldRefresh) {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
@@ -120,11 +119,23 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!gradeState.equals(mProperty.readGrade())) {
+        if (!gradeState.equals(mProperty.readGrades()) || !courseState.equals(mProperty.readCourse())) {
             //returning from settings: update title and list
-            gradeState = mProperty.readGrade();
+            updateGradeAndCourses();
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
         }
+    }
+
+    private void updateGradeAndCourses() {
+        boolean showAll = mProperty.readShowAll();
+        if(showAll) {
+            gradeState = "";
+            courseState = "";
+        } else {
+            gradeState = mProperty.readGrades();
+            courseState = mProperty.readCourse();
+        }
+        updateActionBar();
     }
 
     private void updateActionBar() {
@@ -133,81 +144,6 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
             subtitle = getString(R.string.text_showing_all);
         }
         setActionBarSubtitle(subtitle);
-    }
-
-
-    public void showGradePicker() {
-        GradeSorter gSorter = new GradeSorter(mProperty.readGrade());
-        String[] gradeList = getResources().getStringArray(R.array.listGrades);
-        boolean[] selectedItems = new boolean[gradeList.length];
-
-
-        if (gSorter.matchesEverything()) {
-            for (int i = gradeList.length - 1; i >= 0; i--) {
-                selectedItems[i] = false;
-            }
-        } else {
-            for (int i = gradeList.length - 1; i >= 0; i--) {
-                selectedItems[i] = gSorter.matchItem(gradeList[i]);
-            }
-        }
-
-        final List<Integer> selected = new ArrayList<>();
-        for (int i = 0; i < selectedItems.length; i++) {
-            if (selectedItems[i]) {
-                selected.add(i);
-            }
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog);
-
-        builder.setTitle(R.string.text_dialog_pick_grade)
-                .setMultiChoiceItems(R.array.listGrades, selectedItems,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which,
-                                                boolean isChecked) {
-                                if (isChecked) {
-                                    selected.add(which);
-                                } else if (selected.contains(which)) {
-                                    selected.remove(Integer.valueOf(which));
-                                }
-                            }
-                        })
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String[] list = getResources().getStringArray(R.array.listGrades);
-                        StringBuilder output = new StringBuilder();
-                        Collections.sort(selected);
-                        for (int i : selected) {
-                            output.append(list[i]);
-                            output.append(",");
-                        }
-                        String grades = output.toString();
-                        if (grades.length() > 0) {
-                            grades = grades.substring(0, grades.length() - 1);
-                        } else {
-                            grades = "";
-                        }
-                        mProperty.storeGrade(grades);
-                        mProperty.setShowGradePicker(false);
-                        gradeState = grades;
-                        updateActionBar();
-                        mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
-                    }
-                })
-                .setNegativeButton(R.string.select_all, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        mProperty.storeGrade("");
-                        mProperty.setShowGradePicker(false);
-                        gradeState = "";
-                        updateActionBar();
-                        mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
-                    }
-                });
-
-        builder.create().show();
     }
 
     @Override
@@ -230,9 +166,10 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         @Override
         public void vPlanLoadingSucceeded(VPlanData vplan1, VPlanData vplan2) {
             toggleLoading(false);
-            GradeSorter gSorter = new GradeSorter(gradeState);
-            vplan1 = gSorter.applyPatternToData(vplan1);
-            vplan2 = gSorter.applyPatternToData(vplan2);
+            updateGradeAndCourses();
+            VPlanSorter sorter = new VPlanSorter(gradeState, courseState);
+            vplan1 = sorter.filterData(vplan1);
+            vplan2 = sorter.filterData(vplan2);
             multiVPlanAdapter.setData(vplan1, vplan2);
         }
 
