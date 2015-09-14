@@ -2,6 +2,7 @@ package xyz.jbapps.vplan.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGFeedProvider.IFHGFeedResultListener {
 
     private FHGFeedProvider feedProvider;
+    private static final String STATE_SHOULD_REFRESH = "refresh_feed";
+    private static final String TAG = "FHGFeedFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,10 +43,22 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
         return v;
     }
 
+    private boolean stateShouldRefresh = true;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        stateShouldRefresh = (savedInstanceState == null) || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        loadFeed();
+        if (stateShouldRefresh) {
+            loadFeed();
+        } else {
+            loadCachedFeed();
+        }
     }
 
     private void loadCachedFeed() {
@@ -54,6 +69,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
         }
         feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_CACHE, this);
         feedProvider.execute();
+        Log.d(TAG, "Cache loading");
     }
 
     private void loadFeed() {
@@ -70,6 +86,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
         }
         feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_LOAD, this);
         feedProvider.execute();
+        Log.d(TAG, "loading Feed");
     }
 
     @Override
@@ -81,9 +98,21 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
     @Override
     public void feedLoadingSucceeded(List<FHGFeedXmlParser.FHGFeedItem> feed) {
         toggleLoading(false);
-        FHGFeedAdapter adapter = new FHGFeedAdapter(getActivity());
+        adapter = new FHGFeedAdapter(getActivity());
         adapter.setData(feed);
         recyclerView.setAdapter(adapter);
+    }
+
+    FHGFeedAdapter adapter;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        boolean re = isListEmpty();
+        outState.putBoolean(STATE_SHOULD_REFRESH, re);
+    }
+
+    private boolean isListEmpty() {
+        return adapter.getItemCount() == 0;
     }
 
 }

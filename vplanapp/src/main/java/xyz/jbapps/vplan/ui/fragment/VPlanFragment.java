@@ -130,7 +130,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     private void updateActionBar() {
         String subtitle = gradeState;
         if (subtitle != null && subtitle.equals("")) {
-            subtitle = "Alles";
+            subtitle = getString(R.string.text_showing_all);
         }
         setActionBarSubtitle(subtitle);
     }

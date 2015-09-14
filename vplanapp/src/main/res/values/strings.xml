@@ -32,6 +32,7 @@
     <string name="text_subject_general">[VPlan-App] general</string>
     <string name="text_write_mail">Mail schreiben</string>
     <string name="text_call">Anrufen</string>
+    <string name="text_showing_all">Alles wird angezeigt.</string>
 
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_feed">FeedActivity</string>
