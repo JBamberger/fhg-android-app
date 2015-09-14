@@ -158,15 +158,22 @@ public class BaseActivity extends AppCompatActivity {
                 applyFragment(creditsFragment);
                 break;
             case R.id.drawer_settings:
-                if (settingsFragment == null) {
-                settingsFragment = new SettingsFragment();
-                }
-                applyFragment(settingsFragment);
+                showSettings();
                 break;
             default:
                 return false;
         }
         return true;
+    }
+
+    public void showSettings() {
+        if (settingsFragment == null) {
+            settingsFragment = new SettingsFragment();
+        }
+        getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragmentContainer, settingsFragment)
+        //.addToBackStack(null)
+        .commit();
     }
 
     private void applyFragment(Fragment fragment) {

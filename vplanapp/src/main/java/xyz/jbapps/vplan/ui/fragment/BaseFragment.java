@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
+import xyz.jbapps.vplan.ui.activity.BaseActivity;
+
 public class BaseFragment extends Fragment {
 
     protected void setActionBarTitle(CharSequence title) {
@@ -25,6 +27,10 @@ public class BaseFragment extends Fragment {
 
     protected ActionBar getSupportActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+    protected void showSettings() {
+        ((BaseActivity) getActivity()).showSettings();
     }
 
 }

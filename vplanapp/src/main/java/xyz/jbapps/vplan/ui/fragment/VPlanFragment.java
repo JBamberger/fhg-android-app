@@ -38,6 +38,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     private VPlanProvider vPlanProvider;
     private MultiVPlanAdapter multiVPlanAdapter;
 
+    private boolean showAll;
     private String gradeState;
     private String courseState;
     private Context context;
@@ -106,8 +107,8 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     public void onStart() {
         super.onStart();
         updateActionBar();
-        if (mProperty.getShowGradePicker()) {
-            //TODO go to settings
+        if (mProperty.getShowSettings()) {
+            showSettings();
         }
         if (stateShouldRefresh) {
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_LOAD);
@@ -119,7 +120,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!gradeState.equals(mProperty.readGrades()) || !courseState.equals(mProperty.readCourse())) {
+        if (!gradeState.equals(mProperty.readGrades()) || !courseState.equals(mProperty.readCourse()) || showAll != mProperty.readShowAll()) {
             //returning from settings: update title and list
             updateGradeAndCourses();
             mVPlanListener.loadVPlan(VPlanProvider.TYPE_CACHE);
@@ -127,7 +128,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     }
 
     private void updateGradeAndCourses() {
-        boolean showAll = mProperty.readShowAll();
+        showAll = mProperty.readShowAll();
         if(showAll) {
             gradeState = "";
             courseState = "";
@@ -166,7 +167,6 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         @Override
         public void vPlanLoadingSucceeded(VPlanData vplan1, VPlanData vplan2) {
             toggleLoading(false);
-            updateGradeAndCourses();
             VPlanSorter sorter = new VPlanSorter(gradeState, courseState);
             vplan1 = sorter.filterData(vplan1);
             vplan2 = sorter.filterData(vplan2);

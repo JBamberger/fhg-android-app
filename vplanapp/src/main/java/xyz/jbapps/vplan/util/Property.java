@@ -62,15 +62,15 @@ public class Property {
         return getSettingsPreferences().getString(appContext.getString(R.string.preference_course_key), "");
     }
 
-    public boolean getShowGradePicker() {
-        return getMainPreferences().getBoolean(PROPERTY_SHOW_GRADE_PICKER, true);
+    public boolean getShowSettings() {
+        return getSettingsPreferences().getBoolean(appContext.getString(R.string.preference_show_settings_key), true);
     }
 
-    public void setShowGradePicker(boolean show) {
-        final SharedPreferences prefs = getMainPreferences();
-        Log.i(TAG, "Saving showgradepicker: " + show);
+    public void setShowSettings(boolean show) {
+        final SharedPreferences prefs = getSettingsPreferences();
+        Log.i(TAG, "Saving showSettings: " + show);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(PROPERTY_SHOW_GRADE_PICKER, show);
+        editor.putBoolean(appContext.getString(R.string.preference_show_settings_key), show);
         editor.apply();
     }
 }

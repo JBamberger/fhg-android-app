@@ -4,6 +4,7 @@
     <CheckBoxPreference
         android:key="@string/preference_grade_show_all_key"
         android:disableDependentsState="true"
+        android:defaultValue="true"
         android:title="@string/preference_grade_show_all_title"
         android:summary="@string/preference_grade_show_all_summary" />
 
