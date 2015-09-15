@@ -4,15 +4,10 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.Interpolator;
 
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
-    private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {
         super();
@@ -31,16 +26,9 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
                                final View target, final int dxConsumed, final int dyConsumed,
                                final int dxUnconsumed, final int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, fab, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        boolean mIsAnimatingOut = false;
-        if (dyConsumed > 0 && !mIsAnimatingOut && fab.getVisibility() == View.VISIBLE) {
-            try {
-                if (((LinearLayoutManager) ((RecyclerView) target).getLayoutManager()).findFirstVisibleItemPosition() == 0) {
-                    fab.hide();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
+        if (dyConsumed > 10 && fab.getVisibility() == View.VISIBLE) {
+            fab.hide();
         } else if (dyConsumed < 0 && fab.getVisibility() != View.VISIBLE) {
             fab.show();
         }

@@ -84,6 +84,6 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_SHOULD_REFRESH, adapter.getItemCount() == 0);
+        outState.putBoolean(STATE_SHOULD_REFRESH, adapter != null && adapter.getItemCount() == 0);
     }
 }

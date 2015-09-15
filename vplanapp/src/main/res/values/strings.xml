@@ -26,10 +26,10 @@
     <string name="text_vplan_motd">Nachrichten zum Tag</string>
     <string name="text_network_disconnected">Bitte eine Internetverbindung herstellen.</string>
     <string name="text_no_vplan">VPlan konnte nicht geladen werden.</string>
-    <string name="text_subject_question">[VPlan-App] question</string>
-    <string name="text_subject_feedback">[VPlan-App] feedback</string>
-    <string name="text_subject_bug">[VPlan-App] bug</string>
-    <string name="text_subject_general">[VPlan-App] general</string>
+    <string name="text_subject_question">[FHG-App] question</string>
+    <string name="text_subject_feedback">[FHG-App] feedback</string>
+    <string name="text_subject_bug">[FHG-App] bug</string>
+    <string name="text_subject_general">[FHG-App] general</string>
     <string name="text_write_mail">Mail schreiben</string>
     <string name="text_call">Anrufen</string>
     <string name="text_showing_all">Alles wird angezeigt.</string>
