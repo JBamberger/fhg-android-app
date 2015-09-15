@@ -17,76 +17,55 @@ import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 
 public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGFeedProvider.IFHGFeedResultListener {
 
-    private FHGFeedProvider feedProvider;
-    private static final String STATE_SHOULD_REFRESH = "refresh_feed";
     private static final String TAG = "FHGFeedFragment";
+    private static final String STATE_SHOULD_REFRESH = "refresh_feed";
+
+    private FHGFeedProvider feedProvider;
+    private FHGFeedAdapter adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         setActionBarSubtitle("");
         setActionBarTitle(R.string.title_fragment_fhg_feed);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadFeed();
+                loadFeed(FHGFeedProvider.TYPE_LOAD);
             }
         });
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFeed();
+                loadFeed(FHGFeedProvider.TYPE_LOAD);
             }
         });
-        return v;
-    }
 
-    private boolean stateShouldRefresh = true;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        stateShouldRefresh = (savedInstanceState == null) || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (stateShouldRefresh) {
-            loadFeed();
+        if ((savedInstanceState == null) || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
+            loadFeed(FHGFeedProvider.TYPE_LOAD);
         } else {
-            loadCachedFeed();
+            loadFeed(FHGFeedProvider.TYPE_CACHE);
         }
     }
 
-    private void loadCachedFeed() {
-        toggleLoading(true);
-        if (feedProvider != null) {
-            feedProvider.cancel(true);
-            feedProvider = null;
-        }
-        feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_CACHE, this);
-        feedProvider.execute();
-        Log.d(TAG, "Cache loading");
-    }
-
-    private void loadFeed() {
+    public void loadFeed(int method) {
         updateNetworkFlags();
         if (!wifiConnected && !mobileConnected) {
-            loadCachedFeed();
-            Toast.makeText(getActivity(), R.string.text_network_disconnected, Toast.LENGTH_LONG).show();
+            toggleLoading(false);
+            Toast.makeText(context, R.string.text_network_disconnected, Toast.LENGTH_LONG).show();
             return;
+        }
+        if (method == FHGFeedProvider.TYPE_LOAD && wifiConnected) {
+            method = FHGFeedProvider.TYPE_FORCE_LOAD;
         }
         toggleLoading(true);
         if (feedProvider != null) {
             feedProvider.cancel(true);
             feedProvider = null;
         }
-        feedProvider = new FHGFeedProvider(getActivity(), FHGFeedProvider.TYPE_LOAD, this);
+        feedProvider = new FHGFeedProvider(context, method, this);
         feedProvider.execute();
-        Log.d(TAG, "loading Feed");
     }
 
     @Override
@@ -103,16 +82,8 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment implements FHGF
         recyclerView.setAdapter(adapter);
     }
 
-    FHGFeedAdapter adapter;
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        boolean re = isListEmpty();
-        outState.putBoolean(STATE_SHOULD_REFRESH, re);
+        outState.putBoolean(STATE_SHOULD_REFRESH, adapter.getItemCount() == 0);
     }
-
-    private boolean isListEmpty() {
-        return adapter.getItemCount() == 0;
-    }
-
 }

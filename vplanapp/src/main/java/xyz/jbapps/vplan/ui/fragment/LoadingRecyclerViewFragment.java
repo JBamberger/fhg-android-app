@@ -54,7 +54,6 @@ public class LoadingRecyclerViewFragment extends BaseFragment {
         return view;
     }
 
-
     protected void toggleLoading(boolean on) {
         if (on) {
             progressBar.setVisibility(View.VISIBLE);
