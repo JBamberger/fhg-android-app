@@ -1,5 +1,6 @@
 package xyz.jbapps.vplan.ui.activity;
 
+import android.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -41,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
     private FHGFeedFragment fhgFeedFragment = null;
     private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
-    private SettingsFragment settingsFragment = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,10 +124,18 @@ public class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                selectedFragment = menuItem.getItemId();
-                boolean applied = applySelectedFragment();
-                drawerLayout.closeDrawer(navigationView);
-                return applied;
+                if(menuItem.getItemId() == R.id.drawer_settings) {
+                    showSettings();
+                    navigationView.setCheckedItem(selectedFragment);
+                    drawerLayout.closeDrawer(navigationView);
+                    return true;
+                } else {
+                    selectedFragment = menuItem.getItemId();
+                    boolean applied = applySelectedFragment();
+                    drawerLayout.closeDrawer(navigationView);
+                    return applied;
+                }
+
             }
         });
     }
@@ -167,13 +176,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void showSettings() {
-        if (settingsFragment == null) {
-            settingsFragment = new SettingsFragment();
-        }
-        getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragmentContainer, settingsFragment)
-        //.addToBackStack(null)
-        .commit();
+        navigationView.setCheckedItem(selectedFragment);
+        startActivity(new Intent(this, SettingsActivity.class));
     }
 
     private void applyFragment(Fragment fragment) {
