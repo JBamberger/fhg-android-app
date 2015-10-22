@@ -15,10 +15,14 @@ public class FHGCalendarParser {
         public String title;
         @SerializedName("calendar_entry_summary")
         public String summary;
+        @SerializedName("calendar_entry_full_day")
+        public boolean fullDay;
         @SerializedName("calendar_entry_date_start")
-        public String updated_at;
+        public String startDate;
         @SerializedName("calendar_entry_date_end")
-        public String published_at;
+        public String endDate;
+        @SerializedName("calendar_entry_permanent_link")
+        public String permanentLink;
 
         public void escape() {
             summary = StringEscapeUtils.escapeHtml4(summary);
@@ -30,11 +34,13 @@ public class FHGCalendarParser {
             title = StringEscapeUtils.unescapeHtml4(title);
         }
 
-        public FHGCalendarEntry(String title, String author, String summary, String link, String updated_at, String published_at) {
+        public FHGCalendarEntry(String title, String summary, boolean fullDay, String startDate, String endDate, String permanentLink) {
             this.title = title;
             this.summary = summary;
-            this.updated_at = updated_at;
-            this.published_at = published_at;
+            this.fullDay = fullDay;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.permanentLink = permanentLink;
         }
     }
 }

@@ -13,22 +13,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
 import xyz.jbapps.vplan.util.Property;
 import xyz.jbapps.vplan.util.VPlanProvider;
 import xyz.jbapps.vplan.util.VPlanSorter;
+import xyz.jbapps.vplan.util.network.VPlanRequest;
 
-public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanProvider.IVPlanResultListener {
+public class VPlanFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG = "VPlanFragment";
-    private static final String STATE_SHOULD_REFRESH = "refresh";
 
+    private static final String TAG_VPLAN1 = "VPlan1";
+    private static final String TAG_VPLAN2 = "VPlan2";
+    private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+
+    private boolean vPlan1Loaded = false;
+    private boolean vPlan2Loaded = false;
+
+    private RequestQueue netQueue;
+    private VPlanData vPlanCache;
     private Property mProperty;
-    private VPlanProvider vPlanProvider;
     private MultiVPlanAdapter multiVPlanAdapter;
-
     private boolean showAll;
     private String gradeState;
     private String courseState;
@@ -44,7 +57,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_force_reload) {
-            loadVPlan(VPlanProvider.TYPE_FORCE_LOAD);
+            loadVPlan();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -59,24 +72,21 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadVPlan(VPlanProvider.TYPE_LOAD);
+                loadVPlan();
             }
         });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadVPlan(VPlanProvider.TYPE_LOAD);
+                loadVPlan();
             }
         });
         multiVPlanAdapter = new MultiVPlanAdapter(context);
         recyclerView.setAdapter(multiVPlanAdapter);
 
-        if (savedInstanceState == null || savedInstanceState.getBoolean(STATE_SHOULD_REFRESH, true)) {
-            loadVPlan(VPlanProvider.TYPE_LOAD);
-        } else {
-            loadVPlan(VPlanProvider.TYPE_CACHE);
-        }
+            loadVPlan();
+
     }
 
     @Override
@@ -84,6 +94,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
+        netQueue = Volley.newRequestQueue(context);
         mProperty = new Property(context);
         loadParserValues();
     }
@@ -104,7 +115,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
         boolean all = showAll;
         loadParserValues();
         if (!gradeState.equals(grade) || !courseState.equals(course) || showAll != all) {
-            loadVPlan(VPlanProvider.TYPE_CACHE);
+            loadVPlan();
         }
         String subtitle = gradeState;
         if (subtitle != null && subtitle.equals("")) {
@@ -124,19 +135,15 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_SHOULD_REFRESH, !(multiVPlanAdapter.getItemCount() > 0));
-    }
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            toggleLoading(false);
+            Toast.makeText(context, "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
+        }
+    };
 
-    @Override
-    public void vPlanLoadingFailed() {
-        toggleLoading(false);
-        Toast.makeText(context, "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
-    }
-
-    @Override
-    public void vPlanLoadingSucceeded(VPlanData vplan1, VPlanData vplan2) {
+    private void applyData(VPlanData vplan1, VPlanData vplan2) {
         toggleLoading(false);
         VPlanSorter sorter = new VPlanSorter(gradeState, courseState);
         vplan1 = sorter.filterData(vplan1);
@@ -144,23 +151,42 @@ public class VPlanFragment extends LoadingRecyclerViewFragment implements VPlanP
         multiVPlanAdapter.setData(vplan1, vplan2);
     }
 
-    public void loadVPlan(int method) {
-        updateNetworkFlags();
-        if (!wifiConnected && !mobileConnected) {
-            toggleLoading(false);
-            Toast.makeText(context, R.string.text_network_disconnected, Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (method == VPlanProvider.TYPE_LOAD && wifiConnected) {
-            method = VPlanProvider.TYPE_FORCE_LOAD;
-        }
+    private void loadVPlan() {
         toggleLoading(true);
-        if (vPlanProvider != null) {
-            vPlanProvider.cancel(true);
-            vPlanProvider = null;
-        }
-        vPlanProvider = new VPlanProvider(context, method, this);
-        vPlanProvider.execute();
+        netQueue.cancelAll(TAG_VPLAN1);
+        netQueue.cancelAll(TAG_VPLAN2);
+
+        VPlanRequest vPlanRequest1 = new VPlanRequest(URL_VPLAN1, new Response.Listener<VPlanData>() {
+            @Override
+            public void onResponse(VPlanData data) {
+                if (vPlan2Loaded) {
+                    vPlan1Loaded = false;
+                    vPlan2Loaded = false;
+                    applyData(data, vPlanCache);
+                } else {
+                    vPlan1Loaded = true;
+                    vPlanCache = data;
+                }
+            }
+        }, errorListener);
+        vPlanRequest1.setTag(TAG_VPLAN1);
+        VPlanRequest vPlanRequest2 = new VPlanRequest(URL_VPLAN2, new Response.Listener<VPlanData>() {
+            @Override
+            public void onResponse(VPlanData data) {
+                if (vPlan1Loaded) {
+                    vPlan1Loaded = false;
+                    vPlan2Loaded = false;
+                    applyData(vPlanCache, data);
+                } else {
+                    vPlan2Loaded = true;
+                    vPlanCache = data;
+                }
+            }
+        }, errorListener);
+        vPlanRequest2.setTag(TAG_VPLAN2);
+
+        netQueue.add(vPlanRequest1);
+        netQueue.add(vPlanRequest2);
     }
 
 }

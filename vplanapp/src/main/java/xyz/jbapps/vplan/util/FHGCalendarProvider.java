@@ -42,7 +42,7 @@ public class FHGCalendarProvider extends AsyncTask<Object, Object, Boolean> {
     /**
      * url of first vplan fragment
      */
-    private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+    private static final String URL_VPLAN1 = "";//TODO: url missing
 
     /**
      * http header last modified
