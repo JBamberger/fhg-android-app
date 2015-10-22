@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -43,6 +44,18 @@ public class BaseActivity extends AppCompatActivity {
     private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            if (!drawerLayout.isDrawerOpen(navigationView)) {
+                drawerLayout.openDrawer(navigationView);
+            } else if (drawerLayout.isDrawerOpen(navigationView)) {
+                drawerLayout.closeDrawer(navigationView);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,35 +81,38 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_contact_developer) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.text_dialog_contact_developer)
-                    .setItems(R.array.mail_subjects, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            String subject;
-                            switch (which) {
-                                case 0:
-                                    subject = getString(R.string.text_subject_question);
-                                    break;
-                                case 1:
-                                    subject = getString(R.string.text_subject_feedback);
-                                    break;
-                                case 2:
-                                    subject = getString(R.string.text_subject_bug);
-                                    break;
-                                default:
-                                    subject = getString(R.string.text_subject_general);
-                                    break;
-                            }
-                            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + getString(R.string.mail_developer)));
-                            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-                            startActivity(intent);
-                        }
-                    });
-            builder.create().show();
+            showContactDevDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showContactDevDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.text_dialog_contact_developer)
+                .setItems(R.array.mail_subjects, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String subject;
+                        switch (which) {
+                            case 0:
+                                subject = getString(R.string.text_subject_question);
+                                break;
+                            case 1:
+                                subject = getString(R.string.text_subject_feedback);
+                                break;
+                            case 2:
+                                subject = getString(R.string.text_subject_bug);
+                                break;
+                            default:
+                                subject = getString(R.string.text_subject_general);
+                                break;
+                        }
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + getString(R.string.mail_developer)));
+                        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+                        startActivity(intent);
+                    }
+                });
+        builder.create().show();
     }
 
     @Override

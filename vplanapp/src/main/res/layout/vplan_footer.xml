@@ -7,7 +7,7 @@
 
     <ImageView
         android:src="@drawable/ic_warning"
-        android:tint="@color/material_red_A400"
+        android:tint="#FFCDD2"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:id="@+id/imageView" />

@@ -47,21 +47,6 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     private String courseState;
     private Context context;
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_vplan, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_force_reload) {
-            loadVPlan();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -92,7 +77,6 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         context = getActivity().getApplicationContext();
         netQueue = Volley.newRequestQueue(context);
         mProperty = new Property(context);

@@ -25,6 +25,10 @@ public class BaseFragment extends Fragment {
         getSupportActionBar().setSubtitle(id);
     }
 
+    protected void showContactDevDialog() {
+        ((BaseActivity) getActivity()).showContactDevDialog();
+    }
+
     protected ActionBar getSupportActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
