@@ -74,7 +74,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
             @Override
             public void onErrorResponse(VolleyError error) {
                 toggleLoading(false);
-                Toast.makeText(context, "Fehler beim laden", Toast.LENGTH_LONG).show(); //TODO res
+                Toast.makeText(context, getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
             }
         });
         req.setTag(TAG_FHG_FEED);

@@ -139,7 +139,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             toggleLoading(false);
-            Toast.makeText(context, "Loading failed", Toast.LENGTH_LONG).show(); // TODO: use resources
+            Toast.makeText(context, getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
         }
     };
 
