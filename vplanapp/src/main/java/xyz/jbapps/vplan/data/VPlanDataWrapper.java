@@ -7,12 +7,17 @@ package xyz.jbapps.vplan.data;
  */
 public class VPlanDataWrapper {
 
+    private static final int HEADERCOUNT = 2;
+    private static final int FOOTERCOUNT = 1;
+
     private final VPlanData vPlanData1;
     private final VPlanData vPlanData2;
+    private final VPlanFooter vPlanFooter;
 
     public VPlanDataWrapper(VPlanData vPlanData1, VPlanData vPlanData2) {
         this.vPlanData1 = vPlanData1;
         this.vPlanData2 = vPlanData2;
+        vPlanFooter = new VPlanFooter();
     }
 
     public VPlanElement getItemAtPosition(int position) throws ArrayIndexOutOfBoundsException {
@@ -24,14 +29,16 @@ public class VPlanDataWrapper {
             return vPlanData1.getVPlanRowAtPosition(position - 1);
         } else if (position == vPlanData1.getVPlanRowCount() + 1) {
             return vPlanData2.getvPlanHeader();
-        } else if (position < length()) {
+        } else if (position < length() - 1) {
             return vPlanData2.getVPlanRowAtPosition(position - (vPlanData1.getVPlanRowCount() + 2));
+        } else if (position == length() - 1) {//FIXME probably fails
+            return vPlanFooter;
         } else {
             throw new ArrayIndexOutOfBoundsException();
         }
     }
 
     public int length() {
-        return 2 + vPlanData1.getVPlanRowCount() + vPlanData2.getVPlanRowCount();
+        return HEADERCOUNT + vPlanData1.getVPlanRowCount() + vPlanData2.getVPlanRowCount() + FOOTERCOUNT;
     }
 }

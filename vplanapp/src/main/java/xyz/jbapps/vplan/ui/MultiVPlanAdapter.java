@@ -46,6 +46,9 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
             case VPlanElement.TYPE_ROW:
                 View v1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.vplan_item, parent, false);
                 return new VPlanRowViewHolder(v1);
+            case VPlanElement.TYPE_FOOTER:
+                View v2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.vplan_footer, parent, false);
+                return new VPlanRowViewHolder(v2);
         }
         return null;
     }
@@ -85,6 +88,8 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 if (row.getMarkedNew()) {
                     rowHolder.background.setBackgroundResource(R.color.vplan_new);
                 }
+                break;
+            case VPlanElement.TYPE_FOOTER:
                 break;
         }
     }
