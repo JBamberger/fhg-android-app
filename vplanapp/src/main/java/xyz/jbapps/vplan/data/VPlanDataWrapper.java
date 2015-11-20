@@ -1,9 +1,11 @@
 package xyz.jbapps.vplan.data;
 
 /**
+ * The VPlanDataWrapper contains two VPlanData objects and presents them as a List, so iterating
+ * through them is easy.
+ *
  * @author Jannik Bamberger
  * @version 1.0
- *          The VPlanDataWrapper contains two VPlanData objects and presents them as a List, so iterating through them is easy
  */
 public class VPlanDataWrapper {
 

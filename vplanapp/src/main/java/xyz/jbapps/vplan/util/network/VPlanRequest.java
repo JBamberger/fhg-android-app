@@ -10,28 +10,23 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.data.VPlanRow;
 
+/**
+ * Volley Request, provides VPlan.
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class VPlanRequest extends Request<VPlanData> {
 
     private static final String TAG = "VPlanRequest";

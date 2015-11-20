@@ -22,16 +22,20 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Utility class to parse the FHG Atom Feed using the {@link XmlPullParser} API.
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class FHGFeedXmlParser {
     private static final String ns = null;
     private final SimpleDateFormat dateParser;

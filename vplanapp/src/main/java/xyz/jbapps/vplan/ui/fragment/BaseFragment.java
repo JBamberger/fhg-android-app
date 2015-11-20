@@ -6,7 +6,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import xyz.jbapps.vplan.ui.activity.BaseActivity;
-
+/**
+ * Fragment providing basic accessors to modify the host Activity's view
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class BaseFragment extends Fragment {
 
     protected void setActionBarTitle(CharSequence title) {

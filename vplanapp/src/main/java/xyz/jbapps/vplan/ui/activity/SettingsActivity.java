@@ -1,13 +1,9 @@
 package xyz.jbapps.vplan.ui.activity;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
@@ -28,7 +24,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(R.id.fragmentContainer, settingsFragment)
                 .commit();
     }
-
+    
+    /**
+     * Setup the Activities Toolbar and Up-Navigation.
+     * */
     private void setupUI() {
         Toolbar mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
         mToolbar.setSubtitle("");

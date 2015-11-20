@@ -7,6 +7,13 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+
+/**
+ * Hides FAB if User scrolls down.
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
 
     public ScrollAwareFABBehavior(Context context, AttributeSet attrs) {

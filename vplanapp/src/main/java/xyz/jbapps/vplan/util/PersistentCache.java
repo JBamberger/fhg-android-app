@@ -5,22 +5,21 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.data.VPlanData;
 
 /**
- * This class is used to save VPlan information to the cache directory definded by the Android OS.
+ * This class is used to save VPlan information to the cache directory defined by the Android OS.
  * None of these methods should be called on the UI thread.
+ *
+ * The usage of this API is strongly discouraged due to several bugs.
  *
  * @author Jannik Bamberger
  * @version 1.0

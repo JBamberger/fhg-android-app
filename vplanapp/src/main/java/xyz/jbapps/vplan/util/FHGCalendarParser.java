@@ -5,7 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
- * Created by Jannik on 17.10.2015.
+ * Used to parse calendar entries
+ *
+ * TODO: finish implementation
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
  */
 public class FHGCalendarParser {
 

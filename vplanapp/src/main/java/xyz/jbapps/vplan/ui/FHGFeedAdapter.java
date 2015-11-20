@@ -21,6 +21,8 @@ import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 
 /**
+ * Adapter to show the parsed FHGFeed
+ *
  * @author Jannik Bamberger
  * @version 1.0
  */

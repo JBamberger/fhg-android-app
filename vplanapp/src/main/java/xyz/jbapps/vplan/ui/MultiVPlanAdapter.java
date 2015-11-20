@@ -18,6 +18,8 @@ import xyz.jbapps.vplan.data.VPlanElement;
 import xyz.jbapps.vplan.data.VPlanRow;
 
 /**
+ * Adapter to show two VPlan lists in series.
+ *
  * @author Jannik Bamberger
  * @version 1.0
  */

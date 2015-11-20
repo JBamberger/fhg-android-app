@@ -20,9 +20,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.data.VPlanRow;
 
+/**
+ * @deprecated Use {@link com.android.volley.Request} instead.
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class FHGCalendarProvider extends AsyncTask<Object, Object, Boolean> {
 
     /**

@@ -1,31 +1,27 @@
 package xyz.jbapps.vplan.ui.activity;
 
-import android.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
 import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
-import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
 import xyz.jbapps.vplan.ui.fragment.VPlanFragment;
 
 public class BaseActivity extends AppCompatActivity {
@@ -140,7 +136,7 @@ public class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if(menuItem.getItemId() == R.id.drawer_settings) {
+                if (menuItem.getItemId() == R.id.drawer_settings) {
                     showSettings();
                     navigationView.setCheckedItem(selectedFragment);
                     drawerLayout.closeDrawer(navigationView);

@@ -10,6 +10,9 @@ import xyz.jbapps.vplan.R;
 
 /**
  * A placeholder fragment containing a simple view.
+ *
+ * @author autogen
+ * @version 1.0
  */
 public class BaseActivityFragment extends Fragment {
 

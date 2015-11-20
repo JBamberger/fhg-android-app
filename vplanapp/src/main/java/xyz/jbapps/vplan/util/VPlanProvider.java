@@ -30,6 +30,7 @@ import xyz.jbapps.vplan.data.VPlanRow;
  * This class is used to load vplan html parse it and cache it. Results are published using the
  * {@link xyz.jbapps.vplan.util.VPlanProvider.IVPlanResultListener}.
  *
+ * @deprecated Replaced by {@link xyz.jbapps.vplan.util.network.VPlanRequest} using Volley APIs.
  * @author Jannik Bamberger
  * @version 1.0
  */
@@ -289,6 +290,8 @@ public class VPlanProvider extends AsyncTask<Object, Object, Boolean> {
     }
 
     /**
+     * Parse the VPlanObject and return a instance of VPlanData.
+     *
      * @param vplan VPlanObject to parse
      * @return VPlanData
      * @throws IOException if an error occurs while parsing

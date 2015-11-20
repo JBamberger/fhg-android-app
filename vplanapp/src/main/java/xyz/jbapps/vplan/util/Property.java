@@ -13,6 +13,9 @@ import xyz.jbapps.vplan.ui.activity.MainActivity;
 
 /**
  * This class provides access to the applications SharedPreferences
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
  */
 public class Property {
 

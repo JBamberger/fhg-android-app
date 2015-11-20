@@ -13,6 +13,12 @@ import java.util.Map;
 import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 
+/**
+ * Volley Request, provides FHG Feed
+ *
+ * @author Jannik Bamberger
+ * @version 1.0
+ */
 public class FHGFeedRequest extends Request<FHGFeed> {
 
     private static final String TAG = "FHGFeedRequest";

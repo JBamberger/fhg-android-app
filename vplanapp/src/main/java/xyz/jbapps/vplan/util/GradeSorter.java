@@ -3,6 +3,7 @@ package xyz.jbapps.vplan.util;
 import xyz.jbapps.vplan.data.VPlanData;
 
 /**
+ * @deprecated {@link VPlanSorter} replaces the GradeSorter functionality.
  * @author Jannik Bamberger
  * @version 1.0
  */

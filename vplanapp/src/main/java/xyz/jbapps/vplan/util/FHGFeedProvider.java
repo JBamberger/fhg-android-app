@@ -18,6 +18,7 @@ import java.util.Map;
 import xyz.jbapps.vplan.data.FHGFeed;
 
 /**
+ * @deprecated Replaced by {@link xyz.jbapps.vplan.util.network.FHGFeedRequest} using Volley APIs
  * @author Jannik Bamberger
  * @version 1.0
  */

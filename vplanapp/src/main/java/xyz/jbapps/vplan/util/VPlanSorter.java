@@ -50,6 +50,10 @@ public class VPlanSorter {
         coursePattern = generateCoursePattern(courses);
     }
 
+    /**
+     * Filters the data, using the grade- and course pattern. Entities matching the patterns will
+     * stay in the data set.
+     * */
     public VPlanData filterData(VPlanData data) {
         for (int i = data.getVPlanRowCount(); i > 0; i--) {
             VPlanRow row = data.getVPlanRowAtPosition(i - 1);
@@ -66,14 +70,23 @@ public class VPlanSorter {
         return data;
     }
 
+    /**
+     * Returns if the grade pattern matches every string.
+     * */
     public boolean matchesEverything() {
         return gradePattern.equals(PATTERN_MATCHES_EVERYTHING);
     }
 
+    /**
+     * True if the given row contains data relevant for the "Kursstufe".
+     * */
     private boolean isGradeCourse(VPlanRow row) {
         return row.getGrade().matches("(.*[kK].*2.*)|(.*[kK].*1.*)");
     }
 
+    /**
+     * Generates the Regex pattern to match all grades specified in "grades".
+     * */
     private String generateGradePattern(String grades) {
         StringBuilder patternBuilder = new StringBuilder();
         boolean first = true;
@@ -104,6 +117,9 @@ public class VPlanSorter {
         }
     }
 
+    /**
+     * Generates the Regex pattern to match all courses specified in "courses".
+     * */
     private String generateCoursePattern(String courses) {
         StringBuilder patternBuilder = new StringBuilder();
         boolean first = true;
