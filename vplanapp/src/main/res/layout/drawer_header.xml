@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:tint="@color/fhg_logo_header_tint"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:paddingLeft="16dp"
@@ -24,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:textColor="@color/fhg_logo_header_tint"
         android:padding="8dp"
         android:text="@string/text_fhg_name"
-        android:textAppearance="?android:attr/textAppearanceLargeInverse" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 </LinearLayout>

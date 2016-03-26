@@ -7,7 +7,7 @@
 
     <ImageView
         android:src="@drawable/ic_warning"
-        android:tint="#FFCDD2"
+        android:tint="@color/vplan_footer_tint"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:id="@+id/imageView" />

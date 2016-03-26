@@ -2,7 +2,21 @@
 <resources>
 
     <string name="app_name">VPlan</string>
-    <string name="app_copyright">&#169; Jannik Bamberger 2012 &#8211; 2015</string>
+    <string name="app_copyright">&#169; Jannik Bamberger 2012 &#8211; 2016</string>
+    <string name="app_credits">
+        Alle Angaben ohne Gewähr.\n\n
+        In der Anwendung werden Daten der Website <a href="http://www.fhg-radolfzell.de">fhg-radolfzell.de</a> verarbeitet und angezeigt.\n\n
+        Die Anwendung enthält Ressourcen die durch das Android Asset Studio von Roman Nurik generiert wurden. Sie sind unter der Creative Commons Lizenz v3.0 lizensiert. \n\n
+        Verwendete Bibliotheken:\n\n
+        <b>jsoup</b>\n
+        MIT license\n
+        &#169; 2009 &#8211; 2014 Jonathan Hedley (jonathan@hedley.net)\n\n
+        <b>GSON</b>\n
+        Apache 2.0 license\n
+        &#169; 2008 Google Inc.\n\n
+        <b>org.apache.commons.lang3</b>\n
+        Apache 2.0 license\n
+        &#169; The Apache Foundation</string>
 
     <string name="action_classic_view">Website anzeigen</string>
     <string name="action_credits">Credits</string>

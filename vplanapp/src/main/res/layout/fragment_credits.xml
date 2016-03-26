@@ -1,20 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context="xyz.jbapps.vplan.ui.fragment.CreditsFragment">
 
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <Button
-        android:background="@color/brand_accent_dark"
-        android:textColor="@color/material_text_inverse_100"
+        android:id="@+id/action_contact_developer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/action_contact_developer"
-        android:id="@+id/action_contact_developer"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_gravity="center_horizontal|bottom"
+        android:text="@string/action_contact_developer" />
 
-</FrameLayout>
+    <ScrollView
+        android:paddingTop="16dp"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/app_credits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/app_credits"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </ScrollView>
+
+
+</LinearLayout>

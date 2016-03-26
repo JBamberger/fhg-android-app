@@ -80,11 +80,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 rowHolder.subject.setText(row.getSubject());
                 rowHolder.background.setBackgroundResource(R.color.transparent);
                 if (row.getOmitted()) {
-                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_red_A400));
+                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.vplan_text_omitted));
                     rowHolder.roomOmitted.setText(context.getString(R.string.text_vplan_omitted));
                     rowHolder.background.setBackgroundResource(R.color.vplan_omitted);
                 } else {
-                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_text_54));
+                    rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.vplan_text_normal));
                     rowHolder.roomOmitted.setText(row.getRoom());
                 }
                 if (row.getMarkedNew()) {

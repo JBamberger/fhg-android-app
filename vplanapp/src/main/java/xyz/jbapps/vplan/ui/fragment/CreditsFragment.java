@@ -24,7 +24,6 @@ public class CreditsFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((WebView) view.findViewById(R.id.webView)).loadUrl("file:///android_asset/vplan_licence.txt");
         ViewUtils.findViewById(view, R.id.action_contact_developer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
