@@ -1,13 +1,13 @@
 package xyz.jbapps.vplan.ui.activity;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +22,7 @@ import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
 import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
+import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
 import xyz.jbapps.vplan.ui.fragment.VPlanFragment;
 
 public class BaseActivity extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     private FHGFeedFragment fhgFeedFragment = null;
     private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
+    private SettingsFragment settingsFragment = null;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -136,17 +138,10 @@ public class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if (menuItem.getItemId() == R.id.drawer_settings) {
-                    showSettings();
-                    navigationView.setCheckedItem(selectedFragment);
-                    drawerLayout.closeDrawer(navigationView);
-                    return true;
-                } else {
-                    selectedFragment = menuItem.getItemId();
-                    boolean applied = applySelectedFragment();
-                    drawerLayout.closeDrawer(navigationView);
-                    return applied;
-                }
+                selectedFragment = menuItem.getItemId();
+                boolean applied = applySelectedFragment();
+                drawerLayout.closeDrawer(navigationView);
+                return applied;
 
             }
         });
@@ -179,7 +174,10 @@ public class BaseActivity extends AppCompatActivity {
                 applyFragment(creditsFragment);
                 break;
             case R.id.drawer_settings:
-                showSettings();
+                if (settingsFragment == null) {
+                    settingsFragment = new SettingsFragment();
+                }
+                applyFragment(settingsFragment);
                 break;
             default:
                 return false;
@@ -193,7 +191,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void applyFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer, fragment);
         fragmentTransaction.commit();

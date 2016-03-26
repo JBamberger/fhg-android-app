@@ -68,6 +68,7 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
             }
         });
         multiVPlanAdapter = new MultiVPlanAdapter(context);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(multiVPlanAdapter);
 
             loadVPlan();

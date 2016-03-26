@@ -1,7 +1,11 @@
 package xyz.jbapps.vplan.ui.fragment;
 
+import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +26,7 @@ import xyz.jbapps.vplan.util.FHGFeedProvider;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 import xyz.jbapps.vplan.util.network.FHGFeedRequest;
 
-public class FHGFeedFragment extends LoadingRecyclerViewFragment{
+public class FHGFeedFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG = "FHGFeedFragment";
     private static final String URL_FHG_FEED = "http://www.fhg-radolfzell.de/feed/atom";
@@ -43,6 +47,18 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
         setActionBarSubtitle("");
         setActionBarTitle(R.string.title_fragment_fhg_feed);
 
+        Activity activity = getActivity();
+        if (activity != null) {
+            int orientation = activity.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+            } else {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            }
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        }
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -56,7 +72,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
             }
         });
 
-            loadFeed();
+        loadFeed();
     }
 
     public void loadFeed() {
@@ -68,6 +84,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
                 toggleLoading(false);
                 adapter = new FHGFeedAdapter(getActivity());
                 adapter.setData(response.feedItems);
+
                 recyclerView.setAdapter(adapter);
             }
         }, new Response.ErrorListener() {

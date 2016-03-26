@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,8 +49,6 @@ public class LoadingRecyclerViewFragment extends BaseFragment {
         floatingActionButton.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
 
         swipeRefreshLayout.setColorSchemeResources(R.color.brand_accent_light, R.color.brand_accent_dark, R.color.brand_accent_light, R.color.brand_accent_dark);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.hasFixedSize();
         return view;
     }
