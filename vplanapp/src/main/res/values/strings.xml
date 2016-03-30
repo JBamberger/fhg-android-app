@@ -5,7 +5,7 @@
     <string name="app_copyright">&#169; Jannik Bamberger 2012 &#8211; 2016</string>
     <string name="app_credits">
         Alle Angaben ohne Gewähr.\n\n
-        In der Anwendung werden Daten der Website <a href="http://www.fhg-radolfzell.de">fhg-radolfzell.de</a> verarbeitet und angezeigt.\n\n
+        In der Anwendung werden Daten der Website fhg-radolfzell.de verarbeitet und angezeigt.\n\n
         Die Anwendung enthält Ressourcen die durch das Android Asset Studio von Roman Nurik generiert wurden. Sie sind unter der Creative Commons Lizenz v3.0 lizensiert. \n\n
         Verwendete Bibliotheken:\n\n
         <b>jsoup</b>\n

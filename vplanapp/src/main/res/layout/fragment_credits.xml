@@ -24,8 +24,6 @@
                 android:text="@string/action_contact_developer" />
 
             <TextView
-                android:autoLink="web"
-                android:linksClickable="true"
                 android:id="@+id/app_credits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
