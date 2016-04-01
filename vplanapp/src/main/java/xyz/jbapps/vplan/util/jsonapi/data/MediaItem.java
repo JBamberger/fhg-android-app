@@ -1,7 +1,13 @@
 package xyz.jbapps.vplan.util.jsonapi.data;
 
-/**
- * Created by Jannik on 31.03.2016.
- */
+import java.util.SimpleTimeZone;
+
 public class MediaItem {
+    public String title;
+    public String url;
+
+    public MediaItem(String title, String url) {
+        this.title = title;
+        this.url = url;
+    }
 }

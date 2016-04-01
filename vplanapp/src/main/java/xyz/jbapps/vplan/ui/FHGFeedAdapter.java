@@ -86,11 +86,11 @@ public class FHGFeedAdapter extends RecyclerView.Adapter {
         public final TextView title;
         public final TextView meta;
         public final TextView summary;
-        private final IOnItemClicked listner;
+        private final IOnItemClicked listener;
 
         public FeedItemViewHolder(View itemView, IOnItemClicked listener) {
             super(itemView);
-            this.listner = listener;
+            this.listener = listener;
             cardView = ViewUtils.findViewById(itemView, R.id.item_card);
             title = ViewUtils.findViewById(itemView, R.id.item_title);
             meta = ViewUtils.findViewById(itemView, R.id.item_meta);
@@ -100,8 +100,8 @@ public class FHGFeedAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            if(listner != null) {
-                listner.onItemClicked(v);
+            if(listener != null) {
+                listener.onItemClicked(v);
             }
         }
 

@@ -23,6 +23,7 @@ import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
 import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
 import xyz.jbapps.vplan.ui.fragment.FeedFragment;
+import xyz.jbapps.vplan.ui.fragment.PostFragment;
 import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
 import xyz.jbapps.vplan.ui.fragment.VPlanFragment;
 
@@ -39,6 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     private int selectedFragment = R.id.drawer_vplan;
     private VPlanFragment vPlanFragment = null;
     private FeedFragment feedFragment = null;
+    private PostFragment postFragment = null;
     private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
     private SettingsFragment settingsFragment = null;
@@ -80,7 +82,8 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_contact_developer) {
-            showContactDevDialog();
+            startActivity(new Intent(this, ExperimentsActivity.class));
+            //showContactDevDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -157,10 +160,14 @@ public class BaseActivity extends AppCompatActivity {
                 applyFragment(vPlanFragment);
                 break;
             case R.id.drawer_fhg_feed:
-                if (feedFragment == null) {
+                /*if (feedFragment == null) {
                     feedFragment = new FeedFragment();
                 }
-                applyFragment(feedFragment);
+                applyFragment(feedFragment);*/
+                if (postFragment == null) {
+                    postFragment = new PostFragment();
+                }
+                applyFragment(postFragment);
                 break;
             case R.id.drawer_contact:
                 if (contactFragment == null) {

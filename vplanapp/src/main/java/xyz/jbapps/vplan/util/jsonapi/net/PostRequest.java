@@ -14,24 +14,23 @@ import java.util.Map;
 
 import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
-import xyz.jbapps.vplan.util.jsonapi.data.MediaItem;
-import xyz.jbapps.vplan.util.jsonapi.parser.MediaParser;
+import xyz.jbapps.vplan.util.jsonapi.data.PostItem;
+import xyz.jbapps.vplan.util.jsonapi.data.PostItem;
+import xyz.jbapps.vplan.util.jsonapi.parser.PostParser;
 
 /**
- * Volley Request, provides FHG Feed
+ * Volley Request, provides Posts from fhg-radolfzell.de
  *
  * @author Jannik Bamberger
  * @version 1.0
  */
-public class PostRequest extends Request<FHGFeed> {
+public class PostRequest extends Request<List<PostItem>> {
 
-    private static final String TAG = "MediaRequest";
+    private static final String TAG = "PostRequest";
 
-    private final Response.Listener<List<MediaItem>> listener;
+    private final Response.Listener<List<PostItem>> listener;
 
-    private static final String HEADER_LAST_MODIFIED = "Last-Modified";
-
-    public PostRequest(String url, Response.Listener<List<MediaItem>> listener, Response.ErrorListener errorListener) {
+    public PostRequest(String url, Response.Listener<List<PostItem>> listener, Response.ErrorListener errorListener) {
         super(Method.GET, url, errorListener);
         this.listener = listener;
     }
@@ -42,18 +41,17 @@ public class PostRequest extends Request<FHGFeed> {
     }
 
     @Override
-    protected void deliverResponse(List<MediaItem> response) {
+    protected void deliverResponse(List<PostItem> response) {
         listener.onResponse(response);
     }
 
     @Override
-    protected Response<List<MediaItem>> parseNetworkResponse(NetworkResponse response) {
+    protected Response<List<PostItem>> parseNetworkResponse(NetworkResponse response) {
         try {
-            //System.out.println("MediaRequest header last-modified: " + HttpHeaderParser.parseDateAsEpoch(response.headers.get(HEADER_LAST_MODIFIED)));
-            List<MediaItem> mediaItems = new ArrayList<>();
-            MediaParser mediaParser = new MediaParser();
-            mediaParser.parse(new ByteArrayInputStream(response.data), mediaItems);
-            return Response.success(mediaItems, HttpHeaderParser.parseCacheHeaders(response));
+            List<PostItem> PostItems = new ArrayList<>();
+            PostParser PostParser = new PostParser();
+            PostParser.parse(new ByteArrayInputStream(response.data), PostItems);
+            return Response.success(PostItems, HttpHeaderParser.parseCacheHeaders(response));
         } catch (Exception e) {
             return Response.error(new ParseError(e));
         }

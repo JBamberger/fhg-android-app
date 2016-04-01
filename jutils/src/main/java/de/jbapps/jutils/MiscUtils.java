@@ -17,9 +17,11 @@ import android.util.Patterns;
  * <code>MiscUtils.{@link #getApplicationName getApplicationName}(this);</code> /"Your App" - your app name from AndroidManifest"<br />
  */
 public class MiscUtils {
-    public static int dpToPx(Context context, int dp) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    public static int dpToPx(Context context, int dps) {
+        //DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        //return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dps * scale + 0.5f);
     }
 
     public static String getVersionName(Context context) {

@@ -14,19 +14,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import java.util.List;
+
 import xyz.jbapps.vplan.R;
-import xyz.jbapps.vplan.data.FHGFeed;
-import xyz.jbapps.vplan.ui.FHGFeedAdapter;
-import xyz.jbapps.vplan.util.network.FHGFeedRequest;
+import xyz.jbapps.vplan.ui.PostAdapter;
+import xyz.jbapps.vplan.util.jsonapi.data.PostItem;
+import xyz.jbapps.vplan.util.jsonapi.net.PostRequest;
 
 public class PostFragment extends LoadingRecyclerViewFragment {
 
-    private static final String TAG = "FHGFeedFragment";
-    private static final String URL_FHG_FEED = "http://www.fhg-radolfzell.de/feed/atom";
-    private static final String TAG_FHG_FEED = "FHGFeed";
+    private static final String TAG = "PostFragment";
+    private static final String URL_POSTS = "http://fhg-radolfzell.de/wp-json/wp/v2/posts";
+    private static final String TAG_POSTS = "PostRequest";
 
     private RequestQueue netQueue;
-    private FHGFeedAdapter adapter;
+    private PostAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,28 +57,28 @@ public class PostFragment extends LoadingRecyclerViewFragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadFeed();
+                loadPosts();
             }
         });
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFeed();
+                loadPosts();
             }
         });
 
-        loadFeed();
+        loadPosts();
     }
 
-    public void loadFeed() {
+    public void loadPosts() {
         toggleLoading(true);
-        netQueue.cancelAll(TAG_FHG_FEED);
-        FHGFeedRequest req = new FHGFeedRequest(URL_FHG_FEED, new Response.Listener<FHGFeed>() {
+        netQueue.cancelAll(URL_POSTS);
+        PostRequest req = new PostRequest(URL_POSTS, new Response.Listener<List<PostItem>>() {
             @Override
-            public void onResponse(FHGFeed response) {
+            public void onResponse(List<PostItem> posts) {
                 toggleLoading(false);
-                adapter = new FHGFeedAdapter(getActivity());
-                adapter.setData(response.feedItems);
+                adapter = new PostAdapter(getActivity());
+                adapter.setData(posts);
 
                 recyclerView.setAdapter(adapter);
             }
@@ -87,7 +89,7 @@ public class PostFragment extends LoadingRecyclerViewFragment {
                 Toast.makeText(context, getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
             }
         });
-        req.setTag(TAG_FHG_FEED);
+        req.setTag(TAG_POSTS);
         netQueue.add(req);
     }
 }
