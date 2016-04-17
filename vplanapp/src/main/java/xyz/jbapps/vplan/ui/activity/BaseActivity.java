@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +20,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageView;
 
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
-import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
 import xyz.jbapps.vplan.ui.fragment.FeedFragment;
 import xyz.jbapps.vplan.ui.fragment.PostFragment;
 import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
@@ -122,6 +123,21 @@ public class BaseActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    private void showContactFHGDialog() {
+        Drawable headerImage = getResources().getDrawable(R.drawable.header_logo);
+        if (headerImage != null) {
+            headerImage.mutate();
+            headerImage.setColorFilter(getResources().getColor(R.color.toolbar_textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+        }
+        new AlertDialog.Builder(this).setTitle(R.string.text_fhg_name)
+                .setMessage(R.string.text_fhg_contact)
+                .setIcon(headerImage)
+                .setCancelable(true)
+                .create()
+                .show();
+
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_FRAGMENT, selectedFragment);
@@ -154,6 +170,14 @@ public class BaseActivity extends AppCompatActivity {
 
             }
         });
+        ImageView imageView = ViewUtils.findViewById(navigationView.getHeaderView(0), R.id.header_image);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContactFHGDialog();
+            }
+        });
+
         Toolbar contactToolbar = ViewUtils.findViewById(navigationView.getHeaderView(0), R.id.contact_toolbar);
         contactToolbar.inflateMenu(R.menu.menu_drawer_contact);
         Menu menu = contactToolbar.getMenu();
@@ -181,19 +205,14 @@ public class BaseActivity extends AppCompatActivity {
                         startActivity(mapIntent);
                         return true;
                     case R.id.action_drawer_contact_full:
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
-                        AlertDialog alertDialog = alertDialogBuilder.setTitle(R.string.text_fhg_name)
-                                .setMessage(R.string.text_fhg_contact)
-                                .setIcon(R.drawable.header_logo)
-                                .setCancelable(true)
-                                .create();
-                        alertDialog.show();
+                        showContactFHGDialog();
                         return true;
                 }
                 return false;
             }
         });
     }
+
 
     private boolean applySelectedFragment() {
         switch (selectedFragment) {
@@ -228,6 +247,11 @@ public class BaseActivity extends AppCompatActivity {
             case R.id.drawer_settings:
                 if (settingsFragment == null) {
                     settingsFragment = new SettingsFragment();
+                }
+                ActionBar actionBar = getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setTitle(R.string.title_fragment_settings);
+                    actionBar.setSubtitle("");
                 }
                 applyFragment(settingsFragment);
                 break;
