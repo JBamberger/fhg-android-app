@@ -14,11 +14,11 @@
             android:icon="@drawable/ic_action_feed"
             android:orderInCategory="20"
             android:title="@string/title_fragment_fhg_feed" />
-        <item
+        <!--<item
             android:id="@+id/drawer_contact"
             android:icon="@drawable/ic_action_contact"
             android:orderInCategory="30"
-            android:title="@string/title_fragment_contact" />
+            android:title="@string/title_fragment_contact" />-->
         <item
             android:id="@+id/drawer_credits"
             android:icon="@drawable/ic_action_info"

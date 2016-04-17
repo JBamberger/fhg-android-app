@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_drawer_contact_phone"
+        android:icon="@drawable/ic_action_phone"
+        android:orderInCategory="10"
+        android:title="@string/action_contact_phone"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_drawer_contact_email"
+        android:icon="@drawable/ic_action_email"
+        android:orderInCategory="20"
+        android:title="@string/action_contact_mail"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_drawer_contact_navigate"
+        android:icon="@drawable/ic_action_maps_directions"
+        android:orderInCategory="30"
+        android:title="@string/action_contact_navigate"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_drawer_contact_full"
+        android:icon="@drawable/ic_action_info"
+        android:orderInCategory="30"
+        android:title="@string/action_contact_full"
+        app:showAsAction="ifRoom" />
+</menu>

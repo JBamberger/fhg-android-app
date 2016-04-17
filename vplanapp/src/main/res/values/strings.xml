@@ -27,8 +27,10 @@
     <string name="action_get_version">Version anzeigen</string>
     <string name="action_force_reload">Aktualisieren</string>
     <string name="action_contact_developer">Entwickler kontaktieren</string>
-    <string name="action_contact_mail">Mail schreiben</string>
-    <string name="action_contact_phone">Anrufen</string>
+    <string name="action_contact_mail">Mail an FHG schreiben</string>
+    <string name="action_contact_phone">FHG Anrufen</string>
+    <string name="action_contact_navigate">Navigation zum FHG</string>
+    <string name="action_contact_full">FHG Kontaktdaten</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
@@ -65,7 +67,7 @@
 
 
     <string name="text_fhg_logo_description">Logo des FHG Radolfzell</string>
-    <string name="text_fhg_name">FHG Radolfzell</string>
+    <string name="text_fhg_name">Friedrich-Hecker-Gymnasium</string>
     <string name="text_fhg_contact_mail">mailto:schule@fhg-radolfzell.de</string>
     <string name="text_fhg_contact_phone">tel:0049773294780</string>
     <string name="text_fhg_contact">
@@ -74,7 +76,7 @@
         D – 78315 Radolfzell\n
         Tel: +49 (0) 77 32 / 94 78 0\n
         Fax: +49 (0) 77 32 / 94 78 99\n
-        E-Mail: schule@fhg-radolfzell.de\n
+        E-Mail: schule@fhg-radolfzell.de
     </string>
     <string name="text_fhg_contact_condensed">
         Friedrich-Hecker-Gymnasium\n

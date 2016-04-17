@@ -3,8 +3,11 @@ package xyz.jbapps.vplan.ui.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
@@ -36,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-
+    private Context context;
     private int selectedFragment = R.id.drawer_vplan;
     private VPlanFragment vPlanFragment = null;
     private FeedFragment feedFragment = null;
@@ -62,6 +66,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        context = this;
         setupUI();
         if (savedInstanceState != null) {
             selectedFragment = savedInstanceState.getInt(SELECTED_FRAGMENT, R.id.drawer_vplan);
@@ -149,6 +154,45 @@ public class BaseActivity extends AppCompatActivity {
 
             }
         });
+        Toolbar contactToolbar = ViewUtils.findViewById(navigationView.getHeaderView(0), R.id.contact_toolbar);
+        contactToolbar.inflateMenu(R.menu.menu_drawer_contact);
+        Menu menu = contactToolbar.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            Drawable drawable = menu.getItem(i).getIcon();
+            if (drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(getResources().getColor(R.color.toolbar_textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        contactToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_drawer_contact_phone:
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.text_fhg_contact_phone))));
+                        return true;
+                    case R.id.action_drawer_contact_email:
+                        startActivity(new Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.text_fhg_contact_mail))));
+                        return true;
+                    case R.id.action_drawer_contact_navigate:
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=Friedrich-Hecker-Gymnasium,+Markelfinger+Straße,+Radolfzell+am+Bodensee");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                        return true;
+                    case R.id.action_drawer_contact_full:
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context, R.style.AppTheme_Dialog);
+                        AlertDialog alertDialog = alertDialogBuilder.setTitle(R.string.text_fhg_name)
+                                .setMessage(R.string.text_fhg_contact)
+                                .setIcon(R.drawable.header_logo)
+                                .setCancelable(true)
+                                .create();
+                        alertDialog.show();
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private boolean applySelectedFragment() {
@@ -169,12 +213,12 @@ public class BaseActivity extends AppCompatActivity {
                 }
                 applyFragment(postFragment);
                 break;
-            case R.id.drawer_contact:
+            /*case R.id.drawer_contact:
                 if (contactFragment == null) {
                     contactFragment = new ContactFragment();
                 }
                 applyFragment(contactFragment);
-                break;
+                break;*/
             case R.id.drawer_credits:
                 if (creditsFragment == null) {
                     creditsFragment = new CreditsFragment();

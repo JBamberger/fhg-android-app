@@ -49,8 +49,9 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment {
 
         Activity activity = getActivity();
         if (activity != null) {
-            int orientation = activity.getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            boolean horizontal = Configuration.ORIENTATION_LANDSCAPE == activity.getResources().getConfiguration().orientation;
+            boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+            if (horizontal ||  isTablet) {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
             } else {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
