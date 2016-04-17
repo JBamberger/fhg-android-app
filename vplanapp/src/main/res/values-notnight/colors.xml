@@ -6,12 +6,15 @@
     <color name="vplan_text_omitted">@color/material_red_A400</color>
     <color name="vplan_text_normal">@color/material_text_54</color>
     <color name="vplan_footer_tint">@color/material_red_A400</color>
+
     <color name="toolbar_textColorPrimary">@color/material_text_inverse_100</color>
-    <color name="toolbar_textColorPrimaryInverse">@color/material_text_87</color>
-    <color name="toolbar_actionMenuTextColor">@color/material_text_87</color>
+    <color name="toolbar_textColorPrimaryInverse">@color/material_text_inverse_100</color>
+    <color name="toolbar_actionMenuTextColor">@color/material_text_inverse_100</color>
     <color name="toolbar_textColorSecondary">@color/material_text_inverse_100</color>
+
     <color name="drawer_item_highlighted">@color/brand_primary_dark</color>
     <color name="drawer_item_default">@color/material_text_54</color>
+
     <color name="fhg_logo_tint">@color/black</color>
     <color name="fhg_logo_header_tint">@color/white</color>
 

@@ -76,4 +76,14 @@ public class Property {
         editor.putBoolean(appContext.getString(R.string.preference_show_settings_key), show);
         editor.apply();
     }
+
+    public String getThemeSetting() {
+        return getSettingsPreferences().getString(appContext.getString(R.string.preference_theme_key), "0");
+    }
+
+    public void setThemeSetting(boolean show) {
+        Log.e(TAG, "not implemented");
+        //FIXME: implement
+
+    }
 }

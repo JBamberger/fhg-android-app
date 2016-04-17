@@ -65,6 +65,6 @@ public class PostItem {
         postItem.format = bundle.getString("format");
         postItem.categories = bundle.getStringArray("categories");
         postItem.tags = bundle.getStringArray("tags");
-        return null;
+        return postItem;
     }
 }

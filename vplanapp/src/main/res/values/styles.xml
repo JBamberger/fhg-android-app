@@ -12,15 +12,28 @@
     </style>
 
     <style name="AppTheme.Toolbar" parent="AppTheme">
+
         <item name="android:textColorPrimary">@color/toolbar_textColorPrimary</item>
+
         <item name="android:textColorPrimaryInverse">@color/toolbar_textColorPrimaryInverse</item>
+
         <item name="android:actionMenuTextColor">@color/toolbar_actionMenuTextColor</item>
         <item name="actionMenuTextColor">@color/toolbar_actionMenuTextColor</item>
+
         <item name="android:textColorSecondary">@color/toolbar_textColorSecondary</item>
+
+        <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
+        <item name="dropDownListViewStyle">@style/PopupMenuListView</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PopupMenuListView" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:textColor">@color/toolbar_actionMenuTextColor</item>
+        <item name="android:background">@color/brand_primary_light</item>
+    </style>
 
 </resources>

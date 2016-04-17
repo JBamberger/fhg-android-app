@@ -14,6 +14,10 @@
     <string name="preference_grade_show_all_title">Alle Klassen anzeigen</string>
     <string name="preference_grade_show_all_summary">Es werden alle Klassen angezeigt, anstatt die nur die ausgewählten.</string>
 
+    <string name="preference_theme_key">preference_theme_key</string>
+    <string name="preference_theme_title">Theme</string>
+    <string name="preference_theme_summary">Neustart der App erforderlich.</string>
+
     <string name="preference_show_settings_key">preference_show_settings_key</string>
 
     <!--  Strings for possible PreferenceActivity Back/Next buttons -->
