@@ -41,12 +41,9 @@ public class BaseActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private Context context;
     private int selectedFragment = R.id.drawer_vplan;
     private VPlanFragment vPlanFragment = null;
-    private FeedFragment feedFragment = null;
     private PostFragment postFragment = null;
-    private ContactFragment contactFragment = null;
     private CreditsFragment creditsFragment = null;
     private SettingsFragment settingsFragment = null;
 
@@ -67,7 +64,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        context = this;
         setupUI();
         if (savedInstanceState != null) {
             selectedFragment = savedInstanceState.getInt(SELECTED_FRAGMENT, R.id.drawer_vplan);
@@ -124,14 +120,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void showContactFHGDialog() {
-        Drawable headerImage = getResources().getDrawable(R.drawable.header_logo);
+        /*Drawable headerImage = getResources().getDrawable(R.drawable.header_logo);
         if (headerImage != null) {
             headerImage.mutate();
-            headerImage.setColorFilter(getResources().getColor(R.color.toolbar_textColorPrimary), PorterDuff.Mode.SRC_ATOP);
-        }
+            headerImage.setColorFilter(getResources().getColor(R.color.vplan_text_normal), PorterDuff.Mode.SRC_ATOP);
+        }*/
         new AlertDialog.Builder(this).setTitle(R.string.text_fhg_name)
                 .setMessage(R.string.text_fhg_contact)
-                .setIcon(headerImage)
+                //.setIcon(headerImage)
                 .setCancelable(true)
                 .create()
                 .show();
@@ -232,12 +228,6 @@ public class BaseActivity extends AppCompatActivity {
                 }
                 applyFragment(postFragment);
                 break;
-            /*case R.id.drawer_contact:
-                if (contactFragment == null) {
-                    contactFragment = new ContactFragment();
-                }
-                applyFragment(contactFragment);
-                break;*/
             case R.id.drawer_credits:
                 if (creditsFragment == null) {
                     creditsFragment = new CreditsFragment();
