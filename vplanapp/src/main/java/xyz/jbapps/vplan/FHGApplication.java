@@ -10,7 +10,7 @@ public class FHGApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Property p = new Property(this);
+        /*Property p = new Property(this);
         String theme = p.getThemeSetting();
         switch (theme) {
             case "light":
@@ -25,8 +25,6 @@ public class FHGApplication extends Application {
             default:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;
-
-        }
-
+        }*/
     }
 }
