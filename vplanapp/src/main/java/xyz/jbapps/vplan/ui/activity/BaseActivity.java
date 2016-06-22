@@ -27,6 +27,7 @@ import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
+import xyz.jbapps.vplan.ui.fragment.FHGFeedFragment;
 import xyz.jbapps.vplan.ui.fragment.FeedFragment;
 import xyz.jbapps.vplan.ui.fragment.PostFragment;
 import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
@@ -43,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private int selectedFragment = R.id.drawer_vplan;
     private VPlanFragment vPlanFragment = null;
-    private PostFragment postFragment = null;
+    private FHGFeedFragment postFragment = null;
     private CreditsFragment creditsFragment = null;
     private SettingsFragment settingsFragment = null;
 
@@ -224,7 +225,7 @@ public class BaseActivity extends AppCompatActivity {
                 }
                 applyFragment(feedFragment);*/
                 if (postFragment == null) {
-                    postFragment = new PostFragment();
+                    postFragment = new FHGFeedFragment();
                 }
                 applyFragment(postFragment);
                 break;

@@ -14,6 +14,7 @@
 
 package xyz.jbapps.vplan.util;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.google.gson.annotations.SerializedName;
@@ -38,6 +39,7 @@ import java.util.Locale;
  */
 public class FHGFeedXmlParser {
     private static final String ns = null;
+    private static final String TAG = "FHGFeedXmlParser";
     private final SimpleDateFormat dateParser;
     private final SimpleDateFormat dateFormatter;
 
@@ -157,6 +159,7 @@ public class FHGFeedXmlParser {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, updated);
         parser.require(XmlPullParser.END_TAG, ns, "updated");
         return updated;
     }
