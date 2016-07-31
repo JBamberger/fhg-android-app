@@ -20,6 +20,7 @@ import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 import xyz.jbapps.vplan.util.jsonapi.data.MediaItem;
 import xyz.jbapps.vplan.util.jsonapi.parser.MediaParser;
 
+@Deprecated
 public class MediaRequest extends Request<List<MediaItem>> {
 
     private static final String TAG = "MediaRequest";

@@ -24,6 +24,7 @@ import xyz.jbapps.vplan.data.VPlanData;
  * @author Jannik Bamberger
  * @version 1.0
  */
+@Deprecated
 public class PersistentCache {
 
     public static final String FILE_VPLAN1 = "vplan1.txt";

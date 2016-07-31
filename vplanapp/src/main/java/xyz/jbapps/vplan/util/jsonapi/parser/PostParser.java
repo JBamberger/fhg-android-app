@@ -10,6 +10,7 @@ import java.util.List;
 
 import xyz.jbapps.vplan.util.jsonapi.data.PostItem;
 
+@Deprecated
 public class PostParser {
 
     public List<PostItem> parse(InputStream in, List<PostItem> itemCollection) throws IOException {

@@ -12,6 +12,7 @@ import java.util.List;
 
 import xyz.jbapps.vplan.util.jsonapi.data.MediaItem;
 
+@Deprecated
 public class MediaParser {
 
     public List<MediaItem> parse(InputStream in, List<MediaItem> itemCollection) throws IOException{

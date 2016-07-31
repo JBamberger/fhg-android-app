@@ -24,6 +24,7 @@ import xyz.jbapps.vplan.util.jsonapi.parser.PostParser;
  * @author Jannik Bamberger
  * @version 1.0
  */
+@Deprecated
 public class PostRequest extends Request<List<PostItem>> {
 
     private static final String TAG = "PostRequest";

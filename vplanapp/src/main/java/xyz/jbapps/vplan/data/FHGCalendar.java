@@ -12,6 +12,7 @@ import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 /**
  * Represents the current calendar content.
  */
+@Deprecated
 public class FHGCalendar {
     @SerializedName("http_last_updated")
     public long lastUpdated = 0;

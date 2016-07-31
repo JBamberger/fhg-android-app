@@ -31,6 +31,7 @@ import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.ui.FHGFeedAdapter;
 import xyz.jbapps.vplan.util.network.FHGFeedRequest;
 
+@Deprecated
 public class FeedFragment extends BaseFragment {
 
     private static final String TAG = "FeedFragment";

@@ -21,6 +21,7 @@ import xyz.jbapps.vplan.ui.PostAdapter;
 import xyz.jbapps.vplan.util.jsonapi.data.PostItem;
 import xyz.jbapps.vplan.util.jsonapi.net.PostRequest;
 
+@Deprecated
 public class PostFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG = "PostFragment";

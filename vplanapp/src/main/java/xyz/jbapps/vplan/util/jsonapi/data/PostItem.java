@@ -2,6 +2,7 @@ package xyz.jbapps.vplan.util.jsonapi.data;
 
 import android.os.Bundle;
 
+@Deprecated
 public class PostItem {
     public String id;
     public String date;

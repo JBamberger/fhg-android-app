@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
  * @author Jannik Bamberger
  * @version 1.0
  */
+@Deprecated
 public class FHGCalendarParser {
 
 
