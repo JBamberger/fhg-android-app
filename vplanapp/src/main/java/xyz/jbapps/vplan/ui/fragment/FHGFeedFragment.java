@@ -2,10 +2,7 @@ package xyz.jbapps.vplan.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -13,19 +10,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-import java.util.List;
-
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.ui.FHGFeedAdapter;
-import xyz.jbapps.vplan.util.FHGFeedProvider;
-import xyz.jbapps.vplan.util.FHGFeedXmlParser;
 import xyz.jbapps.vplan.util.network.FHGFeedRequest;
 
 public class FHGFeedFragment extends LoadingRecyclerViewFragment{
 
     private static final String TAG = "FHGFeedFragment";
-    private static final String URL_FHG_FEED = "http://www.fhg-radolfzell.de/feed/atom";
+    private static final String URL_FHG_FEED = "https://www.fhg-radolfzell.de/feed/atom";
     private static final String TAG_FHG_FEED = "FHGFeed";
 
     private RequestQueue netQueue;

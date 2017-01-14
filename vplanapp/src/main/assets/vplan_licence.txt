@@ -1,8 +1,8 @@
-﻿Copyright 2012 - 2015 Jannik Bamberger
+﻿Copyright 2012 - 2017 Jannik Bamberger
 
 Alle Angaben ohne Gewähr.
 
-In der Anwendung werden Daten der Website http://www.fhg-radolfzell.de verarbeitet und angezeigt.
+In der Anwendung werden Daten der Website https://www.fhg-radolfzell.de verarbeitet und angezeigt.
 
 Die Anwendung enthält Ressourcen die durch das Android Asset Studio von Roman Nurik generiert wurden. Sie sind unter der Creative Commons Lizenz v3.0 lizensiert.
 

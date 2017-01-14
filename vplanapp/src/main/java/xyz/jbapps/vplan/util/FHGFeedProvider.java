@@ -29,7 +29,7 @@ public class FHGFeedProvider extends AsyncTask<Object, Object, Boolean> {
     private static final String TAG = "FHGFeedProvider";
     private static final boolean SUCCESS = true;
     private static final boolean FAILURE = false;
-    private static final String FHG_FEED_URL = "http://www.fhg-radolfzell.de/feed/atom";
+    private static final String FHG_FEED_URL = "https://www.fhg-radolfzell.de/feed/atom";
     private static final String HEADER_LAST_MODIFIED = "Last-Modified";
     private final IFHGFeedResultListener listener;
     private final PersistentCache persistentCache;

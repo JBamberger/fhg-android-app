@@ -3,14 +3,7 @@ package xyz.jbapps.vplan.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -22,7 +15,6 @@ import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.ui.MultiVPlanAdapter;
 import xyz.jbapps.vplan.util.Property;
-import xyz.jbapps.vplan.util.VPlanProvider;
 import xyz.jbapps.vplan.util.VPlanSorter;
 import xyz.jbapps.vplan.util.network.VPlanRequest;
 
@@ -32,8 +24,8 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG_VPLAN1 = "VPlan1";
     private static final String TAG_VPLAN2 = "VPlan2";
-    private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
-    private static final String URL_VPLAN2 = "http://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
+    private static final String URL_VPLAN1 = "https://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
+    private static final String URL_VPLAN2 = "https://www.fhg-radolfzell.de/vertretungsplan/f2/subst_001.htm";
 
     private boolean vPlan1Loaded = false;
     private boolean vPlan2Loaded = false;
