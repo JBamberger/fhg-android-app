@@ -1,0 +1,14 @@
+ readGcmId
+writeGcmId
+ readvPlanId
+writevPlanId
+ readselectedGrade
+writeselectedGrade
+ readvPlan
+writevPlan
+ readvPlanHeader
+writevPlanHeader
+ readAppVersion
+writeAppVersion
+
+ readGradePattern
