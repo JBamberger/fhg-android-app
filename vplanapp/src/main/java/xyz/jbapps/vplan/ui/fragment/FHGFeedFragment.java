@@ -1,5 +1,6 @@
 package xyz.jbapps.vplan.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -15,7 +16,7 @@ import xyz.jbapps.vplan.data.FHGFeed;
 import xyz.jbapps.vplan.ui.FHGFeedAdapter;
 import xyz.jbapps.vplan.util.network.FHGFeedRequest;
 
-public class FHGFeedFragment extends LoadingRecyclerViewFragment{
+public class FHGFeedFragment extends LoadingRecyclerViewFragment {
 
     private static final String TAG = "FHGFeedFragment";
     private static final String URL_FHG_FEED = "https://www.fhg-radolfzell.de/feed/atom";
@@ -49,7 +50,7 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
             }
         });
 
-            loadFeed();
+        loadFeed();
     }
 
     public void loadFeed() {
@@ -67,7 +68,10 @@ public class FHGFeedFragment extends LoadingRecyclerViewFragment{
             @Override
             public void onErrorResponse(VolleyError error) {
                 toggleLoading(false);
-                Toast.makeText(context, getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
+                Activity a = getActivity();
+                if (a != null && isAdded()) {
+                    Toast.makeText(a, a.getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
+                }
             }
         });
         req.setTag(TAG_FHG_FEED);

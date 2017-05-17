@@ -1,5 +1,6 @@
 package xyz.jbapps.vplan.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -115,7 +116,10 @@ public class VPlanFragment extends LoadingRecyclerViewFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             toggleLoading(false);
-            Toast.makeText(context, getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
+            Activity a = getActivity();
+            if (a != null && isAdded()) {
+                Toast.makeText(a, a.getString(R.string.text_loading_failed), Toast.LENGTH_LONG).show();
+            }
         }
     };
 
