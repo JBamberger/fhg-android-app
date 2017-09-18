@@ -2,10 +2,10 @@ package de.jbapps.jutils;
 
 import android.os.AsyncTask;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,22 +56,32 @@ public class PageLoader extends AsyncTask<String, Void, Void> {
             os.close();*/
 
             connection.connect();
-            InputStream in = connection.getInputStream();
-            //TODO: connection.getResponseCode();
-            String content = IOUtils.toString(in, connection.getContentEncoding());
+            InputStream is = connection.getInputStream();
+            Reader in = new InputStreamReader(is, connection.getContentEncoding());
+            try {
+                //TODO: connection.getResponseCode();
+                final int bufferSize = 1024;
+                final char[] buffer = new char[bufferSize];
+                final StringBuilder out = new StringBuilder();
+                for (; ; ) {
+                    int rsz = in.read(buffer, 0, buffer.length);
+                    if (rsz < 0)
+                        break;
+                    out.append(buffer, 0, rsz);
+                }
+                String content = out.toString();
+
+            } finally {
+                is.close();
+                in.close();
+            }
+
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (connection != null) connection.disconnect();
         }
-
-
-
-
-
-
-
 
 
         return null;
@@ -91,6 +101,7 @@ public class PageLoader extends AsyncTask<String, Void, Void> {
     public interface IPageLoader {
 
         void onLoadingProgressUpdated();
+
         void onLoadingComplete(String content, Map<String, String> headers);
 
     }
