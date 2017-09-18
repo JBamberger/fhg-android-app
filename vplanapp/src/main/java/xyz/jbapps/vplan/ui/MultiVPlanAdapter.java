@@ -2,13 +2,18 @@ package xyz.jbapps.vplan.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.xml.sax.XMLReader;
 
 import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
@@ -25,9 +30,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
     private VPlanDataWrapper vPlanDataWrapper;
     private final Context context;
+    private final StrikeTagHandler tagHandler;
 
     public MultiVPlanAdapter(Context context) {
         vPlanDataWrapper = new VPlanDataWrapper(new VPlanData(), new VPlanData());
+        tagHandler = new StrikeTagHandler();
         this.context = context;
 
     }
@@ -72,10 +79,10 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
                 VPlanRow row = (VPlanRow) vPlanDataWrapper.getItemAtPosition(position);
                 VPlanRowViewHolder rowHolder = (VPlanRowViewHolder) holder;
-                rowHolder.grade.setText(row.getGrade());
-                rowHolder.content.setText(row.getContent());
-                rowHolder.hour.setText(row.getHour());
-                rowHolder.subject.setText(row.getSubject());
+                rowHolder.grade.setText(Html.fromHtml(row.getGrade(), null, tagHandler));
+                rowHolder.content.setText(Html.fromHtml(row.getContent(), null, tagHandler));
+                rowHolder.hour.setText(Html.fromHtml(row.getHour(), null, tagHandler));
+                rowHolder.subject.setText(Html.fromHtml(row.getSubject(), null, tagHandler));
                 rowHolder.background.setBackgroundResource(R.color.transparent);
                 if (row.getOmitted()) {
                     rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_red_A400));
@@ -83,7 +90,7 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                     rowHolder.background.setBackgroundResource(R.color.vplan_omitted);
                 } else {
                     rowHolder.roomOmitted.setTextColor(context.getResources().getColor(R.color.material_text_54));
-                    rowHolder.roomOmitted.setText(row.getRoom());
+                    rowHolder.roomOmitted.setText(Html.fromHtml(row.getRoom(), null, tagHandler));
                 }
                 if (row.getMarkedNew()) {
                     rowHolder.background.setBackgroundResource(R.color.vplan_new);
@@ -140,5 +147,48 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
             motdHeader = ViewUtils.findViewById(itemView, R.id.vplan_motd_header);
             motdContent = ViewUtils.findViewById(itemView, R.id.vplan_motd_content);
         }
+    }
+
+
+    public class StrikeTagHandler implements Html.TagHandler {
+
+        public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+            if (tag.equalsIgnoreCase("strike") || tag.equals("s")) {
+                processStrike(opening, output);
+            }
+        }
+
+        private void processStrike(boolean opening, Editable output) {
+            int len = output.length();
+            if (opening) {
+                output.setSpan(new StrikethroughSpan(), len, len, Spannable.SPAN_MARK_MARK);
+            } else {
+                Object obj = getLast(output, StrikethroughSpan.class);
+                int where = output.getSpanStart(obj);
+
+                output.removeSpan(obj);
+
+                if (where != len) {
+                    output.setSpan(new StrikethroughSpan(), where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+
+        private Object getLast(Editable text, Class kind) {
+            Object[] objs = text.getSpans(0, text.length(), kind);
+
+            if (objs.length == 0) {
+                return null;
+            } else {
+                for (int i = objs.length; i > 0; i--) {
+                    if (text.getSpanFlags(objs[i - 1]) == Spannable.SPAN_MARK_MARK) {
+                        return objs[i - 1];
+                    }
+                }
+                return null;
+            }
+        }
+
+
     }
 }

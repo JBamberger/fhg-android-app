@@ -12,7 +12,7 @@ public class VPlanData {
     @SerializedName("vplan_header_row")
     private VPlanRow VPlanHeaderRow;
     @SerializedName("vplan_rows")
-    private final List<VPlanRow> mVPlanRows = new ArrayList<>();
+    private List<VPlanRow> mVPlanRows = new ArrayList<>();
     @SerializedName("vplan_header")
     private VPlanHeader vPlanHeader;
 
@@ -27,6 +27,10 @@ public class VPlanData {
 
     public VPlanRow getVPlanRowAtPosition(int position) throws ArrayIndexOutOfBoundsException {
         return mVPlanRows.get(position);
+    }
+
+    public void setRows(List<VPlanRow> rows) {
+        this.mVPlanRows = rows;
     }
 
     public int getVPlanRowCount() {

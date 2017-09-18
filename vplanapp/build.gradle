@@ -41,4 +41,5 @@ dependencies {
     compile "com.android.support:support-v4:$support_version"
     compile "com.android.volley:volley:$volley_version"
     compile "org.apache.commons:commons-lang3:$commons_lang3_version"
+    testCompile 'junit:junit:4.12'
 }

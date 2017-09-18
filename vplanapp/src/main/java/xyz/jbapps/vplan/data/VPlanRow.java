@@ -99,5 +99,16 @@ public class VPlanRow extends VPlanElement {
         this.subject = subject;
     }
 
-
+    @Override
+    public String toString() {
+        return "VPlanRow{" +
+                "subject='" + subject + '\'' +
+                ", omitted=" + omitted +
+                ", hour='" + hour + '\'' +
+                ", room='" + room + '\'' +
+                ", content='" + content + '\'' +
+                ", grade='" + grade + '\'' +
+                ", marked_new=" + marked_new +
+                '}';
+    }
 }
