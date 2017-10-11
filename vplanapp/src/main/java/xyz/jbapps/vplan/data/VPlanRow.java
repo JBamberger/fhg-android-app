@@ -24,17 +24,20 @@ public class VPlanRow extends VPlanElement {
     private String content;
     @SerializedName("grade")
     private String grade;
+    @SerializedName("kind")
+    private String kind;
     @SerializedName("marked_new")
     private boolean marked_new;
 
 
-    public VPlanRow(String grade, String hour, String content, String subject, String room, boolean omitted, boolean marked_new) {
+    public VPlanRow(String grade, String hour, String content, String subject, String room, String kind, boolean omitted, boolean marked_new) {
         super(VPlanElement.TYPE_ROW);
         this.grade = grade;
         this.subject = subject;
         this.room = room;
         this.hour = hour;
         this.content = content;
+        this.kind = kind;
         this.omitted = omitted;
         this.marked_new = marked_new;
     }
@@ -99,6 +102,14 @@ public class VPlanRow extends VPlanElement {
         this.subject = subject;
     }
 
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
     @Override
     public String toString() {
         return "VPlanRow{" +
@@ -108,6 +119,7 @@ public class VPlanRow extends VPlanElement {
                 ", room='" + room + '\'' +
                 ", content='" + content + '\'' +
                 ", grade='" + grade + '\'' +
+                ", kind='" + kind + '\'' +
                 ", marked_new=" + marked_new +
                 '}';
     }

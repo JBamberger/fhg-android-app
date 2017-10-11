@@ -22,6 +22,13 @@ public final class VPlanParser {
 
     private static final String TAG = VPlanParser.class.getSimpleName();
 
+    private static final int GRADE_C = 0;
+    private static final int HOUR_C = 1;
+    private static final int SUBJECT_C = 2;
+    private static final int ROOM_C = 3;
+    private static final int KIND_C = 4;
+    private static final int CONTENT_C = 5;
+
     @NonNull
     public static VPlanData parse(@NonNull String html, long lastModified) throws ParseException {
         Log.d(TAG, html);
@@ -122,29 +129,33 @@ public final class VPlanParser {
             if (cells.size() >= 6) {
                 VPlanRow row = new VPlanRow();
 
-                Elements grade = cells.get(0).getElementsByTag("span");
-                Elements hour = cells.get(1).getElementsByTag("span");
-                Elements content = cells.get(2).getElementsByTag("span");
-                Elements subject = cells.get(3).getElementsByTag("span");
-                Elements room = cells.get(4).getElementsByTag("span");
+                Elements grade = cells.get(GRADE_C).getElementsByTag("span");
+                Elements hour = cells.get(HOUR_C).getElementsByTag("span");
+                Elements subject = cells.get(SUBJECT_C).getElementsByTag("span");
+                Elements room = cells.get(ROOM_C).getElementsByTag("span");
+                Elements kind = cells.get(KIND_C).getElementsByTag("span");
+                Elements content = cells.get(CONTENT_C).getElementsByTag("span");
 
                 row.setGrade(grade != null && grade.first() != null
                         ? grade.first().html()
-                        : cells.get(0).text());
+                        : cells.get(GRADE_C).text());
                 row.setHour(hour != null && hour.first() != null
                         ? hour.first().html()
-                        : cells.get(1).text());
+                        : cells.get(HOUR_C).text());
                 row.setContent(content != null && content.first() != null
                         ? content.first().html()
-                        : cells.get(2).text());
+                        : cells.get(CONTENT_C).text());
                 row.setSubject(subject != null && subject.first() != null
                         ? subject.first().html()
-                        : cells.get(3).text());
+                        : cells.get(SUBJECT_C).text());
                 row.setRoom(room != null && room.first() != null
                         ? room.first().html()
-                        : cells.get(4).text());
-                row.setOmitted(cells.get(5).text().contains("x"));
-                row.setMarkedNew(cells.get(0).attr("style").matches("background-color: #00[Ff][Ff]00"));
+                        : cells.get(ROOM_C).text());
+                row.setKind(kind != null && kind.first() != null
+                        ? kind.first().html()
+                        : cells.get(KIND_C).text());
+                row.setOmitted(cells.get(KIND_C).text().toLowerCase().contains("entfall"));
+                row.setMarkedNew(cells.get(GRADE_C).attr("style").matches("background-color: #00[Ff][Ff]00"));
 
                 return row;
             }

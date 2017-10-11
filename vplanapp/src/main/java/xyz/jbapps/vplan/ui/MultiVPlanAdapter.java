@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import xyz.jbapps.vplan.data.VPlanRow;
  * @version 1.0
  */
 public class MultiVPlanAdapter extends RecyclerView.Adapter {
+
+    private static final String NON_BREAKING_SPACE = "&nbsp;";
 
     private VPlanDataWrapper vPlanDataWrapper;
     private final Context context;
@@ -76,11 +79,27 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
                 headHolder.motdContent.setText(Html.fromHtml(header.getMotd()));
                 break;
             case VPlanElement.TYPE_ROW:
-
                 VPlanRow row = (VPlanRow) vPlanDataWrapper.getItemAtPosition(position);
+
+                String content;
+
+                if (row.getContent() != null && !row.getContent().isEmpty() && !row.getContent().equals(NON_BREAKING_SPACE)) {
+                    if(row.getKind() != null && !row.getKind().isEmpty() && !row.getKind().equals(NON_BREAKING_SPACE)) {
+                        content = row.getKind() + ": " + row.getContent();
+                    } else {
+                        content = row.getContent();
+                    }
+                } else {
+                    if(row.getKind() != null && !row.getKind().isEmpty() && !row.getKind().equals(NON_BREAKING_SPACE)) {
+                        content = row.getKind();
+                    } else {
+                        content = "";
+                    }
+                }
+
                 VPlanRowViewHolder rowHolder = (VPlanRowViewHolder) holder;
                 rowHolder.grade.setText(Html.fromHtml(row.getGrade(), null, tagHandler));
-                rowHolder.content.setText(Html.fromHtml(row.getContent(), null, tagHandler));
+                rowHolder.content.setText(Html.fromHtml(content, null, tagHandler));
                 rowHolder.hour.setText(Html.fromHtml(row.getHour(), null, tagHandler));
                 rowHolder.subject.setText(Html.fromHtml(row.getSubject(), null, tagHandler));
                 rowHolder.background.setBackgroundResource(R.color.transparent);
