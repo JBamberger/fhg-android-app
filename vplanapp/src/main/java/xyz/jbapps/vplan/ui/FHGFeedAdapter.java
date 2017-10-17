@@ -15,10 +15,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.jutils.MiscUtils;
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.util.FHGFeedXmlParser;
+import xyz.jbapps.vplan.util.Utils;
 
 /**
  * @author Jannik Bamberger
@@ -50,7 +49,7 @@ public class FHGFeedAdapter extends RecyclerView.Adapter {
             public void onItemClicked(View v) {
                 String link = (String) v.getTag(R.id.item_card);
                 Log.d(TAG, link);
-                if (MiscUtils.isValidURL(link)) {
+                if (Utils.isValidURL(link)) {
                     activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
                 } else {
                     Toast.makeText(activity, "Der hinterlegte Link funktioniert nicht", Toast.LENGTH_LONG).show();
@@ -89,16 +88,16 @@ public class FHGFeedAdapter extends RecyclerView.Adapter {
         public FeedItemViewHolder(View itemView, IOnItemClicked listener) {
             super(itemView);
             this.listner = listener;
-            cardView = ViewUtils.findViewById(itemView, R.id.item_card);
-            title = ViewUtils.findViewById(itemView, R.id.item_title);
-            meta = ViewUtils.findViewById(itemView, R.id.item_meta);
-            summary = ViewUtils.findViewById(itemView, R.id.item_summary);
+            cardView = itemView.findViewById(R.id.item_card);
+            title = itemView.findViewById(R.id.item_title);
+            meta = itemView.findViewById(R.id.item_meta);
+            summary = itemView.findViewById(R.id.item_summary);
             cardView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if(listner != null) {
+            if (listner != null) {
                 listner.onItemClicked(v);
             }
         }

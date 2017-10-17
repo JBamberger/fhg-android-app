@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.style.StrikethroughSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import org.xml.sax.XMLReader;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.data.VPlanData;
 import xyz.jbapps.vplan.data.VPlanDataWrapper;
@@ -140,12 +138,12 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
         public VPlanRowViewHolder(View itemView) {
             super(itemView);
-            grade = ViewUtils.findViewById(itemView, R.id.vplan_first);
-            hour = ViewUtils.findViewById(itemView, R.id.vplan_second);
-            subject = ViewUtils.findViewById(itemView, R.id.vplan_third);
-            roomOmitted = ViewUtils.findViewById(itemView, R.id.vplan_fourth);
-            content = ViewUtils.findViewById(itemView, R.id.vplan_content);
-            background = ViewUtils.findViewById(itemView, R.id.item_layout);
+            grade = itemView.findViewById(R.id.vplan_first);
+            hour = itemView.findViewById(R.id.vplan_second);
+            subject = itemView.findViewById(R.id.vplan_third);
+            roomOmitted = itemView.findViewById(R.id.vplan_fourth);
+            content = itemView.findViewById(R.id.vplan_content);
+            background = itemView.findViewById(R.id.item_layout);
         }
 
     }
@@ -160,11 +158,11 @@ public class MultiVPlanAdapter extends RecyclerView.Adapter {
 
         public VPlanHeaderViewHolder(View itemView) {
             super(itemView);
-            headlayout = ViewUtils.findViewById(itemView, R.id.header_layout);
-            status = ViewUtils.findViewById(itemView, R.id.vplan_status);
-            title = ViewUtils.findViewById(itemView, R.id.vplan_title);
-            motdHeader = ViewUtils.findViewById(itemView, R.id.vplan_motd_header);
-            motdContent = ViewUtils.findViewById(itemView, R.id.vplan_motd_content);
+            headlayout = itemView.findViewById(R.id.header_layout);
+            status = itemView.findViewById(R.id.vplan_status);
+            title = itemView.findViewById(R.id.vplan_title);
+            motdHeader = itemView.findViewById(R.id.vplan_motd_header);
+            motdContent = itemView.findViewById(R.id.vplan_motd_content);
         }
     }
 

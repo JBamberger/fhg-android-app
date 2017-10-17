@@ -18,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.ContactFragment;
 import xyz.jbapps.vplan.ui.fragment.CreditsFragment;
@@ -128,9 +127,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        Toolbar mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
-        drawerLayout = ViewUtils.findViewById(this, R.id.drawerLayout);
-        navigationView = ViewUtils.findViewById(this, R.id.navigationView);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.ok, R.string.cancel);
         drawerLayout.setDrawerListener(drawerToggle);
@@ -140,7 +139,7 @@ public class BaseActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if(menuItem.getItemId() == R.id.drawer_settings) {
+                if (menuItem.getItemId() == R.id.drawer_settings) {
                     showSettings();
                     navigationView.setCheckedItem(selectedFragment);
                     drawerLayout.closeDrawer(navigationView);

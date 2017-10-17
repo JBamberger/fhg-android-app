@@ -1,15 +1,10 @@
 package xyz.jbapps.vplan.ui.activity;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 import xyz.jbapps.vplan.ui.fragment.SettingsFragment;
 
@@ -30,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        Toolbar mToolbar = ViewUtils.findViewById(this, R.id.toolbar);
+        Toolbar mToolbar = findViewById(R.id.toolbar);
         mToolbar.setSubtitle("");
         mToolbar.setTitle(R.string.title_fragment_settings);
 

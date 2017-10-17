@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 
 public class CreditsFragment extends BaseFragment {
@@ -25,7 +23,7 @@ public class CreditsFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((WebView) view.findViewById(R.id.webView)).loadUrl("file:///android_asset/vplan_licence.txt");
-        ViewUtils.findViewById(view, R.id.action_contact_developer).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.action_contact_developer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showContactDevDialog();

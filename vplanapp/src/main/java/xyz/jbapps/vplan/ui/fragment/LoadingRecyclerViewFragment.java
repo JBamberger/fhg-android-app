@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
-import de.jbapps.jutils.ViewUtils;
 import xyz.jbapps.vplan.R;
 
 public class LoadingRecyclerViewFragment extends BaseFragment {
@@ -40,10 +39,10 @@ public class LoadingRecyclerViewFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_loading_recyclerview, container, false);
 
 
-        floatingActionButton = ViewUtils.findViewById(view, R.id.floatingActionButton);
-        progressBar = ViewUtils.findViewById(view, R.id.progressBar);
-        recyclerView = ViewUtils.findViewById(view, R.id.recyclerView);
-        swipeRefreshLayout = ViewUtils.findViewById(view, R.id.swipeRefreshLayout);
+        floatingActionButton = view.findViewById(R.id.floatingActionButton);
+        progressBar = view.findViewById(R.id.progressBar);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         floatingActionButton.setAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_rotate_animation));
 
