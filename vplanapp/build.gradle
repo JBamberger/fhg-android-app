@@ -1,23 +1,26 @@
 apply plugin: 'com.android.application'
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    signingConfigs {
+        release {
+            keyAlias '***REMOVED***'
+            keyPassword '***REMOVED***'
+            storeFile file('***REMOVED***')
+            storePassword '***REMOVED***'
+        }
+    }
+    compileSdkVersion 26
     defaultConfig {
         applicationId "xyz.jbapps.vplan"
-        minSdkVersion 11
-        targetSdkVersion 25
+        minSdkVersion 14
+        targetSdkVersion 26
         versionCode 19
         versionName '2.3.4'
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled false
         }
     }
     productFlavors {
@@ -26,20 +29,20 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+        compile project(':jutils')
+        compile "org.jsoup:jsoup:$jsoup_version"
+        compile "com.google.code.gson:gson:$gson_version"
+        compile "com.android.support:appcompat-v7:$support_version"
+        compile "com.android.support:design:$support_version"
+        compile "com.android.support:cardview-v7:$support_version"
+        compile "com.android.support:recyclerview-v7:$support_version"
+        compile "com.android.support:support-v4:$support_version"
+        compile "com.android.volley:volley:$volley_version"
+        compile "org.apache.commons:commons-lang3:$commons_lang3_version"
+        testCompile 'junit:junit:4.12'
+    }
 }
-
-
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':jutils')
-    compile files("libs/jsoup-1.7.2.jar")
-    compile "com.google.code.gson:gson:$gson_version"
-    compile "com.android.support:appcompat-v7:$support_version"
-    compile "com.android.support:design:$support_version"
-    compile "com.android.support:cardview-v7:$support_version"
-    compile "com.android.support:recyclerview-v7:$support_version"
-    compile "com.android.support:support-v4:$support_version"
-    compile "com.android.volley:volley:$volley_version"
-    compile "org.apache.commons:commons-lang3:$commons_lang3_version"
-    testCompile 'junit:junit:4.12'
 }
