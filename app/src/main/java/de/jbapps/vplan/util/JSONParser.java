@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,11 +10,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.vplan.data.VPlanSet;
-import de.jbapps.vplan.ui.VPlanBaseData;
-import de.jbapps.vplan.ui.VPlanHeader;
-import de.jbapps.vplan.ui.VPlanItemData;
-import de.jbapps.vplan.ui.VPlanMotd;
+import de.jbamberger.vplan.data.VPlanSet;
+import de.jbamberger.vplan.ui.VPlanBaseData;
+import de.jbamberger.vplan.ui.VPlanHeader;
+import de.jbamberger.vplan.ui.VPlanItemData;
+import de.jbamberger.vplan.ui.VPlanMotd;
 
 /**
  * parses a VPlanSet asynchronously to a List of VPlanBaseData

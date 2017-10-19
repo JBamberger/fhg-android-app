@@ -9,7 +9,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission
-        android:name="de.jbapps.vplan.permission.C2D_MESSAGE"
+        android:name="de.jbamberger.vplan.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="de.jbapps.vplan.permission.C2D_MESSAGE" />
@@ -34,7 +34,7 @@
             android:parentActivityName=".VPlanActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.jbapps.vplan.VPlanActivity" />
+                android:value="de.jbamberger.vplan.VPlanActivity" />
         </activity>
 
         <activity
@@ -43,7 +43,7 @@
             android:parentActivityName=".VPlanActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.jbapps.vplan.VPlanActivity" />
+                android:value="de.jbamberger.vplan.VPlanActivity" />
         </activity>
     </application>
 

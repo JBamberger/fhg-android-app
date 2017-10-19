@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -22,7 +22,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
-import de.jbapps.vplan.data.VPlanSet;
+import de.jbamberger.vplan.data.VPlanSet;
 
 class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
 

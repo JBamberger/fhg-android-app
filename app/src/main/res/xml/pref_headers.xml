@@ -3,11 +3,11 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="de.jbapps.vplan.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="de.jbamberger.vplan.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="de.jbapps.vplan.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="de.jbamberger.vplan.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 
 </preference-headers>

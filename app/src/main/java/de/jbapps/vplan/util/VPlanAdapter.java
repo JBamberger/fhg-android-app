@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -11,11 +11,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.vplan.R;
-import de.jbapps.vplan.ui.VPlanBaseData;
-import de.jbapps.vplan.ui.VPlanHeader;
-import de.jbapps.vplan.ui.VPlanItemData;
-import de.jbapps.vplan.ui.VPlanMotd;
+import de.jbamberger.vplan.R;
+import de.jbamberger.vplan.ui.VPlanBaseData;
+import de.jbamberger.vplan.ui.VPlanHeader;
+import de.jbamberger.vplan.ui.VPlanItemData;
+import de.jbamberger.vplan.ui.VPlanMotd;
 
 public class VPlanAdapter extends BaseAdapter {
 

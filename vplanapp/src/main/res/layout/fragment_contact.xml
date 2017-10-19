@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:context="xyz.jbapps.vplan.ui.fragment.ContactFragment">
+        tools:context="de.jbamberger.vplan.ui.fragment.ContactFragment">
 
         <ImageView
             android:layout_width="match_parent"

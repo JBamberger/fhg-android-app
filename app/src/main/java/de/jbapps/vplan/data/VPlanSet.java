@@ -1,4 +1,4 @@
-package de.jbapps.vplan.data;
+package de.jbamberger.vplan.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import junit.framework.TestCase;
 

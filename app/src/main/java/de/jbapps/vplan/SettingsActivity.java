@@ -1,4 +1,4 @@
-package de.jbapps.vplan;
+package de.jbamberger.vplan;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -19,8 +19,8 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.jutils.MiscUtils;
-import de.jbapps.vplan.util.Property;
+import de.jbamberger.jutils.MiscUtils;
+import de.jbamberger.vplan.util.Property;
 
 public class SettingsActivity extends PreferenceActivity {
 

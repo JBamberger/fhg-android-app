@@ -1,4 +1,4 @@
-package de.jbapps.vplan;
+package de.jbamberger.vplan;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -27,14 +27,14 @@ import com.nispok.snackbar.SnackbarManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbapps.jutils.NetUtils;
-import de.jbapps.jutils.ViewUtils;
-import de.jbapps.vplan.data.VPlanSet;
-import de.jbapps.vplan.ui.VPlanBaseData;
-import de.jbapps.vplan.util.JSONParser;
-import de.jbapps.vplan.util.Property;
-import de.jbapps.vplan.util.VPlanAdapter;
-import de.jbapps.vplan.util.VPlanProvider;
+import de.jbamberger.jutils.NetUtils;
+import de.jbamberger.jutils.ViewUtils;
+import de.jbamberger.vplan.data.VPlanSet;
+import de.jbamberger.vplan.ui.VPlanBaseData;
+import de.jbamberger.vplan.util.JSONParser;
+import de.jbamberger.vplan.util.Property;
+import de.jbamberger.vplan.util.VPlanAdapter;
+import de.jbamberger.vplan.util.VPlanProvider;
 
 
 public class VPlanActivity extends ActionBarActivity implements VPlanProvider.IVPlanLoader, JSONParser.IItemsParsed {

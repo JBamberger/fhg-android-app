@@ -2,14 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference android:title="@string/pref_header_general">
         <intent
-            android:action="de.jbapps.prefs.PREFS_GENERAL"
-            android:targetClass="de.jbapps.vplan.SettingsActivity"
-            android:targetPackage="de.jbapps.vplan" />
+            android:action="de.jbamberger.prefs.PREFS_GENERAL"
+            android:targetClass="de.jbamberger.vplan.SettingsActivity"
+            android:targetPackage="de.jbamberger.vplan" />
     </Preference>
     <Preference android:title="@string/pref_header_notifications">
         <intent
-            android:action="de.jbapps.prefs.PREFS_NOTIFICATION"
-            android:targetClass="de.jbapps.vplan.SettingsActivity"
-            android:targetPackage="de.jbapps.vplan" />
+            android:action="de.jbamberger.prefs.PREFS_NOTIFICATION"
+            android:targetClass="de.jbamberger.vplan.SettingsActivity"
+            android:targetPackage="de.jbamberger.vplan" />
     </Preference>
 </PreferenceScreen>

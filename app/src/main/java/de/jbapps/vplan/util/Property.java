@@ -1,4 +1,4 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import de.jbapps.vplan.R;
-import de.jbapps.vplan.VPlanActivity;
+import de.jbamberger.vplan.R;
+import de.jbamberger.vplan.VPlanActivity;
 
 /**
  * This class provides access to the applications SharedPreferences

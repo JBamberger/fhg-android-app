@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="xyz.jbapps.vplan.ui.activity.SettingsActivity">
+    tools:context="de.jbamberger.vplan.ui.activity.SettingsActivity">
 
 
     <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"

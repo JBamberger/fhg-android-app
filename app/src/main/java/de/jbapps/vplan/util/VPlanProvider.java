@@ -1,9 +1,9 @@
-package de.jbapps.vplan.util;
+package de.jbamberger.vplan.util;
 
 import android.content.Context;
 import android.util.Log;
 
-import de.jbapps.vplan.data.VPlanSet;
+import de.jbamberger.vplan.data.VPlanSet;
 
 /**
  * This class manages the whole loading and caching process for the MainActivity.
