@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:gravity="bottom|center_horizontal"
+    android:padding="12dp"
+    android:layout_height="96dp">
+
+    <ImageView
+        android:src="@drawable/ic_warning_24dp"
+        android:tint="@color/vplan_warranty_warning"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="@string/vplan_text_no_warranty"
+        android:textAppearance="?android:attr/textAppearance" />
+</LinearLayout>

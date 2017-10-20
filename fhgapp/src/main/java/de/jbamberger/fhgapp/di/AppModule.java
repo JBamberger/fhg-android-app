@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp;
+package de.jbamberger.fhgapp.di;
 
 import android.app.Application;
 import android.content.Context;
@@ -14,8 +14,8 @@ import dagger.Provides;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-@Module
-public class AppModule {
+@Module(includes = {ViewModelModule.class, NetModule.class})
+class AppModule {
 
     @Provides
     @Singleton
