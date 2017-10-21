@@ -77,7 +77,7 @@ public class VPlanAdapter extends BaseAdapter {
                 if (convertView == null) {
                     convertView = mInflater.inflate(R.layout.vplan_motditem, null);
                     motdholder = new MotdHolder();
-                    motdholder.content = (TextView) convertView.findViewById(R.id.vplan_motd);
+                    motdholder.content = convertView.findViewById(R.id.vplan_motd);
                     convertView.setTag(motdholder);
                 } else {
                     motdholder = (MotdHolder) convertView.getTag();
@@ -91,12 +91,12 @@ public class VPlanAdapter extends BaseAdapter {
                 if (convertView == null) {
                     convertView = mInflater.inflate(R.layout.vplan_item, null);
                     vplanholder = new VPlanHolder();
-                    vplanholder.layout = (LinearLayout) convertView.findViewById(R.id.item_layout);
-                    vplanholder.hour = (TextView) convertView.findViewById(R.id.vplan_first);
-                    vplanholder.grade = (TextView) convertView.findViewById(R.id.vplan_second);
-                    vplanholder.subject = (TextView) convertView.findViewById(R.id.vplan_third);
-                    vplanholder.room = (TextView) convertView.findViewById(R.id.vplan_fourth);
-                    vplanholder.content = (TextView) convertView.findViewById(R.id.vplan_content);
+                    vplanholder.layout = convertView.findViewById(R.id.item_layout);
+                    vplanholder.hour = convertView.findViewById(R.id.vplan_first);
+                    vplanholder.grade = convertView.findViewById(R.id.vplan_second);
+                    vplanholder.subject = convertView.findViewById(R.id.vplan_third);
+                    vplanholder.room = convertView.findViewById(R.id.vplan_fourth);
+                    vplanholder.content = convertView.findViewById(R.id.vplan_content);
                     convertView.setTag(vplanholder);
                 } else {
                     vplanholder = (VPlanHolder) convertView.getTag();
@@ -127,8 +127,8 @@ public class VPlanAdapter extends BaseAdapter {
                 if (convertView == null) {
                     convertView = mInflater.inflate(R.layout.vplan_header, null);
                     headerholder = new HeaderHolder();
-                    headerholder.title = (TextView) convertView.findViewById(R.id.vplan_text);
-                    headerholder.status = (TextView) convertView.findViewById(R.id.vplan_status);
+                    headerholder.title = convertView.findViewById(R.id.vplan_text);
+                    headerholder.status = convertView.findViewById(R.id.vplan_status);
                     convertView.setTag(headerholder);
                 } else {
                     headerholder = (HeaderHolder) convertView.getTag();

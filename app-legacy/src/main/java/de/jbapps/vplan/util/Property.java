@@ -65,7 +65,7 @@ public class Property {
     public String getRegistrationId(Context context) {
         final SharedPreferences prefs = getMainPreferences();
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        if (registrationId == null || registrationId.isEmpty()) {
+        if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
             return "";
         }
@@ -81,7 +81,7 @@ public class Property {
     public String getClientId() {
         final SharedPreferences prefs = getMainPreferences();
         String clientId = prefs.getString(PROPERTY_CLIENT_ID, "");
-        if (clientId == null || clientId.isEmpty()) {
+        if (clientId.isEmpty()) {
             Log.i(TAG, "VPlanID not found.");
             return "";
         } else {

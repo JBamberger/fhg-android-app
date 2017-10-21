@@ -56,10 +56,10 @@ public class JSONParser extends AsyncTask<Void, Void, List<VPlanBaseData>> {
             "(.*[kK].*1.*)",
             "(.*[kK].*2.*)"};
 
-    IItemsParsed mListener;
-    List<VPlanBaseData> mData;
-    JSONObject vplan1;
-    JSONObject vplan2;
+    private IItemsParsed mListener;
+    private List<VPlanBaseData> mData;
+    private JSONObject vplan1;
+    private JSONObject vplan2;
     private String gradePattern;
 
     public JSONParser(IItemsParsed listener, String grades, VPlanSet vPlanSet) {

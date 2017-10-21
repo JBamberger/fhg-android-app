@@ -8,7 +8,7 @@ public abstract class VPlanBaseData {
 
     public final Type type;
 
-    public VPlanBaseData(Type type) {
+    VPlanBaseData(Type type) {
         this.type = type;
     }
 

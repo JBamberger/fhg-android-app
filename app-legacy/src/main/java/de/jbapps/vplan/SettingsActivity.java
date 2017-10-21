@@ -126,8 +126,6 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.pref_notification);
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_ringtone)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_notification_light)));
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            addPreferencesFromResource(R.xml.pref_header_legacy);
         }
     }
 

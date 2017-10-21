@@ -56,7 +56,6 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
     private VPlanAdapter mListAdapter;
     private VPlanProvider mVPlanProvider;
     private JSONParser mJSONParser;
-    private Context context;
     private String gradeState;
     private Activity mActivity;
 
@@ -67,7 +66,6 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
 
         mActivity = this;
         mProperty = new Property(this);
-        context = getApplicationContext();
         gradeState = mProperty.readGrade();
         mVPlanProvider = new VPlanProvider(this, this);
 
@@ -103,9 +101,7 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
     @Override
     public void onPause() {
         super.onPause();
-        if (mNetworkStateReceiver != null) {
-            unregisterReceiver(mNetworkStateReceiver);
-        }
+        unregisterReceiver(mNetworkStateReceiver);
         if (mJSONParser != null) {
             mJSONParser.cancel(true);
             mJSONParser = null;
@@ -186,6 +182,7 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_SHOULD_REFRESH, isListEmpty());
     }
 
