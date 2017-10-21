@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="de.fhg_radolfzell.android_app.util.TimeFormatter" />
+
+        <import type="android.view.View" />
+        <variable
+            name="header"
+            type="de.fhg_radolfzell.android_app.main.feed.FeedDataWrapperImpl.FeedHeader" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/brand_primary"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/feed_header_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="@{header.icon == null || header.icon.isEmpty() ? View.GONE : View.VISIBLE}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/feed_header_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:text="@{header.title}"
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textStyle="bold"
+                tools:text="Friedrich-Hecker-Gymnasium Radolfzell" />
+
+            <TextView
+                android:id="@+id/feed_header_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="center_horizontal"
+                android:text="@{header.subtitle}"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse"
+                android:textStyle="italic"
+                android:visibility="@{header.subtitle == null || header.subtitle.isEmpty() ? View.GONE : View.VISIBLE}"
+                tools:text="- die aktive Schule am See" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calendar_loading_failed">Kalender konnte nicht geladen werden.</string>
+    <string name="calendar_event_day_to_day">Von %1$s bis %2$s</string>
+    <string name="calendar_event_day">Am %1$s</string>
+    <string name="calendar_event_in_day">Am %1$s von %2$s bis %3$s</string>
+    <string name="calendar_action_save_event">Speichern</string>
+    <string name="calendar_action_export_as_ics">Als ics-Datei speichern</string>
+    <string name="calendar_action_export_as_xml">Als xml-Datei speichern</string>
+</resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="listGrades">
+    <item>5a</item>
+    <item>5b</item>
+    <item>5c</item>
+    <item>5d</item>
+    <item>5e</item>
+    <item>6a</item>
+    <item>6b</item>
+    <item>6c</item>
+    <item>6d</item>
+    <item>6e</item>
+    <item>7a</item>
+    <item>7b</item>
+    <item>7c</item>
+    <item>7d</item>
+    <item>7e</item>
+    <item>8a</item>
+    <item>8b</item>
+    <item>8c</item>
+    <item>8d</item>
+    <item>8e</item>
+    <item>9a</item>
+    <item>9b</item>
+    <item>9c</item>
+    <item>9d</item>
+    <item>9e</item>
+    <item>10a</item>
+    <item>10b</item>
+    <item>10c</item>
+    <item>10d</item>
+    <item>10e</item>
+    <item>K1</item>
+    <item>K2</item>
+</string-array>
+    <string-array name="listGradePatterns">
+        <item tools:ignore="TypographyDashes">.*5[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*5[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*5[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*5[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*5[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*6[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*6[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*6[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*6[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*6[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*7[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*7[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*7[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*7[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*7[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*8[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*8[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*8[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*8[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*8[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*9[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*9[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*9[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*9[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*9[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*10[^0-9]*a.*</item>
+        <item tools:ignore="TypographyDashes">.*10[^0-9]*b.*</item>
+        <item tools:ignore="TypographyDashes">.*10[^0-9]*c.*</item>
+        <item tools:ignore="TypographyDashes">.*10[^0-9]*d.*</item>
+        <item tools:ignore="TypographyDashes">.*10[^0-9]*e.*</item>
+        <item tools:ignore="TypographyDashes">.*K.*1.*</item>
+        <item tools:ignore="TypographyDashes">.*K.*2.*</item>
+    </string-array>
+
+    <string-array name="listGradesDefault">
+    </string-array>
+
+    <string-array name="mail_subjects">
+        <item>Frage stellen</item>
+        <item>Feedback geben</item>
+        <item>Fehler melden</item>
+        <item>anderes</item>
+    </string-array>
+</resources>

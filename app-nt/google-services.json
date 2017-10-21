@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "795894847293",
+    "firebase_url": "https://fhg-app.firebaseio.com",
+    "project_id": "fhg-app",
+    "storage_bucket": "fhg-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795894847293:android:f6a72a3db0256443",
+        "android_client_info": {
+          "package_name": "de.fhg_radolfzell.android_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795894847293-moqbnhs80olctcchd3678cpe2nhsisc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBquWaAzpjWYLtfsVGzRStozEA_me_YuFo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,1 +1,1 @@
-include ':jutils', ':vplanapp', ':fhgapp', ':utils'
+include ':jutils', ':vplanapp', ':fhgapp', ':utils', ':app-legacy', ':app-nt'
