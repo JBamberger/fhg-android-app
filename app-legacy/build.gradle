@@ -32,13 +32,13 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile "org.jsoup:jsoup:$jsoup_version"
-    //compile "commons-io:commons-io:2.5"
-    compile "com.android.support:appcompat-v7:$support_version"
-    compile "com.android.support:recyclerview-v7:$support_version"
-    compile "com.android.support:support-v4:$support_version"
-    compile "com.nispok:snackbar:2.10.10"
-    testCompile "junit:junit:4.12"
-    compile project(":jutils")
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jsoup:jsoup:$jsoup_version"
+    //implementation "commons-io:commons-io:$commons_io_version"
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:recyclerview-v7:$support_version"
+    implementation "com.android.support:support-v4:$support_version"
+    implementation "com.nispok:snackbar:$nispok_snackbar_version"
+    testImplementation "junit:junit:$junit_version"
+    implementation project(":jutils")
 }
