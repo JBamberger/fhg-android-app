@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.jbamberger.fhg_parser.FhgParserFactory;
 import de.jbamberger.fhgapp.BuildConfig;
 import de.jbamberger.fhgapp.source.FhgApi;
 import de.jbamberger.fhgapp.util.LiveDataCallAdapterFactory;
@@ -63,6 +64,7 @@ class NetModule {
     Retrofit.Builder provideRetrofitAPI(@NonNull Gson gson, @NonNull OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
+                .addConverterFactory(FhgParserFactory.create())
                 //.addConverterFactory(SimpleXmlConverterFactory.create())
 //                .addConverterFactory(ScalarsConverterFactory.create())
 //                .addConverterFactory(GsonConverterFactory.create(gson))

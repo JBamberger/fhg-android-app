@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Headers;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -39,6 +40,10 @@ public class ApiResponse<T> {
             .compile("<([^>]*)>[\\s]*;[\\s]*rel=\"([a-zA-Z0-9]+)\"");
     private static final Pattern PAGE_PATTERN = Pattern.compile("page=(\\d)+");
     private static final String NEXT_LINK = "next";
+
+    @Nullable
+    public final Headers headers;
+
     public final int code;
     @Nullable
     public final T body;
@@ -48,6 +53,7 @@ public class ApiResponse<T> {
     public final Map<String, String> links;
 
     public ApiResponse(@Nullable T body, @NonNull ApiResponse<?> response) {
+        this.headers = response.headers;
         this.code = response.code;
         this.errorMessage = response.errorMessage;
         this.links = response.links;
@@ -55,6 +61,7 @@ public class ApiResponse<T> {
     }
 
     public ApiResponse(Throwable error) {
+        this.headers = null;
         code = 500;
         body = null;
         errorMessage = error.getMessage();
@@ -62,6 +69,7 @@ public class ApiResponse<T> {
     }
 
     public ApiResponse(Response<T> response) {
+        this.headers = response.headers();
         code = response.code();
         if (response.isSuccessful()) {
             body = response.body();
@@ -116,5 +124,16 @@ public class ApiResponse<T> {
             Timber.w("cannot parse next page from %s", next);
             return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ApiResponse{" +
+                "headers=" + headers +
+                ", code=" + code +
+                ", body=" + body +
+                ", errorMessage='" + errorMessage + '\'' +
+                ", links=" + links +
+                '}';
     }
 }

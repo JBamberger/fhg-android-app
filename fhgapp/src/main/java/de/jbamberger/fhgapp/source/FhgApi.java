@@ -2,7 +2,7 @@ package de.jbamberger.fhgapp.source;
 
 import android.arch.lifecycle.LiveData;
 
-import de.jbamberger.fhgapp.source.model.VPlanDay;
+import de.jbamberger.fhg_parser.VPlan;
 import retrofit2.Response;
 import retrofit2.http.GET;
 
@@ -18,10 +18,10 @@ public interface FhgApi {
     String BASE_URL = "https://fhg-radolfzell.de/";
 
     @GET("vertretungsplan/f1/subst_001.htm")
-    LiveData<ApiResponse<VPlanDay>> getVPlanFrame1();
+    LiveData<ApiResponse<VPlan>> getVPlanFrame1();
 
     @GET("vertretungsplan/f2/subst_001.htm")
-    LiveData<ApiResponse<VPlanDay>> getVPlanFrame2();
+    LiveData<ApiResponse<VPlan>> getVPlanFrame2();
 
     @GET("/wp-json/wp/v2/posts")
     LiveData<ApiResponse<Response>> getFeed();

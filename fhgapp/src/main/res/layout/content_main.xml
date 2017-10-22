@@ -8,4 +8,10 @@
     tools:context="de.jbamberger.fhgapp.ui.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <fragment
+        android:id="@+id/contentFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="de.jbamberger.fhgapp.ui.vplan.VPlanFragment" />
+
 </android.support.constraint.ConstraintLayout>

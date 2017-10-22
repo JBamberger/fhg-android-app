@@ -11,10 +11,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import de.jbamberger.fhg_parser.VPlan;
 import de.jbamberger.fhgapp.AppExecutors;
-import de.jbamberger.fhgapp.source.model.VPlan;
 import de.jbamberger.fhgapp.source.model.VPlanDay;
+import de.jbamberger.fhgapp.source.model.VPlanSet;
 import de.jbamberger.fhgapp.util.AbsentLiveData;
+import timber.log.Timber;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -25,7 +27,7 @@ public class Repository {
 
     private final FhgApi api;
     private final AppExecutors appExecutors;
-    private final MutableLiveData<Resource<VPlan>> posts = new MutableLiveData<>();
+    private final MutableLiveData<Resource<VPlanSet>> posts = new MutableLiveData<>();
 
 
     @Inject
@@ -34,36 +36,41 @@ public class Repository {
         this.api = api;
     }
 
-    public LiveData<Resource<VPlan>> getVPlan() {
-        return new NetworkBoundResource<VPlan, VPlan>(appExecutors) {
+    public LiveData<Resource<VPlanSet>> getVPlan() {
+        return new NetworkBoundResource<VPlanSet, VPlanSet>(appExecutors) {
             @Override
-            protected void saveCallResult(@NonNull VPlan item) {
+            protected void saveCallResult(@NonNull VPlanSet item) {
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable VPlan data) {
+            protected boolean shouldFetch(@Nullable VPlanSet data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<VPlan> loadFromDb() {
+            protected LiveData<VPlanSet> loadFromDb() {
                 return AbsentLiveData.create();
             }
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<VPlan>> createCall() {
-                LiveData<ApiResponse<VPlanDay>> day1 = api.getVPlanFrame1();
-                LiveData<ApiResponse<VPlanDay>> day2 = api.getVPlanFrame2();
+            protected LiveData<ApiResponse<VPlanSet>> createCall() {
+                LiveData<ApiResponse<VPlan>> day1 = api.getVPlanFrame1();
+                LiveData<ApiResponse<VPlan>> day2 = api.getVPlanFrame2();
                 AtomicBoolean fin = new AtomicBoolean(false);
-                final VPlan.Builder builder = new VPlan.Builder();
-                final MediatorLiveData<ApiResponse<VPlan>> merger = new MediatorLiveData<>();
+                final VPlanSet.Builder builder = new VPlanSet.Builder();
+                final MediatorLiveData<ApiResponse<VPlanSet>> merger = new MediatorLiveData<>();
                 merger.addSource(day1, response -> {
+                    Timber.e("Day one Response: %s", response);
                     if (response != null && response.isSuccessful()) {
-                        builder.addDay1(response.body);
+                        long lastModified = 0;
+                        if (response.headers != null) {
+                            //lastModified = Long.parseLong(response.headers.get("Last-Modified"));
+                        }
+                        builder.addDay1(new VPlanDay(response.body, lastModified));
                         if (fin.compareAndSet(true, true)) {
-                            merger.setValue(new ApiResponse<VPlan>(builder.build(), response));
+                            merger.setValue(new ApiResponse<>(builder.build(), response));
                         }
                     } else {
                         merger.removeSource(day2);
@@ -76,8 +83,13 @@ public class Repository {
                     merger.removeSource(day1);
                 });
                 merger.addSource(day2, response -> {
+                    Timber.e("Day one Response: %s", response);
                     if (response != null && response.isSuccessful()) {
-                        builder.addDay2(response.body);
+                        long lastModified = 0;
+                        if (response.headers != null) {
+                            //lastModified = Long.parseLong(response.headers.get("Last-Modified"));
+                        }
+                        builder.addDay2(new VPlanDay(response.body, lastModified));
                         if (fin.compareAndSet(true, true)) {
                             merger.setValue(new ApiResponse<>(builder.build(), response));
                         }

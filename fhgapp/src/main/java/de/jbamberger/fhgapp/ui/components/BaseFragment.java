@@ -20,7 +20,7 @@ public abstract class BaseFragment<T extends ViewModel> extends Fragment impleme
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    private T viewModel;
+    protected T viewModel;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
