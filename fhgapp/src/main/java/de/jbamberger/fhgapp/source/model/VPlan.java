@@ -2,7 +2,7 @@ package de.jbamberger.fhgapp.source.model;
 
 import android.support.annotation.NonNull;
 
-import static de.jbamberger.utils.Preconditions.checkNotNull;
+import static de.jbamberger.util.Preconditions.checkNotNull;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)

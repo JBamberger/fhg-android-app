@@ -14,7 +14,8 @@ import de.fhg_radolfzell.android_app.main.MainActivity;
 import de.fhg_radolfzell.android_app.main.MainContract;
 import de.fhg_radolfzell.android_app.view.BaseFragment;
 
-import static de.fhg_radolfzell.android_app.util.Preconditions.checkNotNull;
+import static de.jbamberger.util.Preconditions.checkNotNull;
+
 
 /**
  * @author Jannik

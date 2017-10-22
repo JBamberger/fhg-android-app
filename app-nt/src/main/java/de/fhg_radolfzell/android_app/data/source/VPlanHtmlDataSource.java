@@ -14,7 +14,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static de.fhg_radolfzell.android_app.util.Preconditions.checkNotNull;
+import static de.jbamberger.util.Preconditions.checkNotNull;
+
 
 @VPlanScope
 public class VPlanHtmlDataSource implements VPlanDataSource {

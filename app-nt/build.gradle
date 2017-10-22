@@ -64,6 +64,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     provided "javax.annotation:jsr250-api:1.0"
     implementation "org.jsoup:jsoup:$jsoup_version"
+    implementation project(':utils')
 }
 
 apply plugin: 'com.google.gms.google-services'

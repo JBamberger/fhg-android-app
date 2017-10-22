@@ -1,4 +1,4 @@
-package de.jbamberger.utils;
+package de.jbamberger.util;
 
 /**
  * Code from Guava's {@code com.google.common.base.Preconditions}

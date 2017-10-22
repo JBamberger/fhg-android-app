@@ -8,7 +8,7 @@ import de.fhg_radolfzell.android_app.data.VPlan;
 import de.fhg_radolfzell.android_app.data.source.VPlanDataSource;
 import de.fhg_radolfzell.android_app.util.Storage;
 
-import static de.fhg_radolfzell.android_app.util.Preconditions.checkNotNull;
+import static de.jbamberger.util.Preconditions.checkNotNull;
 
 
 /**
