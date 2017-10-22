@@ -1,4 +1,4 @@
-package de.jbamberger.api;
+package de.jbamberger.api.data;
 
 import android.support.annotation.NonNull;
 
@@ -32,7 +32,7 @@ public class VPlanRow {
 
     private final boolean markedNew;
 
-    VPlanRow(@NonNull String subject, boolean omitted, @NonNull String hour, @NonNull String room, @NonNull String content, @NonNull String grade, @NonNull String kind, boolean markedNew) {
+    public VPlanRow(@NonNull String subject, boolean omitted, @NonNull String hour, @NonNull String room, @NonNull String content, @NonNull String grade, @NonNull String kind, boolean markedNew) {
         this.subject = checkNotNull(subject);
         this.omitted = omitted;
         this.hour = checkNotNull(hour);

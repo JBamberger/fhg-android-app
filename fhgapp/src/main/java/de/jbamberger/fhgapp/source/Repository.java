@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import de.jbamberger.api.VPlanDay;
+import de.jbamberger.api.data.VPlanDay;
 import de.jbamberger.fhgapp.AppExecutors;
 import de.jbamberger.fhgapp.source.model.VPlanSet;
 import de.jbamberger.fhgapp.util.AbsentLiveData;

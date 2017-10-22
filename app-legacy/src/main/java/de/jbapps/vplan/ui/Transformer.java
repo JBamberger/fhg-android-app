@@ -3,7 +3,7 @@ package de.jbapps.vplan.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbamberger.api.VPlan;
+import de.jbamberger.api.data.VPlan;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)

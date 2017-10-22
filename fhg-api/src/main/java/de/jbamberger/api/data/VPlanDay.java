@@ -1,4 +1,4 @@
-package de.jbamberger.api;
+package de.jbamberger.api.data;
 
 import android.support.annotation.NonNull;
 
@@ -20,7 +20,7 @@ public final class VPlanDay {
     @NonNull
     private final List<VPlanRow> vPlanRows;
 
-    VPlanDay(@NonNull String dateAndDay, @NonNull String lastUpdated, @NonNull String motd, @NonNull List<VPlanRow> vPlanRows) {
+    public VPlanDay(@NonNull String dateAndDay, @NonNull String lastUpdated, @NonNull String motd, @NonNull List<VPlanRow> vPlanRows) {
         this.dateAndDay = checkNotNull(dateAndDay);
         this.lastUpdated = checkNotNull(lastUpdated);
         this.motd = checkNotNull(motd);

@@ -1,4 +1,4 @@
-package de.jbamberger.api;
+package de.jbamberger.api.data;
 
 import android.support.annotation.NonNull;
 

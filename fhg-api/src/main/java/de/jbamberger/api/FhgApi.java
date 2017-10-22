@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import de.jbamberger.api.data.VPlan;
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */

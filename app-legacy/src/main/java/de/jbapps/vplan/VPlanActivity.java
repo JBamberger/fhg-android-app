@@ -31,7 +31,7 @@ import java.util.List;
 
 import de.jbamberger.api.ApiResponse;
 import de.jbamberger.api.FhgApi;
-import de.jbamberger.api.VPlan;
+import de.jbamberger.api.data.VPlan;
 import de.jbamberger.jutils.NetUtils;
 import de.jbamberger.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;

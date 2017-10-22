@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import de.jbamberger.api.data.VPlanDay;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -15,7 +16,7 @@ import retrofit2.Retrofit;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class VPlanConverterFactory extends Converter.Factory {
+class VPlanConverterFactory extends Converter.Factory {
 
     public static VPlanConverterFactory create() {
         return new VPlanConverterFactory();

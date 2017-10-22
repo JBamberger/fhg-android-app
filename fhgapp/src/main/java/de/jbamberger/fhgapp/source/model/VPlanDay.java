@@ -9,16 +9,16 @@ import android.support.annotation.NonNull;
 public class VPlanDay {
 
     @NonNull
-    private final de.jbamberger.api.VPlanDay plan;
+    private final de.jbamberger.api.data.VPlanDay plan;
     private final long httpLastUpdated;
 
-    public VPlanDay(@NonNull de.jbamberger.api.VPlanDay plan, long httpLastUpdated) {
+    public VPlanDay(@NonNull de.jbamberger.api.data.VPlanDay plan, long httpLastUpdated) {
         this.plan = plan;
         this.httpLastUpdated = httpLastUpdated;
     }
 
     @NonNull
-    public de.jbamberger.api.VPlanDay getPlan() {
+    public de.jbamberger.api.data.VPlanDay getPlan() {
         return plan;
     }
 

@@ -10,6 +10,9 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jbamberger.api.data.VPlanDay;
+import de.jbamberger.api.data.VPlanRow;
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */

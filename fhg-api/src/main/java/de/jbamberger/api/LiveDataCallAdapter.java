@@ -33,10 +33,10 @@ import retrofit2.Response;
  *
  * @param <R>
  */
-public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>> {
+class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>> {
     private final Type responseType;
 
-    public LiveDataCallAdapter(Type responseType) {
+    LiveDataCallAdapter(Type responseType) {
         this.responseType = responseType;
     }
 

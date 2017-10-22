@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.jbamberger.api.data.VPlan;
+import de.jbamberger.api.data.VPlanDay;
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
@@ -35,9 +38,9 @@ class FhgApiImpl implements FhgApi {
             } else {
                 merger.removeSource(day2);
                 if (response != null) {
-                    merger.setValue(new ApiResponse<VPlan>(new Throwable(response.errorMessage)));
+                    merger.setValue(new ApiResponse<>(new Throwable(response.errorMessage)));
                 } else {
-                    merger.setValue(new ApiResponse<VPlan>(new Throwable("Network error")));
+                    merger.setValue(new ApiResponse<>(new Throwable("Network error")));
                 }
             }
             merger.removeSource(day1);
@@ -51,9 +54,9 @@ class FhgApiImpl implements FhgApi {
             } else {
                 merger.removeSource(day1);
                 if (response != null) {
-                    merger.setValue(new ApiResponse<VPlan>(new Throwable(response.errorMessage)));
+                    merger.setValue(new ApiResponse<>(new Throwable(response.errorMessage)));
                 } else {
-                    merger.setValue(new ApiResponse<VPlan>(new Throwable("Network error")));
+                    merger.setValue(new ApiResponse<>(new Throwable("Network error")));
                 }
             }
             merger.removeSource(day2);

@@ -2,7 +2,7 @@ package de.jbamberger.fhgapp.source;
 
 import android.arch.lifecycle.LiveData;
 
-import de.jbamberger.api.VPlanDay;
+import de.jbamberger.api.data.VPlanDay;
 import retrofit2.Response;
 import retrofit2.http.GET;
 

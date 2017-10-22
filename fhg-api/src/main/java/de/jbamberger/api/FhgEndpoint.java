@@ -2,7 +2,9 @@ package de.jbamberger.api;
 
 import android.arch.lifecycle.LiveData;
 
-import retrofit2.Response;
+import de.jbamberger.api.data.EventCalendar;
+import de.jbamberger.api.data.FeedChunk;
+import de.jbamberger.api.data.VPlanDay;
 import retrofit2.http.GET;
 
 /**
@@ -23,17 +25,17 @@ interface FhgEndpoint {
     LiveData<ApiResponse<VPlanDay>> getVPlanFrame2();
 
     @GET("/wp-json/wp/v2/posts")
-    LiveData<ApiResponse<Response>> getFeed();
+    LiveData<ApiResponse<FeedChunk>> getFeed();
 
     @GET("feed")
-    LiveData<ApiResponse<Response>> getXmlFeed();
+    LiveData<ApiResponse<FeedChunk>> getXmlFeed();
 
     @GET("feed/atom")
-    LiveData<ApiResponse<Response>> getAtomFeed();
+    LiveData<ApiResponse<FeedChunk>> getAtomFeed();
 
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
-    LiveData<ApiResponse<Response>> getIcsCalendar();
+    LiveData<ApiResponse<EventCalendar>> getIcsCalendar();
 
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&xml=true")
-    LiveData<ApiResponse<Response>> getXmlCalendar();
+    LiveData<ApiResponse<EventCalendar>> getXmlCalendar();
 }
