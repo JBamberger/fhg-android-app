@@ -4,14 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class VPlanRow extends VPlanElement {
 
-    public static final int SUBJECT = 0;
-    public static final int OMITTED = 1;
-    public static final int HOUR = 2;
-    public static final int ROOM = 3;
-    public static final int CONTENT = 4;
-    public static final int GRADE = 5;
-    public static final int MARKED_NEW = 6;
-
     @SerializedName("subject")
     private String subject;
     @SerializedName("omitted")
@@ -28,19 +20,6 @@ public class VPlanRow extends VPlanElement {
     private String kind;
     @SerializedName("marked_new")
     private boolean marked_new;
-
-
-    public VPlanRow(String grade, String hour, String content, String subject, String room, String kind, boolean omitted, boolean marked_new) {
-        super(VPlanElement.TYPE_ROW);
-        this.grade = grade;
-        this.subject = subject;
-        this.room = room;
-        this.hour = hour;
-        this.content = content;
-        this.kind = kind;
-        this.omitted = omitted;
-        this.marked_new = marked_new;
-    }
 
     public VPlanRow() {
         super(VPlanElement.TYPE_ROW);

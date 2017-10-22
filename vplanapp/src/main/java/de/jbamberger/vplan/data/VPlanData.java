@@ -7,8 +7,6 @@ import java.util.List;
 
 public class VPlanData {
 
-    private static final String TAG = "VPlanData";
-
     @SerializedName("vplan_header_row")
     private VPlanRow VPlanHeaderRow;
     @SerializedName("vplan_rows")
@@ -19,10 +17,6 @@ public class VPlanData {
 
     public VPlanData() {
         vPlanHeader = new VPlanHeader();
-    }
-
-    public void addVPlanRow(VPlanRow vPlanRow) {
-        mVPlanRows.add(vPlanRow);
     }
 
     public VPlanRow getVPlanRowAtPosition(int position) throws ArrayIndexOutOfBoundsException {
@@ -41,24 +35,12 @@ public class VPlanData {
         mVPlanRows.remove(position);
     }
 
-    public long getLastUpdated() {
-        return vPlanHeader.lastUpdated;
-    }
-
     public void setLastUpdated(long lastUpdated) {
         this.vPlanHeader.lastUpdated = lastUpdated;
     }
 
-    public String getMotd() {
-        return vPlanHeader.motd;
-    }
-
     public void setMotd(String motd) {
         this.vPlanHeader.motd = motd;
-    }
-
-    public String getStatus() {
-        return vPlanHeader.status;
     }
 
     public void setStatus(String status) {
@@ -73,19 +55,8 @@ public class VPlanData {
         this.vPlanHeader.title = title;
     }
 
-    public VPlanRow getVPlanHeaderRow() {
-        return VPlanHeaderRow;
-    }
-
-    public void setVPlanHeaderRow(VPlanRow VPlanHeaderRow) {
-        this.VPlanHeaderRow = VPlanHeaderRow;
-    }
-
     public VPlanHeader getvPlanHeader() {
         return vPlanHeader;
     }
 
-    public void setvPlanHeader(VPlanHeader vPlanHeader) {
-        this.vPlanHeader = vPlanHeader;
-    }
 }

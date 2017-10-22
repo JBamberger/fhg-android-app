@@ -23,28 +23,12 @@ public class VPlanHeader extends VPlanElement {
         super(VPlanElement.TYPE_HEADER);
     }
 
-    public long getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(long lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
     public String getMotd() {
         return motd;
     }
 
-    public void setMotd(String motd) {
-        this.motd = motd;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getTitle() {

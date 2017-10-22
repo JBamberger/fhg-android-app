@@ -38,7 +38,7 @@ public class VPlanFragment extends BaseFragment<VPlanViewModel> {
         viewModel.getVPlan().observe(this, vPlanSetResource -> {
             Timber.d(vPlanSetResource.toString());
             if (vPlanSetResource.status == Status.SUCCESS) {
-                for (VPlanRow vPlanRow : vPlanSetResource.data.getDay1().getPlan().getVPlanRows()) {
+                for (VPlanRow vPlanRow : vPlanSetResource.data.getDay1().getVPlanRows()) {
                     Timber.d(vPlanRow.toString());
                 }
             }

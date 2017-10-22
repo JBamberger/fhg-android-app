@@ -5,16 +5,16 @@ import android.arch.lifecycle.ViewModel;
 
 import javax.inject.Inject;
 
+import de.jbamberger.api.data.VPlan;
 import de.jbamberger.fhgapp.source.Repository;
 import de.jbamberger.fhgapp.source.Resource;
-import de.jbamberger.fhgapp.source.model.VPlanSet;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
 public class VPlanViewModel extends ViewModel {
-    private LiveData<Resource<VPlanSet>> vplan;
+    private LiveData<Resource<VPlan>> vplan;
     private Repository repo;
 
     @Inject
@@ -30,7 +30,7 @@ public class VPlanViewModel extends ViewModel {
         vplan = repo.getVPlan();
     }
 
-    public LiveData<Resource<VPlanSet>> getVPlan() {
+    public LiveData<Resource<VPlan>> getVPlan() {
         return vplan;
     }
 }

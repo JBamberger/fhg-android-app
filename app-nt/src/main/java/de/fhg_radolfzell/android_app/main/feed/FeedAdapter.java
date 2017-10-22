@@ -1,13 +1,8 @@
 package de.fhg_radolfzell.android_app.main.feed;
 
 import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.RecyclerView;
@@ -15,16 +10,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 import de.fhg_radolfzell.android_app.R;
-import de.fhg_radolfzell.android_app.databinding.FeedFooterBinding;
-import de.fhg_radolfzell.android_app.databinding.FeedHeaderBinding;
-import de.fhg_radolfzell.android_app.databinding.FeedItemBinding;
 import de.fhg_radolfzell.android_app.data.Feed;
 import de.fhg_radolfzell.android_app.data.Post;
 import de.fhg_radolfzell.android_app.data.RSS;
+import de.fhg_radolfzell.android_app.databinding.FeedFooterBinding;
+import de.fhg_radolfzell.android_app.databinding.FeedHeaderBinding;
+import de.fhg_radolfzell.android_app.databinding.FeedItemBinding;
 import timber.log.Timber;
 
 /**
@@ -87,8 +80,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 try {
                     Glide.with(activity)
                             .load(header.icon)
-                            .transform(new CircleTransform(activity))
-                            .crossFade()
+                            //.transform(new CircleTransform(activity))
+                            //.crossFade()
                             .into(binding.feedHeaderIcon);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -124,7 +117,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         return feedDataWrapperImpl.length();
     }
 
-    public static class CircleTransform extends BitmapTransformation {
+    /*public static class CircleTransform extends BitmapTransformation {
         public CircleTransform(Context context) {
             super(context);
         }
@@ -162,7 +155,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         public String getId() {
             return getClass().getName();
         }
-    }
+    }*/
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
