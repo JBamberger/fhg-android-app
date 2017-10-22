@@ -1,4 +1,4 @@
-package de.jbamberger.fhg_parser;
+package de.jbamberger.api;
 
 import android.support.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 import static de.jbamberger.util.Preconditions.checkNotNull;
 
-public final class VPlan {
+public final class VPlanDay {
 
     @NonNull
     private final String dateAndDay;
@@ -20,7 +20,7 @@ public final class VPlan {
     @NonNull
     private final List<VPlanRow> vPlanRows;
 
-    VPlan(@NonNull String dateAndDay, @NonNull String lastUpdated, @NonNull String motd, @NonNull List<VPlanRow> vPlanRows) {
+    VPlanDay(@NonNull String dateAndDay, @NonNull String lastUpdated, @NonNull String motd, @NonNull List<VPlanRow> vPlanRows) {
         this.dateAndDay = checkNotNull(dateAndDay);
         this.lastUpdated = checkNotNull(lastUpdated);
         this.motd = checkNotNull(motd);
@@ -49,7 +49,7 @@ public final class VPlan {
 
     @Override
     public String toString() {
-        return "VPlan{" +
+        return "VPlanDay{" +
                 "dateAndDay='" + dateAndDay + '\'' +
                 ", lastUpdated='" + lastUpdated + '\'' +
                 ", motd='" + motd + '\'' +

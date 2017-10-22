@@ -1,4 +1,4 @@
-package de.jbamberger.fhg_parser;
+package de.jbamberger.api;
 
 import android.support.annotation.NonNull;
 

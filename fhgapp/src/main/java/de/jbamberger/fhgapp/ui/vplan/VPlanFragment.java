@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.jbamberger.fhg_parser.VPlanRow;
+import de.jbamberger.api.VPlanRow;
 import de.jbamberger.fhgapp.R;
 import de.jbamberger.fhgapp.VPlanFragmentBinding;
 import de.jbamberger.fhgapp.source.Status;

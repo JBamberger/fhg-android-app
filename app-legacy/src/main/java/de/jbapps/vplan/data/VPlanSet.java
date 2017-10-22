@@ -8,7 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * This class contains all information about a given VPlan set, including headers and content for two days.
+ * This class contains all information about a given VPlanDay set, including headers and content for two days.
  * It also manages persisting this data.
  */
 public class VPlanSet {

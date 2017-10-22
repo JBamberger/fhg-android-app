@@ -19,7 +19,10 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
     public static final String JSON_VPLAN_GRADE = "grade";
     public static final String JSON_VPLAN_MARKED_NEW = "marked_new";
 
+    private final IOnLoadingFinished listener;
+
     public VPlanLoader(IOnLoadingFinished listener, VPlanSet vPlanSet) {
+        this.listener = listener;
         listener.loaderFinished(false);
     }
 
@@ -104,7 +107,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         int status = response.getStatusLine().getStatusCode();
         if (status >= 200 && status < 300) {
             HttpEntity entity = response.getEntity();
-            Log.i(TAG, "VPlan loaded");
+            Log.i(TAG, "VPlanDay loaded");
             return entity != null ? EntityUtils.toString(entity) : null;
         } else {
             throw new ClientProtocolException("Unexpected response status: " + status);
@@ -136,7 +139,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
             header.put(JSON_HEADER_TITLE, doc.getElementsByClass("mon_title").get(0).getAllElements().get(0).text());
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
-            header.put(JSON_HEADER_STATUS, "The VPlan-file is corrupted.");
+            header.put(JSON_HEADER_STATUS, "The VPlanDay-file is corrupted.");
             header.put(JSON_HEADER_TITLE, "~ please contact the support");
         }
         jPlan.put(JSON_HEADER, header);
@@ -179,7 +182,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
             }
         }
         jPlan.put(JSON_VPLAN, temp);
-        Log.i(TAG, "VPlan parsed");
+        Log.i(TAG, "VPlanDay parsed");
         return jPlan;
     }
 

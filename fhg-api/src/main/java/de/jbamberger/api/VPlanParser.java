@@ -1,4 +1,4 @@
-package de.jbamberger.fhg_parser;
+package de.jbamberger.api;
 
 import android.support.annotation.NonNull;
 
@@ -13,10 +13,7 @@ import java.util.List;
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-
 final class VPlanParser {
-
-    private static final String TAG = VPlanParser.class.getSimpleName();
 
     private static final int GRADE_C = 0;
     private static final int HOUR_C = 1;
@@ -26,7 +23,7 @@ final class VPlanParser {
     private static final int CONTENT_C = 5;
 
     @NonNull
-    static VPlan parse(@NonNull String html) throws ParseException {
+    static VPlanDay parse(@NonNull String html) throws ParseException {
         Document doc = Jsoup.parse(html);
 
         String dateAndDay = readVPlanStatus(html);
@@ -34,7 +31,7 @@ final class VPlanParser {
         String motd = readMotdTable(doc.getElementsByClass("info"));
         List<VPlanRow> entries = readVPlanTable(doc.getElementsByClass("list").select("tr"));
 
-        return new VPlan(dateAndDay, lastUpdated, motd, entries);
+        return new VPlanDay(dateAndDay, lastUpdated, motd, entries);
     }
 
 

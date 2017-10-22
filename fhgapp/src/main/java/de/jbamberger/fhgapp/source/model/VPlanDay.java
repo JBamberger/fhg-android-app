@@ -2,8 +2,6 @@ package de.jbamberger.fhgapp.source.model;
 
 import android.support.annotation.NonNull;
 
-import de.jbamberger.fhg_parser.VPlan;
-
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
@@ -11,16 +9,16 @@ import de.jbamberger.fhg_parser.VPlan;
 public class VPlanDay {
 
     @NonNull
-    private final VPlan plan;
+    private final de.jbamberger.api.VPlanDay plan;
     private final long httpLastUpdated;
 
-    public VPlanDay(@NonNull VPlan plan, long httpLastUpdated) {
+    public VPlanDay(@NonNull de.jbamberger.api.VPlanDay plan, long httpLastUpdated) {
         this.plan = plan;
         this.httpLastUpdated = httpLastUpdated;
     }
 
     @NonNull
-    public VPlan getPlan() {
+    public de.jbamberger.api.VPlanDay getPlan() {
         return plan;
     }
 

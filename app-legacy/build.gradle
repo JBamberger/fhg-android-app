@@ -41,4 +41,5 @@ dependencies {
     implementation "com.nispok:snackbar:$nispok_snackbar_version"
     testImplementation "junit:junit:$junit_version"
     implementation project(":jutils")
+    implementation project(":fhg-api")
 }

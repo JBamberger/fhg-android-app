@@ -11,9 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import de.jbamberger.fhg_parser.VPlan;
+import de.jbamberger.api.VPlanDay;
 import de.jbamberger.fhgapp.AppExecutors;
-import de.jbamberger.fhgapp.source.model.VPlanDay;
 import de.jbamberger.fhgapp.source.model.VPlanSet;
 import de.jbamberger.fhgapp.util.AbsentLiveData;
 import timber.log.Timber;
@@ -56,8 +55,8 @@ public class Repository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<VPlanSet>> createCall() {
-                LiveData<ApiResponse<VPlan>> day1 = api.getVPlanFrame1();
-                LiveData<ApiResponse<VPlan>> day2 = api.getVPlanFrame2();
+                LiveData<ApiResponse<VPlanDay>> day1 = api.getVPlanFrame1();
+                LiveData<ApiResponse<VPlanDay>> day2 = api.getVPlanFrame2();
                 AtomicBoolean fin = new AtomicBoolean(false);
                 final VPlanSet.Builder builder = new VPlanSet.Builder();
                 final MediatorLiveData<ApiResponse<VPlanSet>> merger = new MediatorLiveData<>();
@@ -68,7 +67,7 @@ public class Repository {
                         if (response.headers != null) {
                             //lastModified = Long.parseLong(response.headers.get("Last-Modified"));
                         }
-                        builder.addDay1(new VPlanDay(response.body, lastModified));
+                        builder.addDay1(new de.jbamberger.fhgapp.source.model.VPlanDay(response.body, lastModified));
                         if (fin.compareAndSet(true, true)) {
                             merger.setValue(new ApiResponse<>(builder.build(), response));
                         }
@@ -89,7 +88,7 @@ public class Repository {
                         if (response.headers != null) {
                             //lastModified = Long.parseLong(response.headers.get("Last-Modified"));
                         }
-                        builder.addDay2(new VPlanDay(response.body, lastModified));
+                        builder.addDay2(new de.jbamberger.fhgapp.source.model.VPlanDay(response.body, lastModified));
                         if (fin.compareAndSet(true, true)) {
                             merger.setValue(new ApiResponse<>(builder.build(), response));
                         }

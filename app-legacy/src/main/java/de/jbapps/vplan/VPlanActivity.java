@@ -1,6 +1,7 @@
 package de.jbapps.vplan;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -27,9 +29,13 @@ import com.nispok.snackbar.SnackbarManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.jbamberger.api.ApiResponse;
+import de.jbamberger.api.FhgApi;
+import de.jbamberger.api.VPlan;
 import de.jbamberger.jutils.NetUtils;
 import de.jbamberger.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;
+import de.jbapps.vplan.ui.Transformer;
 import de.jbapps.vplan.ui.VPlanBaseData;
 import de.jbapps.vplan.util.JSONParser;
 import de.jbapps.vplan.util.Property;
@@ -43,7 +49,7 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
 
     private static final String URL_MAIL_DEVELOPER = "mailto:vplanbugreport@gmail.com";
     private static final String URL_FHG_HOME = "http://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm";
-    private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlan-App-FHG/808086192561672";
+    private static final String URL_VPLAN_HOME = "https://www.facebook.com/pages/VPlanDay-App-FHG/808086192561672";
 
     private static final String STATE_SHOULD_REFRESH = "refresh";
 
@@ -125,7 +131,7 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
         final ActionBar actionBar = getSupportActionBar();
         String title = gradeState;
         if (title != null && title.equals("")) title = "Alles";//FIXME: possible bug
-        if (actionBar != null) actionBar.setTitle("VPlan - " + title);
+        if (actionBar != null) actionBar.setTitle("VPlanDay - " + title);
     }
 
     public void showGradePicker() {
@@ -214,16 +220,16 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
                             String subject;
                             switch (which) {
                                 case 0:
-                                    subject = "[VPlan-App] question";
+                                    subject = "[VPlanDay-App] question";
                                     break;
                                 case 1:
-                                    subject = "[VPlan-App] feedback";
+                                    subject = "[VPlanDay-App] feedback";
                                     break;
                                 case 2:
-                                    subject = "[VPlan-App] bugreport";
+                                    subject = "[VPlanDay-App] bugreport";
                                     break;
                                 default:
-                                    subject = "[VPlan-App] general";
+                                    subject = "[VPlanDay-App] general";
                                     break;
                             }
                             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(URL_MAIL_DEVELOPER));
@@ -263,14 +269,24 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
         }
     }
 
-    private void loadVPlan(boolean forceLoad) {
+    private void loadVPlan(boolean ignored) {
         toggleLoading(true);
-        mVPlanProvider.getVPlan(forceLoad);
+        FhgApi.Builder.getInstance(this).getVPlan().observe(this, new Observer<ApiResponse<VPlan>>() {
+            @Override
+            public void onChanged(@Nullable ApiResponse<VPlan> response) {
+                if(response == null) return;
+                if (response.isSuccessful()) {
+                    onItemsParsed(Transformer.transform(response.body));
+                } else {
+                    Log.d(TAG, response.errorMessage);
+                    toggleLoading(false);
+                }
+            }
+        });
     }
 
     private void loadCachedVPlan() {
-        toggleLoading(true);
-        mVPlanProvider.getCachedVPlan();
+        loadVPlan(false);
     }
 
     @Override

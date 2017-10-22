@@ -1,8 +1,7 @@
-package de.jbamberger.fhgapp.source;
+package de.jbamberger.api;
 
 import android.arch.lifecycle.LiveData;
 
-import de.jbamberger.api.VPlanDay;
 import retrofit2.Response;
 import retrofit2.http.GET;
 
@@ -10,7 +9,7 @@ import retrofit2.http.GET;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public interface FhgApi {
+interface FhgEndpoint {
 
 
     //JSON REST API : https://fhg-radolfzell.de/wp-json/wp/v2/posts

@@ -3,6 +3,7 @@ package de.jbapps.vplan.util;
 import android.content.Context;
 import android.util.Log;
 
+import de.jbamberger.api.FhgApi;
 import de.jbapps.vplan.data.VPlanSet;
 
 /**
@@ -17,10 +18,13 @@ public class VPlanProvider implements VPlanLoader.IOnLoadingFinished {
      */
     private final IVPlanLoader mListener;
     private VPlanSet mVPlanSet;
+    private FhgApi api;
 
     public VPlanProvider(Context context, IVPlanLoader listener) {
         mVPlanSet = new VPlanSet(context);
         mListener = listener;
+        api = FhgApi.Builder.getInstance(context);
+
     }
 
 

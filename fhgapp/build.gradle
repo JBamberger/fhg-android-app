@@ -45,7 +45,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':utils')
-    implementation project(':fhg-parser')
+    implementation project(':fhg-api')
     //review
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:support-v4:$support_version"

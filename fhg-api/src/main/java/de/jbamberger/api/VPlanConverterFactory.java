@@ -1,4 +1,4 @@
-package de.jbamberger.fhg_parser;
+package de.jbamberger.api;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,22 +15,22 @@ import retrofit2.Retrofit;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class FhgParserFactory extends Converter.Factory {
+public class VPlanConverterFactory extends Converter.Factory {
 
-    public static FhgParserFactory create() {
-        return new FhgParserFactory();
+    public static VPlanConverterFactory create() {
+        return new VPlanConverterFactory();
     }
 
-    private FhgParserFactory() {
+    private VPlanConverterFactory() {
     }
 
     @Nullable
     @Override
-    public Converter<ResponseBody, VPlan> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        if (type.equals(VPlan.class)) {
-            return new Converter<ResponseBody, VPlan>() {
+    public Converter<ResponseBody, VPlanDay> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        if (type.equals(VPlanDay.class)) {
+            return new Converter<ResponseBody, VPlanDay>() {
                 @Override
-                public VPlan convert(@NonNull ResponseBody value) throws IOException {
+                public VPlanDay convert(@NonNull ResponseBody value) throws IOException {
                     return VPlanParser.parse(value.string());
                 }
             };
