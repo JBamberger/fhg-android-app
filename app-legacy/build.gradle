@@ -16,20 +16,27 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles 'proguard.cfg', 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
+    }
+    packagingOptions {
+        pickFirst 'META-INF/ASL2.0'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
     }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "org.jsoup:jsoup:$jsoup_version"
-    compile "commons-io:commons-io:2.5"
-    compile "org.apache.httpcomponents:httpclient:4.5.3"
+    //compile "commons-io:commons-io:2.5"
     compile "com.android.support:appcompat-v7:$support_version"
-    compile "com.google.android.gms:play-services:11.4.2"
+    compile "com.android.support:recyclerview-v7:$support_version"
     compile "com.android.support:support-v4:$support_version"
     compile "com.nispok:snackbar:2.10.10"
     testCompile "junit:junit:4.12"

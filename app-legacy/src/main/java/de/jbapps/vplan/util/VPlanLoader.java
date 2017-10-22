@@ -1,26 +1,6 @@
 package de.jbapps.vplan.util;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 
 import de.jbapps.vplan.data.VPlanSet;
 
@@ -38,6 +18,18 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
     public static final String JSON_VPLAN_CONTENT = "content";
     public static final String JSON_VPLAN_GRADE = "grade";
     public static final String JSON_VPLAN_MARKED_NEW = "marked_new";
+
+    public VPlanLoader(IOnLoadingFinished listener, VPlanSet vPlanSet) {
+        listener.loaderFinished(false);
+    }
+
+    @Override
+    protected Void doInBackground(Boolean... booleans) {
+        return null;
+    }
+
+    /*
+
 
     private static final String TAG = "VPlanLoader";
     private static final String URL_VPLAN1 = "http://www.fhg-radolfzell.de/vertretungsplan/f1/subst_001.htm";
@@ -197,7 +189,7 @@ class VPlanLoader extends AsyncTask<Boolean, Void, Void> {
         if (mListener != null) {
             mListener.loaderFinished(loadCache);
         }
-    }
+    }*/
 
     public interface IOnLoadingFinished {
         void loaderFinished(boolean loadCache);
