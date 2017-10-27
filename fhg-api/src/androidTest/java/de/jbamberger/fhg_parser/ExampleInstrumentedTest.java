@@ -7,6 +7,8 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import de.jbamberger.api.FhgApi;
+
 import static org.junit.Assert.*;
 
 /**
@@ -21,6 +23,12 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("de.jbamberger.fhg_parser.test", appContext.getPackageName());
+        assertEquals("de.jbamberger.api", appContext.getPackageName());
+
+        FhgApi api = FhgApi.Builder.getInstance(appContext);
+
+        api.getVPlan().observeForever(response -> {
+            System.out.println(response.toString());
+        });
     }
 }

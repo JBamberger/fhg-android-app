@@ -5,18 +5,19 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-rc1'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'com.google.gms:google-services:3.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://maven.google.com/" }
+        google()
     }
-    //print more error messages (data binding genereates a lot of errors if compilation fails)
+    //print more error messages (data binding generates a lot of errors if compilation fails)
     afterEvaluate {
         tasks.withType(JavaCompile.class) {
             options.compilerArgs << "-Xmaxerrs" << "500"
@@ -24,14 +25,11 @@ allprojects {
     }
 }
 
-dependencies {
-}
-
 ext {
     //general
     support_version = '26.1.0'
     constraint_layout_version = "1.1.0-beta3"
-    arch_version = "1.0.0-beta2"
+    arch_version = "1.0.0-rc1"
     firebase_version = "11.4.2"
     retrofit_version = "2.3.0"
     okhttp_version = "3.8.0"
