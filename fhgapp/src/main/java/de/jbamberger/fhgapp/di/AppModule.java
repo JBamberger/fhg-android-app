@@ -9,12 +9,13 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.jbamberger.api.FhgApiModule;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-@Module(includes = {ViewModelModule.class, NetModule.class})
+@Module(includes = {ViewModelModule.class, FhgApiModule.class})
 class AppModule {
 
     @Provides

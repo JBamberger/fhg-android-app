@@ -1,7 +1,6 @@
 package de.jbapps.vplan;
 
 import android.app.Activity;
-import android.arch.lifecycle.Observer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -29,13 +27,9 @@ import com.nispok.snackbar.SnackbarManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.jbamberger.api.ApiResponse;
-import de.jbamberger.api.FhgApi;
-import de.jbamberger.api.data.VPlan;
 import de.jbamberger.jutils.NetUtils;
 import de.jbamberger.jutils.ViewUtils;
 import de.jbapps.vplan.data.VPlanSet;
-import de.jbapps.vplan.ui.Transformer;
 import de.jbapps.vplan.ui.VPlanBaseData;
 import de.jbapps.vplan.util.JSONParser;
 import de.jbapps.vplan.util.Property;
@@ -271,6 +265,8 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
 
     private void loadVPlan(boolean ignored) {
         toggleLoading(true);
+        /* FIXME: impl
+
         FhgApi.Builder.getInstance(this).getVPlan().observe(this, new Observer<ApiResponse<VPlan>>() {
             @Override
             public void onChanged(@Nullable ApiResponse<VPlan> response) {
@@ -282,7 +278,7 @@ public class VPlanActivity extends AppCompatActivity implements VPlanProvider.IV
                     toggleLoading(false);
                 }
             }
-        });
+        });*/
     }
 
     private void loadCachedVPlan() {

@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 import de.jbamberger.api.data.VPlan;
 import de.jbamberger.api.data.VPlanDay;
 
@@ -18,6 +20,7 @@ class FhgApiImpl implements FhgApi {
 
     private FhgEndpoint endpoint;
 
+    @Inject
     FhgApiImpl(@NonNull Context context) {
         this.endpoint = NetModule.getEndpoint(context);
     }

@@ -1,12 +1,6 @@
 package de.jbamberger.fhgapp.di;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
-import dagger.Provides;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -14,9 +8,9 @@ import dagger.Provides;
 @Module
 class NetModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     de.jbamberger.api.FhgApi providesFhgApi(@NonNull Context context) {
         return de.jbamberger.api.FhgApi.Builder.getInstance(context);
-    }
+    }*/
 }

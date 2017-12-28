@@ -7,9 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.jbamberger.api.FhgApi;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -25,10 +23,8 @@ public class ExampleInstrumentedTest {
 
         assertEquals("de.jbamberger.api", appContext.getPackageName());
 
-        FhgApi api = FhgApi.Builder.getInstance(appContext);
+        /*FhgApi api = FhgApi.Builder.getInstance(appContext);
 
-        api.getVPlan().observeForever(response -> {
-            System.out.println(response.toString());
-        });
+        api.getVPlan().observeForever(System.out::println);*/
     }
 }
