@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
+import de.jbamberger.fhgapp.ui.MainViewModel;
 import de.jbamberger.fhgapp.ui.vplan.VPlanViewModel;
 
 @Module
@@ -15,6 +16,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(VPlanViewModel.class)
     abstract ViewModel bindVPlanViewModel(VPlanViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel.class)
+    abstract ViewModel bindMainViewModel(MainViewModel viewModel);
 
 
     @Binds
