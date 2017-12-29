@@ -3,9 +3,12 @@ package de.jbamberger.api;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -38,12 +41,14 @@ final class NetModule {
     }
 
     private static Retrofit.Builder provideRetrofitAPI(@NonNull OkHttpClient okHttpClient) {
+        Gson gson = new Gson();
         return new Retrofit.Builder()
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
-                .addConverterFactory(VPlanConverterFactory.create())
+                .addConverterFactory(new VPlanConverterFactory())
+                .addConverterFactory(new FeedConverterFactory(gson))
                 //.addConverterFactory(SimpleXmlConverterFactory.create())
 //                .addConverterFactory(ScalarsConverterFactory.create())
-//                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient);
     }
 

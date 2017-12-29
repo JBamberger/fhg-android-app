@@ -17,11 +17,7 @@ import retrofit2.Retrofit;
 
 class VPlanConverterFactory extends Converter.Factory {
 
-    public static VPlanConverterFactory create() {
-        return new VPlanConverterFactory();
-    }
-
-    private VPlanConverterFactory() {
+    VPlanConverterFactory() {
     }
 
     @Nullable

@@ -11,19 +11,10 @@ import java.util.List;
 public class FeedChunk {
 
     @NonNull
-    private String updated;
-
-    @NonNull
     private List<FeedItem> items;
 
-    public FeedChunk(@NonNull String updated, @NonNull List<FeedItem> items) {
-        this.updated = updated;
+    public FeedChunk(@NonNull List<FeedItem> items) {
         this.items = items;
-    }
-
-    @NonNull
-    public String getUpdated() {
-        return updated;
     }
 
     @NonNull
