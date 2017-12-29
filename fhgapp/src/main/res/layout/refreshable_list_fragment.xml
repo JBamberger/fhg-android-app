@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data class=".VPlanFragmentBinding">
+    <data class=".RefreshableListFragmentBinding">
 
         <variable
             name="listener"
@@ -21,7 +21,7 @@
         app:setRefreshing="@{isRefreshing}">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/vplan_container"
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

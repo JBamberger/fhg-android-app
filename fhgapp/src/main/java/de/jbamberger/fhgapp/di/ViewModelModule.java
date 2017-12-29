@@ -7,10 +7,16 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import de.jbamberger.fhgapp.ui.MainViewModel;
+import de.jbamberger.fhgapp.ui.feed.FeedViewModel;
 import de.jbamberger.fhgapp.ui.vplan.VPlanViewModel;
 
 @Module
 abstract class ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeedViewModel.class)
+    abstract ViewModel bindFeedViewModel(FeedViewModel viewModel);
 
     @Binds
     @IntoMap

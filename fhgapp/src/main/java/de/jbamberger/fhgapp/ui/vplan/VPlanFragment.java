@@ -17,7 +17,7 @@ import de.jbamberger.api.data.VPlan;
 import de.jbamberger.api.data.VPlanDay;
 import de.jbamberger.api.data.VPlanRow;
 import de.jbamberger.fhgapp.R;
-import de.jbamberger.fhgapp.VPlanFragmentBinding;
+import de.jbamberger.fhgapp.RefreshableListFragmentBinding;
 import de.jbamberger.fhgapp.source.Resource;
 import de.jbamberger.fhgapp.source.Status;
 import de.jbamberger.fhgapp.ui.components.BaseFragment;
@@ -30,13 +30,13 @@ public class VPlanFragment extends BaseFragment<VPlanViewModel>
         implements SwipeRefreshLayout.OnRefreshListener,
         Observer<Resource<VPlan>> {
 
-    private VPlanFragmentBinding binding;
+    private RefreshableListFragmentBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.vplan_fragment, container, false);
-        binding.vplanContainer.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding = DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false);
+        binding.container.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.setListener(this);
         return binding.getRoot();
     }
@@ -61,7 +61,7 @@ public class VPlanFragment extends BaseFragment<VPlanViewModel>
     public void onChanged(@Nullable Resource<VPlan> vPlanResource) {
         if (vPlanResource == null) return;
         if (vPlanResource.status == Status.SUCCESS && vPlanResource.data != null) {
-            binding.vplanContainer.setAdapter(new VPlanAdapter(vPlanResource.data));
+            binding.container.setAdapter(new VPlanAdapter(vPlanResource.data));
             binding.setIsRefreshing(false);
         }
     }

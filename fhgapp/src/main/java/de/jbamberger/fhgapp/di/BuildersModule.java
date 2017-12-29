@@ -3,6 +3,7 @@ package de.jbamberger.fhgapp.di;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import de.jbamberger.fhgapp.ui.MainActivity;
+import de.jbamberger.fhgapp.ui.feed.FeedFragment;
 import de.jbamberger.fhgapp.ui.vplan.VPlanFragment;
 
 /**
@@ -19,5 +20,8 @@ abstract class BuildersModule {
 
     @ContributesAndroidInjector
     abstract VPlanFragment contributesVPlanFragment();
+
+    @ContributesAndroidInjector
+    abstract FeedFragment contributesFeedFragment();
 
 }
