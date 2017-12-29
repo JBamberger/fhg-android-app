@@ -62,7 +62,7 @@ class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>>
 
                         @Override
                         public void onFailure(@NonNull Call<R> call, @NonNull Throwable throwable) {
-                            postValue(new ApiResponse<R>(throwable));
+                            postValue(new ApiResponse<>(throwable));
                         }
                     });
                 }

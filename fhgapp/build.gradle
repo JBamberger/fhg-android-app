@@ -32,13 +32,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     packagingOptions {
-        pickFirst 'META-INF/ASL2.0'
-        pickFirst 'META-INF/LICENSE'
-        pickFirst 'META-INF/NOTICE'
-        pickFirst 'META-INF/LICENSE.txt'
-        pickFirst 'META-INF/NOTICE.txt'
-        pickFirst 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/README.HTML'
+        exclude 'readme.html'
+        exclude 'license.html'
+        exclude 'META-INF/eclipse.inf'
     }
 }
 

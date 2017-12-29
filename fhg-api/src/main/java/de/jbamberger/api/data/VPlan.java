@@ -8,28 +8,22 @@ import static de.jbamberger.util.Preconditions.checkNotNull;
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class VPlan {
+public final class VPlan {
 
-    public static class Builder {
+    public static final class Builder {
 
         private VPlanDay day1;
         private VPlanDay day2;
 
-        public Builder() {
-
-        }
-
-        public Builder addDay1(VPlanDay day1) {
+        public synchronized void addDay1(@NonNull VPlanDay day1) {
             this.day1 = day1;
-            return this;
         }
 
-        public Builder addDay2(VPlanDay day2) {
+        public synchronized void addDay2(@NonNull VPlanDay day2) {
             this.day2 = day2;
-            return this;
         }
 
-        public VPlan build() {
+        public synchronized VPlan build() {
             checkNotNull(day1);
             checkNotNull(day2);
             return new VPlan(day1, day2);

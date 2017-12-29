@@ -29,13 +29,15 @@ class FhgApiImpl implements FhgApi {
     public LiveData<ApiResponse<VPlan>> getVPlan() {
         LiveData<ApiResponse<VPlanDay>> day1 = endpoint.getVPlanFrame1();
         LiveData<ApiResponse<VPlanDay>> day2 = endpoint.getVPlanFrame2();
-        AtomicBoolean fin = new AtomicBoolean(false);
+        AtomicBoolean isLoaded = new AtomicBoolean(false);
         final VPlan.Builder builder = new VPlan.Builder();
         final MediatorLiveData<ApiResponse<VPlan>> merger = new MediatorLiveData<>();
         merger.addSource(day1, response -> {
-            if (response != null && response.isSuccessful()) {
+            merger.removeSource(day1); // there is only one value, i.e. we don't need this anymore
+
+            if (response != null && response.isSuccessful() && response.body != null) {
                 builder.addDay1(response.body);
-                if (fin.compareAndSet(true, true)) {
+                if (isLoaded.getAndSet(true)) {
                     merger.setValue(new ApiResponse<>(builder.build(), response));
                 }
             } else {
@@ -46,12 +48,13 @@ class FhgApiImpl implements FhgApi {
                     merger.setValue(new ApiResponse<>(new Throwable("Network error")));
                 }
             }
-            merger.removeSource(day1);
         });
         merger.addSource(day2, response -> {
-            if (response != null && response.isSuccessful()) {
+            merger.removeSource(day2); // there is only one value, i.e. we don't need this anymore
+
+            if (response != null && response.isSuccessful() && response.body != null) {
                 builder.addDay2(response.body);
-                if (fin.compareAndSet(true, true)) {
+                if (isLoaded.getAndSet(true)) {
                     merger.setValue(new ApiResponse<>(builder.build(), response));
                 }
             } else {
@@ -62,7 +65,6 @@ class FhgApiImpl implements FhgApi {
                     merger.setValue(new ApiResponse<>(new Throwable("Network error")));
                 }
             }
-            merger.removeSource(day2);
         });
 
         return merger;

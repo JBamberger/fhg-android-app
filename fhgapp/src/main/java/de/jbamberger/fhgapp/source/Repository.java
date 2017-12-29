@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.source;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import de.jbamberger.api.FhgApi;
 import de.jbamberger.api.data.VPlan;
 import de.jbamberger.fhgapp.AppExecutors;
 import de.jbamberger.fhgapp.util.AbsentLiveData;
+import timber.log.Timber;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -36,23 +38,37 @@ public class Repository {
         return new NetworkBoundResource<VPlan, VPlan>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull VPlan item) {
+                Timber.d("saveCallResult()");
             }
 
             @Override
             protected boolean shouldFetch(@Nullable VPlan data) {
+                Timber.d("shouldFetch()");
                 return true;
             }
 
             @NonNull
             @Override
             protected LiveData<VPlan> loadFromDb() {
+                Timber.d("loadFromDb()");
                 return AbsentLiveData.create();
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<VPlan>> createCall() {
-                return api.getVPlan();
+                Timber.d("createCall()");
+                MediatorLiveData<ApiResponse<VPlan>> m = new MediatorLiveData<>();
+                m.addSource(api.getVPlan(), (x) -> {
+                    Timber.d("received vplan %s", x);
+                    m.setValue(x);
+                });
+                return m;
+            }
+
+            @Override
+            protected void onFetchFailed() {
+                Timber.d("onFetchFailed()");
             }
         }.asLiveData();
     }

@@ -5,7 +5,7 @@
 
         <variable
             name="obj"
-            type="Object" />
+            type="de.jbamberger.fhgapp.ui.vplan.VPlanHeader" />
 
     </data>
 
@@ -26,6 +26,7 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
+            android:text="@{obj.dateAndDay}"
             tools:text="Title" />
 
         <TextView
@@ -36,6 +37,7 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
+            android:text="@{obj.lastUpdated}"
             tools:text="last updated" />
 
         <TextView
@@ -56,6 +58,7 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
+            android:text="@{obj.motd}"
             tools:text="Blablable lorem ipsum coaizse jgsaza" />
 
     </RelativeLayout>

@@ -3,7 +3,6 @@ package de.jbamberger.api;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -27,14 +26,10 @@ class VPlanConverterFactory extends Converter.Factory {
 
     @Nullable
     @Override
-    public Converter<ResponseBody, VPlanDay> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public Converter<ResponseBody, VPlanDay> responseBodyConverter(
+            @NonNull Type type, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         if (type.equals(VPlanDay.class)) {
-            return new Converter<ResponseBody, VPlanDay>() {
-                @Override
-                public VPlanDay convert(@NonNull ResponseBody value) throws IOException {
-                    return VPlanParser.parse(value.string());
-                }
-            };
+            return value -> VPlanParser.parse(value.string());
         } else {
             return null;
         }

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
 /**
@@ -29,11 +28,11 @@ final class NetModule {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.cache(cache);
 
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(httpLoggingInterceptor);
-        }
+        }*/
 
         return builder.build();
     }

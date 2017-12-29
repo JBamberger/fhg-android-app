@@ -5,7 +5,7 @@
 
         <variable
             name="obj"
-            type="Object" />
+            type="de.jbamberger.api.data.VPlanRow" />
 
         <variable
             name="listener"
@@ -34,6 +34,7 @@
                 android:layout_weight="1"
                 android:gravity="start"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@{obj.grade}"
                 tools:text="grade" />
 
             <TextView
@@ -43,6 +44,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@{obj.hour}"
                 tools:text="hour" />
 
 
@@ -53,6 +55,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@{obj.subject}"
                 tools:text="subject" />
 
             <TextView
@@ -62,6 +65,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@{obj.room}"
                 tools:text="room" />
         </LinearLayout>
 
@@ -72,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@{obj.content}"
             tools:text="content" />
 
     </LinearLayout>
