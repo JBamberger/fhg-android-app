@@ -2,6 +2,7 @@ package de.jbamberger.api;
 
 import android.arch.lifecycle.LiveData;
 
+import de.jbamberger.api.data.FeedChunk;
 import de.jbamberger.api.data.VPlan;
 
 /**
@@ -11,4 +12,6 @@ import de.jbamberger.api.data.VPlan;
 public interface FhgApi {
 
     LiveData<ApiResponse<VPlan>> getVPlan();
+
+    LiveData<ApiResponse<FeedChunk>> getFeed();
 }

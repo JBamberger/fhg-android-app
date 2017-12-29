@@ -11,9 +11,9 @@ import javax.inject.Singleton;
 
 import de.jbamberger.api.ApiResponse;
 import de.jbamberger.api.FhgApi;
+import de.jbamberger.api.data.FeedChunk;
 import de.jbamberger.api.data.VPlan;
 import de.jbamberger.fhgapp.AppExecutors;
-import timber.log.Timber;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -25,6 +25,7 @@ public class Repository {
     private final FhgApi api;
     private final AppExecutors appExecutors;
     private VPlan plan;
+    private FeedChunk feed;
 
     @Inject
     public Repository(AppExecutors appExecutors, FhgApi api) {
@@ -37,19 +38,16 @@ public class Repository {
             @Override
             protected void saveCallResult(@NonNull VPlan item) {
                 plan = item;
-                Timber.d("saveCallResult()");
             }
 
             @Override
             protected boolean shouldFetch(@Nullable VPlan data) {
-                Timber.d("shouldFetch()");
                 return true;
             }
 
             @NonNull
             @Override
             protected LiveData<VPlan> loadFromDb() {
-                Timber.d("loadFromDb()");
                 MutableLiveData<VPlan> l = new MutableLiveData<>();
                 l.setValue(plan);
                 return l;
@@ -58,18 +56,39 @@ public class Repository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<VPlan>> createCall() {
-                Timber.d("createCall()");
                 MediatorLiveData<ApiResponse<VPlan>> m = new MediatorLiveData<>();
-                m.addSource(api.getVPlan(), (x) -> {
-                    Timber.d("received vplan %s", x);
-                    m.setValue(x);
-                });
+                m.addSource(api.getVPlan(), m::setValue);
                 return m;
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<FeedChunk>> getFeed() {
+        return new NetworkBoundResource<FeedChunk, FeedChunk>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull FeedChunk item) {
+                feed = item;
             }
 
             @Override
-            protected void onFetchFailed() {
-                Timber.d("onFetchFailed()");
+            protected boolean shouldFetch(@Nullable FeedChunk data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<FeedChunk> loadFromDb() {
+                MutableLiveData<FeedChunk> l = new MutableLiveData<>();
+                l.setValue(feed);
+                return l;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<FeedChunk>> createCall() {
+                MediatorLiveData<ApiResponse<FeedChunk>> m = new MediatorLiveData<>();
+                m.addSource(api.getFeed(), m::setValue);
+                return m;
             }
         }.asLiveData();
     }

@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
+import de.jbamberger.api.data.FeedChunk;
 import de.jbamberger.api.data.VPlan;
 import de.jbamberger.api.data.VPlanDay;
 
@@ -68,5 +69,10 @@ class FhgApiImpl implements FhgApi {
         });
 
         return merger;
+    }
+
+    @Override
+    public LiveData<ApiResponse<FeedChunk>> getFeed() {
+        return endpoint.getFeed();
     }
 }
