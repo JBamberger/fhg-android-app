@@ -4,22 +4,28 @@
 
     <data class=".VPlanFragmentBinding">
 
+        <variable
+            name="listener"
+            type="android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener" />
+
+        <variable
+            name="isRefreshing"
+            type="boolean" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:onRefreshListener="@{listener::onRefresh}"
+        app:setRefreshing="@{isRefreshing}">
 
         <android.support.v7.widget.RecyclerView
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/vplan_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </layout>
 

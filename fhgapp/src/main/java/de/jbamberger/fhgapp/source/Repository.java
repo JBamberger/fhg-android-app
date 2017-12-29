@@ -24,7 +24,6 @@ public class Repository {
 
     private final FhgApi api;
     private final AppExecutors appExecutors;
-    private final MutableLiveData<Resource<VPlan>> posts = new MutableLiveData<>();
     private VPlan plan;
 
     @Inject

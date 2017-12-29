@@ -18,19 +18,23 @@ public class VPlanViewModel extends ViewModel {
     private Repository repo;
 
     @Inject
-    public VPlanViewModel(Repository repo) {
+    VPlanViewModel(Repository repo) {
         this.repo = repo;
     }
 
 
-    public void init() {
+    void init() {
         if (this.vplan != null) {
             return;
         }
         vplan = repo.getVPlan();
     }
 
-    public LiveData<Resource<VPlan>> getVPlan() {
+    void refresh() {
+        vplan = repo.getVPlan();
+    }
+
+    LiveData<Resource<VPlan>> getVPlan() {
         return vplan;
     }
 }
