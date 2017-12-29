@@ -13,7 +13,7 @@
         android:title="@string/action_share"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_credits"
+        android:id="@+id/action_about"
         android:icon="@drawable/ic_about_black_24dp"
         android:title="@string/action_credits"
         app:showAsAction="never" />
