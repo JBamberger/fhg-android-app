@@ -1,5 +1,6 @@
 package de.jbamberger.fhgapp.ui;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +37,8 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         binding.navView.setNavigationItemSelectedListener(this);
+
+        binding.mainContent.fab.setOnClickListener((v) -> startActivity(new Intent(MainActivity.this, Main2Activity.class)));
     }
 
     @Override

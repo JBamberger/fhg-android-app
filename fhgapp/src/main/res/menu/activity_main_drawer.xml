@@ -10,11 +10,11 @@
             android:title="VPlan" />
         <item
             android:id="@+id/nav_feed"
-            android:icon="@drawable/ic_rss_feed_black_24dp"
+            android:icon="@drawable/ic_feed_black_24dp"
             android:title="FHG Feed" />
         <item
             android:id="@+id/nav_contact"
-            android:icon="@drawable/ic_person_black_24dp"
+            android:icon="@drawable/ic_contact_black_24dp"
             android:title="Kontakt" />
 
     </group>
@@ -27,7 +27,7 @@
                 android:title="Share" />
             <item
                 android:id="@+id/nav_credits"
-                android:icon="@drawable/ic_info_outline_black_24dp"
+                android:icon="@drawable/ic_about_black_24dp"
                 android:title="Credits" />
             <item
                 android:id="@+id/nav_settings"

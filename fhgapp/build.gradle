@@ -19,6 +19,7 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }*/
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -66,6 +67,9 @@ dependencies {
 
     implementation "android.arch.lifecycle:runtime:$arch_version"
     implementation "android.arch.lifecycle:extensions:$arch_version"
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
 
     implementation "android.arch.persistence.room:runtime:$arch_version"
@@ -94,4 +98,8 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
