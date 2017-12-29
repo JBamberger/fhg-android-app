@@ -29,7 +29,7 @@ class VPlanConverterFactory extends Converter.Factory {
     public Converter<ResponseBody, VPlanDay> responseBodyConverter(
             @NonNull Type type, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         if (type.equals(VPlanDay.class)) {
-            return value -> VPlanParser.parse(value.string());
+            return new VPlanParser();
         } else {
             return null;
         }

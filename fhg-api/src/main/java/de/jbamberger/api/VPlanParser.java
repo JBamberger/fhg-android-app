@@ -7,16 +7,26 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.jbamberger.api.data.VPlanDay;
 import de.jbamberger.api.data.VPlanRow;
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+import timber.log.Timber;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-final class VPlanParser {
+final class VPlanParser implements Converter<ResponseBody, VPlanDay> {
 
     private static final int GRADE_C = 0;
     private static final int HOUR_C = 1;
@@ -26,8 +36,58 @@ final class VPlanParser {
     private static final int CONTENT_C = 5;
 
     @NonNull
-    static VPlanDay parse(@NonNull String html) throws ParseException {
-        Document doc = Jsoup.parse(html);
+    public VPlanDay convert(@NonNull ResponseBody body) throws IOException {
+        byte[] data = body.bytes();
+        Document doc = null;
+        String html = null;
+        MediaType type = body.contentType();
+        Charset charset = type != null ? type.charset() : null;
+        if (charset != null) {
+            Timber.i("Using header charset '%s'", charset.name());
+            html = new String(data, charset);
+            doc = Jsoup.parse(html);
+        } else {
+            String tmpHtml = new String(data);
+            Document tmpDoc = Jsoup.parse(tmpHtml);
+            Element head = tmpDoc.getElementsByTag("head").first();
+            if (head != null) {
+                Element contentType = head.getElementsByAttributeValue("http-equiv", "Content-Type").first();
+                if (contentType != null && contentType.hasAttr("content")) {
+                    String contentAttr = contentType.attr("content");
+
+                    try {
+                        Matcher matcher = Pattern.compile("\\s*([^;]+)(;\\s*)?")
+                                .matcher(contentAttr);
+                        Pattern charsetPattern = Pattern.compile("^charset=([^\\s]*)$");
+
+                        while (matcher.find()) {
+                            Matcher m = charsetPattern.matcher(matcher.group(1));
+                            if (m.find()) {
+                                charset = Charset.forName(m.group(1));
+                                break;
+                            }
+                        }
+                        if (charset != null) {
+                            Timber.i("Using html charset '%s'", charset.name());
+                            html = new String(data, charset);
+                            doc = Jsoup.parse(html);
+                        }
+
+                    } catch (IllegalCharsetNameException | UnsupportedCharsetException |
+                            IllegalStateException e) {
+                        //no match or illegal charset
+                        Timber.w(e, "charset extraction failed.");
+                    }
+                }
+            }
+            if (doc == null) {
+                doc = tmpDoc;
+            }
+            if (html == null) {
+                html = tmpHtml;
+            }
+        }
+
 
         String dateAndDay = readVPlanStatus(html);
         String lastUpdated = readVPlanTitle(doc);

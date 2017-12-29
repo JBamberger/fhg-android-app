@@ -13,7 +13,6 @@ import de.jbamberger.api.ApiResponse;
 import de.jbamberger.api.FhgApi;
 import de.jbamberger.api.data.VPlan;
 import de.jbamberger.fhgapp.AppExecutors;
-import de.jbamberger.fhgapp.util.AbsentLiveData;
 import timber.log.Timber;
 
 /**
@@ -26,7 +25,7 @@ public class Repository {
     private final FhgApi api;
     private final AppExecutors appExecutors;
     private final MutableLiveData<Resource<VPlan>> posts = new MutableLiveData<>();
-
+    private VPlan plan;
 
     @Inject
     public Repository(AppExecutors appExecutors, FhgApi api) {
@@ -38,6 +37,7 @@ public class Repository {
         return new NetworkBoundResource<VPlan, VPlan>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull VPlan item) {
+                plan = item;
                 Timber.d("saveCallResult()");
             }
 
@@ -51,7 +51,9 @@ public class Repository {
             @Override
             protected LiveData<VPlan> loadFromDb() {
                 Timber.d("loadFromDb()");
-                return AbsentLiveData.create();
+                MutableLiveData<VPlan> l = new MutableLiveData<>();
+                l.setValue(plan);
+                return l;
             }
 
             @NonNull
