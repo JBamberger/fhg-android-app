@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.v4.app.Fragment
+import de.jbamberger.fhgapp.ui.contact.ContactFragment
 import de.jbamberger.fhgapp.ui.feed.FeedFragment
 import de.jbamberger.fhgapp.ui.vplan.VPlanFragment
 
@@ -31,7 +32,7 @@ constructor() : ViewModel() {
     }
 
     fun selectedContact() {
-        fragment.value = Fragment()
+        fragment.value = ContactFragment()
     }
 
     fun getFragment(): LiveData<Fragment> {

@@ -24,8 +24,6 @@ import timber.log.Timber
 class FeedFragment : BaseFragment<FeedViewModel>(),
         SwipeRefreshLayout.OnRefreshListener, Observer<Resource<FeedChunk>> {
 
-    class Feed
-
     private var binding: RefreshableListFragmentBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
