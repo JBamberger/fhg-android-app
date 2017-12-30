@@ -1,119 +1,117 @@
-package de.jbamberger.api.data;
+package de.jbamberger.api.data
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class JsonPost {
+internal class JsonPost {
 
     @SerializedName("id")
     @Expose
-    public int id;
+    var id: Int = 0
     @SerializedName("date_gmt")
     @Expose
-    public String dateGmt;
+    var dateGmt: String? = null
     @SerializedName("modified_gmt")
     @Expose
-    public String modifiedGmt;
+    var modifiedGmt: String? = null
     @SerializedName("slug")
     @Expose
-    public String slug;
+    var slug: String? = null
     @SerializedName("link")
     @Expose
-    public String link;
+    var link: String? = null
     @SerializedName("title")
     @Expose
-    public Title title;
+    var title: Title? = null
     @SerializedName("content")
     @Expose
-    public Content content;
+    var content: Content? = null
     @SerializedName("excerpt")
     @Expose
-    public Excerpt excerpt;
+    var excerpt: Excerpt? = null
     @SerializedName("featured_media")
     @Expose
-    public int featuredMedia;
+    var featuredMedia: Int = 0
     @SerializedName("meta")
     @Expose
-    public List<Object> meta = null;
+    var meta: List<Any>? = null
     @SerializedName("_links")
     @Expose
-    public Links links;
+    var links: Links? = null
 
-    public class Guid {
-
-        @SerializedName("rendered")
-        @Expose
-        public String rendered;
-
-    }
-
-    public class Title {
+    inner class Guid {
 
         @SerializedName("rendered")
         @Expose
-        public String rendered;
+        var rendered: String? = null
 
     }
 
-    public class Content {
+    inner class Title {
 
         @SerializedName("rendered")
         @Expose
-        public String rendered;
+        var rendered: String? = null
 
     }
 
-    public class Excerpt {
+    inner class Content {
 
         @SerializedName("rendered")
         @Expose
-        public String rendered;
+        var rendered: String? = null
 
     }
 
-    public class Links {
+    inner class Excerpt {
+
+        @SerializedName("rendered")
+        @Expose
+        var rendered: String? = null
+
+    }
+
+    inner class Links {
 
         @SerializedName("self")
         @Expose
-        public List<Self> self = null;
+        var self: List<Self>? = null
         @SerializedName("wp:featuredmedia")
         @Expose
-        public List<WpFeaturedmedium> wpFeaturedmedia = null;
+        var wpFeaturedmedia: List<WpFeaturedmedium>? = null
         @SerializedName("wp:attachment")
         @Expose
-        public List<WpAttachment> wpAttachment = null;
+        var wpAttachment: List<WpAttachment>? = null
 
 
-        public class Self {
+        inner class Self {
 
             @SerializedName("href")
             @Expose
-            public String href;
+            var href: String? = null
 
         }
 
-        public class WpFeaturedmedium {
+        inner class WpFeaturedmedium {
 
             @SerializedName("embeddable")
             @Expose
-            public Boolean embeddable;
+            var embeddable: Boolean? = null
             @SerializedName("href")
             @Expose
-            public String href;
+            var href: String? = null
 
         }
 
-        public class WpAttachment {
+        inner class WpAttachment {
 
             @SerializedName("href")
             @Expose
-            public String href;
+            var href: String? = null
 
         }
     }

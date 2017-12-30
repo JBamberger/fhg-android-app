@@ -1,56 +1,53 @@
-package de.jbamberger.api.data;
+package de.jbamberger.api.data
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-public class FeedItem {
+class FeedItem {
 
     @SerializedName("id")
-    public int id;
+    var id: Int = 0
     @SerializedName("date")
-    public String date;
+    var date: String? = null
     @SerializedName("link")
-    public String link;
+    var link: String? = null
     @SerializedName("title")
-    public Title title;
+    var title: Title? = null
     @SerializedName("excerpt")
-    public Excerpt excerpt;
+    var excerpt: Excerpt? = null
 
-    public static class Title {
+    class Title {
         @SerializedName("rendered")
-        public String rendered;
+        var rendered: String? = null
 
-        @Override
-        public String toString() {
+        override fun toString(): String {
             return "Title{" +
                     "rendered='" + rendered + '\'' +
-                    '}';
+                    '}'
         }
     }
 
-    public static class Excerpt {
+    class Excerpt {
         @SerializedName("rendered")
-        public String rendered;
+        var rendered: String? = null
 
-        @Override
-        public String toString() {
+        override fun toString(): String {
             return "Excerpt{" +
                     "rendered='" + rendered + '\'' +
-                    '}';
+                    '}'
         }
     }
 
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "FeedItem{" +
                 "id=" + id +
                 ", date='" + date + '\'' +
                 ", link='" + link + '\'' +
                 ", title=" + title +
                 ", excerpt=" + excerpt +
-                '}';
+                '}'
     }
 }

@@ -1,67 +1,50 @@
-package de.jbamberger.api.data;
+package de.jbamberger.api.data
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.Namespace;
-import org.simpleframework.xml.NamespaceList;
-import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Text;
-
-import java.util.List;
+import org.simpleframework.xml.*
 
 @Root
-class RssFeed {
+internal class RssFeed {
 
     @Attribute
-    String version;
+    var version: String? = null
 
     @Element
-    Channel channel;
+    var channel: Channel? = null
 
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public String toString() {
+    override fun toString(): String {
         return "RssFeed{" +
                 "version='" + version + '\'' +
                 ", channel=" + channel +
-                '}';
+                '}'
     }
 
-    @NamespaceList({
-            @Namespace(reference = "http://www.w3.org/2005/Atom", prefix = "atom")
-    })
+    @NamespaceList(Namespace(reference = "http://www.w3.org/2005/Atom", prefix = "atom"))
     @Root(strict = false)
-    static class Channel {
+    internal class Channel {
         // Tricky part in Simple XML because the link is named twice
-        @ElementList(entry = "link", inline = true, required = false, type = Link.class)
-        public List<Link> links;
+        @ElementList(entry = "link", inline = true, required = false, type = Link::class)
+        var links: List<Link>? = null
 
-        @ElementList(name = "item", required = true, inline = true, type = Item.class)
-        public List<Item> itemList;
-
-        @Element(required = false)
-        public Image image;
-
-        @Element
-        public String title;
+        @ElementList(name = "item", required = true, inline = true, type = Item::class)
+        var itemList: List<Item>? = null
 
         @Element(required = false)
-        public String description;
+        var image: Image? = null
 
         @Element
-        public String language;
+        var title: String? = null
+
+        @Element(required = false)
+        var description: String? = null
+
+        @Element
+        var language: String? = null
         @Element(name = "pubDate", required = false)
-        public String pubDate;
+        var pubDate: String? = null
         @Element(name = "ttl", required = false)
-        int ttl;
+        var ttl: Int = 0
 
-        @Override
-        public String toString() {
+        override fun toString(): String {
             return "Channel{" +
                     "links=" + links +
                     ", itemList=" + itemList +
@@ -69,63 +52,62 @@ class RssFeed {
                     ", language='" + language + '\'' +
                     ", ttl=" + ttl +
                     ", pubDate='" + pubDate + '\'' +
-                    '}';
+                    '}'
         }
 
         @Root(name = "image", strict = false)
-        public static class Image {
+        class Image {
             @Attribute(required = false)
-            public String url;
+            var url: String? = null
             @Attribute(required = false)
-            public String title;
+            var title: String? = null
             @Attribute(required = false)
-            public String link;
+            var link: String? = null
             @Attribute(required = false)
-            public String width;
+            var width: String? = null
             @Attribute(required = false)
-            public String height;
+            var height: String? = null
         }
 
-        public static class Link {
+        class Link {
             @Attribute(required = false)
-            public String href;
+            var href: String? = null
 
             @Attribute(required = false)
-            public String rel;
+            var rel: String? = null
 
             @Attribute(name = "type", required = false)
-            public String contentType;
+            var contentType: String? = null
 
             @Text(required = false)
-            public String link;
+            var link: String? = null
         }
 
         @Root(name = "item", strict = false)
-        public static class Item {
+        class Item {
 
             @Element(name = "title", required = true)
-            public String title;
+            var title: String? = null
             @Element(name = "link", required = true)
-            public String link;
+            var link: String? = null
             @Element(name = "description", required = false)
-            public String description;
+            var description: String? = null
             @Element(name = "author", required = false)
-            public String author;
-            @ElementList(name = "category", required = false, inline = true, type = String.class)
-            public List<String> categories;
+            var author: String? = null
+            @ElementList(name = "category", required = false, inline = true, type = String::class)
+            var categories: List<String>? = null
             @Element(name = "comments", required = false)
-            public String comments;
+            var comments: String? = null
             @Element(name = "enclosure", required = false)
-            public String enclosure;
+            var enclosure: String? = null
             @Element(name = "guid", required = false)
-            public String guid;
+            var guid: String? = null
             @Element(name = "pubDate", required = false)
-            public String pubDate;
+            var pubDate: String? = null
             @Element(name = "source", required = false)
-            public String source;
+            var source: String? = null
 
-            @Override
-            public String toString() {
+            override fun toString(): String {
                 return "Item{" +
                         "title='" + title + '\'' +
                         ", link='" + link + '\'' +
@@ -137,7 +119,7 @@ class RssFeed {
                         ", guid='" + guid + '\'' +
                         ", pubDate='" + pubDate + '\'' +
                         ", source='" + source + '\'' +
-                        '}';
+                        '}'
             }
         }
     }
