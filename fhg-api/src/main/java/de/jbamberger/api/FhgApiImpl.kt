@@ -2,7 +2,6 @@ package de.jbamberger.api
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import android.content.Context
 import de.jbamberger.api.data.FeedChunk
 import de.jbamberger.api.data.VPlan
 import java.util.concurrent.atomic.AtomicBoolean
@@ -13,9 +12,7 @@ import javax.inject.Inject
  */
 
 internal class FhgApiImpl @Inject
-constructor(context: Context) : FhgApi {
-
-    private val endpoint: FhgEndpoint = NetModule.getEndpoint(context)
+constructor(private val endpoint: FhgEndpoint) : FhgApi {
 
     override val vPlan: LiveData<ApiResponse<VPlan>>
         get() {

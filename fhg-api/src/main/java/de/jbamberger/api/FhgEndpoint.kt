@@ -35,10 +35,7 @@ internal interface FhgEndpoint {
     val xmlCalendar: LiveData<ApiResponse<EventCalendar>>
 
     companion object {
-
-
         //JSON REST API : https://fhg-radolfzell.de/wp-json/wp/v2/posts
-
         val BASE_URL = "https://fhg-radolfzell.de/"
     }
 }

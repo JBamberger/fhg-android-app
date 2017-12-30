@@ -1,62 +1,71 @@
 package de.jbamberger.api
 
 import android.content.Context
-
 import com.google.gson.Gson
-
+import com.google.gson.GsonBuilder
+import dagger.Module
+import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
+@Module
+internal class NetModule {
 
-internal class NetModule private constructor() {
+    private val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
 
-    init {
-        throw AssertionError("No instances.")
+    @Provides
+    @Singleton
+    fun providesGson(): Gson {
+        return GsonBuilder().create()
     }
 
-    companion object {
+    @Provides
+    @Singleton
+    fun provideOkHttpCache(context: Context): Cache {
+        return Cache(context.cacheDir, CACHE_SIZE)
+    }
 
-        fun getEndpoint(context: Context): FhgEndpoint {
-            return provideFhgEndpoint(provideRetrofitAPI(provideOkHttpClient(provideOkHttpCache(context))))
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(cache: Cache): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        builder.cache(cache)
+
+        if (BuildConfig.DEBUG) {
+            val httpLoggingInterceptor = HttpLoggingInterceptor()
+            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            builder.addInterceptor(httpLoggingInterceptor)
         }
 
-        private fun provideOkHttpCache(context: Context): Cache {
-            val cacheSize = 10 * 1024 * 1024 // 10 MiB
-            return Cache(context.cacheDir, cacheSize.toLong())
-        }
+        return builder.build()
+    }
 
-        private fun provideOkHttpClient(cache: Cache): OkHttpClient {
-            val builder = OkHttpClient.Builder()
-            builder.cache(cache)
+    @Provides
+    @Singleton
+    fun provideRetrofitAPI(gson: Gson, okHttpClient: OkHttpClient,
+                           feedConverterFactory: FeedConverterFactory): Retrofit.Builder {
+        return Retrofit.Builder()
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                .addConverterFactory(VPlanConverterFactory())
+                .addConverterFactory(feedConverterFactory)
+//                .addConverterFactory(SimpleXmlConverterFactory.create())
+//                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
+    }
 
-            /*if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(httpLoggingInterceptor);
-        }*/
-
-            return builder.build()
-        }
-
-        private fun provideRetrofitAPI(okHttpClient: OkHttpClient): Retrofit.Builder {
-            val gson = Gson()
-            return Retrofit.Builder()
-                    .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                    .addConverterFactory(VPlanConverterFactory())
-                    .addConverterFactory(FeedConverterFactory(gson))
-                    //.addConverterFactory(SimpleXmlConverterFactory.create())
-                    //                .addConverterFactory(ScalarsConverterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(okHttpClient)
-        }
-
-        private fun provideFhgEndpoint(retrofitBuilder: Retrofit.Builder): FhgEndpoint {
-            return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL).build().create(FhgEndpoint::class.java)
-        }
+    @Provides
+    @Singleton
+    fun provideFhgEndpoint(retrofitBuilder: Retrofit.Builder): FhgEndpoint {
+        return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL)
+                .build()
+                .create(FhgEndpoint::class.java)
     }
 }

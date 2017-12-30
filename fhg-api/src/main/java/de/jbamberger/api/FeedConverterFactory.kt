@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import de.jbamberger.api.data.FeedChunk
 import de.jbamberger.api.data.FeedItem
-import de.jbamberger.util.Preconditions.checkNotNull
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -16,13 +15,7 @@ import javax.inject.Inject
  */
 
 class FeedConverterFactory @Inject
-internal constructor(gson: Gson) : Converter.Factory() {
-
-    private val gson: Gson
-
-    init {
-        this.gson = checkNotNull(gson)
-    }
+internal constructor(private val gson: Gson) : Converter.Factory() {
 
     override fun responseBodyConverter(
             type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, FeedChunk>? {
