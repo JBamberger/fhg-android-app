@@ -12,7 +12,6 @@ import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.charset.IllegalCharsetNameException
 import java.nio.charset.UnsupportedCharsetException
-import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -66,7 +65,6 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
                     } catch (e: IllegalStateException) {
                         Timber.w(e, "charset extraction failed.")
                     }
-
                 }
             }
             if (doc == null) {
@@ -76,7 +74,6 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
                 html = tmpHtml
             }
         }
-
 
         val dateAndDay = readVPlanStatus(html)
         val lastUpdated = readVPlanTitle(doc!!)
@@ -105,7 +102,6 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
             } catch (e: ArrayIndexOutOfBoundsException) {
                 throw ParseException("Could not parse vplan lastUpdated", e)
             }
-
         }
 
         @Throws(ParseException::class)
@@ -115,7 +111,6 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
             } catch (e: Exception) {
                 throw ParseException("Could not parse vplan dateAndDay", e)
             }
-
         }
 
         @Throws(ParseException::class)
@@ -156,24 +151,18 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
             } catch (e: Exception) {
                 throw ParseException("Could not parse motd table", e)
             }
-
         }
 
         @Throws(ParseException::class)
         private fun readVPlanTable(vPlanTable: Elements): List<VPlanRow> {
             try {
-                val rows = ArrayList<VPlanRow>()
-                for (line in vPlanTable) {
-                    val cells = line.children()
-                    if (cells.select("th").size == 0) {
-                        rows.add(readVPlanTableCells(cells))
-                    }
-                }
-                return rows
+                return vPlanTable
+                        .map { it.children() }
+                        .filter { it.select("th").size == 0 }
+                        .map { readVPlanTableCells(it) }
             } catch (e: Exception) {
                 throw ParseException("Could not parse vplan table", e)
             }
-
         }
 
         @Throws(ParseException::class)
@@ -187,27 +176,27 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
                     val kind = cells[KIND_C].getElementsByTag("span")
                     val content = cells[CONTENT_C].getElementsByTag("span")
 
-                    val valGrade = if (grade != null && grade.first() != null)
+                    val valGrade = if (grade?.first() != null)
                         grade.first().html()
                     else
                         cells[GRADE_C].text()
-                    val valHour = if (hour != null && hour.first() != null)
+                    val valHour = if (hour?.first() != null)
                         hour.first().html()
                     else
                         cells[HOUR_C].text()
-                    val valContent = if (content != null && content.first() != null)
+                    val valContent = if (content?.first() != null)
                         content.first().html()
                     else
                         cells[CONTENT_C].text()
-                    val valSubject = if (subject != null && subject.first() != null)
+                    val valSubject = if (subject?.first() != null)
                         subject.first().html()
                     else
                         cells[SUBJECT_C].text()
-                    val valRoom = if (room != null && room.first() != null)
+                    val valRoom = if (room?.first() != null)
                         room.first().html()
                     else
                         cells[ROOM_C].text()
-                    val valKind = if (kind != null && kind.first() != null)
+                    val valKind = if (kind?.first() != null)
                         kind.first().html()
                     else
                         cells[KIND_C].text()
@@ -221,7 +210,6 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
             } catch (e: Exception) {
                 throw ParseException("Could not parse vplan row", e)
             }
-
         }
     }
 }

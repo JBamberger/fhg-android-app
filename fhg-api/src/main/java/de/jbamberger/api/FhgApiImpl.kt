@@ -58,7 +58,6 @@ constructor(context: Context) : FhgApi {
                     }
                 }
             }
-
             return merger
         }
 
