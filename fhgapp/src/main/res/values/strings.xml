@@ -2,30 +2,25 @@
     <string name="app_name">FhgApp</string>
     <string name="play_link">https://play.google.com/store/apps/details?id=%1$s</string>
 
+
+
+    <string name="title_activity_main">FHG Radolfzell</string>
+
+    <string name="action_share">Teilen</string>
+    <string name="action_share_text">Die App %1$s hat mir gut gefallen. Du kannst sie von %2$s herunterladen.</string>
+    <string name="action_share_chooser_title">App empfehlen</string>
+
+    <string name="action_contact_developer">Entwickler kontaktieren</string>
     <string name="support_uri">mailto:dev.jbamberger@gmail.com</string>
     <string name="support_subject">Application [%1$s] version [%2$s (%3$d)]</string>
 
-    <string name="action_share_chooser_title">App empfehlen</string>
-    <string name="action_share_text">Die App %1$s hat mir gut gefallen. Du kannst sie von %2$s herunterladen.</string>
+    <string name="action_settings">Einstellungen</string>
 
-    <string name="vplan_text_no_warranty">Alle Angaben ohne Gewähr.</string>
-    <string name="title_activity_main">MainActivity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="action_share">Share</string>
-    <string name="action_credits">Credits</string>
-    <string name="title_vplan">VPlan</string>
     <string name="title_feed">Feed</string>
 
-    <string name="action_contact_developer">Entwickler kontaktieren.</string>
-
+    <string name="action_about">Über die App</string>
     <string name="title_activity_about">Über die App</string>
 
+    <string name="title_vplan">Vertretungsplan</string>
+    <string name="vplan_text_no_warranty">Alle Angaben ohne Gewähr.</string>
 </resources>
