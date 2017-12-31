@@ -13,20 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/fhg_header_logo"
+                android:id="@+id/contact_header_logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:contentDescription="@string/contact_fhg_logo_description"
-                app:layout_constraintBottom_toTopOf="@+id/contact_title"
+                android:contentDescription="@string/contact_logo_description"
+                app:layout_constraintBottom_toTopOf="@+id/contact_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +33,7 @@
                 app:srcCompat="@drawable/fhg_header_logo" />
 
             <TextView
-                android:id="@+id/contact_title"
+                android:id="@+id/contact_header"
                 android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -42,17 +41,17 @@
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:padding="12dp"
-                android:text="@string/contact_title"
+                android:text="@string/contact_header"
                 android:textColor="@color/text_dark_primary"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/contact_text"
+                app:layout_constraintBottom_toTopOf="@+id/contact_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fhg_header_logo" />
+                app:layout_constraintTop_toBottomOf="@+id/contact_header_logo" />
 
             <TextView
-                android:id="@+id/contact_text"
+                android:id="@+id/contact_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -60,15 +59,15 @@
                 android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/contact_fhg_contact"
-                app:layout_constraintBottom_toTopOf="@+id/action_call"
+                android:text="@string/contact_content"
+                app:layout_constraintBottom_toTopOf="@+id/contact_action_call"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_title" />
+                app:layout_constraintTop_toBottomOf="@+id/contact_header" />
 
             <TextView
-                android:id="@+id/action_call"
+                android:id="@+id/contact_action_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -77,16 +76,16 @@
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/ic_call_accent_24dp"
                 android:focusable="true"
-                android:text="@string/action_call"
+                android:text="@string/contact_action_call"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/action_mail"
+                app:layout_constraintEnd_toStartOf="@+id/contact_action_mail"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_text"
+                app:layout_constraintTop_toBottomOf="@+id/contact_content"
                 app:onClickListener="@{listener::onClick}" />
 
             <TextView
-                android:id="@+id/action_mail"
+                android:id="@+id/contact_action_mail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -94,16 +93,16 @@
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/ic_email_accent_24dp"
                 android:focusable="true"
-                android:text="@string/action_mail"
-                app:layout_constraintBottom_toBottomOf="@+id/action_call"
-                app:layout_constraintEnd_toStartOf="@+id/action_navigate"
+                android:text="@string/contact_action_mail"
+                app:layout_constraintBottom_toBottomOf="@+id/contact_action_call"
+                app:layout_constraintEnd_toStartOf="@+id/contact_action_navigate"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/action_call"
-                app:layout_constraintTop_toTopOf="@+id/action_call"
+                app:layout_constraintStart_toEndOf="@+id/contact_action_call"
+                app:layout_constraintTop_toTopOf="@+id/contact_action_call"
                 app:onClickListener="@{listener::onClick}" />
 
             <TextView
-                android:id="@+id/action_navigate"
+                android:id="@+id/contact_action_navigate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -111,12 +110,12 @@
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/ic_map_accent_24dp"
                 android:focusable="true"
-                android:text="@string/action_navigate"
-                app:layout_constraintBottom_toBottomOf="@+id/action_call"
+                android:text="@string/contact_action_navigate"
+                app:layout_constraintBottom_toBottomOf="@+id/contact_action_call"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/action_mail"
-                app:layout_constraintTop_toTopOf="@+id/action_call"
+                app:layout_constraintStart_toEndOf="@+id/contact_action_mail"
+                app:layout_constraintTop_toTopOf="@+id/contact_action_call"
                 app:onClickListener="@{listener::onClick}" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

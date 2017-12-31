@@ -32,16 +32,16 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.action_call -> {
-                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.text_fhg_contact_phone))))
+            R.id.contact_action_call -> {
+                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.contact_phone_uri))))
             }
-            R.id.action_mail -> {
-                startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.text_fhg_contact_mail))))
+            R.id.contact_action_mail -> {
+                startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.contact_mail_uri))))
             }
-            R.id.action_navigate -> {
+            R.id.contact_action_navigate -> {
                 val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(getString(R.string.contact_nav_uri))
-                intent.`package` = getString(R.string.contact_nav_package)
+                intent.data = Uri.parse(getString(R.string.contact_navigation_uri))
+                intent.`package` = getString(R.string.contact_navigation_package)
                 startActivity(intent)
             }
         }
