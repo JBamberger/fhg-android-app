@@ -19,7 +19,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_contact_developere"
+        android:id="@+id/action_contact_developer"
         android:title="@string/action_contact_developer"
         app:showAsAction="never" />
 

@@ -13,6 +13,7 @@ import de.jbamberger.fhgapp.databinding.ActivityMainBinding
 import de.jbamberger.fhgapp.ui.about.AboutActivity
 import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.settings.SettingsActivity
+import de.jbamberger.fhgapp.util.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -61,6 +62,7 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.action_share -> {
+                Utils.shareApplication(this)
                 return true
             }
             R.id.action_settings -> {
@@ -71,7 +73,8 @@ class MainActivity : BaseActivity() {
                 startActivity(Intent(this, AboutActivity::class.java))
                 return true
             }
-            R.id.action_contact_developere -> {
+            R.id.action_contact_developer -> {
+                Utils.contactDeveloper(this)
                 return true
             }
         }

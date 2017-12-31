@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">FhgApp</string>
+    <string name="play_link">https://play.google.com/store/apps/details?id=%1$s</string>
+
+    <string name="support_uri">mailto:dev.jbamberger@gmail.com</string>
+    <string name="support_subject">Application [%1$s] version [%2$s (%3$d)]</string>
+
+    <string name="action_share_chooser_title">App empfehlen</string>
+    <string name="action_share_text">Die App %1$s hat mir gut gefallen. Du kannst sie von %2$s herunterladen.</string>
 
     <string name="vplan_text_no_warranty">Alle Angaben ohne Gewähr.</string>
     <string name="title_activity_main">MainActivity</string>
