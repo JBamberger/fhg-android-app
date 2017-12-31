@@ -67,7 +67,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      */
     override fun isValidFragment(fragmentName: String): Boolean {
         return PreferenceFragment::class.java.name == fragmentName
-                || GeneralPreferenceFragment::class.java.name == fragmentName
+                || VPlanPreferenceFragment::class.java.name == fragmentName
     }
 
     /**
@@ -75,7 +75,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    class GeneralPreferenceFragment : PreferenceFragment() {
+    class VPlanPreferenceFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.pref_general)
@@ -85,8 +85,8 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"))
-            bindPreferenceSummaryToValue(findPreference("example_list"))
+//            bindPreferenceSummaryToValue(findPreference("example_text"))
+//            bindPreferenceSummaryToValue(findPreference("example_list"))
         }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {

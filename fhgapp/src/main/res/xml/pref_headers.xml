@@ -2,7 +2,8 @@
 
     <!-- These settings headers are only used on tablets. -->
     <header
-        android:fragment="de.jbamberger.fhgapp.ui.settings.SettingsActivity$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general" />
+        android:fragment="de.jbamberger.fhgapp.ui.settings.SettingsActivity$VPlanPreferenceFragment"
+        android:summary="@string/settings_header_vplan_summary"
+        android:title="@string/settings_header_vplan_title" />
 
 </preference-headers>
