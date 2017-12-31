@@ -31,5 +31,22 @@
 
 
     <string name="title_activity_about">Über die App</string>
+    <string name="action_call">Anrufen</string>
+    <string name="action_mail">Mail schreiben</string>
+    <string name="action_navigate">Navigieren</string>
+
+    <string name="text_fhg_contact_mail">mailto:schule@fhg-radolfzell.de</string>
+    <string name="text_fhg_contact_phone">tel:0049773294780</string>
+    <string name="contact_fhg_contact">
+        Markelfinger Str. 15\n
+        D – 78315 Radolfzell\n
+        Tel: +49 (0) 77 32 / 94 78 0\n
+        Fax: +49 (0) 77 32 / 94 78 99\n
+        E-Mail: schule@fhg-radolfzell.de\n
+    </string>
+    <string name="contact_title">Friedrich-Hecker-Gymnasium</string>
+    <string name="contact_fhg_logo_description">FHG Logo</string>
+    <string name="contact_nav_uri">google.navigation:q=Friedrich-Hecker-Gymnasium,+Markelfinger+Straße,+Radolfzell+am+Bodensee</string>
+    <string name="contact_nav_package">com.google.android.apps.maps</string>
 
 </resources>
