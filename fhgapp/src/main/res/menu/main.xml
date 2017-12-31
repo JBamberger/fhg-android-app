@@ -18,4 +18,9 @@
         android:title="@string/action_credits"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_contact_developere"
+        android:title="@string/action_contact_developer"
+        app:showAsAction="never" />
+
 </menu>
