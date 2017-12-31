@@ -27,7 +27,7 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.init()
+        viewModel!!.init()
     }
 
     override fun onClick(view: View?) {
@@ -47,7 +47,6 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
         }
     }
 
-    override fun getViewModelClass(): Class<ContactViewModel> {
-        return ContactViewModel::class.java
-    }
+    override val viewModelClass: Class<ContactViewModel>
+        get() = ContactViewModel::class.java
 }

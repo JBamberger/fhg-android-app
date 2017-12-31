@@ -35,16 +35,16 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.init()
+        viewModel!!.init()
         binding!!.isRefreshing = true
-        viewModel.feed!!.observe(this, this)
+        viewModel!!.feed!!.observe(this, this)
     }
 
     override fun onRefresh() {
         binding!!.isRefreshing = true
-        viewModel.feed!!.removeObserver(this)
-        viewModel.refresh()
-        viewModel.feed!!.observe(this, this)
+        viewModel!!.feed!!.removeObserver(this)
+        viewModel!!.refresh()
+        viewModel!!.feed!!.observe(this, this)
     }
 
     override fun onChanged(feedResource: Resource<FeedChunk>?) {
@@ -63,10 +63,8 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
         Timber.d("clicked item with link %s", link)
     }
 
-
-    override fun getViewModelClass(): Class<FeedViewModel> {
-        return FeedViewModel::class.java
-    }
+    override val viewModelClass: Class<FeedViewModel>
+        get() = FeedViewModel::class.java
 
     private class FeedAdapter
     internal constructor(private val fragment: FeedFragment, private val feed: FeedChunk)

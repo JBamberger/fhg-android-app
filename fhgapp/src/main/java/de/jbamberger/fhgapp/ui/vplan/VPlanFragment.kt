@@ -33,16 +33,16 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.init()
+        viewModel!!.init()
         binding!!.isRefreshing = true
-        viewModel.vPlan!!.observe(this, this)
+        viewModel!!.vPlan!!.observe(this, this)
     }
 
     override fun onRefresh() {
         binding!!.isRefreshing = true
-        viewModel.vPlan!!.removeObserver(this)
-        viewModel.refresh()
-        viewModel.vPlan!!.observe(this, this)
+        viewModel!!.vPlan!!.removeObserver(this)
+        viewModel!!.refresh()
+        viewModel!!.vPlan!!.observe(this, this)
     }
 
     override fun onChanged(vPlanResource: Resource<VPlan>?) {
@@ -53,10 +53,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         }
     }
 
-    override fun getViewModelClass(): Class<VPlanViewModel> {
-        return VPlanViewModel::class.java
-    }
-
+    override val viewModelClass: Class<VPlanViewModel>
+        get() = VPlanViewModel::class.java
 
     private class VPlanAdapter internal constructor(vPlan: VPlan) : DataBindingBaseAdapter() {
 
