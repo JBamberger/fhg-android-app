@@ -9,6 +9,7 @@ import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.fhgapp.AppExecutors
 import de.jbamberger.fhgapp.source.db.AppDatabase
+import de.jbamberger.fhgapp.source.db.KeyValueStorage
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,23 +19,26 @@ import javax.inject.Singleton
 
 @Singleton
 class Repository @Inject
-constructor(private val appExecutors: AppExecutors, private val api: FhgApi, private val db: AppDatabase) {
-    private var vPlanCache: VPlan? = null
+constructor(private val appExecutors: AppExecutors, private val api: FhgApi,
+            private val db: AppDatabase, private val kvStore: KeyValueStorage) {
+    private var vplanFromNet: Boolean = true
     private var feedFromNet: Boolean = true
 
     val vPlan: LiveData<Resource<VPlan>>
         get() = object : NetworkBoundResource<VPlan, VPlan>(appExecutors) {
             override fun saveCallResult(item: VPlan) {
-                vPlanCache = item
+                kvStore.save(VPLAN_KEY, item)
             }
 
             override fun shouldFetch(data: VPlan?): Boolean {
-                return true
+                val fetch = vplanFromNet
+                vplanFromNet = false
+                return fetch
             }
 
             override fun loadFromDb(): LiveData<VPlan> {
                 val l = MutableLiveData<VPlan>()
-                l.value = vPlanCache
+                l.value = kvStore.get(VPLAN_KEY)
                 return l
             }
 
@@ -68,4 +72,9 @@ constructor(private val appExecutors: AppExecutors, private val api: FhgApi, pri
             }
         }.asLiveData()
 
+
+
+    companion object {
+        val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"
+    }
 }
