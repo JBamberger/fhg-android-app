@@ -24,6 +24,7 @@ internal constructor(private val repo: Repository) : ViewModel() {
     }
 
     internal fun refresh() {
+        repo.feedFromNet = true
         feed = repo.feed
     }
 }

@@ -51,10 +51,6 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
         if (feedResource.status == Status.SUCCESS && feedResource.data != null) {
-            for (item in feedResource.data) {
-                Timber.d(item.toString())
-            }
-
             binding!!.container.adapter = FeedAdapter(this, feedResource.data)
             binding!!.isRefreshing = false
         }

@@ -25,6 +25,7 @@ internal constructor(private val repo: Repository) : ViewModel() {
     }
 
     internal fun refresh() {
+        repo.vplanFromNet = true
         vPlan = repo.vPlan
     }
 }

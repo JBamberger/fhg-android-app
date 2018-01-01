@@ -21,8 +21,8 @@ import javax.inject.Singleton
 class Repository @Inject
 constructor(private val appExecutors: AppExecutors, private val api: FhgApi,
             private val db: AppDatabase, private val kvStore: KeyValueStorage) {
-    private var vplanFromNet: Boolean = true
-    private var feedFromNet: Boolean = true
+    var vplanFromNet: Boolean = true
+    var feedFromNet: Boolean = true
 
     val vPlan: LiveData<Resource<VPlan>>
         get() = object : NetworkBoundResource<VPlan, VPlan>(appExecutors) {
