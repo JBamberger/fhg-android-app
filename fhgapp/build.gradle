@@ -18,11 +18,11 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        /*javaCompileOptions {
+        javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
-        }*/
+        }
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -78,7 +78,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
 
     implementation "android.arch.persistence.room:runtime:$arch_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
+    kapt "android.arch.persistence.room:compiler:$arch_version"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:retrofit-converters:$retrofit_version"

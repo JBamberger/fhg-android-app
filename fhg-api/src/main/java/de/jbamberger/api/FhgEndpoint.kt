@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 
 import de.jbamberger.api.data.EventCalendar
 import de.jbamberger.api.data.FeedChunk
+import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlanDay
 import retrofit2.http.GET
 
@@ -20,7 +21,7 @@ internal interface FhgEndpoint {
     val vPlanFrame2: LiveData<ApiResponse<VPlanDay>>
 
     @get:GET("/wp-json/wp/v2/posts")
-    val feed: LiveData<ApiResponse<FeedChunk>>
+    val feed: LiveData<ApiResponse<List<FeedItem>>>
 
     @get:GET("feed")
     val xmlFeed: LiveData<ApiResponse<FeedChunk>>

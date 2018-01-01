@@ -2,7 +2,7 @@ package de.jbamberger.fhgapp.ui.feed
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import de.jbamberger.api.data.FeedChunk
+import de.jbamberger.api.data.FeedItem
 import de.jbamberger.fhgapp.source.Repository
 import de.jbamberger.fhgapp.source.Resource
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
  */
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var feed: LiveData<Resource<FeedChunk>>? = null
+    internal var feed: LiveData<Resource<List<FeedItem>>>? = null
         private set
 
 

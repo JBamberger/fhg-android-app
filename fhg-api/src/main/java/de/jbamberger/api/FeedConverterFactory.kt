@@ -2,7 +2,6 @@ package de.jbamberger.api
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import de.jbamberger.api.data.FeedChunk
 import de.jbamberger.api.data.FeedItem
 import okhttp3.ResponseBody
 import retrofit2.Converter
@@ -18,12 +17,11 @@ class FeedConverterFactory @Inject
 internal constructor(private val gson: Gson) : Converter.Factory() {
 
     override fun responseBodyConverter(
-            type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, FeedChunk>? {
-        if (type == FeedChunk::class.java) {
+            type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, List<FeedItem>>? {
+        val listType = object : TypeToken<List<FeedItem>>() {}.type
+        if (type == listType) {
             return Converter { body ->
-                val listType = object : TypeToken<List<FeedItem>>() {}.type
-                val items = gson.fromJson<List<FeedItem>>(body.string(), listType)
-                FeedChunk(items)
+                gson.fromJson<List<FeedItem>>(body.string(), listType).orEmpty()
             }
         } else {
             return null

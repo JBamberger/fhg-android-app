@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.jbamberger.api.data.FeedChunk
+import de.jbamberger.api.data.FeedItem
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.source.Resource
@@ -18,11 +18,12 @@ import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
 import timber.log.Timber
 
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 class FeedFragment : BaseFragment<FeedViewModel>(),
-        SwipeRefreshLayout.OnRefreshListener, Observer<Resource<FeedChunk>> {
+        SwipeRefreshLayout.OnRefreshListener, Observer<Resource<List<FeedItem>>> {
 
     private var binding: RefreshableListFragmentBinding? = null
 
@@ -47,10 +48,10 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
         viewModel!!.feed!!.observe(this, this)
     }
 
-    override fun onChanged(feedResource: Resource<FeedChunk>?) {
+    override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
         if (feedResource.status == Status.SUCCESS && feedResource.data != null) {
-            for (item in feedResource.data.items) {
+            for (item in feedResource.data) {
                 Timber.d(item.toString())
             }
 
@@ -67,7 +68,7 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
         get() = FeedViewModel::class.java
 
     private class FeedAdapter
-    internal constructor(private val fragment: FeedFragment, private val feed: FeedChunk)
+    internal constructor(private val fragment: FeedFragment, private val feed: List<FeedItem>)
         : DataBindingBaseAdapter() {
 
         override fun getLayoutIdForPosition(position: Int): Int {
@@ -75,11 +76,11 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
         }
 
         override fun getItemCount(): Int {
-            return feed.items.size
+            return feed.size
         }
 
         override fun getObjForPosition(position: Int): Any {
-            return feed.items[position]
+            return feed[position]
         }
 
         override fun getListenerForPosition(position: Int): Any? {

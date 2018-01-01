@@ -1,8 +1,7 @@
 package de.jbamberger.api
 
 import android.arch.lifecycle.LiveData
-
-import de.jbamberger.api.data.FeedChunk
+import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
 
 /**
@@ -13,5 +12,5 @@ interface FhgApi {
 
     val vPlan: LiveData<ApiResponse<VPlan>>
 
-    val feed: LiveData<ApiResponse<FeedChunk>>
+    val feed: LiveData<ApiResponse<List<FeedItem>>>
 }

@@ -2,7 +2,7 @@ package de.jbamberger.api
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
-import de.jbamberger.api.data.FeedChunk
+import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -58,7 +58,7 @@ constructor(private val endpoint: FhgEndpoint) : FhgApi {
             return merger
         }
 
-    override val feed: LiveData<ApiResponse<FeedChunk>>
+    override val feed: LiveData<ApiResponse<List<FeedItem>>>
         get() = endpoint.feed
 
 }

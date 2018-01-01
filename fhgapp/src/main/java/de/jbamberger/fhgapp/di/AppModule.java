@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.di;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -10,6 +11,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import de.jbamberger.api.FhgApiModule;
+import de.jbamberger.fhgapp.source.db.AppDatabase;
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -28,5 +30,11 @@ class AppModule {
     @Singleton
     SharedPreferences providesSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    @Provides
+    @Singleton
+    AppDatabase provideAppDatabase(Application application) {
+        return Room.databaseBuilder(application, AppDatabase.class, "fhg-db.sglite").build();
     }
 }
