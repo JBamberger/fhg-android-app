@@ -47,8 +47,12 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onChanged(vPlanResource: Resource<VPlan>?) {
         if (vPlanResource == null) return
-        if (vPlanResource.status == Status.SUCCESS && vPlanResource.data != null) {
-            binding!!.container.adapter = VPlanAdapter(vPlanResource.data)
+        if (vPlanResource.status == Status.SUCCESS) {
+            if (vPlanResource.data != null) {
+                binding!!.container.adapter = VPlanAdapter(vPlanResource.data)
+            }
+            binding!!.isRefreshing = false
+        } else if (vPlanResource.status == Status.ERROR) {
             binding!!.isRefreshing = false
         }
     }

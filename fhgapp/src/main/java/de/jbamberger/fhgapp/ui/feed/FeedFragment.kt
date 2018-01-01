@@ -50,8 +50,12 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
 
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
-        if (feedResource.status == Status.SUCCESS && feedResource.data != null) {
-            binding!!.container.adapter = FeedAdapter(this, feedResource.data)
+        if (feedResource.status == Status.SUCCESS) {
+            if (feedResource.data != null) {
+                binding!!.container.adapter = FeedAdapter(this, feedResource.data)
+            }
+            binding!!.isRefreshing = false
+        } else if (feedResource.status == Status.ERROR) {
             binding!!.isRefreshing = false
         }
     }
