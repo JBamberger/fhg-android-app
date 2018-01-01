@@ -7,6 +7,8 @@ import de.jbamberger.fhgapp.BuildConfig
 import de.jbamberger.fhgapp.R
 
 
+
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
@@ -20,7 +22,10 @@ class Utils {
             val sendIntent = Intent(Intent.ACTION_SEND)
             sendIntent.type = "text/plain"
             sendIntent.putExtra(Intent.EXTRA_TEXT, content)
-            activity.startActivity(Intent.createChooser(sendIntent, chooserTitle))
+            val intent = Intent.createChooser(sendIntent, chooserTitle)
+
+            if (intent.resolveActivity(activity.packageManager) == null) return
+            activity.startActivity(intent)
         }
 
         fun contactDeveloper(activity: Activity) {
@@ -29,6 +34,19 @@ class Utils {
                     BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
             val intent = Intent(Intent.ACTION_SENDTO, recipientUri)
             intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+
+            if (intent.resolveActivity(activity.packageManager) == null) return
+            activity.startActivity(intent)
+        }
+
+        fun openUrl(activity: Activity, url: String) {
+            var uri = Uri.parse(url)
+            if (uri.scheme.isBlank()) {
+                uri = Uri.parse("http://" + url)
+            }
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+
+            if (intent.resolveActivity(activity.packageManager) == null) return
             activity.startActivity(intent)
         }
     }
