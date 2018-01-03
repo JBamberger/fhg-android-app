@@ -148,7 +148,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         }
 
         override fun getItemCount(): Int {
-            return bound2
+            return bound2 + 1
         }
     }
 }
