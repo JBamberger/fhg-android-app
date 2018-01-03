@@ -1,10 +1,12 @@
 package de.jbamberger.fhgapp.ui.vplan
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.fhgapp.source.Repository
 import de.jbamberger.fhgapp.source.Resource
+import de.jbamberger.fhgapp.source.Status
 import javax.inject.Inject
 
 /**
@@ -21,11 +23,21 @@ internal constructor(private val repo: Repository) : ViewModel() {
         if (this.vPlan != null) {
             return
         }
-        vPlan = repo.vPlan
+        vPlan = filterVPlan(repo.vPlan)
     }
 
     internal fun refresh() {
         repo.vplanFromNet = true
-        vPlan = repo.vPlan
+        vPlan = filterVPlan(repo.vPlan)
+    }
+
+    private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>): LiveData<Resource<VPlan>> {
+        return Transformations.map(unfiltered, {
+            if (it.status == Status.SUCCESS && it.data != null) {
+                Resource.success(VPlanUtils.filter(it.data, repo.getVPlanMatcher()))
+            } else {
+                it
+            }
+        })
     }
 }

@@ -7,9 +7,12 @@ import de.jbamberger.api.ApiResponse
 import de.jbamberger.api.FhgApi
 import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
+import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhgapp.AppExecutors
 import de.jbamberger.fhgapp.source.db.AppDatabase
 import de.jbamberger.fhgapp.source.db.KeyValueStorage
+import de.jbamberger.fhgapp.source.db.Settings
+import de.jbamberger.fhgapp.ui.vplan.VPlanUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,8 +22,12 @@ import javax.inject.Singleton
 
 @Singleton
 class Repository @Inject
-constructor(private val appExecutors: AppExecutors, private val api: FhgApi,
-            private val db: AppDatabase, private val kvStore: KeyValueStorage) {
+constructor(
+        private val appExecutors: AppExecutors,
+        private val api: FhgApi,
+        private val db: AppDatabase,
+        private val kvStore: KeyValueStorage,
+        private val settings: Settings) {
     var vplanFromNet: Boolean = true
     var feedFromNet: Boolean = true
 
@@ -72,7 +79,13 @@ constructor(private val appExecutors: AppExecutors, private val api: FhgApi,
             }
         }.asLiveData()
 
-
+    fun getVPlanMatcher(): (VPlanRow) -> Boolean {
+        if (settings.vPlanShowAll) {
+            return { true }
+        } else {
+            return VPlanUtils.matcherForSettings(settings.vPlanGrades, settings.vPlanCourses)
+        }
+    }
 
     companion object {
         val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"

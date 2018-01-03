@@ -14,13 +14,15 @@ class VPlan private constructor(val day1: VPlanDay, val day2: VPlanDay) {
         private var day2: VPlanDay? = null
 
         @Synchronized
-        fun addDay1(day1: VPlanDay) {
+        fun addDay1(day1: VPlanDay): VPlan.Builder {
             this.day1 = day1
+            return this
         }
 
         @Synchronized
-        fun addDay2(day2: VPlanDay) {
+        fun addDay2(day2: VPlanDay): VPlan.Builder {
             this.day2 = day2
+            return this
         }
 
         @Synchronized
