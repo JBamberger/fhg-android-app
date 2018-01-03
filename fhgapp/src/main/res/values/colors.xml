@@ -9,13 +9,7 @@
 
     <color name="ic_launcher_background">@color/colorPrimary</color>
 
-    <color name="vplan_warranty_warning">#FFCDD2</color>
 
-
-
-    <color name="vplan_new">@color/light_green_500</color>
-    <color name="vplan_standard">@color/text_light_primary</color>
-    <color name="vplan_omitted">@color/text_dark_divider</color>
 
 
 

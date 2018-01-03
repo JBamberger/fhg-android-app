@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="vplan_omitted">entfällt</string>
     <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
     <string name="vplan_subtitle_few_grades">Zeige %1$s</string>
     <string name="vplan_subtitle_grades">Zeige %1$s&#8230;</string>
 
+
+    <color name="vplan_warranty_warning">#FFCDD2</color>
+
+    <color name="vplan_new">@color/light_green_500</color>
+    <color name="vplan_standard">@color/text_light_primary</color>
+    <color name="vplan_omitted">@color/text_dark_divider</color>
+
+    <color name="vplan_text_omitted">#FF5252</color>
+    <color name="vplan_text_normal">@color/text_dark_secondary</color>
 
 </resources>
