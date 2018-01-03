@@ -12,6 +12,7 @@
     </data>
 
     <RelativeLayout
+        android:background="@color/vplan_header"
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            app:html="@{obj.dateAndDay}"
+            app:html="@{obj.lastUpdated}"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
             tools:text="Title" />
@@ -36,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/vplan_title"
             android:layout_centerHorizontal="true"
-            app:html="@{obj.lastUpdated}"
+            app:html="@{obj.dateAndDay}"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
             tools:text="last updated" />
@@ -47,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/vplan_status"
             android:layout_centerHorizontal="true"
+            android:text="@string/vplan_motd"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
             tools:text="Nachrichten zum Tag" />
