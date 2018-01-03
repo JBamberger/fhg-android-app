@@ -15,9 +15,8 @@ import javax.inject.Inject
 
 class VPlanViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var vPlan: LiveData<Resource<VPlan>>? = null
+    internal var vPlan: LiveData<Pair<Repository.VPlanSettings, Resource<VPlan>>>? = null
         private set
-
 
     internal fun init() {
         if (this.vPlan != null) {
@@ -31,12 +30,15 @@ internal constructor(private val repo: Repository) : ViewModel() {
         vPlan = filterVPlan(repo.vPlan)
     }
 
-    private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>): LiveData<Resource<VPlan>> {
+    private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>):
+            LiveData<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
         return Transformations.map(unfiltered, {
+            val settings = repo.vPlanSettings
+            val matcher = VPlanUtils.getVPlanMatcher(settings)
             if (it.status == Status.SUCCESS && it.data != null) {
-                Resource.success(VPlanUtils.filter(it.data, repo.getVPlanMatcher()))
+                Pair(settings, Resource.success(VPlanUtils.filter(it.data, matcher)))
             } else {
-                it
+                Pair(settings, it)
             }
         })
     }

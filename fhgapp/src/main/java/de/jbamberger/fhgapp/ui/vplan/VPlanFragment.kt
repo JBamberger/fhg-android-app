@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.ui.vplan
 
 import android.arch.lifecycle.Observer
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -12,17 +13,34 @@ import de.jbamberger.api.data.VPlan
 import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
+import de.jbamberger.fhgapp.source.Repository
 import de.jbamberger.fhgapp.source.Resource
 import de.jbamberger.fhgapp.source.Status
+import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener, Observer<Resource<VPlan>> {
+class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener, Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
 
     private var binding: RefreshableListFragmentBinding? = null
+    private var parent: MainActivity? = null
+
+    override fun onAttach(context: Context?) {
+        if (activity is MainActivity) {
+            parent = activity as MainActivity;
+        } else {
+            throw IllegalStateException("Parent must be MainActivity.")
+        }
+        super.onAttach(context)
+    }
+
+    override fun onDetach() {
+        parent = null
+        super.onDetach()
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
@@ -45,8 +63,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         viewModel!!.vPlan!!.observe(this, this)
     }
 
-    override fun onChanged(vPlanResource: Resource<VPlan>?) {
-        if (vPlanResource == null) return
+    override fun onChanged(filteredPlan: Pair<Repository.VPlanSettings, Resource<VPlan>>?) {
+        if (filteredPlan == null) return
+
+        parent?.setSubtitle(getSubtitle(filteredPlan.first))
+        val vPlanResource = filteredPlan.second
         if (vPlanResource.status == Status.SUCCESS) {
             if (vPlanResource.data != null) {
                 binding!!.container.adapter = VPlanAdapter(vPlanResource.data)
@@ -54,6 +75,18 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
             binding!!.isRefreshing = false
         } else if (vPlanResource.status == Status.ERROR) {
             binding!!.isRefreshing = false
+        }
+    }
+
+    private fun getSubtitle(settings: Repository.VPlanSettings): String {
+        if (settings.showAll || settings.grades.isEmpty()) {
+            return getString(R.string.vplan_subtitle_all)
+        } else {
+            if (settings.grades.size > 3) {
+                return getString(R.string.vplan_subtitle_grades, settings.grades.take(3).joinToString(", "))
+            } else {
+                return getString(R.string.vplan_subtitle_few_grades, settings.grades.take(3).joinToString(", "))
+            }
         }
     }
 

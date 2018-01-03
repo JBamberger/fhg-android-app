@@ -82,9 +82,14 @@ class MainActivity : BaseActivity() {
     }
 
     private fun showFragment(frag: Fragment?) {
+        supportActionBar?.subtitle = null
         val fragment: Fragment = frag ?: Fragment()
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit()
+    }
+
+    fun setSubtitle(subtitle: String) {
+        supportActionBar?.subtitle = subtitle
     }
 }

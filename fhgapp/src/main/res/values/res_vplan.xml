@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
+    <string name="vplan_subtitle_few_grades">Zeige %1$s</string>
+    <string name="vplan_subtitle_grades">Zeige %1$s&#8230;</string>
+
+
+</resources>

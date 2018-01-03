@@ -3,7 +3,7 @@ package de.jbamberger.fhgapp.ui.vplan
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanRow
-import timber.log.Timber
+import de.jbamberger.fhgapp.source.Repository
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -11,9 +11,17 @@ import timber.log.Timber
 
 object VPlanUtils {
 
-    interface VPlanMatcher {
-        fun matches(row: VPlanRow): Boolean;
-    }
+    private val PATTERN_START = "(.*"
+    private val PATTERN_END = ".*)"
+    private val GRADE_PATTERNS = arrayOf(
+            "(.*5[^0-9]*[aA].*)", "(.*5[^0-9]*[bB].*)", "(.*5[^0-9]*[cC].*)", "(.*5[^0-9]*[dD].*)", "(.*5[^0-9]*[eE].*)",
+            "(.*6[^0-9]*[aA].*)", "(.*6[^0-9]*[bB].*)", "(.*6[^0-9]*[cC].*)", "(.*6[^0-9]*[dD].*)", "(.*6[^0-9]*[eE].*)",
+            "(.*7[^0-9]*[aA].*)", "(.*7[^0-9]*[bB].*)", "(.*7[^0-9]*[cC].*)", "(.*7[^0-9]*[dD].*)", "(.*7[^0-9]*[eE].*)",
+            "(.*8[^0-9]*[aA].*)", "(.*8[^0-9]*[bB].*)", "(.*8[^0-9]*[cC].*)", "(.*8[^0-9]*[dD].*)", "(.*8[^0-9]*[eE].*)",
+            "(.*9[^0-9]*[aA].*)", "(.*9[^0-9]*[bB].*)", "(.*9[^0-9]*[cC].*)", "(.*9[^0-9]*[dD].*)", "(.*9[^0-9]*[eE].*)",
+            "(.*10[^0-9]*[aA].*)", "(.*10[^0-9]*[bB].*)", "(.*10[^0-9]*[cC].*)", "(.*10[^0-9]*[dD].*)", "(.*10[^0-9]*[eE].*)",
+            "(.*[kK].*1.*)", "(.*[kK].*2.*)")
+    private val IS_COURSE_PATTERN = "(.*[kK].*2.*)|(.*[kK].*1.*)".toRegex()
 
     fun filter(plan: VPlan, matcher: (VPlanRow) -> Boolean): VPlan {
         return VPlan.Builder()
@@ -27,28 +35,20 @@ object VPlanUtils {
                 day.vPlanRows.filter(matcher))
     }
 
-    private val PATTERN_MATCHES_EVERYTHING = ".*"
-    private val PATTERN_START = "(.*"
-    private val PATTERN_END = ".*)"
-    private val GRADE_PATTERNS = arrayOf(
-            "(.*5[^0-9]*[aA].*)", "(.*5[^0-9]*[bB].*)", "(.*5[^0-9]*[cC].*)", "(.*5[^0-9]*[dD].*)", "(.*5[^0-9]*[eE].*)",
-            "(.*6[^0-9]*[aA].*)", "(.*6[^0-9]*[bB].*)", "(.*6[^0-9]*[cC].*)", "(.*6[^0-9]*[dD].*)", "(.*6[^0-9]*[eE].*)",
-            "(.*7[^0-9]*[aA].*)", "(.*7[^0-9]*[bB].*)", "(.*7[^0-9]*[cC].*)", "(.*7[^0-9]*[dD].*)", "(.*7[^0-9]*[eE].*)",
-            "(.*8[^0-9]*[aA].*)", "(.*8[^0-9]*[bB].*)", "(.*8[^0-9]*[cC].*)", "(.*8[^0-9]*[dD].*)", "(.*8[^0-9]*[eE].*)",
-            "(.*9[^0-9]*[aA].*)", "(.*9[^0-9]*[bB].*)", "(.*9[^0-9]*[cC].*)", "(.*9[^0-9]*[dD].*)", "(.*9[^0-9]*[eE].*)",
-            "(.*10[^0-9]*[aA].*)", "(.*10[^0-9]*[bB].*)", "(.*10[^0-9]*[cC].*)", "(.*10[^0-9]*[dD].*)", "(.*10[^0-9]*[eE].*)",
-            "(.*[kK].*1.*)", "(.*[kK].*2.*)")
-
-    fun matcherForSettings(grades: Set<String>, courses: String): (VPlanRow) -> Boolean {
-        if (grades.isEmpty()) {
+    fun getVPlanMatcher(settings: Repository.VPlanSettings): (VPlanRow) -> Boolean {
+        if (settings.showAll) {
             return { true }
+        } else {
+            if (settings.grades.isEmpty()) {
+                return { true }
+            }
+            val gradeMatcher = getGradeMatcher(settings.grades)
+            if (settings.courses.isEmpty()) {
+                return gradeMatcher
+            }
+            val courseMatcher = getCourseMatcher(settings.courses)
+            return { gradeMatcher(it) && courseMatcher(it) }
         }
-        val gradeMatcher = getGradeMatcher(grades)
-        if (courses.isBlank()) {
-            return gradeMatcher
-        }
-        val courseMatcher = getCourseMatcher(courses)
-        return { gradeMatcher(it) && courseMatcher(it) }
     }
 
     private fun getGradeMatcher(grades: Set<String>): (VPlanRow) -> Boolean {
@@ -71,12 +71,10 @@ object VPlanUtils {
         return { it.grade.matches(pattern) }
     }
 
-    private fun getCourseMatcher(courses: String): (VPlanRow) -> Boolean {
+    private fun getCourseMatcher(courses: Set<String>): (VPlanRow) -> Boolean {
         val patternBuilder = StringBuilder()
-        val courseArray = courses.split(",".toRegex())
-                .filter { !it.isBlank() }
 
-        courseArray.forEachIndexed { index, course ->
+        courses.forEachIndexed { index, course ->
             run {
                 if (index > 0) {
                     patternBuilder.append("|")
@@ -86,14 +84,10 @@ object VPlanUtils {
                 patternBuilder.append(PATTERN_END)
             }
         }
-
-        val isCoursePattern = "(.*[kK].*2.*)|(.*[kK].*1.*)".toRegex()
         val pattern = patternBuilder.toString().toRegex()
 
-        Timber.d("Patterns /%s/   /%s/", isCoursePattern, pattern)
-
         return {
-            it.grade.matches(isCoursePattern) && it.subject.toLowerCase().matches(pattern)
+            it.grade.matches(IS_COURSE_PATTERN) && it.subject.toLowerCase().matches(pattern)
         }
     }
 }
