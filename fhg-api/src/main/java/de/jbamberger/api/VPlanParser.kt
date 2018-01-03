@@ -5,6 +5,7 @@ import de.jbamberger.api.data.VPlanRow
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import retrofit2.Converter
 import timber.log.Timber
@@ -167,39 +168,20 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
 
         @Throws(ParseException::class)
         private fun readVPlanTableCells(cells: Elements): VPlanRow {
+            fun read(element: Element): String {
+                val span = element.getElementsByTag("span")
+                val out = if (span.first() != null) span.first().html() else element.text()
+                return out.replace("&nbsp;", " ").trim()
+            }
             try {
                 if (cells.size >= 6) {
-                    val grade = cells[GRADE_C].getElementsByTag("span")
-                    val hour = cells[HOUR_C].getElementsByTag("span")
-                    val subject = cells[SUBJECT_C].getElementsByTag("span")
-                    val room = cells[ROOM_C].getElementsByTag("span")
-                    val kind = cells[KIND_C].getElementsByTag("span")
-                    val content = cells[CONTENT_C].getElementsByTag("span")
+                    val valGrade = read(cells[GRADE_C])
+                    val valHour = read(cells[HOUR_C])
+                    val valContent = read(cells[CONTENT_C])
+                    val valSubject = read(cells[SUBJECT_C])
+                    val valRoom = read(cells[ROOM_C])
+                    val valKind = read(cells[KIND_C])
 
-                    val valGrade = if (grade?.first() != null)
-                        grade.first().html()
-                    else
-                        cells[GRADE_C].text()
-                    val valHour = if (hour?.first() != null)
-                        hour.first().html()
-                    else
-                        cells[HOUR_C].text()
-                    val valContent = if (content?.first() != null)
-                        content.first().html()
-                    else
-                        cells[CONTENT_C].text()
-                    val valSubject = if (subject?.first() != null)
-                        subject.first().html()
-                    else
-                        cells[SUBJECT_C].text()
-                    val valRoom = if (room?.first() != null)
-                        room.first().html()
-                    else
-                        cells[ROOM_C].text()
-                    val valKind = if (kind?.first() != null)
-                        kind.first().html()
-                    else
-                        cells[KIND_C].text()
                     val valOmitted = cells[KIND_C].text().toLowerCase().contains("entfall")
                     val valMarkedNew = cells[GRADE_C].attr("style").matches("background-color: #00[Ff][Ff]00".toRegex())
 

@@ -9,12 +9,24 @@
 
     <color name="vplan_warranty_warning">#FFCDD2</color>
 
-    <color name="vplan_header">@color/blue_grey_100</color>
-    <color name="vplan_new">@color/light_green_500</color>
-    <color name="vplan_standard">@color/text_light_primary</color>
-    <color name="vplan_omitted">@color/text_dark_divider</color>
+    <color name="vplan_background_header">@color/blue_grey_100</color>
 
-    <color name="vplan_text_omitted">#FF5252</color>
-    <color name="vplan_text_normal">@color/text_dark_secondary</color>
+    <color name="vplan_background_new">@color/light_green_500</color>
+    <color name="vplan_background_standard">@color/text_light_primary</color>
+    <color name="vplan_background_omitted">@color/text_dark_divider</color>
+
+    <color name="vplan_text_omitted_highlight">#FF5252</color>
+    <color name="vplan_text_omitted">@color/text_dark_secondary</color>
+    <color name="vplan_text_new">@color/text_light_primary</color>
+    <color name="vplan_text_default">@color/text_dark_secondary</color>
+
+    <style name="VPlan" />
+    <style name="VPlan.Row" />
+
+    <style name="VPlan.Row.Info">
+        <item name="android:background">@null</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
 
 </resources>

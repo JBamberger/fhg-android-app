@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,73 +15,101 @@
 
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:vplanBackground="@{obj}"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:theme="@style/VPlan.Row"
+        app:vPlanBackground="@{obj}">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/vplan_grade"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+            app:html="@{obj.grade}"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_hour"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColor="@{obj}"
+            tools:text="grade" />
 
-            <TextView
-                android:id="@+id/vplan_first"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                app:html="@{obj.grade}"
-                tools:text="grade" />
-
-            <TextView
-                android:id="@+id/vplan_second"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                app:html="@{obj.hour}"
-                tools:text="hour" />
-
-
-            <TextView
-                android:id="@+id/vplan_third"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                app:html="@{obj.subject}"
-                tools:text="subject" />
-
-            <TextView
-                android:id="@+id/vplan_fourth"
-                android:layout_width="0px"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@{obj.omitted ? @color/vplan_text_omitted : @color/vplan_text_normal}"
-                app:html="@{obj.omitted ? @string/vplan_omitted : obj.room}"
-                tools:text="room" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/vplan_hour"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:html="@{obj.hour}"
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_subject"
+            app:layout_constraintStart_toEndOf="@+id/vplan_grade"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColor="@{obj}"
+            tools:text="hour" />
 
 
         <TextView
-            android:id="@+id/vplan_content"
-            android:layout_width="wrap_content"
+            android:id="@+id/vplan_subject"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:html="@{obj.subject}"
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_room"
+            app:layout_constraintStart_toEndOf="@+id/vplan_hour"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColor="@{obj}"
+            tools:text="subject" />
+
+        <TextView
+            android:id="@+id/vplan_room"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:html="@{obj.room}"
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_kind"
+            app:layout_constraintStart_toEndOf="@+id/vplan_subject"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColor="@{obj}"
+            tools:text="room" />
+
+        <TextView
+            android:id="@+id/vplan_kind"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            app:html="@{obj.kind}"
+            app:layout_constraintBottom_toTopOf="@+id/barrier"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/vplan_room"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColorHighlighted="@{obj}"
+            tools:text="kind" />
+
+        <TextView
+            android:id="@+id/vplan_content"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             app:html="@{obj.content}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/barrier"
+            app:vPlanTextColor="@{obj}"
+            app:visibleIfNotEmpty="@{obj.content}"
             tools:text="content" />
 
-    </LinearLayout>
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:layout_constraintBottom_toTopOf="@id/vplan_content"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 </layout>

@@ -12,10 +12,10 @@
     </data>
 
     <RelativeLayout
-        android:background="@color/vplan_header"
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/vplan_background_header"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -26,9 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            app:html="@{obj.lastUpdated}"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
+            app:html="@{obj.lastUpdated}"
             tools:text="Title" />
 
         <TextView
@@ -37,9 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/vplan_title"
             android:layout_centerHorizontal="true"
-            app:html="@{obj.dateAndDay}"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
+            app:html="@{obj.dateAndDay}"
             tools:text="last updated" />
 
         <TextView
@@ -51,6 +51,7 @@
             android:text="@string/vplan_motd"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold"
+            app:visibleIfNotEmpty="@{obj.motd}"
             tools:text="Nachrichten zum Tag" />
 
         <TextView
@@ -62,6 +63,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
             app:html="@{obj.motd}"
+            app:visibleIfNotEmpty="@{obj.motd}"
             tools:text="Blablable lorem ipsum coaizse jgsaza" />
 
     </RelativeLayout>
