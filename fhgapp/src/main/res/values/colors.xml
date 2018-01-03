@@ -13,6 +13,12 @@
 
 
 
+    <color name="vplan_new">@color/light_green_500</color>
+    <color name="vplan_standard">@color/text_light_primary</color>
+    <color name="vplan_omitted">@color/text_dark_divider</color>
+
+
+
     <color name="brand_primary">@color/green_500</color>
     <color name="brand_primary_dark">@color/green_700</color>
     <color name="brand_primary_light">@color/green_300</color>

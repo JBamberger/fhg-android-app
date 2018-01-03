@@ -16,7 +16,7 @@ import de.jbamberger.fhgapp.source.Resource
 import de.jbamberger.fhgapp.source.Status
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
-import timber.log.Timber
+import de.jbamberger.fhgapp.util.Utils
 
 
 /**
@@ -60,8 +60,8 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
         }
     }
 
-    fun itemClicked(link: String) {
-        Timber.d("clicked item with link %s", link)
+    fun itemClicked(url: String) {
+        Utils.openUrl(activity, url)
     }
 
     override val viewModelClass: Class<FeedViewModel>

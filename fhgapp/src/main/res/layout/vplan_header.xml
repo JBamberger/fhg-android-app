@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,8 +11,7 @@
 
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            app:html="@{obj.dateAndDay}"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            android:text="@{obj.dateAndDay}"
             tools:text="Title" />
 
         <TextView
@@ -35,9 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/vplan_title"
             android:layout_centerHorizontal="true"
+            app:html="@{obj.lastUpdated}"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
-            android:text="@{obj.lastUpdated}"
             tools:text="last updated" />
 
         <TextView
@@ -58,7 +59,7 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
-            android:text="@{obj.motd}"
+            app:html="@{obj.motd}"
             tools:text="Blablable lorem ipsum coaizse jgsaza" />
 
     </RelativeLayout>

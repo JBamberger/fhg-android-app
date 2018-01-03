@@ -35,16 +35,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{obj.title.rendered}"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                app:html="@{obj.title.rendered}"
                 tools:text="Title" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{obj.excerpt.rendered}"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                app:html="@{obj.excerpt.rendered}"
                 tools:text="Content" />
 
         </LinearLayout>
