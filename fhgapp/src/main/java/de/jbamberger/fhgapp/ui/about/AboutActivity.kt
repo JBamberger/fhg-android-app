@@ -30,14 +30,12 @@ class AboutActivity : BaseActivity() {
         Utils.openUrl(this, url)
     }
 
-    fun addData() {
+    private fun addData() {
         val items: List<Item> = listOf(
                 Item(R.layout.about_disclaimer, null, null),
                 Item(R.layout.about_contact, null,
-                        View.OnClickListener { Utils.contactDeveloper(this) }),
-                Item(R.layout.about_version, null, null),
-                Item(R.layout.about_library_title, null, null),
-                Item(R.layout.about_library, Library("Libname", "Libdescription", "https://jbamberger.de/liburl"), this)
+                        View.OnClickListener { Utils.contactDeveloper(this) })
+                //Item(R.layout.about_version, null, null)
                 //TODO: add all libs
         )
         adapter.replaceAll(items)

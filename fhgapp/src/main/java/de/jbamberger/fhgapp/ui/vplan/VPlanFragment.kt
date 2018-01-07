@@ -5,6 +5,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,9 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
-        binding!!.container.layoutManager = LinearLayoutManager(context)
+        val layoutManager: LinearLayoutManager = LinearLayoutManager(context)
+        binding!!.container.layoutManager = layoutManager
+        binding!!.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
         binding!!.listener = this
         return binding!!.root
     }

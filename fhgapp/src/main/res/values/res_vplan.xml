@@ -13,7 +13,7 @@
 
     <color name="vplan_background_new">@color/light_green_500</color>
     <color name="vplan_background_standard">@color/text_light_primary</color>
-    <color name="vplan_background_omitted">@color/text_dark_divider</color>
+    <color name="vplan_background_omitted">@color/text_dark_hint</color>
 
     <color name="vplan_text_omitted_highlight">#FF5252</color>
     <color name="vplan_text_omitted">@color/text_dark_secondary</color>
