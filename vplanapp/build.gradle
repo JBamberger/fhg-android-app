@@ -1,13 +1,5 @@
 apply plugin: 'com.android.application'
 android {
-    signingConfigs {
-        release {
-            keyAlias '***REMOVED***'
-            keyPassword '***REMOVED***'
-            storeFile file('***REMOVED***')
-            storePassword '***REMOVED***'
-        }
-    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "xyz.jbapps.vplan"
