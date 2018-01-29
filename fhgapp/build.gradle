@@ -10,7 +10,8 @@ android {
     dataBinding.enabled true
 
     defaultConfig {
-        applicationId "de.jbamberger.fhgapp"
+        // legacy name. Replace with de.jbamberger.fhgapp to match package
+        applicationId "xyz.jbapps.vplan"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1

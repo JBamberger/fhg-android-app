@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="vplan_loading_failed">VPlan konnte nicht geladen werden.</string>
-    <string name="vplan_text_omitted">entfällt</string>
-    <string name="vplan_motd">Nachrichten zum Tag</string>
-    <string name="vplan_showing_all">Alles wird angezeigt.</string>
-    <string name="vplan_text_no_warranty">Alle Angaben ohne Gewähr.</string>
-</resources>

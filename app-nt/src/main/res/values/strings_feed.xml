@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="feed_loading_failed">Feed konnte nicht geladen werden.</string>
-    <string name="feed_post_author_date">Veröffentlicht von %1$s am %2$s.</string>
-</resources>
