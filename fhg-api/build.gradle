@@ -45,6 +45,7 @@ dependencies {
     implementation "com.android.support:support-annotations:$support_version"
 
     implementation "org.jsoup:jsoup:$jsoup_version"
+
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
@@ -62,18 +63,15 @@ dependencies {
 
     api "android.arch.lifecycle:runtime:$arch_lifecycle_version"
     api "android.arch.lifecycle:extensions:$arch_lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
+
     api "android.arch.persistence.room:runtime:$arch_room_version"
+    kapt "android.arch.persistence.room:compiler:$arch_room_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
-
-    annotationProcessor "android.arch.lifecycle:compiler:$arch_lifecycle_version"
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-
-    kapt "android.arch.persistence.room:compiler:$arch_room_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     testImplementation "junit:junit:$junit_version"
-
     androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
 
