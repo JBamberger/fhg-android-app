@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.ui
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -15,41 +16,32 @@ import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.settings.SettingsActivity
 import de.jbamberger.fhgapp.util.Utils
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 class MainActivity : BaseActivity() {
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_vplan -> {
-                viewModel.selectedVPlan()
+    private val navigationListener =
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.navigation_vplan -> viewModel.selectedVPlan()
+                    R.id.navigation_feed -> viewModel.selectedFeed()
+                    R.id.navigation_contact -> viewModel.selectedContact()
+                    else -> return@OnNavigationItemSelectedListener false
+                }
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_feed -> {
-                viewModel.selectedFeed()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_contact -> {
-                viewModel.selectedContact()
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
 
-    @Inject
     lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.setOnNavigationItemSelectedListener(navigationListener)
 
-        viewModel.init()
         viewModel.getFragment().observe(this, Observer { frag -> showFragment(frag) })
     }
 

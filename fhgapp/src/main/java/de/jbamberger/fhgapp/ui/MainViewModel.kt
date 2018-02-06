@@ -7,21 +7,14 @@ import android.support.v4.app.Fragment
 import de.jbamberger.fhgapp.ui.contact.ContactFragment
 import de.jbamberger.fhgapp.ui.feed.FeedFragment
 import de.jbamberger.fhgapp.ui.vplan.VPlanFragment
-
 import javax.inject.Inject
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class MainViewModel @Inject
-constructor() : ViewModel() {
-
-    private val fragment:MutableLiveData<Fragment> = MutableLiveData()
-
-    fun init() {
-        fragment.value = VPlanFragment()
-    }
+class MainViewModel @Inject constructor() : ViewModel() {
+    private val fragment: MutableLiveData<Fragment> = MutableLiveData()
 
     fun selectedVPlan() {
         fragment.value = VPlanFragment()
@@ -39,4 +32,7 @@ constructor() : ViewModel() {
         return fragment
     }
 
+    init {
+        fragment.value = VPlanFragment()
+    }
 }

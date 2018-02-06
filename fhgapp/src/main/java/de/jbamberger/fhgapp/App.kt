@@ -16,8 +16,7 @@ import javax.inject.Inject
 class App : Application(), HasActivityInjector {
 
     @Inject
-    @JvmField
-    internal var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>? = null
+    internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
