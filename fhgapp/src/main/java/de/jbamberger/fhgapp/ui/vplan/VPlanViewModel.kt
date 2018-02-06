@@ -15,15 +15,7 @@ import javax.inject.Inject
 
 class VPlanViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var vPlan: LiveData<Pair<Repository.VPlanSettings, Resource<VPlan>>>? = null
-        private set
-
-    internal fun init() {
-        if (this.vPlan != null) {
-            return
-        }
-        vPlan = filterVPlan(repo.vPlan)
-    }
+    internal var vPlan: LiveData<Pair<Repository.VPlanSettings, Resource<VPlan>>>
 
     internal fun refresh() {
         repo.vplanFromNet = true
@@ -41,5 +33,9 @@ internal constructor(private val repo: Repository) : ViewModel() {
                 Pair(settings, it)
             }
         })
+    }
+
+    init {
+        vPlan = filterVPlan(repo.vPlan)
     }
 }

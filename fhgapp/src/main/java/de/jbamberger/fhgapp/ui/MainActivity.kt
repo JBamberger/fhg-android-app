@@ -52,24 +52,13 @@ class MainActivity : BaseActivity<MainViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.action_share -> {
-                Utils.shareApplication(this)
-                return true
-            }
-            R.id.action_settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                return true
-            }
-            R.id.action_about -> {
-                startActivity(Intent(this, AboutActivity::class.java))
-                return true
-            }
-            R.id.action_contact_developer -> {
-                Utils.contactDeveloper(this)
-                return true
-            }
+            R.id.action_share -> Utils.shareApplication(this)
+            R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+            R.id.action_about -> startActivity(Intent(this, AboutActivity::class.java))
+            R.id.action_contact_developer -> Utils.contactDeveloper(this)
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun showFragment(frag: Fragment?) {

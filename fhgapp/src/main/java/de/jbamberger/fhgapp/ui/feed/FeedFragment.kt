@@ -25,6 +25,9 @@ import de.jbamberger.fhgapp.util.Utils
 class FeedFragment : BaseFragment<FeedViewModel>(),
         SwipeRefreshLayout.OnRefreshListener, Observer<Resource<List<FeedItem>>> {
 
+    override val viewModelClass: Class<FeedViewModel>
+        get() = FeedViewModel::class.java
+
     private lateinit var binding: RefreshableListFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,16 +39,15 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.init()
         binding.isRefreshing = true
-        viewModel.feed!!.observe(this, this)
+        viewModel.feed.observe(this, this)
     }
 
     override fun onRefresh() {
         binding.isRefreshing = true
-        viewModel.feed!!.removeObserver(this)
+        viewModel.feed.removeObserver(this)
         viewModel.refresh()
-        viewModel.feed!!.observe(this, this)
+        viewModel.feed.observe(this, this)
     }
 
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
@@ -63,9 +65,6 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     fun itemClicked(url: String) {
         Utils.openUrl(activity, url)
     }
-
-    override val viewModelClass: Class<FeedViewModel>
-        get() = FeedViewModel::class.java
 
     private class FeedAdapter
     internal constructor(private val fragment: FeedFragment, private val feed: List<FeedItem>)

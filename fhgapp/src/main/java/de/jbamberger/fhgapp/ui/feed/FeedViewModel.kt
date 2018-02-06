@@ -12,19 +12,14 @@ import javax.inject.Inject
  */
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var feed: LiveData<Resource<List<FeedItem>>>? = null
-        private set
-
-
-    internal fun init() {
-        if (this.feed != null) {
-            return
-        }
-        feed = repo.feed
-    }
+    internal var feed: LiveData<Resource<List<FeedItem>>>
 
     internal fun refresh() {
         repo.feedFromNet = true
+        feed = repo.feed
+    }
+
+    init {
         feed = repo.feed
     }
 }

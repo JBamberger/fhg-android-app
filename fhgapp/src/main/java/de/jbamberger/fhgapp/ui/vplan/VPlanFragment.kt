@@ -26,6 +26,9 @@ import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
  */
 class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener, Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
 
+    override val viewModelClass: Class<VPlanViewModel>
+        get() = VPlanViewModel::class.java
+
     private lateinit var binding: RefreshableListFragmentBinding
     private var parent: MainActivity? = null
 
@@ -54,16 +57,15 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.init()
         binding.isRefreshing = true
-        viewModel.vPlan!!.observe(this, this)
+        viewModel.vPlan.observe(this, this)
     }
 
     override fun onRefresh() {
         binding.isRefreshing = true
-        viewModel.vPlan!!.removeObserver(this)
+        viewModel.vPlan.removeObserver(this)
         viewModel.refresh()
-        viewModel.vPlan!!.observe(this, this)
+        viewModel.vPlan.observe(this, this)
     }
 
     override fun onChanged(filteredPlan: Pair<Repository.VPlanSettings, Resource<VPlan>>?) {
@@ -92,9 +94,6 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
             }
         }
     }
-
-    override val viewModelClass: Class<VPlanViewModel>
-        get() = VPlanViewModel::class.java
 
     private class VPlanAdapter internal constructor(vPlan: VPlan) : DataBindingBaseAdapter() {
 
