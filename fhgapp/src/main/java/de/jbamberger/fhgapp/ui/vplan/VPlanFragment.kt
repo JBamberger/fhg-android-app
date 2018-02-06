@@ -26,7 +26,7 @@ import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
  */
 class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener, Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
 
-    private var binding: RefreshableListFragmentBinding? = null
+    private lateinit var binding: RefreshableListFragmentBinding
     private var parent: MainActivity? = null
 
     override fun onAttach(context: Context?) {
@@ -46,24 +46,24 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
         val layoutManager: LinearLayoutManager = LinearLayoutManager(context)
-        binding!!.container.layoutManager = layoutManager
-        binding!!.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
-        binding!!.listener = this
-        return binding!!.root
+        binding.container.layoutManager = layoutManager
+        binding.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+        binding.listener = this
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel!!.init()
-        binding!!.isRefreshing = true
-        viewModel!!.vPlan!!.observe(this, this)
+        viewModel.init()
+        binding.isRefreshing = true
+        viewModel.vPlan!!.observe(this, this)
     }
 
     override fun onRefresh() {
-        binding!!.isRefreshing = true
-        viewModel!!.vPlan!!.removeObserver(this)
-        viewModel!!.refresh()
-        viewModel!!.vPlan!!.observe(this, this)
+        binding.isRefreshing = true
+        viewModel.vPlan!!.removeObserver(this)
+        viewModel.refresh()
+        viewModel.vPlan!!.observe(this, this)
     }
 
     override fun onChanged(filteredPlan: Pair<Repository.VPlanSettings, Resource<VPlan>>?) {
@@ -73,11 +73,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         val vPlanResource = filteredPlan.second
         if (vPlanResource.status == Status.SUCCESS) {
             if (vPlanResource.data != null) {
-                binding!!.container.adapter = VPlanAdapter(vPlanResource.data)
+                binding.container.adapter = VPlanAdapter(vPlanResource.data)
             }
-            binding!!.isRefreshing = false
+            binding.isRefreshing = false
         } else if (vPlanResource.status == Status.ERROR) {
-            binding!!.isRefreshing = false
+            binding.isRefreshing = false
         }
     }
 

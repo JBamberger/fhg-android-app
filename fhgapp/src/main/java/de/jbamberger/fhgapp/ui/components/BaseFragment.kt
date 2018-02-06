@@ -12,18 +12,17 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-abstract class BaseFragment<T : ViewModel?> : Fragment(), Injectable {
+abstract class BaseFragment<T : ViewModel> : Fragment(), Injectable {
 
     @Inject
-    @JvmField
-    internal var viewModelFactory: ViewModelProvider.Factory? = null
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    protected var viewModel: T? = null
+    protected lateinit var viewModel: T
 
     abstract val viewModelClass: Class<T>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory!!).get(viewModelClass)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(viewModelClass)
     }
 }

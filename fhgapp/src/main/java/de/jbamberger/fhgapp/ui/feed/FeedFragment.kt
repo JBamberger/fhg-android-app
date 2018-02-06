@@ -25,38 +25,38 @@ import de.jbamberger.fhgapp.util.Utils
 class FeedFragment : BaseFragment<FeedViewModel>(),
         SwipeRefreshLayout.OnRefreshListener, Observer<Resource<List<FeedItem>>> {
 
-    private var binding: RefreshableListFragmentBinding? = null
+    private lateinit var binding: RefreshableListFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
-        binding!!.container.layoutManager = LinearLayoutManager(context)
-        binding!!.listener = this
-        return binding!!.root
+        binding.container.layoutManager = LinearLayoutManager(context)
+        binding.listener = this
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel!!.init()
-        binding!!.isRefreshing = true
-        viewModel!!.feed!!.observe(this, this)
+        viewModel.init()
+        binding.isRefreshing = true
+        viewModel.feed!!.observe(this, this)
     }
 
     override fun onRefresh() {
-        binding!!.isRefreshing = true
-        viewModel!!.feed!!.removeObserver(this)
-        viewModel!!.refresh()
-        viewModel!!.feed!!.observe(this, this)
+        binding.isRefreshing = true
+        viewModel.feed!!.removeObserver(this)
+        viewModel.refresh()
+        viewModel.feed!!.observe(this, this)
     }
 
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
         if (feedResource.status == Status.SUCCESS) {
             if (feedResource.data != null) {
-                binding!!.container.adapter = FeedAdapter(this, feedResource.data)
+                binding.container.adapter = FeedAdapter(this, feedResource.data)
             }
-            binding!!.isRefreshing = false
+            binding.isRefreshing = false
         } else if (feedResource.status == Status.ERROR) {
-            binding!!.isRefreshing = false
+            binding.isRefreshing = false
         }
     }
 

@@ -17,17 +17,17 @@ import de.jbamberger.fhgapp.ui.components.BaseFragment
 
 class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
 
-    private var binding: ContactFragmentBinding? = null
+    private lateinit var binding: ContactFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater!!, R.layout.contact_fragment, container, false)
-        binding!!.listener = this
-        return binding!!.root
+        binding.listener = this
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel!!.init()
+        viewModel.init()
     }
 
     override fun onClick(view: View?) {

@@ -25,15 +25,15 @@ class MainActivity : BaseActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_vplan -> {
-                viewModel!!.selectedVPlan()
+                viewModel.selectedVPlan()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_feed -> {
-                viewModel!!.selectedFeed()
+                viewModel.selectedFeed()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_contact -> {
-                viewModel!!.selectedContact()
+                viewModel.selectedContact()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -41,17 +41,16 @@ class MainActivity : BaseActivity() {
     }
 
     @Inject
-    @JvmField
-    var viewModel: MainViewModel? = null
-    private var binding: ActivityMainBinding? = null
+    lateinit var viewModel: MainViewModel
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        viewModel!!.init()
-        viewModel!!.getFragment().observe(this, Observer { frag -> showFragment(frag) })
+        viewModel.init()
+        viewModel.getFragment().observe(this, Observer { frag -> showFragment(frag) })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

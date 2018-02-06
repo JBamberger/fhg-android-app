@@ -16,8 +16,7 @@ import javax.inject.Inject
 abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
-    @JvmField
-    internal var fragmentInjector: DispatchingAndroidInjector<Fragment>? = null
+    internal lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
         return fragmentInjector
