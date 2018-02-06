@@ -7,6 +7,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import de.jbamberger.fhgapp.ui.MainViewModel
+import de.jbamberger.fhgapp.ui.about.AboutViewModel
 import de.jbamberger.fhgapp.ui.contact.ContactViewModel
 import de.jbamberger.fhgapp.ui.feed.FeedViewModel
 import de.jbamberger.fhgapp.ui.vplan.VPlanViewModel
@@ -33,6 +34,11 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     internal abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AboutViewModel::class)
+    internal abstract fun bindAboutViewModel(viewModel: AboutViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

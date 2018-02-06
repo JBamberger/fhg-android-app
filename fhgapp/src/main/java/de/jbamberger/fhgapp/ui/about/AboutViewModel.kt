@@ -7,10 +7,4 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class AboutViewModel @Inject
-constructor() : ViewModel() {
-
-    fun init() {
-    }
-
-}
+class AboutViewModel @Inject constructor() : ViewModel()

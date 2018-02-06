@@ -1,7 +1,6 @@
 package de.jbamberger.fhgapp.ui
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -20,7 +19,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<MainViewModel>() {
+
+    override val viewModelClass: Class<MainViewModel>
+        get() = MainViewModel::class.java
 
     private val navigationListener =
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -33,12 +35,10 @@ class MainActivity : BaseActivity() {
                 return@OnNavigationItemSelectedListener true
             }
 
-    lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(navigationListener)
 

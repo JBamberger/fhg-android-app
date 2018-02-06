@@ -10,9 +10,12 @@ import de.jbamberger.fhgapp.ui.components.DataBindingAdapter.Item
 import de.jbamberger.fhgapp.util.Utils
 import kotlinx.android.synthetic.main.about_activity.*
 
-class AboutActivity : BaseActivity() {
+class AboutActivity : BaseActivity<AboutViewModel>() {
 
     private val adapter: DataBindingAdapter = DataBindingAdapter()
+
+    override val viewModelClass: Class<AboutViewModel>
+        get() = AboutViewModel::class.java
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
