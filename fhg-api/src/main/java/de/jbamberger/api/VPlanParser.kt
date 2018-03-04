@@ -97,8 +97,14 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
         @Throws(ParseException::class)
         private fun readVPlanStatus(html: String): String {
             try {
-                var status = html.split("</head>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-                status = status.split("<p>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0].replace("\n", "").replace("\r", "")
+                var status = html.split("</head>".toRegex())
+                        .dropLastWhile { it.isEmpty() }
+                        .toTypedArray()[1]
+                status = status.split("<p>".toRegex())
+                        .dropLastWhile { it.isEmpty() }
+                        .toTypedArray()[0]
+                        .replace("\n", "")
+                        .replace("\r", "")
                 return status
             } catch (e: ArrayIndexOutOfBoundsException) {
                 throw ParseException("Could not parse vplan lastUpdated", e)

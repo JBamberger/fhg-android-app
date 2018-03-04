@@ -24,7 +24,9 @@ import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener, Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
+class VPlanFragment : BaseFragment<VPlanViewModel>(),
+        SwipeRefreshLayout.OnRefreshListener,
+        Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
 
     override val viewModelClass: Class<VPlanViewModel>
         get() = VPlanViewModel::class.java
@@ -84,13 +86,13 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
     }
 
     private fun getSubtitle(settings: Repository.VPlanSettings): String {
-        if (settings.showAll || settings.grades.isEmpty()) {
-            return getString(R.string.vplan_subtitle_all)
+        return if (settings.showAll || settings.grades.isEmpty()) {
+            getString(R.string.vplan_subtitle_all)
         } else {
             if (settings.grades.size > 3) {
-                return getString(R.string.vplan_subtitle_grades, settings.grades.take(3).joinToString(", "))
+                getString(R.string.vplan_subtitle_grades, settings.grades.take(3).joinToString(", "))
             } else {
-                return getString(R.string.vplan_subtitle_few_grades, settings.grades.take(3).joinToString(", "))
+                getString(R.string.vplan_subtitle_few_grades, settings.grades.take(3).joinToString(", "))
             }
         }
     }
@@ -103,7 +105,6 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         private val header2: VPlanHeader
         private val bound1: Int
         private val bound2: Int
-
 
         init {
             val day1 = vPlan.day1
@@ -118,18 +119,13 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         }
 
         override fun getObjForPosition(position: Int): Any? {
-            return if (position == 0) {
-                header1
-            } else if (position in 1..(bound1 - 1)) {
-                rows1[position - 1]
-            } else if (position == bound1) {
-                header2
-            } else if (position in (bound1 + 1)..(bound2 - 1)) {
-                rows2[position - bound1 - 1]
-            } else if (position == bound2) {
-                null // footer
-            } else {
-                throw ArrayIndexOutOfBoundsException()
+            return when (position) {
+                0 -> header1
+                in 1..(bound1 - 1) -> rows1[position - 1]
+                bound1 -> header2
+                in (bound1 + 1)..(bound2 - 1) -> rows2[position - bound1 - 1]
+                bound2 -> null // footer
+                else -> throw ArrayIndexOutOfBoundsException()
             }
         }
 
@@ -138,14 +134,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         }
 
         override fun getLayoutIdForPosition(position: Int): Int {
-            return if (position == 0 || position == bound1) {
-                R.layout.vplan_header
-            } else if (position in 1..(bound1 - 1) || position in (bound1 + 1)..(bound2 - 1)) {
-                R.layout.vplan_item
-            } else if (position == bound2) {
-                R.layout.vplan_footer
-            } else {
-                throw ArrayIndexOutOfBoundsException()
+            return when (position) {
+                0, bound1 -> R.layout.vplan_header
+                in 1..(bound1 - 1), in (bound1 + 1)..(bound2 - 1) -> R.layout.vplan_item
+                bound2 -> R.layout.vplan_footer
+                else -> throw ArrayIndexOutOfBoundsException()
             }
         }
 

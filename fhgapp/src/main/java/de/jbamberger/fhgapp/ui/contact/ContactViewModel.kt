@@ -7,9 +7,4 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class ContactViewModel @Inject
-internal constructor() : ViewModel() {
-
-    internal fun init() {
-    }
-}
+class ContactViewModel @Inject internal constructor() : ViewModel()

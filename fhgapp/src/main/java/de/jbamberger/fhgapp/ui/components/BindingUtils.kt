@@ -36,39 +36,33 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("vPlanBackground")
     fun bindBackgroundColor(view: View, item: VPlanRow) {
-        if (item.isMarkedNew) {
-            view.background =
-                    ColorDrawable(ContextCompat.getColor(view.context, R.color.vplan_background_new))
-        } else if (item.isOmitted) {
-            view.background =
-                    ColorDrawable(ContextCompat.getColor(view.context, R.color.vplan_background_omitted))
-        } else {
-            view.background =
-                    ColorDrawable(ContextCompat.getColor(view.context, R.color.vplan_background_standard))
+        val color = when {
+            item.isMarkedNew -> R.color.vplan_background_new
+            item.isOmitted -> R.color.vplan_background_omitted
+            else -> R.color.vplan_background_standard
         }
+        view.background = ColorDrawable(ContextCompat.getColor(view.context, color))
     }
 
     @JvmStatic
     @BindingAdapter("vPlanTextColor")
     fun bindTextColor(view: TextView, item: VPlanRow) {
-        if (item.isMarkedNew) {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_new))
-        } else if (item.isOmitted) {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_omitted))
-        } else {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_default))
+         val color = when {
+            item.isMarkedNew -> R.color.vplan_text_new
+            item.isOmitted -> R.color.vplan_text_omitted
+            else -> R.color.vplan_text_default
         }
+        view.setTextColor(ContextCompat.getColor(view.context, color))
     }
 
     @JvmStatic
     @BindingAdapter("vPlanTextColorHighlighted")
     fun bindTextColorHighlighted(view: TextView, item: VPlanRow) {
-        if (item.isOmitted) {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_omitted_highlight))
-        } else if (item.isMarkedNew) {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_new))
-        } else {
-            view.setTextColor(ContextCompat.getColor(view.context, R.color.vplan_text_default))
+        val color = when {
+            item.isMarkedNew -> R.color.vplan_text_new
+            item.isOmitted -> R.color.vplan_text_omitted_highlight
+            else -> R.color.vplan_text_default
         }
+        view.setTextColor(ContextCompat.getColor(view.context, color))
     }
 }

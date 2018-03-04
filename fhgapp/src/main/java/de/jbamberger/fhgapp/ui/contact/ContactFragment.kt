@@ -25,11 +25,6 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel.init()
-    }
-
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.contact_action_call -> {

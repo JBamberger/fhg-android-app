@@ -45,13 +45,13 @@ class MainActivity : BaseActivity<MainViewModel>() {
         viewModel.getFragment().observe(this, Observer { frag -> showFragment(frag) })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_share -> Utils.shareApplication(this)
             R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
             R.id.action_about -> startActivity(Intent(this, AboutActivity::class.java))
