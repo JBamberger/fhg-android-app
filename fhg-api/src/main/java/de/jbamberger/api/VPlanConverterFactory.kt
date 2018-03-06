@@ -12,12 +12,11 @@ import java.lang.reflect.Type
 
 internal class VPlanConverterFactory : Converter.Factory() {
 
-    override fun responseBodyConverter(
-            type: Type, annotations: Array<Annotation>, retrofit: Retrofit): Converter<ResponseBody, VPlanDay>? {
-        return if (type == VPlanDay::class.java) {
-            VPlanParser()
-        } else {
-            null
+    override fun responseBodyConverter(type: Type, annotations: Array<Annotation>,
+                                       retrofit: Retrofit): Converter<ResponseBody, VPlanDay>? {
+        return when (type) {
+            VPlanDay::class.java -> VPlanParser()
+            else -> null
         }
     }
 }
