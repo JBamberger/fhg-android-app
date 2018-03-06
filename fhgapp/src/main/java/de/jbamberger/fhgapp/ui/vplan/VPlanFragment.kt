@@ -80,7 +80,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         val vPlanResource = filteredPlan.second
         when (vPlanResource.status) {
             Status.LOADING -> {
-                adapter.setData(true, vPlanResource.data)
+                adapter.setData(false, vPlanResource.data)
             }
             Status.SUCCESS -> {
                 adapter.setData(false, vPlanResource.data)
