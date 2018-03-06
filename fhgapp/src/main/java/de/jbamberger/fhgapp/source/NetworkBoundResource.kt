@@ -61,14 +61,14 @@ protected constructor(private val appExecutors: AppExecutors) {
         }
     }
 
-    protected fun onFetchFailed() {}
+    protected open fun onFetchFailed() {}
 
     fun asLiveData(): LiveData<Resource<ResultType>> {
         return result
     }
 
     @WorkerThread
-    protected fun processResponse(response: ApiResponse<RequestType>): RequestType? {
+    protected open fun processResponse(response: ApiResponse<RequestType>): RequestType? {
         return response.body
     }
 

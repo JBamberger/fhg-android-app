@@ -26,11 +26,17 @@ constructor(
         private val db: AppDatabase,
         private val kvStore: KeyValueStorage,
         private val settings: Settings) {
-    var vplanFromNet: Boolean = true
+
     var feedFromNet: Boolean = true
 
     val vPlan: LiveData<Resource<VPlan>>
         get() = object : NetworkBoundResource<VPlan, VPlan>(appExecutors) {
+            var vplanFromNet = true
+
+            override fun onFetchFailed() {
+                vplanFromNet = true
+            }
+
             override fun saveCallResult(item: VPlan) {
                 kvStore.save(VPLAN_KEY, item)
             }

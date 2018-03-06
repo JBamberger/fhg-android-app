@@ -5,7 +5,7 @@
     <string name="vplan_subtitle_few_grades">Zeige %1$s</string>
     <string name="vplan_subtitle_grades">Zeige %1$s&#8230;</string>
     <string name="vplan_motd">Nachrichten zum Tag</string>
-    <string name="vplan_loading_error">Fehler beim Laden</string>
+    <string name="vplan_loading_error">Die gezeigten Daten sind nicht aktuell.</string>
 
 
     <color name="vplan_warranty_warning">#FFCDD2</color>

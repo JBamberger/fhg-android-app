@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.jbamberger.api.data.VPlan
+import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.source.Repository
@@ -19,7 +20,6 @@ import de.jbamberger.fhgapp.source.Status
 import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
-
 
 
 /**
@@ -80,17 +80,14 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         val vPlanResource = filteredPlan.second
         when (vPlanResource.status) {
             Status.LOADING -> {
-                if (vPlanResource.data != null) {
-                    adapter.setData(vPlanResource.data)
-                }
+                adapter.setData(true, vPlanResource.data)
             }
             Status.SUCCESS -> {
-                if (vPlanResource.data != null) {
-                    adapter.setData(vPlanResource.data)
-                }
+                adapter.setData(false, vPlanResource.data)
                 binding.isRefreshing = false
             }
             Status.ERROR -> {
+                adapter.setData(true, vPlanResource.data)
                 binding.isRefreshing = false
             }
         }
@@ -110,43 +107,33 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
     private class VPlanAdapter : DataBindingBaseAdapter() {
 
-        private var vPlan: VPlan? = null
-        private var header1: VPlanHeader? = null
-        private var header2: VPlanHeader? = null
-        private var bound1: Int = -1
-        private var bound2: Int = -1
+        private var showWarning = true
+        private var indexedPlan: IndexedVPlan? = null
 
-        fun setData(vPlan: VPlan?) {
-            this.vPlan = vPlan
-
-            if (vPlan != null) {
-                val day1 = vPlan.day1
-                val day2 = vPlan.day2
-
-                bound1 = day1.vPlanRows.size + 1
-                bound2 = bound1 + day1.vPlanRows.size + 1
-                header1 = VPlanHeader(day1.dateAndDay, day1.lastUpdated, day1.motd)
-                header2 = VPlanHeader(day2.dateAndDay, day2.lastUpdated, day2.motd)
-            } else {
-                header1 = null
-                header2 = null
-                bound1 = -1
-                bound2 = -1
+        fun setData(showWarning: Boolean, vPlan: VPlan?) {
+            this.showWarning = showWarning
+            indexedPlan = when {
+                vPlan != null -> IndexedVPlan(vPlan)
+                else -> null
             }
 
             notifyDataSetChanged()
         }
 
         override fun getObjForPosition(position: Int): Any? {
-            val vPlan = vPlan ?: return null
-
-            return when (position) {
-                0 -> header1
-                in 1..(bound1 - 1) -> vPlan.day1.vPlanRows[position - 1]
-                bound1 -> header2
-                in (bound1 + 1)..(bound2 - 1) -> vPlan.day2.vPlanRows[position - bound1 - 1]
-                bound2 -> null // footer
-                else -> throw ArrayIndexOutOfBoundsException()
+            val p = indexedPlan
+            return if (showWarning) {
+                when {
+                    position == 0 -> null
+                    p != null -> p[position - 1]
+                    else -> throw ArrayIndexOutOfBoundsException()
+                }
+            } else {
+                if (p != null) {
+                    p[position]
+                } else {
+                    throw ArrayIndexOutOfBoundsException()
+                }
             }
         }
 
@@ -155,20 +142,77 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
 
         override fun getLayoutIdForPosition(position: Int): Int {
-            if (vPlan == null) return R.layout.list_card_error
-            return when (position) {
-                0, bound1 -> R.layout.vplan_header
-                in 1..(bound1 - 1), in (bound1 + 1)..(bound2 - 1) -> R.layout.vplan_item
-                bound2 -> R.layout.vplan_footer
-                else -> throw ArrayIndexOutOfBoundsException()
+            val p = indexedPlan
+            return if (showWarning) {
+                if (position == 0) {
+                    return R.layout.list_card_error
+                } else if (p != null) {
+                    p.getLayout(position - 1)
+                } else {
+                    throw ArrayIndexOutOfBoundsException()
+                }
+            } else {
+                if (p != null) {
+                    p.getLayout(position)
+                } else {
+                    throw ArrayIndexOutOfBoundsException()
+                }
             }
         }
 
         override fun getItemCount(): Int {
-            return if (vPlan == null) {
-                1
-            } else {
-                bound2 + 1
+            val p = indexedPlan
+            var c = 0
+            if (showWarning) c += 1
+            if (p != null) c += p.size
+
+            return c
+        }
+
+        private class IndexedVPlan(plan: VPlan) {
+
+            val size = plan.day1.vPlanRows.size + plan.day2.vPlanRows.size + 3
+
+            private val header1: VPlanHeader
+            private val rows1: List<VPlanRow>
+            private val rows2: List<VPlanRow>
+            private val header2: VPlanHeader
+            private val bound1: Int
+            private val bound2: Int
+
+            init {
+                val day1 = plan.day1
+                val day2 = plan.day2
+
+                rows1 = day1.vPlanRows
+                rows2 = day2.vPlanRows
+                bound1 = rows1.size + 1
+                bound2 = bound1 + rows2.size + 1
+                header1 = VPlanHeader(day1.dateAndDay, day1.lastUpdated, day1.motd)
+                header2 = VPlanHeader(day2.dateAndDay, day2.lastUpdated, day2.motd)
+            }
+
+
+            operator fun get(position: Int): Any? {
+                if (position < 0 || position >= size) throw ArrayIndexOutOfBoundsException()
+
+                return when (position) {
+                    0 -> header1
+                    in 1..(bound1 - 1) -> rows1[position - 1]
+                    bound1 -> header2
+                    in (bound1 + 1)..(bound2 - 1) -> rows2[position - bound1 - 1]
+                    bound2 -> null // footer
+                    else -> throw ArrayIndexOutOfBoundsException()
+                }
+            }
+
+            fun getLayout(position: Int): Int {
+                return when (position) {
+                    0, bound1 -> R.layout.vplan_header
+                    in 1..(bound1 - 1), in (bound1 + 1)..(bound2 - 1) -> R.layout.vplan_item
+                    bound2 -> R.layout.vplan_footer
+                    else -> throw ArrayIndexOutOfBoundsException()
+                }
             }
         }
     }
