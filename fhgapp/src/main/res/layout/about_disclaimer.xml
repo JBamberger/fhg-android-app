@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -23,13 +22,15 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/title"
                 style="@style/About.Title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:padding="8dp"
                 android:text="@string/about_disclaimer_title"
                 app:layout_constraintBottom_toTopOf="@+id/content"
                 app:layout_constraintEnd_toEndOf="parent"

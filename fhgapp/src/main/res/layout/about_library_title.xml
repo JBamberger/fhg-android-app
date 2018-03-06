@@ -21,6 +21,7 @@
         app:elevation="@dimen/about_card_elevation">
 
         <TextView
+            android:padding="16dp"
             android:id="@+id/title"
             style="@style/About.Title"
             android:layout_width="match_parent"
