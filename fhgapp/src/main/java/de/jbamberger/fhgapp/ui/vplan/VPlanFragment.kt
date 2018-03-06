@@ -4,12 +4,9 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +34,6 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
     private val adapter: VPlanAdapter = VPlanAdapter()
     private lateinit var binding: RefreshableListFragmentBinding
-    private lateinit var loadingErrorSnackBar: Snackbar
     private var parent: MainActivity? = null
 
     override fun onAttach(context: Context?) {
@@ -61,18 +57,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         binding.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
         binding.container.adapter = adapter
         binding.listener = this
-
         return binding.root
-    }
-
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        loadingErrorSnackBar = Snackbar.make(binding.root, "An error occurred", Snackbar.LENGTH_INDEFINITE)
-        val params = loadingErrorSnackBar.view.layoutParams as CoordinatorLayout.LayoutParams
-        params.gravity = Gravity.TOP
-        loadingErrorSnackBar.view.layoutParams = params
-
-
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -103,11 +88,9 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                 if (vPlanResource.data != null) {
                     adapter.setData(vPlanResource.data)
                 }
-                loadingErrorSnackBar.dismiss()
                 binding.isRefreshing = false
             }
             Status.ERROR -> {
-                loadingErrorSnackBar.show()
                 binding.isRefreshing = false
             }
         }
@@ -172,7 +155,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
 
         override fun getLayoutIdForPosition(position: Int): Int {
-            if (vPlan == null) return -1 // TODO: notice that nothing was loaded so far
+            if (vPlan == null) return R.layout.list_card_error
             return when (position) {
                 0, bound1 -> R.layout.vplan_header
                 in 1..(bound1 - 1), in (bound1 + 1)..(bound2 - 1) -> R.layout.vplan_item
@@ -182,7 +165,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
 
         override fun getItemCount(): Int {
-            return bound2 + 1
+            return if (vPlan == null) {
+                1
+            } else {
+                bound2 + 1
+            }
         }
     }
 }
