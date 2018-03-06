@@ -34,13 +34,25 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
     }
 
     private fun addData() {
-        val items: List<Item> = listOf(
+        val names = resources.getStringArray(R.array.about_library_names)
+        val licenses = resources.getStringArray(R.array.about_library_descriptions)
+        val urls = resources.getStringArray(R.array.about_library_urls)
+
+        if (names.size != licenses.size || names.size != urls.size) {
+            throw IllegalStateException("Resources are not correctly loaded or configured.")
+        }
+
+        val items: MutableList<Item> = mutableListOf(
                 Item(R.layout.about_disclaimer, null, null),
                 Item(R.layout.about_contact, null,
-                        View.OnClickListener { Utils.contactDeveloper(this) })
-                //Item(R.layout.about_version, null, null)
-                //TODO: add all libs
+                        View.OnClickListener { Utils.contactDeveloper(this) }),
+                Item(R.layout.about_version, null, null)
         )
+
+        for (i in names.indices) {
+            items.add(Item(R.layout.about_library, Library(names[i], licenses[i], urls[i]), this))
+        }
+
         adapter.replaceAll(items)
     }
 

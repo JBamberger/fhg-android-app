@@ -39,5 +39,42 @@
 
     <string name="about_library_title">Verwendete Bibliotheken</string>
 
+    <string-array name="about_library_names">
+        <item>Kotlin</item>
+        <item>Android Open Source Project</item>
+        <item>Timber</item>
+        <item>JSoup</item>
+        <item>OkHttp</item>
+        <item>Retrofit2</item>
+        <item>JUnit</item>
+        <item>Gson</item>
+        <item>Dagger</item>
+        <item>Dagger Android Extension</item>
+    </string-array>
 
+    <string-array name="about_library_descriptions">
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>MIT -> https://jsoup.org/license</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>EPL v1.0 -> http://www.eclipse.org/legal/epl-v10.html</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+    </string-array>
+
+    <string-array name="about_library_urls">
+        <item>https://kotlinlang.org/</item>
+        <item>https://source.android.com/</item>
+        <item>https://github.com/JakeWharton/timber</item>
+        <item>https://jsoup.org/</item>
+        <item>https://square.github.io/okhttp/</item>
+        <item>https://square.github.io/retrofit/</item>
+        <item>https://junit.org/junit4/</item>
+        <item>https://github.com/google/gson</item>
+        <item>https://google.github.io/dagger/</item>
+        <item>https://google.github.io/dagger/android</item>
+    </string-array>
 </resources>
