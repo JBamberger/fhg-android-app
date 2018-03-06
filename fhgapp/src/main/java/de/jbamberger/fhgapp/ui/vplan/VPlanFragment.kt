@@ -81,6 +81,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
             }
             binding.isRefreshing = false
         } else if (vPlanResource.status == Status.ERROR) {
+            //TODO: show error message
             binding.isRefreshing = false
         }
     }
