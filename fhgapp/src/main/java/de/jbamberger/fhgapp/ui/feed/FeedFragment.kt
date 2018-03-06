@@ -25,14 +25,16 @@ import de.jbamberger.fhgapp.util.Utils
 class FeedFragment : BaseFragment<FeedViewModel>(),
         SwipeRefreshLayout.OnRefreshListener, Observer<Resource<List<FeedItem>>> {
 
-    override val viewModelClass: Class<FeedViewModel>
-        get() = FeedViewModel::class.java
-
+    override val viewModelClass = FeedViewModel::class.java
+    private val adapter = FeedAdapter(this)
     private lateinit var binding: RefreshableListFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
+    override fun onCreateView(
+            inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(
+                inflater!!, R.layout.refreshable_list_fragment, container, false)
         binding.container.layoutManager = LinearLayoutManager(context)
+        binding.container.adapter = adapter
         binding.listener = this
         return binding.root
     }
@@ -52,14 +54,19 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
 
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
-        if (feedResource.status == Status.SUCCESS) {
-            val items = feedResource.data
-            if (items != null) {
-                binding.container.adapter = FeedAdapter(this, items)
+
+        when(feedResource.status) {
+            Status.LOADING -> {
+                adapter.setData(false, feedResource.data)
             }
-            binding.isRefreshing = false
-        } else if (feedResource.status == Status.ERROR) {
-            binding.isRefreshing = false
+            Status.SUCCESS -> {
+                adapter.setData(false, feedResource.data)
+                binding.isRefreshing = false
+            }
+            Status.ERROR -> {
+                adapter.setData(true, feedResource.data)
+                binding.isRefreshing = false
+            }
         }
     }
 
@@ -68,22 +75,41 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     }
 
     private class FeedAdapter
-    internal constructor(private val fragment: FeedFragment, private val feed: List<FeedItem>)
-        : DataBindingBaseAdapter() {
+    internal constructor(private val fragment: FeedFragment) : DataBindingBaseAdapter() {
+
+        private var showWarning = true
+        private var feed: List<FeedItem> = emptyList()
+
+        fun setData(showWarning: Boolean, feed: List<FeedItem>?) {
+            this.showWarning = showWarning
+            this.feed = feed ?: emptyList()
+            notifyDataSetChanged()
+        }
 
         override fun getLayoutIdForPosition(position: Int): Int {
+            if (showWarning && position == 0) return R.layout.list_card_error
             return R.layout.feed_item
         }
 
         override fun getItemCount(): Int {
-            return feed.size
+            return if (showWarning) {
+                feed.size + 1
+            } else {
+                feed.size
+            }
         }
 
-        override fun getObjForPosition(position: Int): Any {
-            return feed[position]
+        override fun getObjForPosition(position: Int): Any? {
+            if (showWarning && position == 0) return null
+            return if (showWarning) {
+                feed[position - 1]
+            } else {
+                feed[position]
+            }
         }
 
         override fun getListenerForPosition(position: Int): Any? {
+            if (showWarning && position == 0) return null
             return fragment
         }
     }

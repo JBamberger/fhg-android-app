@@ -145,7 +145,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
             val p = indexedPlan
             return if (showWarning) {
                 if (position == 0) {
-                    return R.layout.list_card_error
+                    return R.layout.list_flat_error
                 } else if (p != null) {
                     p.getLayout(position - 1)
                 } else {
