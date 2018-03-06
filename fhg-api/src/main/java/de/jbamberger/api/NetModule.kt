@@ -36,7 +36,7 @@ internal class NetModule {
     @Singleton
     fun provideOkHttpClient(cache: Cache): OkHttpClient {
         val builder = OkHttpClient.Builder()
-        //builder.cache(cache)
+        builder.cache(cache)
 
         if (BuildConfig.DEBUG) {
             val httpLoggingInterceptor = HttpLoggingInterceptor()

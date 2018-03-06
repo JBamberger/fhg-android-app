@@ -27,8 +27,6 @@ constructor(
         private val kvStore: KeyValueStorage,
         private val settings: Settings) {
 
-    var feedFromNet: Boolean = true
-
     val vPlan: LiveData<Resource<VPlan>>
         get() = object : NetworkBoundResource<VPlan, VPlan>(appExecutors) {
             var vplanFromNet = true
@@ -62,6 +60,13 @@ constructor(
 
     val feed: LiveData<Resource<List<FeedItem>>>
         get() = object : NetworkBoundResource<List<FeedItem>, List<FeedItem>>(appExecutors) {
+
+            var feedFromNet: Boolean = true
+
+            override fun onFetchFailed() {
+                feedFromNet = true
+            }
+
             override fun saveCallResult(item: List<FeedItem>) {
                 db.feedItemDao.insertAll(item)
             }
@@ -97,6 +102,6 @@ constructor(
     data class VPlanSettings(val showAll: Boolean, val grades: Set<String>, val courses: Set<String>)
 
     companion object {
-        val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"
+        const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"
     }
 }
