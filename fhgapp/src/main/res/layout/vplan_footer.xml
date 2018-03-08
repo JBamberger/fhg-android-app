@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        <TextView
-            android:padding="12dp"
-            android:drawableStart="@drawable/ic_warning_light_red_24dp"
-            android:drawableLeft="@drawable/ic_warning_light_red_24dp"
-            android:layout_width="match_parent"
-            android:layout_height="96dp"
-            android:gravity="center"
-            android:text="@string/vplan_text_no_warranty"
-            android:textAppearance="?android:attr/textAppearance" />
+    <data>
+
+        <import type="de.jbamberger.fhgapp.R" />
+    </data>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/vplan_text_no_warranty"
+        android:textAppearance="?android:attr/textAppearance"
+        app:leftVector="@{R.drawable.ic_warning_light_red_24dp}"
+        tools:drawableLeft="@drawable/ic_warning_light_red_24dp" />
 </layout>

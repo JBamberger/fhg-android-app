@@ -2,7 +2,9 @@ package de.jbamberger.fhgapp.ui.components
 
 import android.databinding.BindingAdapter
 import android.graphics.drawable.ColorDrawable
+import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.support.v7.content.res.AppCompatResources
 import android.text.Html
 import android.view.View
 import android.widget.TextView
@@ -64,5 +66,19 @@ object BindingUtils {
             else -> R.color.vplan_text_default
         }
         view.setTextColor(ContextCompat.getColor(view.context, color))
+    }
+
+    @JvmStatic
+    @BindingAdapter("leftVector")
+    fun bindLeftVectorDrawable(view: TextView, @DrawableRes icon: Int) {
+        val x = view.compoundDrawables
+        view.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(view.context, icon), x[1], x[2], x[3])
+    }
+
+    @JvmStatic
+    @BindingAdapter("topVector")
+    fun bindTopVectorDrawable(view: TextView, @DrawableRes icon: Int) {
+        val x = view.compoundDrawables
+        view.setCompoundDrawablesWithIntrinsicBounds(x[0], AppCompatResources.getDrawable(view.context, icon), x[2], x[3])
     }
 }
