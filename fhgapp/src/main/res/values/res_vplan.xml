@@ -21,6 +21,8 @@
     <color name="vplan_text_new">@color/text_light_primary</color>
     <color name="vplan_text_default">@color/text_dark_secondary</color>
 
+    <dimen name="vplan_line_margin">4dp</dimen>
+
     <style name="VPlan" />
     <style name="VPlan.Row" />
 
