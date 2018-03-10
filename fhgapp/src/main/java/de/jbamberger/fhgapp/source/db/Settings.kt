@@ -14,11 +14,23 @@ import javax.inject.Inject
 class Settings @Inject
 constructor(private val app: Application, private val prefs: SharedPreferences) {
 
-    val vPlanShowAll: Boolean
+    var vPlanShowAll: Boolean
         get() = prefs.getBoolean(app.getString(R.string.settings_grade_show_all_key), true)
-    val vPlanGrades: Set<String>
+        set(value) = prefs.edit()
+                .putBoolean(app.getString(R.string.settings_grade_show_all_key), value)
+                .apply()
+    var vPlanGrades: Set<String>
         get() = prefs.getStringSet(app.getString(R.string.settings_grade_key), Collections.emptySet())
-    val vPlanCourses: String
+        set(value) = prefs.edit()
+                .putStringSet(app.getString(R.string.settings_grade_key), value)
+                .apply()
+    var vPlanCourses: Set<String>
         get() = prefs.getString(app.getString(R.string.settings_course_key), "")
-
+                .split(",")
+                .map { it.trim() }
+                .filter { !it.isBlank() }
+                .toSet()
+        set(value) = prefs.edit()
+                .putString(app.getString(R.string.settings_course_key), value.joinToString(separator = ","))
+                .apply()
 }

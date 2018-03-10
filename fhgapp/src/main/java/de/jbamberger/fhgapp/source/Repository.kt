@@ -93,10 +93,6 @@ constructor(
                 settings.vPlanShowAll,
                 settings.vPlanGrades,
                 settings.vPlanCourses
-                        .split(",")
-                        .map { it.trim() }
-                        .filter { !it.isBlank() }
-                        .toSet()
         )
 
     data class VPlanSettings(val showAll: Boolean, val grades: Set<String>, val courses: Set<String>)
