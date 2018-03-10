@@ -28,7 +28,7 @@ constructor(
         private val settings: Settings) {
 
     val vPlan: LiveData<Resource<VPlan>>
-        get() = object : NetworkBoundResource<VPlan, VPlan>(appExecutors) {
+        get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<VPlan, VPlan> {
             var vplanFromNet = true
 
             override fun onFetchFailed() {
@@ -56,10 +56,10 @@ constructor(
                 m.addSource(api.vPlan, m::setValue)
                 return m
             }
-        }.asLiveData()
+        }).asLiveData()
 
     val feed: LiveData<Resource<List<FeedItem>>>
-        get() = object : NetworkBoundResource<List<FeedItem>, List<FeedItem>>(appExecutors) {
+        get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<List<FeedItem>, List<FeedItem>> {
 
             var feedFromNet: Boolean = true
 
@@ -86,7 +86,7 @@ constructor(
                 m.addSource(api.feed, m::setValue)
                 return m
             }
-        }.asLiveData()
+        }).asLiveData()
 
     val vPlanSettings: VPlanSettings
         get() = VPlanSettings(

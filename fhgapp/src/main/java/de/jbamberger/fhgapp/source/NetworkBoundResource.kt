@@ -14,17 +14,19 @@ import de.jbamberger.fhgapp.AppExecutors
  * @param <ResultType> type of data that is passed to the user
  * @param <RequestType> type that is returned from the network calls
  */
-abstract class NetworkBoundResource<ResultType, RequestType> @MainThread
-protected constructor(private val appExecutors: AppExecutors) {
+class NetworkBoundResource<ResultType, RequestType>
+@MainThread
+constructor(private val appExecutors: AppExecutors,
+                      private val provider: Provider<ResultType, RequestType>) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
         result.value = Resource.loading(null)
-        val dbSource = loadFromDb()
+        val dbSource = provider.loadFromDb()
         result.addSource(dbSource) {
             result.removeSource(dbSource)
-            if (shouldFetch(it)) {
+            if (provider.shouldFetch(it)) {
                 fetchFromNetwork(dbSource)
             } else {
                 result.addSource(dbSource) { result.setValue(Resource.success(it)) }
@@ -33,7 +35,7 @@ protected constructor(private val appExecutors: AppExecutors) {
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
-        val apiResponse = createCall()
+        val apiResponse = provider.createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
         result.addSource(dbSource) { result.setValue(Resource.loading(it)) }
         result.addSource(apiResponse) { response ->
@@ -42,18 +44,18 @@ protected constructor(private val appExecutors: AppExecutors) {
 
             if (response!!.isSuccessful) {
                 appExecutors.diskIO().execute {
-                    saveCallResult(processResponse(response)!!)
+                    provider.saveCallResult(provider.processResponse(response)!!)
                     appExecutors.mainThread().execute {
                         // we specially request a new live data,
                         // otherwise we will get immediately last cached value,
                         // which may not be updated with latest results received from network.
-                        result.addSource(loadFromDb()) {
+                        result.addSource(provider.loadFromDb()) {
                             result.setValue(Resource.success(it))
                         }
                     }
                 }
             } else {
-                onFetchFailed()
+                provider.onFetchFailed()
                 result.addSource(dbSource) {
                     result.setValue(Resource.error(response.errorMessage!!, it))
                 }
@@ -61,26 +63,30 @@ protected constructor(private val appExecutors: AppExecutors) {
         }
     }
 
-    protected open fun onFetchFailed() {}
-
     fun asLiveData(): LiveData<Resource<ResultType>> {
         return result
     }
 
-    @WorkerThread
-    protected open fun processResponse(response: ApiResponse<RequestType>): RequestType? {
-        return response.body
+    interface Provider<ResultType, RequestType> {
+
+        fun onFetchFailed() {}
+
+        @WorkerThread
+        fun processResponse(response: ApiResponse<RequestType>): RequestType? {
+            return response.body
+        }
+
+        @WorkerThread
+        fun saveCallResult(item: RequestType)
+
+        @MainThread
+        fun shouldFetch(data: ResultType?): Boolean
+
+        @MainThread
+        fun loadFromDb(): LiveData<ResultType>
+
+        @MainThread
+        fun createCall(): LiveData<ApiResponse<RequestType>>
+
     }
-
-    @WorkerThread
-    protected abstract fun saveCallResult(item: RequestType)
-
-    @MainThread
-    protected abstract fun shouldFetch(data: ResultType?): Boolean
-
-    @MainThread
-    protected abstract fun loadFromDb(): LiveData<ResultType>
-
-    @MainThread
-    protected abstract fun createCall(): LiveData<ApiResponse<RequestType>>
 }

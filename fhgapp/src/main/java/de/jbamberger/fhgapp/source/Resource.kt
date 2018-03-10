@@ -7,7 +7,8 @@ import de.jbamberger.fhgapp.source.Status.*
  *
  * @param <T>
 </T> */
-class Resource<out T>(val status: Status, val data: T?, val message: String?) {
+class Resource<out T>
+private constructor(val status: Status, val data: T?, val message: String?) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
