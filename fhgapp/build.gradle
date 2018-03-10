@@ -25,6 +25,15 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        testOptions {
+            unitTests {
+                includeAndroidResources = true
+            }
+            unitTests.all {
+                jvmArgs '-noverify'
+            }
+        }
+
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -110,7 +119,9 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
     androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test:rules:$support_test_runner_version"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
 
 }

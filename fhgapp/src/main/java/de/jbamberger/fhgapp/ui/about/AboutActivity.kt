@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.ui.about
 
 import android.os.Bundle
+import android.support.annotation.VisibleForTesting
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import de.jbamberger.fhgapp.R
@@ -21,19 +22,20 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.about_activity)
         setSupportActionBar(toolbar)
-        fab.setOnClickListener { Utils.shareApplication(this) }
+        about_action_share.setOnClickListener { Utils.shareApplication(this) }
         aboutContainer.adapter = adapter
         aboutContainer.layoutManager = LinearLayoutManager(this)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        addData()
+        adapter.replaceAll(addData())
     }
 
     fun libraryClicked(url: String) {
         Utils.openUrl(this, url)
     }
 
-    private fun addData() {
+    @VisibleForTesting
+    internal fun addData(): List<Item> {
         val names = resources.getStringArray(R.array.about_library_names)
         val licenses = resources.getStringArray(R.array.about_library_descriptions)
         val urls = resources.getStringArray(R.array.about_library_urls)
@@ -46,14 +48,15 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
                 Item(R.layout.about_disclaimer, null, null),
                 Item(R.layout.about_contact, null,
                         View.OnClickListener { Utils.contactDeveloper(this) }),
-                Item(R.layout.about_version, null, null)
+                Item(R.layout.about_version, null, null),
+                Item(R.layout.about_library_title, null, null)
         )
 
         for (i in names.indices) {
             items.add(Item(R.layout.about_library, Library(names[i], licenses[i], urls[i]), this))
         }
 
-        adapter.replaceAll(items)
+        return items
     }
 
     data class Library(val name: String, val description: String, val url: String)
