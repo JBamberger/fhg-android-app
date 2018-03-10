@@ -18,12 +18,12 @@ constructor(private val gson: Gson, private val prefs: SharedPreferences) {
         prefs.edit().putString(key, String(base64)).apply()
     }
 
-    inline fun <reified T> get(key: String): T {
+    inline fun <reified T> get(key: String): T? {
         return get<T>(key, T::class.java)
     }
 
-    fun <T> get(key: String, type: Class<T>): T {
-        val base64 = prefs.getString(key, "")
+    fun <T> get(key: String, type: Class<T>): T? {
+        val base64 = prefs.getString(key, null) ?: return null
         val json = String(Base64.decode(base64, Base64.DEFAULT))
         return gson.fromJson(json, type)
     }
