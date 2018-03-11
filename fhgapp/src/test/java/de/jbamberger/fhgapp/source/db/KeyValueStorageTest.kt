@@ -44,6 +44,12 @@ class KeyValueStorageTest {
     }
 
     @Test
+    fun test_restoreBroken() {
+        store.save("c", "Hello broken Object")
+        assertThat(store.get("c"), `is`(equalTo(null as VPlanDay?)))
+    }
+
+    @Test
     fun test_loadNotPresent() {
         assertThat(null, `is`(equalTo(store.get<String>("b"))))
     }
