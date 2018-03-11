@@ -35,7 +35,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="grade" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/grade" />
 
         <TextView
             android:id="@+id/vplan_hour"
@@ -49,7 +49,7 @@
             app:layout_constraintStart_toEndOf="@+id/vplan_grade"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="hour" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/hour" />
 
 
         <TextView
@@ -64,7 +64,7 @@
             app:layout_constraintStart_toEndOf="@+id/vplan_hour"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="subject" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/subject" />
 
         <TextView
             android:id="@+id/vplan_room"
@@ -78,7 +78,7 @@
             app:layout_constraintStart_toEndOf="@+id/vplan_subject"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="room" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/room" />
 
         <TextView
             android:id="@+id/vplan_kind"
@@ -92,7 +92,7 @@
             app:layout_constraintStart_toEndOf="@+id/vplan_room"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColorHighlighted="@{obj}"
-            tools:text="kind" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/kind" />
 
         <TextView
             android:id="@+id/vplan_content"
@@ -105,7 +105,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:vPlanTextColor="@{obj}"
             app:visibleIfNotEmpty="@{obj.content}"
-            tools:text="content" />
+            tools:text="@sample/sample.json/vplan/vPlanRows/content" />
 
 
     </android.support.constraint.ConstraintLayout>
