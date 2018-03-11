@@ -31,8 +31,7 @@ object VPlanUtils {
     }
 
     private fun filter(day: VPlanDay, matcher: (VPlanRow) -> Boolean): VPlanDay {
-        return VPlanDay(day.dateAndDay, day.lastUpdated, day.motd,
-                day.vPlanRows.filter(matcher))
+        return VPlanDay(day.header, day.vPlanRows.filter(matcher))
     }
 
     fun getVPlanMatcher(settings: Repository.VPlanSettings): (VPlanRow) -> Boolean {

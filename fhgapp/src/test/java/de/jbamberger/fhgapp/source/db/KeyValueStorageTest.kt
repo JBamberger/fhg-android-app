@@ -1,8 +1,9 @@
 package de.jbamberger.fhgapp.source.db
 
 import android.preference.PreferenceManager
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import de.jbamberger.api.data.VPlanDay
+import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
@@ -24,8 +25,8 @@ class KeyValueStorageTest {
     @Before
     fun setUp() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-        val gson = Gson()
-        store = KeyValueStorage(gson, prefs)
+        val moshi = Moshi.Builder().build()
+        store = KeyValueStorage(moshi, prefs)
     }
 
     @Test
@@ -36,7 +37,7 @@ class KeyValueStorageTest {
 
     @Test
     fun test_saveAndLoadComplexObject() {
-        val o = VPlanDay("a", "a", "c",
+        val o = VPlanDay(VPlanHeader("a", "a", "c"),
                 listOf(VPlanRow("a", false, "b", "c", "d", "e", "f", false)))
         store.save("c", o)
         assertThat(o, `is`(equalTo(store.get("c"))))

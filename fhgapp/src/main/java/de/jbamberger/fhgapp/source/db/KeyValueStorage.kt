@@ -2,7 +2,8 @@ package de.jbamberger.fhgapp.source.db
 
 import android.content.SharedPreferences
 import android.util.Base64
-import com.google.gson.Gson
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
 /**
@@ -10,10 +11,10 @@ import javax.inject.Inject
  */
 
 class KeyValueStorage @Inject
-constructor(private val gson: Gson, private val prefs: SharedPreferences) {
+constructor(private val moshi: Moshi, private val prefs: SharedPreferences) {
 
-    fun save(key: String, value: Any) {
-        val json: String = gson.toJson(value)
+    fun <T : Any> save(key: String, value: T) {
+        val json: String = moshi.adapter<T>(value::class.java).toJson(value)
         val base64: ByteArray = Base64.encode(json.toByteArray(), Base64.DEFAULT)
         prefs.edit().putString(key, String(base64)).apply()
     }
@@ -25,6 +26,10 @@ constructor(private val gson: Gson, private val prefs: SharedPreferences) {
     fun <T> get(key: String, type: Class<T>): T? {
         val base64 = prefs.getString(key, null) ?: return null
         val json = String(Base64.decode(base64, Base64.DEFAULT))
-        return gson.fromJson(json, type)
+        return try {
+            moshi.adapter<T>(type).fromJson(json)
+        } catch (e: JsonDataException) {
+            null
+        }
     }
 }

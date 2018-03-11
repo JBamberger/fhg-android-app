@@ -1,15 +1,15 @@
 package de.jbamberger.api
 
 import android.content.Context
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -22,8 +22,10 @@ internal class NetModule {
 
     @Provides
     @Singleton
-    fun providesGson(): Gson {
-        return GsonBuilder().create()
+    fun providesMoshi(): Moshi {
+        return Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
     }
 
     @Provides
@@ -49,7 +51,7 @@ internal class NetModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitAPI(gson: Gson, okHttpClient: OkHttpClient,
+    fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient,
                            feedConverterFactory: FeedConverterFactory): Retrofit.Builder {
         return Retrofit.Builder()
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
@@ -57,7 +59,7 @@ internal class NetModule {
                 .addConverterFactory(feedConverterFactory)
 //                .addConverterFactory(SimpleXmlConverterFactory.create())
 //                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)
     }
 

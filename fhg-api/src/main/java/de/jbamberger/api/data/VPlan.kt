@@ -1,15 +1,12 @@
 package de.jbamberger.api.data
 
-import de.jbamberger.util.Preconditions.checkNotNull
-
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class VPlan private constructor(val day1: VPlanDay, val day2: VPlanDay) {
+class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
 
     class Builder {
-
         private var day1: VPlanDay? = null
         private var day2: VPlanDay? = null
 
@@ -27,9 +24,29 @@ class VPlan private constructor(val day1: VPlanDay, val day2: VPlanDay) {
 
         @Synchronized
         fun build(): VPlan {
-            checkNotNull<VPlanDay>(day1)
-            checkNotNull<VPlanDay>(day2)
             return VPlan(day1!!, day2!!)
         }
     }
 }
+
+data class VPlanDay(
+        val header: VPlanHeader,
+        val vPlanRows: List<VPlanRow>
+)
+
+data class VPlanRow(
+        val subject: String,
+        val isOmitted: Boolean,
+        val hour: String,
+        val room: String,
+        val content: String,
+        val grade: String,
+        val kind: String,
+        val isMarkedNew: Boolean
+)
+
+data class VPlanHeader(
+        val dateAndDay: String,
+        val lastUpdated: String,
+        val motd: String
+)

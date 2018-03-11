@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.jbamberger.api.data.VPlan
+import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
@@ -188,8 +189,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                 rows2 = day2.vPlanRows
                 bound1 = rows1.size + 1
                 bound2 = bound1 + rows2.size + 1
-                header1 = VPlanHeader(day1.dateAndDay, day1.lastUpdated, day1.motd)
-                header2 = VPlanHeader(day2.dateAndDay, day2.lastUpdated, day2.motd)
+                header1 = day1.header
+                header2 = day2.header
             }
 
 

@@ -1,10 +1,7 @@
 package de.jbamberger.api;
 
-import com.google.gson.Gson;
-
 import org.junit.Test;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,29 +26,5 @@ public class VPlanParserTest {
 
             }
         }
-    }
-
-    static class TestA {
-        public String name;
-
-        @Override
-        public String toString() {
-            return "TestA{" +
-                    "name='" + name + '\'' +
-                    '}';
-        }
-    }
-
-    static class TestB {
-        public List<TestA> tests;
-    }
-
-    @Test
-    public void gson() throws Exception {
-        Gson gson = new Gson();
-
-        TestB t = gson.fromJson("[{name: \"hello\", id: 1}]", TestB.class);
-
-        System.out.println(t.tests);
     }
 }

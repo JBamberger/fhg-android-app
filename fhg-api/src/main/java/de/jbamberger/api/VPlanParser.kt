@@ -1,6 +1,7 @@
 package de.jbamberger.api
 
 import de.jbamberger.api.data.VPlanDay
+import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
@@ -81,7 +82,7 @@ internal class VPlanParser : Converter<ResponseBody, VPlanDay> {
         val motd = readMotdTable(doc.getElementsByClass("info"))
         val entries = readVPlanTable(doc.getElementsByClass("list").select("tr"))
 
-        return VPlanDay(dateAndDay, lastUpdated, motd, entries)
+        return VPlanDay(VPlanHeader(dateAndDay, lastUpdated, motd), entries)
     }
 
     companion object {

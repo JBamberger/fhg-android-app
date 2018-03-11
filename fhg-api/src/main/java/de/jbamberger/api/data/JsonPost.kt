@@ -1,7 +1,6 @@
 package de.jbamberger.api.data
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -9,108 +8,86 @@ import com.google.gson.annotations.SerializedName
 
 internal class JsonPost {
 
-    @SerializedName("id")
-    @Expose
+    @Json(name = "id")
     var id: Int = 0
-    @SerializedName("date_gmt")
-    @Expose
+    @Json(name = "date_gmt")
     var dateGmt: String? = null
-    @SerializedName("modified_gmt")
-    @Expose
+    @Json(name = "modified_gmt")
     var modifiedGmt: String? = null
-    @SerializedName("slug")
-    @Expose
+    @Json(name = "slug")
     var slug: String? = null
-    @SerializedName("link")
-    @Expose
+    @Json(name = "link")
     var link: String? = null
-    @SerializedName("title")
-    @Expose
+    @Json(name = "title")
     var title: Title? = null
-    @SerializedName("content")
-    @Expose
+    @Json(name = "content")
     var content: Content? = null
-    @SerializedName("excerpt")
-    @Expose
+    @Json(name = "excerpt")
     var excerpt: Excerpt? = null
-    @SerializedName("featured_media")
-    @Expose
+    @Json(name = "featured_media")
     var featuredMedia: Int = 0
-    @SerializedName("meta")
-    @Expose
+    @Json(name = "meta")
     var meta: List<Any>? = null
-    @SerializedName("_links")
-    @Expose
+    @Json(name = "_links")
     var links: Links? = null
 
     inner class Guid {
 
-        @SerializedName("rendered")
-        @Expose
+        @Json(name = "rendered")
         var rendered: String? = null
 
     }
 
     inner class Title {
 
-        @SerializedName("rendered")
-        @Expose
+        @Json(name = "rendered")
         var rendered: String? = null
 
     }
 
     inner class Content {
 
-        @SerializedName("rendered")
-        @Expose
+        @Json(name = "rendered")
         var rendered: String? = null
 
     }
 
     inner class Excerpt {
 
-        @SerializedName("rendered")
-        @Expose
+        @Json(name = "rendered")
         var rendered: String? = null
 
     }
 
     inner class Links {
 
-        @SerializedName("self")
-        @Expose
+        @Json(name = "self")
         var self: List<Self>? = null
-        @SerializedName("wp:featuredmedia")
-        @Expose
+        @Json(name = "wp:featuredmedia")
         var wpFeaturedmedia: List<WpFeaturedmedium>? = null
-        @SerializedName("wp:attachment")
-        @Expose
+        @Json(name = "wp:attachment")
         var wpAttachment: List<WpAttachment>? = null
 
 
         inner class Self {
 
-            @SerializedName("href")
-            @Expose
+            @Json(name = "href")
             var href: String? = null
 
         }
 
         inner class WpFeaturedmedium {
 
-            @SerializedName("embeddable")
-            @Expose
+            @Json(name = "embeddable")
             var embeddable: Boolean? = null
-            @SerializedName("href")
-            @Expose
+            @Json(name = "href")
             var href: String? = null
 
         }
 
         inner class WpAttachment {
 
-            @SerializedName("href")
-            @Expose
+            @Json(name = "href")
             var href: String? = null
 
         }

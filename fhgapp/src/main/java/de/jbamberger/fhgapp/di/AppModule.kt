@@ -5,8 +5,8 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import de.jbamberger.api.FhgApi
@@ -40,8 +40,10 @@ internal class AppModule {
 
     @Provides
     @Singleton
-    fun providesGson(): Gson {
-        return GsonBuilder().create()
+    fun providesMoshi(): Moshi {
+        return Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
     }
 
     @Provides

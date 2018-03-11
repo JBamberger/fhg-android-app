@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -13,29 +13,29 @@ import com.google.gson.annotations.SerializedName
 class FeedItem {
 
     @PrimaryKey
-    @SerializedName("id")
+    @Json(name = "id")
     var id: Int = 0
 
     @ColumnInfo(name = "date")
-    @SerializedName("date")
+    @Json(name = "date")
     var date: String? = null
 
     @ColumnInfo(name = "link")
-    @SerializedName("link")
+    @Json(name = "link")
     var link: String? = null
 
     @Embedded
-    @SerializedName("title")
+    @Json(name = "title")
     var title: Title? = null
 
     @Embedded
-    @SerializedName("excerpt")
+    @Json(name = "excerpt")
     var excerpt: Excerpt? = null
 
 
     class Title {
         @ColumnInfo(name = "renderedTitle")
-        @SerializedName("rendered")
+        @Json(name = "rendered")
         var rendered: String? = null
 
         override fun toString(): String {
@@ -48,7 +48,7 @@ class FeedItem {
 
     class Excerpt {
         @ColumnInfo(name = "renderedExcerpt")
-        @SerializedName("rendered")
+        @Json(name = "rendered")
         var rendered: String? = null
 
         override fun toString(): String {
