@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="about_card_margin">16dp</dimen>
-    <dimen name="about_corner_radius">8dp</dimen>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="de">
+    <dimen name="about_card_margin">8dp</dimen>
+    <dimen name="about_corner_radius">4dp</dimen>
     <dimen name="about_card_elevation">8dp</dimen>
-    <dimen name="about_title_padding">16dp</dimen>
+    <dimen name="about_card_padding">8dp</dimen>
+    <dimen name="about_title_padding">8dp</dimen>
     <dimen name="about_title_text_size">16sp</dimen>
-    <dimen name="about_content_padding">16dp</dimen>
+    <dimen name="about_content_padding">8dp</dimen>
 
     <style name="About" />
 
@@ -13,10 +14,12 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_dark_primary</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:padding">@dimen/about_title_padding</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <style name="About.Content">
+        <item name="android:padding">@dimen/about_content_padding</item>
         <item name="android:gravity">start</item>
         <item name="android:textColor">@color/text_dark_secondary</item>
         <item name="android:textStyle">normal</item>

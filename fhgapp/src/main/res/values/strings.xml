@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="de">
     <string name="app_name">FhgApp</string>
     <string name="play_link">https://play.google.com/store/apps/details?id=%1$s</string>
 

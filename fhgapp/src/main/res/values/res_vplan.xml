@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="de">
     <string name="vplan_omitted">entfällt</string>
     <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
     <string name="vplan_subtitle_few_grades">Zeige %1$s</string>

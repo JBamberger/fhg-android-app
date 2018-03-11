@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 app:html="@{obj.title.rendered}"
-                tools:text="Title" />
+                tools:text="@sample/sample.json/feed/title" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                 android:layout_marginTop="8dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 app:html="@{obj.excerpt.rendered}"
-                tools:text="Content" />
+                tools:text="@sample/sample.json/feed/excerpt" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
