@@ -10,10 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
-import de.jbamberger.fhg.repository.Resource
-import de.jbamberger.fhg.repository.Status
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
 import de.jbamberger.fhgapp.util.Utils
@@ -55,15 +54,15 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     override fun onChanged(feedResource: Resource<List<FeedItem>>?) {
         if (feedResource == null) return
 
-        when(feedResource.status) {
-            Status.LOADING -> {
+        when(feedResource) {
+            is Resource.Loading -> {
                 adapter.setData(false, feedResource.data)
             }
-            Status.SUCCESS -> {
+            is Resource.Success -> {
                 adapter.setData(false, feedResource.data)
                 binding.isRefreshing = false
             }
-            Status.ERROR -> {
+            is Resource.Error -> {
                 adapter.setData(true, feedResource.data)
                 binding.isRefreshing = false
             }

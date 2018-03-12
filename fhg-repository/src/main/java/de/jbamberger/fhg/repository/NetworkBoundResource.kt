@@ -16,19 +16,25 @@ import de.jbamberger.fhg.repository.util.AppExecutors
 class NetworkBoundResource<ResultType, RequestType>
 @MainThread
 internal constructor(private val appExecutors: AppExecutors,
-            private val provider: Provider<ResultType, RequestType>) {
+                     private val provider: Provider<ResultType, RequestType>) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
-        result.value = Resource.loading(null)
+        result.value = Resource.Loading(null)
         val dbSource = provider.loadFromDb()
         result.addSource(dbSource) {
             result.removeSource(dbSource)
             if (provider.shouldFetch(it)) {
                 fetchFromNetwork(dbSource)
             } else {
-                result.addSource(dbSource) { result.setValue(Resource.success(it)) }
+                result.addSource(dbSource) {
+                    if (it == null) {
+                        result.value = Resource.Error("db returned null", it)
+                    } else {
+                        result.value = Resource.Success(it)
+                    }
+                }
             }
         }
     }
@@ -36,7 +42,7 @@ internal constructor(private val appExecutors: AppExecutors,
     private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
         val apiResponse = provider.createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(dbSource) { result.setValue(Resource.loading(it)) }
+        result.addSource(dbSource) { result.setValue(Resource.Loading(it)) }
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
@@ -49,14 +55,18 @@ internal constructor(private val appExecutors: AppExecutors,
                         // otherwise we will get immediately last cached value,
                         // which may not be updated with latest results received from network.
                         result.addSource(provider.loadFromDb()) {
-                            result.setValue(Resource.success(it))
+                            if (it == null) {
+                                result.value = Resource.Error("db returned null", it)
+                            } else {
+                                result.value = Resource.Success(it)
+                            }
                         }
                     }
                 }
             } else {
                 provider.onFetchFailed()
                 result.addSource(dbSource) {
-                    result.setValue(Resource.error(response.errorMessage!!, it))
+                    result.value = Resource.Error(response.errorMessage!!, it)
                 }
             }
         }

@@ -14,7 +14,6 @@ import de.jbamberger.api.data.VPlan
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhg.repository.Resource
-import de.jbamberger.fhg.repository.Status
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.Settings
@@ -79,15 +78,15 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
         parent?.setSubtitle(getSubtitle(filteredPlan.first))
         val vPlanResource = filteredPlan.second
-        when (vPlanResource.status) {
-            Status.LOADING -> {
+        when (vPlanResource) {
+            is Resource.Loading -> {
                 adapter.setData(false, vPlanResource.data)
             }
-            Status.SUCCESS -> {
+            is Resource.Success -> {
                 adapter.setData(false, vPlanResource.data)
                 binding.isRefreshing = false
             }
-            Status.ERROR -> {
+            is Resource.Error -> {
                 adapter.setData(true, vPlanResource.data)
                 binding.isRefreshing = false
             }
