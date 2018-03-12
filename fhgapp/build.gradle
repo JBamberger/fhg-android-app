@@ -102,15 +102,9 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timber_version"
 
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
-
     implementation "android.arch.lifecycle:runtime:$arch_lifecycle_version"
     implementation "android.arch.lifecycle:extensions:$arch_lifecycle_version"
     kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
-
-    implementation "android.arch.persistence.room:runtime:$arch_room_version"
-    kapt "android.arch.persistence.room:compiler:$arch_room_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
