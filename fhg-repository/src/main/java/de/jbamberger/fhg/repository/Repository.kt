@@ -3,6 +3,7 @@ package de.jbamberger.fhg.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
+import dagger.Lazy
 import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.fhg.repository.api.ApiResponse
@@ -20,10 +21,18 @@ import javax.inject.Singleton
 @Singleton
 class Repository
 @Inject
-internal constructor(private val appExecutors: AppExecutors,
-            private val api: FhgApi,
-            private val db: AppDatabase,
-            private val kvStore: KeyValueStorage) {
+internal constructor(
+        appExecutors: Lazy<AppExecutors>,
+        api: Lazy<FhgApi>,
+        db: Lazy<AppDatabase>,
+        kvStore: Lazy<KeyValueStorage>) {
+
+    private val appExecutors: AppExecutors by lazy { appExecutors.get() }
+    private val api: FhgApi  by lazy { api.get() }
+    private val db: AppDatabase by lazy { db.get() }
+    private val kvStore: KeyValueStorage  by lazy { kvStore.get() }
+
+
 
     val vPlan: LiveData<Resource<VPlan>>
         get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<VPlan, VPlan> {

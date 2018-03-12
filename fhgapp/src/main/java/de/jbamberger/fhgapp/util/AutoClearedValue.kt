@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager
  *
  * @param <T>
 </T> */
-class AutoClearedValue<T>(fragment: Fragment, private var value: T?) {
+class AutoClearedValue<out T>(fragment: Fragment, private var value: T?) {
 
     init {
         val fragmentManager = fragment.fragmentManager
