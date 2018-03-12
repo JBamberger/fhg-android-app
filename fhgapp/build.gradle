@@ -83,7 +83,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':utils')
-    implementation project(':fhg-api')
     implementation project(':fhg-repository')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

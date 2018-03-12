@@ -1,1 +1,1 @@
-include ':fhgapp', ':utils', ':fhg-api', ':fhg-repository'
+include ':fhgapp', ':utils', ':fhg-repository'
