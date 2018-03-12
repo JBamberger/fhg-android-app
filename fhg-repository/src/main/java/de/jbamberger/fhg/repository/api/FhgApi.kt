@@ -8,7 +8,7 @@ import de.jbamberger.api.data.VPlan
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-interface FhgApi {
+internal interface FhgApi {
     val vPlan: LiveData<ApiResponse<VPlan>>
     val feed: LiveData<ApiResponse<List<FeedItem>>>
 }

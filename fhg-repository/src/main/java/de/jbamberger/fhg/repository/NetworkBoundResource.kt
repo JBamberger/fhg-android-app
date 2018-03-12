@@ -15,7 +15,7 @@ import de.jbamberger.fhg.repository.util.AppExecutors
  */
 class NetworkBoundResource<ResultType, RequestType>
 @MainThread
-constructor(private val appExecutors: AppExecutors,
+internal constructor(private val appExecutors: AppExecutors,
             private val provider: Provider<ResultType, RequestType>) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
@@ -66,7 +66,7 @@ constructor(private val appExecutors: AppExecutors,
         return result
     }
 
-    interface Provider<ResultType, RequestType> {
+    internal interface Provider<ResultType, RequestType> {
 
         fun onFetchFailed() {}
 

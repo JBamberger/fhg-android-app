@@ -1,4 +1,4 @@
-package de.jbamberger.api.data.dao
+package de.jbamberger.fhg.repository.data.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
@@ -9,7 +9,7 @@ import de.jbamberger.api.data.FeedItem
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @Dao
-interface FeedItemDao {
+internal interface FeedItemDao {
     @Query("SELECT * FROM feedItems")
     fun getAll(): LiveData<List<FeedItem>>
 

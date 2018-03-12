@@ -10,7 +10,7 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class KeyValueStorage @Inject
+internal class KeyValueStorage @Inject
 constructor(private val moshi: Moshi, private val prefs: SharedPreferences) {
 
     fun <T : Any> save(key: String, value: T) {

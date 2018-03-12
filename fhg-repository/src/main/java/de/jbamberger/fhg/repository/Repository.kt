@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class Repository
 @Inject
-constructor(private val appExecutors: AppExecutors,
+internal constructor(private val appExecutors: AppExecutors,
             private val api: FhgApi,
             private val db: AppDatabase,
             private val kvStore: KeyValueStorage) {

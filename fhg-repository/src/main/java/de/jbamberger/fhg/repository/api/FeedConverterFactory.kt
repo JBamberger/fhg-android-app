@@ -15,7 +15,7 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class FeedConverterFactory @Inject
+internal class FeedConverterFactory @Inject
 internal constructor(private val moshi: Moshi) : Converter.Factory() {
 
     override fun responseBodyConverter(

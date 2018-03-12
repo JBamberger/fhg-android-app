@@ -10,7 +10,7 @@ import java.io.IOException
  *
  * @param <T> response content
 </T> */
-class ApiResponse<T> {
+internal class ApiResponse<T> {
 
 
     val code: Int

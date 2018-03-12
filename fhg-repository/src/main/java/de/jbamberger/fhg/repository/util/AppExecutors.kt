@@ -17,12 +17,15 @@ import javax.inject.Singleton
  * webservice requests).
  */
 @Singleton
-class AppExecutors(private val diskIO: Executor, private val networkIO: Executor, private val mainThread: Executor) {
+internal class AppExecutors(
+        private val diskIO: Executor,
+        private val networkIO: Executor,
+        private val mainThread: Executor) {
 
     @Inject
-    constructor() : this(Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(3),
-            MainThreadExecutor()) {
-    }
+    constructor() : this(Executors.newSingleThreadExecutor(),
+            Executors.newFixedThreadPool(3),
+            MainThreadExecutor())
 
     fun diskIO(): Executor {
         return diskIO
