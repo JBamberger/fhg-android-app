@@ -1,4 +1,4 @@
-package de.jbamberger.api
+package de.jbamberger.fhg.repository
 
 import android.content.Context
 import com.squareup.moshi.KotlinJsonAdapterFactory

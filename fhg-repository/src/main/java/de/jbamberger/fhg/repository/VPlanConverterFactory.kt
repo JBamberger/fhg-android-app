@@ -1,4 +1,4 @@
-package de.jbamberger.api
+package de.jbamberger.fhg.repository
 
 import de.jbamberger.api.data.VPlanDay
 import okhttp3.ResponseBody

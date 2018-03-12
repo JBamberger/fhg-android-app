@@ -5,7 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
 
-import de.jbamberger.api.ApiResponse
+import de.jbamberger.fhg.repository.ApiResponse
 import de.jbamberger.fhgapp.AppExecutors
 
 /**

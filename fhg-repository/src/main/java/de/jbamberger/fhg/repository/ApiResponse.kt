@@ -1,4 +1,4 @@
-package de.jbamberger.api
+package de.jbamberger.fhg.repository
 
 import okhttp3.Headers
 import retrofit2.Response

@@ -9,7 +9,7 @@ import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import de.jbamberger.api.FhgApi
+import de.jbamberger.fhg.repository.FhgApi
 import de.jbamberger.fhgapp.source.db.AppDatabase
 import javax.inject.Singleton
 

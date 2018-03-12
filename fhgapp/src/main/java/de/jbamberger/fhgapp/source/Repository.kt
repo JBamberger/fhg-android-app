@@ -3,8 +3,8 @@ package de.jbamberger.fhgapp.source
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import de.jbamberger.api.ApiResponse
-import de.jbamberger.api.FhgApi
+import de.jbamberger.fhg.repository.ApiResponse
+import de.jbamberger.fhg.repository.FhgApi
 import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.fhgapp.AppExecutors
