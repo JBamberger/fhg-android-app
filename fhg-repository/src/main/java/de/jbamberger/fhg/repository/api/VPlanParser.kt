@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository
+package de.jbamberger.fhg.repository.api
 
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanHeader

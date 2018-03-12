@@ -1,12 +1,11 @@
-package de.jbamberger.fhgapp.source
+package de.jbamberger.fhg.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-
-import de.jbamberger.fhg.repository.ApiResponse
-import de.jbamberger.fhgapp.AppExecutors
+import de.jbamberger.fhg.repository.api.ApiResponse
+import de.jbamberger.fhg.repository.util.AppExecutors
 
 /**
  * A generic class that can provide a resource backed by both a database and the network.
@@ -17,7 +16,7 @@ import de.jbamberger.fhgapp.AppExecutors
 class NetworkBoundResource<ResultType, RequestType>
 @MainThread
 constructor(private val appExecutors: AppExecutors,
-                      private val provider: Provider<ResultType, RequestType>) {
+            private val provider: Provider<ResultType, RequestType>) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 

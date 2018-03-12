@@ -9,16 +9,17 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @Singleton
-@Component(modules = [(FhgApiModule::class), (NetModule::class)])
-interface FhgApiComponent {
+@Component(modules = [
+    RepositoryModule::class])
+internal interface RepositoryComponent{
 
     @Component.Builder
     interface Builder {
         @BindsInstance
         fun application(application: Application): Builder
 
-        fun build(): FhgApiComponent
+        fun build(): RepositoryComponent
     }
 
-    fun inject(builder: FhgApi.Provider)
+    fun inject(m: RepoInitModule)
 }

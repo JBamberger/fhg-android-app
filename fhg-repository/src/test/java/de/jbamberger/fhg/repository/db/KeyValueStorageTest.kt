@@ -1,10 +1,11 @@
-package de.jbamberger.fhgapp.source.db
+package de.jbamberger.fhg.repository.db
 
 import android.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.db.KeyValueStorage
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat

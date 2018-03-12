@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository
+package de.jbamberger.fhg.repository.api
 
 import android.app.Application
 import android.content.Context

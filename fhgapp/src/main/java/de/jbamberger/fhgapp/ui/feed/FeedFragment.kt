@@ -12,8 +12,8 @@ import android.view.ViewGroup
 import de.jbamberger.api.data.FeedItem
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
-import de.jbamberger.fhgapp.source.Resource
-import de.jbamberger.fhgapp.source.Status
+import de.jbamberger.fhg.repository.Resource
+import de.jbamberger.fhg.repository.Status
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
 import de.jbamberger.fhgapp.util.Utils

@@ -1,7 +1,7 @@
 package de.jbamberger.fhgapp.ui.feed
 
 import android.arch.lifecycle.ViewModel
-import de.jbamberger.fhgapp.source.Repository
+import de.jbamberger.fhg.repository.Repository
 import javax.inject.Inject
 
 /**

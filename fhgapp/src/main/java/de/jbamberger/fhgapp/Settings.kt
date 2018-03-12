@@ -1,8 +1,7 @@
-package de.jbamberger.fhgapp.source.db
+package de.jbamberger.fhgapp
 
 import android.app.Application
 import android.content.SharedPreferences
-import de.jbamberger.fhgapp.R
 import java.util.*
 import javax.inject.Inject
 
@@ -33,4 +32,13 @@ constructor(private val app: Application, private val prefs: SharedPreferences) 
         set(value) = prefs.edit()
                 .putString(app.getString(R.string.settings_course_key), value.joinToString(separator = ","))
                 .apply()
+
+    val vPlanSettings: VPlanSettings
+        get() = VPlanSettings(
+                vPlanShowAll,
+                vPlanGrades,
+                vPlanCourses
+        )
+
+    data class VPlanSettings(val showAll: Boolean, val grades: Set<String>, val courses: Set<String>)
 }

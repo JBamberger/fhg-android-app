@@ -6,6 +6,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import de.jbamberger.fhg.repository.RepoInitModule
 import de.jbamberger.fhgapp.App
 import javax.inject.Singleton
 
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     AppModule::class,
+    RepoInitModule::class,
     BuildersModule::class,
     AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class])

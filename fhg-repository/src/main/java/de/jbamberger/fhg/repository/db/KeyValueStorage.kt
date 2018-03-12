@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.source.db
+package de.jbamberger.fhg.repository.db
 
 import android.content.SharedPreferences
 import android.util.Base64

@@ -1,6 +1,6 @@
-package de.jbamberger.fhgapp.source
+package de.jbamberger.fhg.repository
 
-import de.jbamberger.fhgapp.source.Status.*
+import de.jbamberger.fhg.repository.Status.*
 
 /**
  * A generic class that holds a value with its loading status.

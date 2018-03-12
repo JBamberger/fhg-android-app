@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.source.db
+package de.jbamberger.fhg.repository.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase

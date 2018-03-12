@@ -1,16 +1,15 @@
-package de.jbamberger.fhgapp.source
+package de.jbamberger.fhg.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import de.jbamberger.fhg.repository.ApiResponse
-import de.jbamberger.fhg.repository.FhgApi
 import de.jbamberger.api.data.FeedItem
 import de.jbamberger.api.data.VPlan
-import de.jbamberger.fhgapp.AppExecutors
-import de.jbamberger.fhgapp.source.db.AppDatabase
-import de.jbamberger.fhgapp.source.db.KeyValueStorage
-import de.jbamberger.fhgapp.source.db.Settings
+import de.jbamberger.fhg.repository.api.ApiResponse
+import de.jbamberger.fhg.repository.api.FhgApi
+import de.jbamberger.fhg.repository.db.AppDatabase
+import de.jbamberger.fhg.repository.db.KeyValueStorage
+import de.jbamberger.fhg.repository.util.AppExecutors
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,13 +18,12 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class Repository @Inject
-constructor(
-        private val appExecutors: AppExecutors,
-        private val api: FhgApi,
-        private val db: AppDatabase,
-        private val kvStore: KeyValueStorage,
-        private val settings: Settings) {
+class Repository
+@Inject
+constructor(private val appExecutors: AppExecutors,
+            private val api: FhgApi,
+            private val db: AppDatabase,
+            private val kvStore: KeyValueStorage) {
 
     val vPlan: LiveData<Resource<VPlan>>
         get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<VPlan, VPlan> {
@@ -87,15 +85,6 @@ constructor(
                 return m
             }
         }).asLiveData()
-
-    val vPlanSettings: VPlanSettings
-        get() = VPlanSettings(
-                settings.vPlanShowAll,
-                settings.vPlanGrades,
-                settings.vPlanCourses
-        )
-
-    data class VPlanSettings(val showAll: Boolean, val grades: Set<String>, val courses: Set<String>)
 
     companion object {
         const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"

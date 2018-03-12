@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository
+package de.jbamberger.fhg.repository.api
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData

@@ -1,8 +1,7 @@
-package de.jbamberger.fhgapp.source.db
+package de.jbamberger.fhgapp
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import de.jbamberger.fhgapp.R
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat

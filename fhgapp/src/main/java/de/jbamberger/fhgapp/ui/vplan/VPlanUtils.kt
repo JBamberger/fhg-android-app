@@ -3,7 +3,7 @@ package de.jbamberger.fhgapp.ui.vplan
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanRow
-import de.jbamberger.fhgapp.source.Repository
+import de.jbamberger.fhgapp.Settings
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -34,7 +34,7 @@ object VPlanUtils {
         return VPlanDay(day.header, day.vPlanRows.filter(matcher))
     }
 
-    fun getVPlanMatcher(settings: Repository.VPlanSettings): (VPlanRow) -> Boolean {
+    fun getVPlanMatcher(settings: Settings.VPlanSettings): (VPlanRow) -> Boolean {
         if (settings.showAll) {
             return { true }
         } else {

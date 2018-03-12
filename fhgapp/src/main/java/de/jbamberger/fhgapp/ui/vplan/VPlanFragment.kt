@@ -13,11 +13,11 @@ import android.view.ViewGroup
 import de.jbamberger.api.data.VPlan
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.Resource
+import de.jbamberger.fhg.repository.Status
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
-import de.jbamberger.fhgapp.source.Repository
-import de.jbamberger.fhgapp.source.Resource
-import de.jbamberger.fhgapp.source.Status
+import de.jbamberger.fhgapp.Settings
 import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
@@ -28,7 +28,7 @@ import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
  */
 class VPlanFragment : BaseFragment<VPlanViewModel>(),
         SwipeRefreshLayout.OnRefreshListener,
-        Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
+        Observer<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
 
     override val viewModelClass: Class<VPlanViewModel>
         get() = VPlanViewModel::class.java
@@ -74,7 +74,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         viewModel.vPlan.observe(this, this)
     }
 
-    override fun onChanged(filteredPlan: Pair<Repository.VPlanSettings, Resource<VPlan>>?) {
+    override fun onChanged(filteredPlan: Pair<Settings.VPlanSettings, Resource<VPlan>>?) {
         if (filteredPlan == null) return
 
         parent?.setSubtitle(getSubtitle(filteredPlan.first))
@@ -94,7 +94,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
     }
 
-    private fun getSubtitle(settings: Repository.VPlanSettings): String {
+    private fun getSubtitle(settings: Settings.VPlanSettings): String {
         return if (settings.showAll || settings.grades.isEmpty()) {
             getString(R.string.vplan_subtitle_all)
         } else {

@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository
+package de.jbamberger.fhg.repository.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types

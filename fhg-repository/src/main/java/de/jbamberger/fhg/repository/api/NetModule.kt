@@ -1,10 +1,11 @@
-package de.jbamberger.fhg.repository
+package de.jbamberger.fhg.repository.api
 
 import android.content.Context
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import de.jbamberger.fhg.repository.BuildConfig
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
