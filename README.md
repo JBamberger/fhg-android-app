@@ -1,4 +1,6 @@
 # FHG APP
 
-This repository contains the code of the FHG-App (prev. VPlan-App).
+Dieses Repository enthält den Code der FHG-App (früher VPlan-App).
+
+[Download](https://play.google.com/store/apps/details?id=xyz.jbapps.vplan)
 
