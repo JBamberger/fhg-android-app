@@ -52,14 +52,10 @@ internal class NetModule {
 
     @Provides
     @Singleton
-    fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient,
-                           feedConverterFactory: FeedConverterFactory): Retrofit.Builder {
+    fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                .addConverterFactory(VPlanConverterFactory())
-                .addConverterFactory(feedConverterFactory)
-//                .addConverterFactory(SimpleXmlConverterFactory.create())
-//                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(FhgTypeConverterFactory.create(moshi))
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)
     }

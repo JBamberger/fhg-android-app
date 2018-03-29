@@ -8,9 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import retrofit2.Converter
 import timber.log.Timber
-import java.io.IOException
 import java.nio.charset.Charset
 import java.nio.charset.IllegalCharsetNameException
 import java.nio.charset.UnsupportedCharsetException
@@ -19,14 +17,6 @@ import java.util.regex.Pattern
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-internal class VPlanConverter : Converter<ResponseBody, VPlanDay> {
-
-    @Throws(IOException::class)
-    override fun convert(body: ResponseBody): VPlanDay {
-        return VPlanParser.parseVPlanDay(body)
-    }
-}
-
 internal object VPlanParser {
 
     private const val GRADE_C = 0
