@@ -15,7 +15,7 @@ internal class VPlanConverterFactory : Converter.Factory() {
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>,
                                        retrofit: Retrofit): Converter<ResponseBody, VPlanDay>? {
         return when (type) {
-            VPlanDay::class.java -> VPlanParser()
+            VPlanDay::class.java -> VPlanConverter()
             else -> null
         }
     }
