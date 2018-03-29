@@ -10,15 +10,15 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
     dataBinding.enabled true
 
     defaultConfig {
         // legacy name. Replace with de.jbamberger.fhgapp to match package
         applicationId "xyz.jbapps.vplan"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 21
         versionName '3.0.1'
         vectorDrawables.useSupportLibrary = true
@@ -31,12 +31,6 @@ android {
             }
             unitTests.all {
                 jvmArgs '-noverify'
-            }
-        }
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }

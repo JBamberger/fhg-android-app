@@ -29,9 +29,9 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     private lateinit var binding: RefreshableListFragmentBinding
 
     override fun onCreateView(
-            inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(
-                inflater!!, R.layout.refreshable_list_fragment, container, false)
+                inflater, R.layout.refreshable_list_fragment, container, false)
         binding.container.layoutManager = LinearLayoutManager(context)
         binding.container.adapter = adapter
         binding.listener = this
@@ -70,7 +70,7 @@ class FeedFragment : BaseFragment<FeedViewModel>(),
     }
 
     fun itemClicked(url: String) {
-        Utils.openUrl(activity, url)
+        Utils.openUrl(activity!!, url)
     }
 
     private class FeedAdapter

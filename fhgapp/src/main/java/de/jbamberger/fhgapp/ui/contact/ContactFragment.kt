@@ -22,8 +22,8 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
 
     private lateinit var binding: ContactFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.contact_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.contact_fragment, container, false)
         binding.listener = this
 
         binding.contactActionCall.setCompoundDrawablesWithIntrinsicBounds(null, AppCompatResources.getDrawable(binding.root.context, R.drawable.ic_contact_call_accent_24dp), null, null)
