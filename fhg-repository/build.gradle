@@ -80,8 +80,10 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
 
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test:rules:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
 }

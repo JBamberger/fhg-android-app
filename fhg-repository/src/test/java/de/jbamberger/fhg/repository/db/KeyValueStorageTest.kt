@@ -5,7 +5,6 @@ import com.squareup.moshi.Moshi
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
-import de.jbamberger.fhg.repository.db.KeyValueStorage
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
@@ -21,7 +20,7 @@ import org.robolectric.RuntimeEnvironment.application
 @RunWith(RobolectricTestRunner::class)
 class KeyValueStorageTest {
 
-    lateinit var store: KeyValueStorage
+    internal lateinit var store: KeyValueStorage
 
     @Before
     fun setUp() {

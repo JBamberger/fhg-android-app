@@ -2,6 +2,7 @@ package de.jbamberger.fhgapp.ui.components
 
 import android.databinding.BindingAdapter
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
@@ -19,8 +20,12 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("html")
     fun bindHtml(view: TextView, html: String) {
-        val span = Html.fromHtml(html);
-        view.text = span
+        view.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            @Suppress("DEPRECATION")
+            Html.fromHtml(html);
+        }
     }
 
     @JvmStatic
@@ -49,7 +54,7 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("vPlanTextColor")
     fun bindTextColor(view: TextView, item: VPlanRow) {
-         val color = when {
+        val color = when {
             item.isMarkedNew -> R.color.vplan_text_new
             item.isOmitted -> R.color.vplan_text_omitted
             else -> R.color.vplan_text_default
