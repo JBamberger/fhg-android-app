@@ -1,5 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
+import android.support.annotation.VisibleForTesting
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
@@ -27,11 +28,16 @@ internal object VPlanParser {
     private const val CONTENT_C = 5
 
     private const val PATTERN_GROUP = "\\s*([^;]+)(;\\s*)?"
-    private const val PATTERN_CHARSET = "^charset=([^\\s]*)\$"
+    private const val PATTERN_CHARSET = "^charset\\s*=\\s*([^\\s]*)\\s*\$"
+    val DEFAULT_CHARSET: Charset = Charset.forName("utf-8")
 
+    @VisibleForTesting
+    internal fun parseContentTypeHeader(contentType: Element?): Charset? {
+        if (contentType == null) return DEFAULT_CHARSET
+        if (contentType.tagName() != "meta") return DEFAULT_CHARSET
+        if (contentType.attr("http-equiv") != "Content-Type") return DEFAULT_CHARSET
 
-    private fun parseContentTypeHeader(contentType: Element?): Charset? {
-        val contentAttr = contentType?.attr("content") ?: return null
+        val contentAttr = contentType.attr("content") ?: return DEFAULT_CHARSET
 
         try {
             val groupMatcher = Pattern.compile(PATTERN_GROUP).matcher(contentAttr)
@@ -39,17 +45,15 @@ internal object VPlanParser {
 
             while (groupMatcher.find()) {
                 val charsetMatcher = charsetPattern.matcher(groupMatcher.group(1))
-                if (charsetMatcher.find()) return Charset.forName(charsetMatcher.group(1))
+                if (charsetMatcher.find()) return Charset.forName(charsetMatcher.group(1).trim())
             }
         } catch (e: IllegalCharsetNameException) {
             //no match or illegal charset
             Timber.w(e, "charset extraction failed.")
         } catch (e: UnsupportedCharsetException) {
             Timber.w(e, "charset extraction failed.")
-        } catch (e: IllegalStateException) {
-            Timber.w(e, "charset extraction failed.")
         }
-        return null
+        return DEFAULT_CHARSET
     }
 
     @Throws(ParseException::class)
@@ -63,8 +67,7 @@ internal object VPlanParser {
         }
         val tmpHtml = String(data)
         val tmpDoc = Jsoup.parse(tmpHtml)
-        val head = tmpDoc.getElementsByTag("head")
-                .first() ?: return parseVPlanDay(tmpHtml)
+        val head = tmpDoc.getElementsByTag("head").first() ?: return parseVPlanDay(tmpHtml)
 
         val contentType = head.getElementsByAttributeValue("http-equiv", "Content-Type").first()
         val c = parseContentTypeHeader(contentType)
@@ -77,14 +80,8 @@ internal object VPlanParser {
     @Throws(ParseException::class)
     private fun parseVPlanDay(html: String): VPlanDay {
         val doc = Jsoup.parse(html)
-
-        val header = VPlanHeader(
-                readVPlanStatus(html),
-                readVPlanTitle(doc),
-                readMotdTable(doc.getElementsByClass("info")))
-        val entries = readVPlanTable(doc.getElementsByClass("list").select("tr"))
-
-        return VPlanDay(header, entries)
+        return VPlanDay(VPlanHeader(readVPlanStatus(html), readVPlanTitle(doc), readMotdTable(doc)),
+                readVPlanTable(doc))
     }
 
     @Throws(ParseException::class)
@@ -107,16 +104,16 @@ internal object VPlanParser {
     @Throws(ParseException::class)
     private fun readVPlanTitle(vplanDoc: Document): String {
         try {
-            return vplanDoc.getElementsByClass("mon_title")[0].allElements[0].text()
+            return vplanDoc.getElementsByClass("mon_title").first().allElements.first().text()
         } catch (e: Exception) {
             throw ParseException("Could not parse vplan dateAndDay", e)
         }
     }
 
     @Throws(ParseException::class)
-    private fun readMotdTable(classInfo: Elements): String {
+    private fun readMotdTable(doc: Document): String {
         try {
-            val tableRows = classInfo.select("tr")
+            val tableRows = doc.getElementsByClass("info").select("tr")
             val motd = StringBuilder()
             for (line in tableRows) {
                 val cells = line.children().select("td")
@@ -124,7 +121,8 @@ internal object VPlanParser {
                 if (size == 0) {
                     continue
                 }
-                val highlightRow = size > 1 && cells.first().text().toLowerCase().contains("unterrichtsfrei")
+                val highlightRow = size > 1 && cells.first()
+                        .text().toLowerCase().contains("unterrichtsfrei")
                 if (highlightRow) {
                     motd.append("<font color=#FF5252>")
                 }
@@ -140,21 +138,20 @@ internal object VPlanParser {
                 }
                 motd.append("<br />")
             }
-            var data = motd.toString()
-            val dat = Jsoup.parse(data)
+            val dat = Jsoup.parse(motd.toString())
             dat.select("html").unwrap()
             dat.select("head").unwrap()
             dat.select("body").unwrap()
             dat.select("td").unwrap()
-            data = dat.toString()
-            return data
+            return dat.toString()
         } catch (e: Exception) {
             throw ParseException("Could not parse motd table", e)
         }
     }
 
     @Throws(ParseException::class)
-    private fun readVPlanTable(vPlanTable: Elements): List<VPlanRow> {
+    private fun readVPlanTable(doc: Document): List<VPlanRow> {
+        val vPlanTable = doc.getElementsByClass("list").select("tr")
         try {
             return vPlanTable
                     .map { it.children() }
