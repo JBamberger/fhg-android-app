@@ -4,6 +4,7 @@ import android.support.annotation.VisibleForTesting
 import de.jbamberger.api.data.VPlanDay
 import de.jbamberger.api.data.VPlanHeader
 import de.jbamberger.api.data.VPlanRow
+import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -11,9 +12,6 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import timber.log.Timber
 import java.nio.charset.Charset
-import java.nio.charset.IllegalCharsetNameException
-import java.nio.charset.UnsupportedCharsetException
-import java.util.regex.Pattern
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -39,21 +37,9 @@ internal object VPlanParser {
 
         val contentAttr = contentType.attr("content") ?: return DEFAULT_CHARSET
 
-        try {
-            val groupMatcher = Pattern.compile(PATTERN_GROUP).matcher(contentAttr)
-            val charsetPattern = Pattern.compile(PATTERN_CHARSET)
+        val t = MediaType.parse(contentAttr)
 
-            while (groupMatcher.find()) {
-                val charsetMatcher = charsetPattern.matcher(groupMatcher.group(1))
-                if (charsetMatcher.find()) return Charset.forName(charsetMatcher.group(1).trim())
-            }
-        } catch (e: IllegalCharsetNameException) {
-            //no match or illegal charset
-            Timber.w(e, "charset extraction failed.")
-        } catch (e: UnsupportedCharsetException) {
-            Timber.w(e, "charset extraction failed.")
-        }
-        return DEFAULT_CHARSET
+        return t?.charset() ?: DEFAULT_CHARSET
     }
 
     @Throws(ParseException::class)

@@ -43,15 +43,14 @@ class VPlanParserTest {
                 "<meta http-equiv=\"Not-Content-Type\" content=\"text/html; charset=windows-1252\">"
         val wrongTagName =
                 "<beta http-equiv=\"Content-Type\" content=\"charset=windows-1252\">"
-
-        val oneCharset =
+        val noContentType =
                 "<meta http-equiv=\"Content-Type\" content=\"charset=windows-1252\">"
-        val oneCharsetAndOthers =
-                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">"
-        val oneCharsetWithSpaces =
-                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset  =   windows-1252   \">"
         val multipleCharsets =
-                "<meta http-equiv=\"Content-Type\" content=\"charset=windows-1252; charset=utf-8\">"
+                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252; charset=utf-8\">"
+
+        val correctType =
+                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">"
+
 
         fun ct(s: String): Element? {
             return Jsoup.parse(s, "", Parser.xmlParser()).children()?.first()
@@ -65,11 +64,10 @@ class VPlanParserTest {
         assertThat(parseContentTypeHeader(ct(noContentAttr)), `is`(equalTo(DEFAULT_CHARSET)))
         assertThat(parseContentTypeHeader(ct(wrongHttpAttr)), `is`(equalTo(DEFAULT_CHARSET)))
         assertThat(parseContentTypeHeader(ct(wrongTagName)), `is`(equalTo(DEFAULT_CHARSET)))
+        assertThat(parseContentTypeHeader(ct(noContentType)), `is`(equalTo(DEFAULT_CHARSET)))
+        assertThat(parseContentTypeHeader(ct(multipleCharsets)), `is`(equalTo(DEFAULT_CHARSET)))
 
         //valid inputs
-        assertThat(parseContentTypeHeader(ct(oneCharset)), `is`(equalTo(csWin1252)))
-        assertThat(parseContentTypeHeader(ct(oneCharsetAndOthers)), `is`(equalTo(csWin1252)))
-        assertThat(parseContentTypeHeader(ct(oneCharsetWithSpaces)), `is`(equalTo(csWin1252)))
-        assertThat(parseContentTypeHeader(ct(multipleCharsets)), `is`(equalTo(csWin1252)))
+        assertThat(parseContentTypeHeader(ct(correctType)), `is`(equalTo(csWin1252)))
     }
 }
