@@ -28,8 +28,8 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            app:html="@{obj.lastUpdated}"
-            tools:text="@sample/sample.json/vplan/lastUpdated" />
+            app:html="@{obj.dateAndDay}"
+            tools:text="@sample/sample.json/vplan/dateAndDay" />
 
         <TextView
             android:id="@+id/vplan_status"
@@ -39,8 +39,8 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
-            app:html="@{obj.dateAndDay}"
-            tools:text="@sample/sample.json/vplan/dateAndDay" />
+            app:html="@{obj.lastUpdated}"
+            tools:text="@sample/sample.json/vplan/lastUpdated" />
 
         <TextView
             android:id="@+id/vplan_motd_header"
