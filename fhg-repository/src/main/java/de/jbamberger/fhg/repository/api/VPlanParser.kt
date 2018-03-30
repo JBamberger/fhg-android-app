@@ -24,6 +24,18 @@ internal object VPlanParser {
     private const val KIND_C = 4
     private const val CONTENT_C = 5
 
+    @Throws(ParseException::class)
+    internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
+        return parseVPlanDay(readWithEncoding(body.bytes(), body.contentType()))
+    }
+
+    @VisibleForTesting
+    @Throws(ParseException::class)
+    internal fun parseVPlanDay(html: String): VPlanDay {
+        val doc = Jsoup.parse(html)
+        return VPlanDay(VPlanHeader(readDayAndDate(doc), readLastUpdated(html), readMotdTable(doc)),
+                readVPlanTable(doc))
+    }
 
     @VisibleForTesting
     internal fun readWithEncoding(data: ByteArray, type: MediaType?): String {
@@ -46,33 +58,14 @@ internal object VPlanParser {
 
     @VisibleForTesting
     @Throws(ParseException::class)
-    internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
-        return parseVPlanDay(readWithEncoding(body.bytes(), body.contentType()))
-    }
-
-    @VisibleForTesting
-    @Throws(ParseException::class)
-    internal fun parseVPlanDay(html: String): VPlanDay {
-        val doc = Jsoup.parse(html)
-        return VPlanDay(VPlanHeader(readLastUpdated(html), readDayAndDate(doc), readMotdTable(doc)),
-                readVPlanTable(doc))
-    }
-
-    @VisibleForTesting
-    @Throws(ParseException::class)
     internal fun readLastUpdated(html: String): String {
-        try {
-            var status = html.split("</head>".toRegex())
-                    .dropLastWhile { it.isEmpty() }
-                    .toTypedArray()[1]
-            status = status.split("<p>".toRegex())
-                    .dropLastWhile { it.isEmpty() }
-                    .toTypedArray()[0]
-                    .replace("\n", "")
-                    .replace("\r", "")
-            return status
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            throw ParseException("Could not parse vplan lastUpdated", e)
+        val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)")
+                .matcher(html)
+
+        if (matcher.find()) {
+            return matcher.group(1)
+        } else {
+            throw ParseException("Could not find lastUpdated value in the document.")
         }
     }
 
@@ -89,41 +82,20 @@ internal object VPlanParser {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readMotdTable(doc: Document): String {
-        try {
-            val tableRows = doc.getElementsByClass("info").select("tr")
-            val motd = StringBuilder()
-            for (line in tableRows) {
-                val cells = line.children().select("td")
-                val size = cells.size
-                if (size == 0) {
-                    continue
-                }
-                val highlightRow = size > 1 && cells.first()
-                        .text().toLowerCase().contains("unterrichtsfrei")
-                if (highlightRow) {
-                    motd.append("<font color=#FF5252>")
-                }
-                for (i in 0 until size) {
-                    val cell = cells[i]
-                    motd.append(cell.toString())
-                    if (i < size - 2) {
-                        motd.append(" | ")
+        return doc.getElementsByClass("info")
+                .select("tr")
+                .map { it.select("td") }
+                .filter { it.isNotEmpty() }
+                .joinToString("<br>") {
+                    val content = it.joinToString(" | ") {
+                        it.html().split("<br>").joinToString("<br>") { it.trim() }
+                    }
+                    if (it.first().text().toLowerCase().contains("unterrichtsfrei")) {
+                        "<font color=#FF5252>$content</font>"
+                    } else {
+                        content
                     }
                 }
-                if (highlightRow) {
-                    motd.append("</font>")
-                }
-                motd.append("<br />")
-            }
-            val dat = Jsoup.parse(motd.toString())
-            dat.select("html").unwrap()
-            dat.select("head").unwrap()
-            dat.select("body").unwrap()
-            dat.select("td").unwrap()
-            return dat.toString()
-        } catch (e: Exception) {
-            throw ParseException("Could not parse motd table", e)
-        }
     }
 
     @VisibleForTesting

@@ -32,6 +32,10 @@ class VPlanParserTest {
         private const val v1_lastUpdated = "Stand: 23.03.2018 10:22"
         private const val v1_dayAndDate = "23.3.2018 Freitag"
 
+        private const val v2_motd = "<font color=#FF5252>K1/2 haben unterrichtsfrei.</font><br>" +
+                "Die Schüler aus der 10b nehmen diese Woche am Unterricht der 10a Teil.<br>" +
+                "<b>SMV-Treffen</b> heute (Mo) in der 6. Std. im Olymp!"
+
         private fun getV1Table(): List<VPlanRow> {
             return listOf(
                     VPlanRow("Gmk_1", false, "3 - 4", "104", "[WolflenzA]: Raumänderung", "K2", "Raum-Vtr.", false),
@@ -89,8 +93,10 @@ class VPlanParserTest {
     @Test
     @Throws(Exception::class)
     fun test_readMotdTable() {
-        val plan = loadAsString("v1.html")
-        assertThat(readMotdTable(Jsoup.parse(plan)), `is`(equalTo(v1_motd)))
+        val v1 = loadAsString("v1.html")
+        assertThat(readMotdTable(Jsoup.parse(v1)), `is`(equalTo(v1_motd)))
+        val v2 = loadAsString("v2.html")
+        assertThat(readMotdTable(Jsoup.parse(v2)), `is`(equalTo(v2_motd)))
     }
 
     @Test

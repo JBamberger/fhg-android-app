@@ -35,7 +35,12 @@ private constructor(private val moshi: Moshi) : Converter.Factory() {
     private class VPlanConverter : Converter<ResponseBody, VPlanDay> {
         @Throws(IOException::class)
         override fun convert(body: ResponseBody): VPlanDay {
-            return VPlanParser.parseVPlanDay(body)
+            try {
+                return VPlanParser.parseVPlanDay(body)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw e;
+            }
         }
 
         companion object {
