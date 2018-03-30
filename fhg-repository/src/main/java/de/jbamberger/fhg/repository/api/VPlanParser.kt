@@ -10,8 +10,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
-import timber.log.Timber
-import java.nio.charset.Charset
+import java.util.regex.Pattern
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -25,42 +24,29 @@ internal object VPlanParser {
     private const val KIND_C = 4
     private const val CONTENT_C = 5
 
-    private const val PATTERN_GROUP = "\\s*([^;]+)(;\\s*)?"
-    private const val PATTERN_CHARSET = "^charset\\s*=\\s*([^\\s]*)\\s*\$"
-    val DEFAULT_CHARSET: Charset = Charset.forName("utf-8")
 
     @VisibleForTesting
-    internal fun parseContentTypeHeader(contentType: Element?): Charset? {
-        if (contentType == null) return DEFAULT_CHARSET
-        if (contentType.tagName() != "meta") return DEFAULT_CHARSET
-        if (contentType.attr("http-equiv") != "Content-Type") return DEFAULT_CHARSET
+    internal fun readWithEncoding(data: ByteArray, type: MediaType?): String {
+        type?.charset().let {
+            if (it != null) return String(data, it)
+        }
 
-        val contentAttr = contentType.attr("content") ?: return DEFAULT_CHARSET
+        val dataDefaultEncoded = String(data)
+        val matcher = Pattern
+                .compile("<meta\\s+http-equiv=\"Content-Type\"\\s+content=\"([^\"]*)\"\\s*/?>")
+                .matcher(dataDefaultEncoded)
 
-        val t = MediaType.parse(contentAttr)
-
-        return t?.charset() ?: DEFAULT_CHARSET
+        while (matcher.find()) {
+            MediaType.parse(matcher.group(1))?.charset().let {
+                if (it != null) return String(data, it)
+            }
+        }
+        return dataDefaultEncoded
     }
 
     @Throws(ParseException::class)
     internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
-        val data = body.bytes()
-        val type = body.contentType()
-        val charset: Charset? = type?.charset()
-        if (charset != null) {
-            Timber.i("Using header charset '%s'", charset.name())
-            return parseVPlanDay(String(data, charset))
-        }
-        val tmpHtml = String(data)
-        val tmpDoc = Jsoup.parse(tmpHtml)
-        val head = tmpDoc.getElementsByTag("head").first() ?: return parseVPlanDay(tmpHtml)
-
-        val contentType = head.getElementsByAttributeValue("http-equiv", "Content-Type").first()
-        val c = parseContentTypeHeader(contentType)
-        return parseVPlanDay(when (c) {
-            null -> tmpHtml
-            else -> String(data, c)
-        })
+        return parseVPlanDay(readWithEncoding(body.bytes(), body.contentType()))
     }
 
     @Throws(ParseException::class)
