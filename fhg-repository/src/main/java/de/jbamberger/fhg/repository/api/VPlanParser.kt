@@ -44,20 +44,23 @@ internal object VPlanParser {
         return dataDefaultEncoded
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
     internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
         return parseVPlanDay(readWithEncoding(body.bytes(), body.contentType()))
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun parseVPlanDay(html: String): VPlanDay {
+    internal fun parseVPlanDay(html: String): VPlanDay {
         val doc = Jsoup.parse(html)
-        return VPlanDay(VPlanHeader(readVPlanStatus(html), readVPlanTitle(doc), readMotdTable(doc)),
+        return VPlanDay(VPlanHeader(readLastUpdated(html), readDayAndDate(doc), readMotdTable(doc)),
                 readVPlanTable(doc))
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun readVPlanStatus(html: String): String {
+    internal fun readLastUpdated(html: String): String {
         try {
             var status = html.split("</head>".toRegex())
                     .dropLastWhile { it.isEmpty() }
@@ -73,8 +76,9 @@ internal object VPlanParser {
         }
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun readVPlanTitle(vplanDoc: Document): String {
+    internal fun readDayAndDate(vplanDoc: Document): String {
         try {
             return vplanDoc.getElementsByClass("mon_title").first().allElements.first().text()
         } catch (e: Exception) {
@@ -82,8 +86,9 @@ internal object VPlanParser {
         }
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun readMotdTable(doc: Document): String {
+    internal fun readMotdTable(doc: Document): String {
         try {
             val tableRows = doc.getElementsByClass("info").select("tr")
             val motd = StringBuilder()
@@ -121,8 +126,9 @@ internal object VPlanParser {
         }
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun readVPlanTable(doc: Document): List<VPlanRow> {
+    internal fun readVPlanTable(doc: Document): List<VPlanRow> {
         val vPlanTable = doc.getElementsByClass("list").select("tr")
         try {
             return vPlanTable
@@ -134,8 +140,9 @@ internal object VPlanParser {
         }
     }
 
+    @VisibleForTesting
     @Throws(ParseException::class)
-    private fun readVPlanTableCells(cells: Elements): VPlanRow {
+    internal fun readVPlanTableCells(cells: Elements): VPlanRow {
         fun read(element: Element): String {
             val span = element.getElementsByTag("span")
             val out = if (span.first() != null) span.first().html() else element.text()
