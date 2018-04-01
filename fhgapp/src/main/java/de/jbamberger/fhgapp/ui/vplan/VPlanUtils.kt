@@ -1,8 +1,8 @@
 package de.jbamberger.fhgapp.ui.vplan
 
-import de.jbamberger.api.data.VPlan
-import de.jbamberger.api.data.VPlanDay
-import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlanDay
+import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.Settings
 
 /**

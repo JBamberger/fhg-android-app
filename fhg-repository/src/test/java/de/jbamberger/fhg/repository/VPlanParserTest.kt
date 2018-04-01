@@ -1,14 +1,14 @@
 package de.jbamberger.fhg.repository
 
-import de.jbamberger.api.data.VPlanDay
-import de.jbamberger.api.data.VPlanHeader
-import de.jbamberger.api.data.VPlanRow
 import de.jbamberger.fhg.repository.api.VPlanParser.parseVPlanDay
 import de.jbamberger.fhg.repository.api.VPlanParser.readDayAndDate
 import de.jbamberger.fhg.repository.api.VPlanParser.readLastUpdated
 import de.jbamberger.fhg.repository.api.VPlanParser.readMotdTable
 import de.jbamberger.fhg.repository.api.VPlanParser.readVPlanTable
 import de.jbamberger.fhg.repository.api.VPlanParser.readWithEncoding
+import de.jbamberger.fhg.repository.data.VPlanDay
+import de.jbamberger.fhg.repository.data.VPlanHeader
+import de.jbamberger.fhg.repository.data.VPlanRow
 import okhttp3.MediaType
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo

@@ -5,7 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import dagger.Lazy
 import de.jbamberger.api.data.FeedItem
-import de.jbamberger.api.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.api.ApiResponse
 import de.jbamberger.fhg.repository.api.FhgApi
 import de.jbamberger.fhg.repository.db.AppDatabase

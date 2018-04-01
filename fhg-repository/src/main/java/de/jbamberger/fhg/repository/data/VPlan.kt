@@ -1,4 +1,4 @@
-package de.jbamberger.api.data
+package de.jbamberger.fhg.repository.data
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -11,13 +11,13 @@ class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
         private var day2: VPlanDay? = null
 
         @Synchronized
-        fun addDay1(day1: VPlanDay): VPlan.Builder {
+        fun addDay1(day1: VPlanDay): Builder {
             this.day1 = day1
             return this
         }
 
         @Synchronized
-        fun addDay2(day2: VPlanDay): VPlan.Builder {
+        fun addDay2(day2: VPlanDay): Builder {
             this.day2 = day2
             return this
         }

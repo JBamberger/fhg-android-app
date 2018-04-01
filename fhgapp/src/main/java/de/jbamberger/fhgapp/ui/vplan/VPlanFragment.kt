@@ -10,9 +10,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.jbamberger.api.data.VPlan
-import de.jbamberger.api.data.VPlanHeader
-import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlanHeader
+import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding

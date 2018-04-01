@@ -9,7 +9,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.text.Html
 import android.view.View
 import android.widget.TextView
-import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 
 /**

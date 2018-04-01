@@ -3,7 +3,7 @@ package de.jbamberger.fhgapp.ui.vplan
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import de.jbamberger.api.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.Repository
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.Settings

@@ -7,7 +7,7 @@
 
         <variable
             name="obj"
-            type="de.jbamberger.api.data.VPlanRow" />
+            type="de.jbamberger.fhg.repository.data.VPlanRow" />
 
         <variable
             name="listener"

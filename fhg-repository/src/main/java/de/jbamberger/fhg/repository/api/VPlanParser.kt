@@ -1,9 +1,9 @@
 package de.jbamberger.fhg.repository.api
 
 import android.support.annotation.VisibleForTesting
-import de.jbamberger.api.data.VPlanDay
-import de.jbamberger.api.data.VPlanHeader
-import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.data.VPlanDay
+import de.jbamberger.fhg.repository.data.VPlanHeader
+import de.jbamberger.fhg.repository.data.VPlanRow
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup

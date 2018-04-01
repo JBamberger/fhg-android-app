@@ -2,7 +2,7 @@ package de.jbamberger.fhg.repository.api
 
 import android.arch.lifecycle.LiveData
 import de.jbamberger.api.data.FeedItem
-import de.jbamberger.api.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlan
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
