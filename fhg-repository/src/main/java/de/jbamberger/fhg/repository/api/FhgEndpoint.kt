@@ -2,9 +2,9 @@ package de.jbamberger.fhg.repository.api
 
 import android.arch.lifecycle.LiveData
 
-import de.jbamberger.api.data.EventCalendar
-import de.jbamberger.api.data.FeedChunk
-import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.data.EventCalendar
+import de.jbamberger.fhg.repository.data.FeedChunk
+import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlanDay
 import retrofit2.http.GET
 

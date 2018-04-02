@@ -2,7 +2,7 @@ package de.jbamberger.fhg.repository.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory.FeedConverter.Companion.FEED_TYPE
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory.VPlanConverter.Companion.VPLAN_TYPE

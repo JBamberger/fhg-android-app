@@ -2,7 +2,7 @@ package de.jbamberger.fhg.repository.data.dao
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedItem
 
 
 /**

@@ -20,7 +20,7 @@ constructor(private val moshi: Moshi, private val prefs: SharedPreferences) {
     }
 
     inline fun <reified T> get(key: String): T? {
-        return get<T>(key, T::class.java)
+        return get(key, T::class.java)
     }
 
     fun <T> get(key: String, type: Class<T>): T? {

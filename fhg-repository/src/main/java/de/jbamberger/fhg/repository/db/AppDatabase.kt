@@ -2,7 +2,7 @@ package de.jbamberger.fhg.repository.db
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
-import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.dao.FeedItemDao
 
 /**

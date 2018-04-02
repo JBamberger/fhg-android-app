@@ -9,7 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.jbamberger.api.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding

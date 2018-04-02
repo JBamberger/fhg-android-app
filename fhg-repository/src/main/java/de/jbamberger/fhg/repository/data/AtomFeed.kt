@@ -1,4 +1,4 @@
-package de.jbamberger.api.data
+package de.jbamberger.fhg.repository.data
 
 import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.Element
