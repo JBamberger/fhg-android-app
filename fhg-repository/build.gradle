@@ -64,6 +64,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit-converters:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
     implementation("com.squareup.retrofit2:converter-simplexml:$retrofit_version") {
         exclude module: "stax"
         exclude module: "stax-api"
