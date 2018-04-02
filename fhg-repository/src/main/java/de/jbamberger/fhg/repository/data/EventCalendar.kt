@@ -5,3 +5,4 @@ package de.jbamberger.fhg.repository.data
  */
 
 class EventCalendar
+class EventItem

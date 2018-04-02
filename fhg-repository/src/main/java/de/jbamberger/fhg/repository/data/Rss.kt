@@ -9,14 +9,14 @@ import javax.xml.bind.annotation.XmlValue
  * RSS model class according to the rss specification 2.0 {@link https://cyber.harvard.edu/rss/rss.html}
  *
  * @param version rss version (required)
- * @param channel channel element
+ * @param channel one or more channels
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  * @version 2.0
  */
 @XmlRootElement(name = "rss")
 internal data class Rss(
         @XmlAttribute(name = "version", required = true) val version: String,
-        @XmlElement(name = "channel", required = true) val channels: Channel)
+        @XmlElement(name = "channel", required = true) val channels: List<Channel>)
 
 /**
  * @param title channel name
