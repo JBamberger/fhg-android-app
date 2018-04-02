@@ -1,9 +1,7 @@
 package de.jbamberger.fhg.repository.api
 
 import android.arch.lifecycle.LiveData
-
 import de.jbamberger.fhg.repository.data.EventCalendar
-import de.jbamberger.fhg.repository.data.FeedChunk
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlanDay
 import retrofit2.http.GET
@@ -31,24 +29,18 @@ internal interface FhgEndpoint {
         const val BASE_URL = "https://fhg-radolfzell.de/"
     }
 
-    @get:GET("vertretungsplan/f1/subst_001.htm")
-    val vPlanFrame1: LiveData<ApiResponse<VPlanDay>>
+    @GET("vertretungsplan/f1/subst_001.htm")
+    fun getVPlanFrame1(): LiveData<ApiResponse<VPlanDay>>
 
-    @get:GET("vertretungsplan/f2/subst_001.htm")
-    val vPlanFrame2: LiveData<ApiResponse<VPlanDay>>
+    @GET("vertretungsplan/f2/subst_001.htm")
+    fun getVPlanFrame2(): LiveData<ApiResponse<VPlanDay>>
 
-    @get:GET("/wp-json/wp/v2/posts")
-    val feed: LiveData<ApiResponse<List<FeedItem>>>
+    @GET("/wp-json/wp/v2/posts")
+    fun getFeed(): LiveData<ApiResponse<List<FeedItem>>>
 
-    @get:GET("feed")
-    val xmlFeed: LiveData<ApiResponse<FeedChunk>>
+    @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
+    fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
 
-    @get:GET("feed/atom")
-    val atomFeed: LiveData<ApiResponse<FeedChunk>>
-
-    @get:GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
-    val icsCalendar: LiveData<ApiResponse<EventCalendar>>
-
-    @get:GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&xml=true")
-    val xmlCalendar: LiveData<ApiResponse<EventCalendar>>
+    @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&xml=true")
+    fun getXmlCalendar(): LiveData<ApiResponse<EventCalendar>>
 }

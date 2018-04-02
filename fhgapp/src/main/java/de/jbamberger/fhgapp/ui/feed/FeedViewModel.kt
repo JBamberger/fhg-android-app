@@ -9,9 +9,9 @@ import javax.inject.Inject
  */
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var feed = repo.feed
+    internal var feed = repo.getFeed()
 
     internal fun refresh() {
-        feed = repo.feed
+        feed = repo.getFeed()
     }
 }

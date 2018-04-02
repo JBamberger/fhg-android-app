@@ -9,6 +9,6 @@ import de.jbamberger.fhg.repository.data.VPlan
  */
 
 internal interface FhgApi {
-    val vPlan: LiveData<ApiResponse<VPlan>>
-    val feed: LiveData<ApiResponse<List<FeedItem>>>
+    fun getVPlan(): LiveData<ApiResponse<VPlan>>
+    fun getFeed(): LiveData<ApiResponse<List<FeedItem>>>
 }

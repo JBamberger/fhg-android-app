@@ -7,10 +7,12 @@ import dagger.Module
 import dagger.Provides
 import de.jbamberger.fhg.repository.BuildConfig
 import okhttp3.Cache
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
 import javax.inject.Singleton
 
 /**
@@ -19,7 +21,9 @@ import javax.inject.Singleton
 @Module
 internal class NetModule {
 
-    private val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
+    companion object {
+        private const val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
+    }
 
     @Provides
     @Singleton
@@ -42,9 +46,11 @@ internal class NetModule {
         builder.cache(cache)
 
         if (BuildConfig.DEBUG) {
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            builder.addInterceptor(httpLoggingInterceptor)
+            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+                Timber.d(it)
+            })
+            logger.level = HttpLoggingInterceptor.Level.BASIC
+            builder.addInterceptor(logger)
         }
 
         return builder.build()
@@ -63,7 +69,7 @@ internal class NetModule {
     @Provides
     @Singleton
     fun provideFhgEndpoint(retrofitBuilder: Retrofit.Builder): FhgEndpoint {
-        return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL)
+        return retrofitBuilder.baseUrl(HttpUrl.parse(FhgEndpoint.BASE_URL)!!)
                 .build()
                 .create(FhgEndpoint::class.java)
     }

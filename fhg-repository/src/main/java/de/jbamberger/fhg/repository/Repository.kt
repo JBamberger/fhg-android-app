@@ -33,9 +33,8 @@ internal constructor(
     private val kvStore: KeyValueStorage  by lazy { kvStore.get() }
 
 
-
-    val vPlan: LiveData<Resource<VPlan>>
-        get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<VPlan, VPlan> {
+    fun getVPlan(): LiveData<Resource<VPlan>> {
+        val provider = object : NetworkBoundResource.Provider<VPlan, VPlan> {
             var vplanFromNet = true
 
             override fun onFetchFailed() {
@@ -60,14 +59,16 @@ internal constructor(
 
             override fun createCall(): LiveData<ApiResponse<VPlan>> {
                 val m = MediatorLiveData<ApiResponse<VPlan>>()
-                m.addSource(api.vPlan, m::setValue)
+                m.addSource(api.getVPlan(), m::setValue)
                 return m
             }
-        }).asLiveData()
+        }
+        return NetworkBoundResource(appExecutors, provider).asLiveData()
+    }
 
-    val feed: LiveData<Resource<List<FeedItem>>>
-        get() = NetworkBoundResource(appExecutors, object : NetworkBoundResource.Provider<List<FeedItem>, List<FeedItem>> {
 
+    fun getFeed(): LiveData<Resource<List<FeedItem>>> {
+        val provider = object : NetworkBoundResource.Provider<List<FeedItem>, List<FeedItem>> {
             var feedFromNet: Boolean = true
 
             override fun onFetchFailed() {
@@ -90,10 +91,12 @@ internal constructor(
 
             override fun createCall(): LiveData<ApiResponse<List<FeedItem>>> {
                 val m = MediatorLiveData<ApiResponse<List<FeedItem>>>()
-                m.addSource(api.feed, m::setValue)
+                m.addSource(api.getFeed(), m::setValue)
                 return m
             }
-        }).asLiveData()
+        }
+        return NetworkBoundResource(appExecutors, provider).asLiveData()
+    }
 
     companion object {
         const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"

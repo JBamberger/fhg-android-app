@@ -54,6 +54,8 @@ dependencies {
 
     implementation "com.jakewharton.timber:timber:$timber_version"
 
+    implementation "joda-time:joda-time:$joda_version"
+
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
@@ -77,6 +79,8 @@ dependencies {
 
     api "android.arch.persistence.room:runtime:$arch_room_version"
     kapt "android.arch.persistence.room:compiler:$arch_room_version"
+
+    api "android.arch.paging:runtime:$arch_paging_version"
 
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"

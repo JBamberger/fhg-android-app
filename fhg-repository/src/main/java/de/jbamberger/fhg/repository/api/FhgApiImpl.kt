@@ -14,10 +14,9 @@ import javax.inject.Inject
 internal class FhgApiImpl @Inject
 constructor(private val endpoint: FhgEndpoint) : FhgApi {
 
-    override val vPlan: LiveData<ApiResponse<VPlan>>
-        get() {
-            val day1 = endpoint.vPlanFrame1
-            val day2 = endpoint.vPlanFrame2
+    override fun getVPlan(): LiveData<ApiResponse<VPlan>>  {
+            val day1 = endpoint.getVPlanFrame1()
+            val day2 = endpoint.getVPlanFrame2()
             val isLoaded = AtomicBoolean(false)
             val builder = VPlan.Builder()
             val merger = MediatorLiveData<ApiResponse<VPlan>>()
@@ -58,7 +57,5 @@ constructor(private val endpoint: FhgEndpoint) : FhgApi {
             return merger
         }
 
-    override val feed: LiveData<ApiResponse<List<FeedItem>>>
-        get() = endpoint.feed
-
+    override fun getFeed(): LiveData<ApiResponse<List<FeedItem>>> = endpoint.getFeed()
 }
