@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData
 import de.jbamberger.fhg.repository.data.EventCalendar
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlanDay
+import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 /**
  * Interface that defines the different access routes to the https://fhg-radolfzell.de/ endpoint.
@@ -37,6 +39,9 @@ internal interface FhgEndpoint {
 
     @GET("/wp-json/wp/v2/posts")
     fun getFeed(): LiveData<ApiResponse<List<FeedItem>>>
+
+    @GET("/wp-json/wp/v2/posts")
+    fun getFeedPaged(@Query(value = "page") page: Int): Call<List<FeedItem>>
 
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
     fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
