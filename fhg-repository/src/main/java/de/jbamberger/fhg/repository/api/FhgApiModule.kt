@@ -10,7 +10,7 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-@Module(includes = [(NetModule::class)])
+@Module(includes = [NetModule::class])
 internal abstract class FhgApiModule {
 
     @Binds

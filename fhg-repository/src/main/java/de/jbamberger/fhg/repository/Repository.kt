@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import dagger.Lazy
 import de.jbamberger.fhg.repository.api.ApiResponse
+import de.jbamberger.fhg.repository.api.FeedDataRepository
 import de.jbamberger.fhg.repository.api.FhgApi
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlan
@@ -25,13 +26,14 @@ internal constructor(
         appExecutors: Lazy<AppExecutors>,
         api: Lazy<FhgApi>,
         db: Lazy<AppDatabase>,
-        kvStore: Lazy<KeyValueStorage>) {
+        kvStore: Lazy<KeyValueStorage>,
+        feedDataRepository: Lazy<FeedDataRepository>) {
 
     private val appExecutors: AppExecutors by lazy { appExecutors.get() }
     private val api: FhgApi  by lazy { api.get() }
     private val db: AppDatabase by lazy { db.get() }
     private val kvStore: KeyValueStorage  by lazy { kvStore.get() }
-
+    private val feedDataRepository: FeedDataRepository by lazy { feedDataRepository.get() }
 
     fun getVPlan(): LiveData<Resource<VPlan>> {
         val provider = object : NetworkBoundResource.Provider<VPlan, VPlan> {
@@ -97,6 +99,8 @@ internal constructor(
         }
         return NetworkBoundResource(appExecutors, provider).asLiveData()
     }
+
+    fun postsOfFeed() = feedDataRepository.postsOfFeed(10)
 
     companion object {
         const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"

@@ -43,6 +43,12 @@ internal interface FhgEndpoint {
     @GET("/wp-json/wp/v2/posts")
     fun getFeedPaged(@Query(value = "page") page: Int): Call<List<FeedItem>>
 
+    @GET("/wp-json/wp/v2/posts")
+    fun getFeedPage(
+            @Query(value = "before") before: String? = null,
+            @Query(value = "after") after: String? = null,
+            @Query(value = "per_page") count: Int? = null): Call<List<FeedItem>>
+
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
     fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
 
