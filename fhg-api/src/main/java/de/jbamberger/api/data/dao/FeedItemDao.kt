@@ -10,7 +10,7 @@ import de.jbamberger.api.data.FeedItem
  */
 @Dao
 interface FeedItemDao {
-    @Query("SELECT * FROM feedItems")
+    @Query("SELECT * FROM feedItems ORDER BY date DESC")
     fun getAll(): LiveData<List<FeedItem>>
 
 //    @Query("SELECT * FROM feedItems WHERE id IN (:ids)")
