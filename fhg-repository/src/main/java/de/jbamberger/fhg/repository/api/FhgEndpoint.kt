@@ -47,7 +47,8 @@ internal interface FhgEndpoint {
     fun getFeedPage(
             @Query(value = "before") before: String? = null,
             @Query(value = "after") after: String? = null,
-            @Query(value = "per_page") count: Int? = null): Call<List<FeedItem>>
+            @Query(value = "per_page") count: Int? = null,
+            @Query(value = "order") order: String? = "desc"): Call<List<FeedItem>>
 
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
     fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>

@@ -1,5 +1,8 @@
 package de.jbamberger.fhgapp.ui.feed
 
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations.map
+import android.arch.lifecycle.Transformations.switchMap
 import android.arch.lifecycle.ViewModel
 import de.jbamberger.fhg.repository.Repository
 import javax.inject.Inject
@@ -9,9 +12,22 @@ import javax.inject.Inject
  */
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    internal var feed = repo.getFeed()
+    private val source = MutableLiveData<String>()
+    private val repoResult = map(source) { repo.postsOfFeed() }
 
-    internal fun refresh() {
-        feed = repo.getFeed()
+    val posts = switchMap(repoResult, { it.pagedList })!!
+    val networkState = switchMap(repoResult, { it.networkState })!!
+    val refreshState = switchMap(repoResult, { it.refreshState })!!
+
+    init {
+        source.postValue("")
+    }
+
+    fun refresh() {
+        repoResult.value?.refresh?.invoke()
+    }
+
+    fun retry() {
+        repoResult.value?.retry?.invoke()
     }
 }

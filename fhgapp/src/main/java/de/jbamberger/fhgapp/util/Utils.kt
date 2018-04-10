@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.util
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import de.jbamberger.fhgapp.BuildConfig
@@ -36,14 +37,14 @@ object Utils {
         activity.startActivity(intent)
     }
 
-    fun openUrl(activity: Activity, url: String) {
+    fun openUrl(context: Context, url: String) {
         var uri = Uri.parse(url)
         if (uri.scheme.isBlank()) {
             uri = Uri.parse("http://$url")
         }
         val intent = Intent(Intent.ACTION_VIEW, uri)
 
-        if (intent.resolveActivity(activity.packageManager) == null) return
-        activity.startActivity(intent)
+        if (intent.resolveActivity(context.packageManager) == null) return
+        context.startActivity(intent)
     }
 }

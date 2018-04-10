@@ -84,7 +84,7 @@ internal class KeyedFeedDataSource(
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<FeedItem>) {
         networkState.postValue(NetworkState.LOADING)
         api.getFeedPage(
-                after = params.key,
+                before = params.key,
                 count = params.requestedLoadSize).enqueue(
                 object : Callback<List<FeedItem>> {
                     override fun onFailure(call: Call<List<FeedItem>>, t: Throwable) {
