@@ -10,7 +10,19 @@
     <color name="ic_launcher_background">@color/colorPrimary</color>
 
 
+    <!-- VPlan -->
+    <color name="vplan_warranty_warning">#FFCDD2</color>
 
+    <color name="vplan_background_header">@color/blue_grey_100</color>
+
+    <color name="vplan_background_new">@color/light_green_500</color>
+    <color name="vplan_background_standard">@color/text_light_primary</color>
+    <color name="vplan_background_omitted">@color/text_dark_hint</color>
+
+    <color name="vplan_text_omitted_highlight">#FF5252</color>
+    <color name="vplan_text_omitted">@color/text_dark_secondary</color>
+    <color name="vplan_text_new">@color/text_light_primary</color>
+    <color name="vplan_text_default">@color/text_dark_secondary</color>
 
 
     <color name="brand_primary">@color/green_500</color>
