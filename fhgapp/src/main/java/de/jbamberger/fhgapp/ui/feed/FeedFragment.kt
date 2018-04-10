@@ -142,6 +142,7 @@ class FeedFragment : Fragment(), Injectable {
         private class FeedItemHolder(view: View) : RecyclerView.ViewHolder(view) {
             private val title: TextView = view.findViewById<TextView>(R.id.title)
             private val content = view.findViewById<TextView>(R.id.content)
+            private val textLoading = view.context.getString(R.string.feed_status_loading)
 
             private var post: FeedItem? = null
 
@@ -156,8 +157,8 @@ class FeedFragment : Fragment(), Injectable {
 
             fun bind(post: FeedItem?) {
                 this.post = post
-                BindingUtils.bindHtml(title, post?.title?.rendered ?: "loading")
-                BindingUtils.bindHtml(content, post?.excerpt?.rendered ?: "loading")
+                BindingUtils.bindHtml(title, post?.title?.rendered ?: textLoading)
+                BindingUtils.bindHtml(content, post?.excerpt?.rendered ?: textLoading)
             }
 
             companion object {

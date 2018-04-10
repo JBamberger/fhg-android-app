@@ -47,7 +47,8 @@
     <string name="vplan_loading_error">Die gezeigten Daten sind nicht aktuell.</string>
 
     <!-- Feed -->
-
+    <string name="feed_button_retry">Erneut versuchen</string>
+    <string name="feed_status_loading">Wird geladen&#8230;</string>
 
     <!-- Settings -->
     <string name="title_activity_settings">Einstellungen</string>
