@@ -5,6 +5,7 @@ import android.app.Application
 import android.util.Log
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import de.jbamberger.fhg.repository.RepoHelper
 import de.jbamberger.fhgapp.di.AppInjector
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,6 +18,9 @@ class App : Application(), HasActivityInjector {
 
     @Inject
     internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+
+    @Inject
+    lateinit var repoHelper: RepoHelper
 
     override fun onCreate() {
         super.onCreate()

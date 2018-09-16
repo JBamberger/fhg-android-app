@@ -2,7 +2,7 @@ package de.jbamberger.fhg.repository.api
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.Transformations.switchMap
 import android.arch.paging.DataSource
 import android.arch.paging.ItemKeyedDataSource
 import android.arch.paging.LivePagedListBuilder
@@ -151,14 +151,13 @@ internal class FeedDataRepository
                 .setFetchExecutor(networkExecutor)
                 .build()
 
-        val refreshState = Transformations.switchMap(sourceFactory.sourceLiveData) {
+        val refreshState = switchMap(sourceFactory.sourceLiveData) {
             it.initialLoad
         }
 
         return Listing(
                 pagedList = pagedList,
-                networkState =
-                Transformations.switchMap(sourceFactory.sourceLiveData) { it.networkState },
+                networkState = switchMap(sourceFactory.sourceLiveData) { it.networkState },
                 retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
                 refresh = { sourceFactory.sourceLiveData.value?.invalidate() },
                 refreshState = refreshState

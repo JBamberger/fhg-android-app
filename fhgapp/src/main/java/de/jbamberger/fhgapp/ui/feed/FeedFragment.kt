@@ -17,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import de.jbamberger.fhg.repository.api.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
+import de.jbamberger.fhg.repository.util.FeedMediaRequest
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
@@ -166,12 +167,11 @@ class FeedFragment : Fragment(), Injectable {
                 BindingUtils.bindHtml(content, post?.excerpt?.rendered ?: textLoading)
 
                 val media = post?.featuredMedia
-                if (media != 0) {
+                if (media != null && media > 0) {
                     featuredMedia.visibility = View.VISIBLE
-                    val url = "https://fhg-radolfzell.de/$media"
 
-                    glide.load(url)
-                            .centerCrop()
+                    glide.load(FeedMediaRequest(media))
+                            .centerInside()
                             .placeholder(R.drawable.ic_image_black_24dp)
                             .error(R.drawable.ic_broken_image_black_24dp)
                             .fallback(R.drawable.ic_broken_image_black_24dp)

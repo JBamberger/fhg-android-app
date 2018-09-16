@@ -6,6 +6,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import de.jbamberger.fhg.repository.RepoHelper
 import de.jbamberger.fhg.repository.RepoInitModule
 import de.jbamberger.fhgapp.App
 import javax.inject.Singleton
@@ -29,4 +30,6 @@ interface AppComponent : AndroidInjector<App> {
 
         fun build(): AppComponent
     }
+
+    fun provideRepoHelper(): RepoHelper
 }
