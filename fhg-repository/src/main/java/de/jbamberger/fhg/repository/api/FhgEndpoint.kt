@@ -3,9 +3,11 @@ package de.jbamberger.fhg.repository.api
 import android.arch.lifecycle.LiveData
 import de.jbamberger.fhg.repository.data.EventCalendar
 import de.jbamberger.fhg.repository.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlanDay
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -49,6 +51,9 @@ internal interface FhgEndpoint {
             @Query(value = "after") after: String? = null,
             @Query(value = "per_page") count: Int? = null,
             @Query(value = "order") order: String? = "desc"): Call<List<FeedItem>>
+
+    @GET("/wp-json/wp/v2/media/{mediaId}")
+    fun getFeedMedia(@Path("mediaId") mediaId: Int): Call<FeedMedia>
 
     @GET("?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events&no_html=true")
     fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
