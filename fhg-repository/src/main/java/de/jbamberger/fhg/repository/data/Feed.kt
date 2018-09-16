@@ -23,6 +23,10 @@ class FeedItem {
     @Json(name = "link")
     var link: String? = null
 
+    @ColumnInfo(name = "featuredMedia")
+    @Json(name = "featured_media")
+    var featuredMedia: Int? = null
+
     @Embedded
     @Json(name = "title")
     var title: Title? = null

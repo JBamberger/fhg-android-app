@@ -63,6 +63,10 @@ internal class KeyedFeedDataSource(
 
             if (response.isSuccessful) {
                 val items = response.body() ?: emptyList()
+                items.forEach {
+
+                }
+
                 retry = null
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)

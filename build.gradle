@@ -41,6 +41,7 @@ ext {
     moshi_version = "1.5.0"
     jsoup_version = '1.11.2'
     joda_version = "2.9.9"
+    glide_version = "4.6.1"
 
     //testing
     junit_version = "4.12"

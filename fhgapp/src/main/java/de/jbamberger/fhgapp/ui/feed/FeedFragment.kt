@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import de.jbamberger.fhg.repository.api.NetworkState
@@ -19,6 +20,8 @@ import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
+import de.jbamberger.fhgapp.util.GlideApp
+import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
 import kotlinx.android.synthetic.main.feed_fragment.*
 import javax.inject.Inject
@@ -61,8 +64,8 @@ class FeedFragment : Fragment(), Injectable {
     }
 
     private fun initAdapter() {
-        //val glide = Glide.with(this)
-        val adapter = FeedAdapter {
+        val glide = GlideApp.with(this)
+        val adapter = FeedAdapter(glide) {
             model.retry()
         }
         feedContainer.adapter = adapter
@@ -75,19 +78,17 @@ class FeedFragment : Fragment(), Injectable {
 
     }
 
-    fun itemClicked(url: String) {
-        Utils.openUrl(activity!!, url)
-    }
-
     private class FeedAdapter
-    internal constructor(private val retryCallback: () -> Unit)
+    internal constructor(
+            private val glide: GlideRequests,
+            private val retryCallback: () -> Unit)
         : PagedListAdapter<FeedItem, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
         private var networkState: NetworkState? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return when (viewType) {
-                R.layout.feed_item -> FeedItemHolder.create(parent)
+                R.layout.feed_item -> FeedItemHolder.create(glide, parent)
                 R.layout.network_state_item -> ErrorHolder.create(parent, retryCallback)
                 else -> throw IllegalArgumentException("unknown view Type $viewType")
             }
@@ -139,9 +140,13 @@ class FeedFragment : Fragment(), Injectable {
             }
         }
 
-        private class FeedItemHolder(view: View) : RecyclerView.ViewHolder(view) {
-            private val title: TextView = view.findViewById<TextView>(R.id.title)
+        private class FeedItemHolder(
+                private val glide: GlideRequests,
+                view: View) : RecyclerView.ViewHolder(view) {
+            private val title = view.findViewById<TextView>(R.id.title)
             private val content = view.findViewById<TextView>(R.id.content)
+            private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
+
             private val textLoading = view.context.getString(R.string.feed_status_loading)
 
             private var post: FeedItem? = null
@@ -159,13 +164,29 @@ class FeedFragment : Fragment(), Injectable {
                 this.post = post
                 BindingUtils.bindHtml(title, post?.title?.rendered ?: textLoading)
                 BindingUtils.bindHtml(content, post?.excerpt?.rendered ?: textLoading)
+
+                val media = post?.featuredMedia
+                if (media != 0) {
+                    featuredMedia.visibility = View.VISIBLE
+                    val url = "https://fhg-radolfzell.de/$media"
+
+                    glide.load(url)
+                            .centerCrop()
+                            .placeholder(R.drawable.ic_image_black_24dp)
+                            .error(R.drawable.ic_broken_image_black_24dp)
+                            .fallback(R.drawable.ic_broken_image_black_24dp)
+                            .into(featuredMedia)
+                } else {
+                    featuredMedia.visibility = View.GONE
+                    glide.clear(featuredMedia)
+                }
             }
 
             companion object {
-                fun create(parent: ViewGroup): FeedItemHolder {
+                fun create(glide: GlideRequests, parent: ViewGroup): FeedItemHolder {
                     val view = LayoutInflater.from(parent.context)
                             .inflate(R.layout.feed_item, parent, false)
-                    return FeedItemHolder(view)
+                    return FeedItemHolder(glide, view)
                 }
             }
         }
