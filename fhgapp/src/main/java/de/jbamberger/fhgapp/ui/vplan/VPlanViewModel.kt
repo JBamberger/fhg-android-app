@@ -3,10 +3,10 @@ package de.jbamberger.fhgapp.ui.vplan
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import de.jbamberger.api.data.VPlan
-import de.jbamberger.fhgapp.source.Repository
-import de.jbamberger.fhgapp.source.Resource
-import de.jbamberger.fhgapp.source.Status
+import de.jbamberger.fhg.repository.Repository
+import de.jbamberger.fhg.repository.Resource
+import de.jbamberger.fhg.repository.data.VPlan
+import de.jbamberger.fhgapp.Settings
 import javax.inject.Inject
 
 /**
@@ -14,23 +14,24 @@ import javax.inject.Inject
  */
 
 class VPlanViewModel @Inject
-internal constructor(private val repo: Repository) : ViewModel() {
-    internal var vPlan = filterVPlan(repo.vPlan)
+internal constructor(
+        private val settings: Settings,
+        private val repo: Repository) : ViewModel() {
+    internal var vPlan = filterVPlan(repo.getVPlan())
 
     internal fun refresh() {
-        vPlan = filterVPlan(repo.vPlan)
+        vPlan = filterVPlan(repo.getVPlan())
     }
 
     private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>):
-            LiveData<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
+            LiveData<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
         return Transformations.map(unfiltered, {
-            val settings = repo.vPlanSettings
-            val matcher = VPlanUtils.getVPlanMatcher(settings)
-            if (it.status == Status.SUCCESS && it.data != null) {
-                Pair(settings, Resource.success(VPlanUtils.filter(it.data, matcher)))
-            } else {
-                Pair(settings, it)
-            }
+            val settings = settings.vPlanSettings
+            Pair(settings, when (it) {
+                is Resource.Success -> Resource.Success(
+                        VPlanUtils.filter(it.data, VPlanUtils.getVPlanMatcher(settings)))
+                else -> it
+            })
         })
     }
 }

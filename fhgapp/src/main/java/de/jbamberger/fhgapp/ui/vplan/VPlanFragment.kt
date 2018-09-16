@@ -10,13 +10,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import de.jbamberger.api.data.VPlan
-import de.jbamberger.api.data.VPlanRow
+import de.jbamberger.fhg.repository.data.VPlan
+import de.jbamberger.fhg.repository.data.VPlanHeader
+import de.jbamberger.fhg.repository.data.VPlanRow
+import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
-import de.jbamberger.fhgapp.source.Repository
-import de.jbamberger.fhgapp.source.Resource
-import de.jbamberger.fhgapp.source.Status
+import de.jbamberger.fhgapp.Settings
 import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
@@ -27,7 +27,7 @@ import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
  */
 class VPlanFragment : BaseFragment<VPlanViewModel>(),
         SwipeRefreshLayout.OnRefreshListener,
-        Observer<Pair<Repository.VPlanSettings, Resource<VPlan>>> {
+        Observer<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
 
     override val viewModelClass: Class<VPlanViewModel>
         get() = VPlanViewModel::class.java
@@ -50,8 +50,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         super.onDetach()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater!!, R.layout.refreshable_list_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
         val layoutManager = LinearLayoutManager(context)
         binding.container.layoutManager = layoutManager
         binding.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
@@ -73,27 +73,27 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         viewModel.vPlan.observe(this, this)
     }
 
-    override fun onChanged(filteredPlan: Pair<Repository.VPlanSettings, Resource<VPlan>>?) {
+    override fun onChanged(filteredPlan: Pair<Settings.VPlanSettings, Resource<VPlan>>?) {
         if (filteredPlan == null) return
 
         parent?.setSubtitle(getSubtitle(filteredPlan.first))
         val vPlanResource = filteredPlan.second
-        when (vPlanResource.status) {
-            Status.LOADING -> {
+        when (vPlanResource) {
+            is Resource.Loading -> {
                 adapter.setData(false, vPlanResource.data)
             }
-            Status.SUCCESS -> {
+            is Resource.Success -> {
                 adapter.setData(false, vPlanResource.data)
                 binding.isRefreshing = false
             }
-            Status.ERROR -> {
+            is Resource.Error -> {
                 adapter.setData(true, vPlanResource.data)
                 binding.isRefreshing = false
             }
         }
     }
 
-    private fun getSubtitle(settings: Repository.VPlanSettings): String {
+    private fun getSubtitle(settings: Settings.VPlanSettings): String {
         return if (settings.showAll || settings.grades.isEmpty()) {
             getString(R.string.vplan_subtitle_all)
         } else {
@@ -188,8 +188,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                 rows2 = day2.vPlanRows
                 bound1 = rows1.size + 1
                 bound2 = bound1 + rows2.size + 1
-                header1 = VPlanHeader(day1.dateAndDay, day1.lastUpdated, day1.motd)
-                header2 = VPlanHeader(day2.dateAndDay, day2.lastUpdated, day2.motd)
+                header1 = day1.header
+                header2 = day2.header
             }
 
 

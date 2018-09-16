@@ -7,7 +7,7 @@
 
         <variable
             name="obj"
-            type="de.jbamberger.fhgapp.ui.vplan.VPlanHeader" />
+            type="de.jbamberger.fhg.repository.data.VPlanHeader" />
 
     </data>
 
@@ -28,8 +28,8 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold"
-            app:html="@{obj.lastUpdated}"
-            tools:text="Title" />
+            app:html="@{obj.dateAndDay}"
+            tools:text="@sample/sample.json/vplan/dateAndDay" />
 
         <TextView
             android:id="@+id/vplan_status"
@@ -39,8 +39,8 @@
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textStyle="italic"
-            app:html="@{obj.dateAndDay}"
-            tools:text="last updated" />
+            app:html="@{obj.lastUpdated}"
+            tools:text="@sample/sample.json/vplan/lastUpdated" />
 
         <TextView
             android:id="@+id/vplan_motd_header"
@@ -64,7 +64,7 @@
             android:textStyle="italic"
             app:html="@{obj.motd}"
             app:visibleIfNotEmpty="@{obj.motd}"
-            tools:text="Blablable lorem ipsum coaizse jgsaza" />
+            tools:text="@sample/sample.json/vplan/motd" />
 
     </RelativeLayout>
 </layout>

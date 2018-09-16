@@ -1,7 +1,6 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="de">
     <string name="app_name">FhgApp</string>
-    <string name="play_link">https://play.google.com/store/apps/details?id=%1$s</string>
-
+    <string name="play_link" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
 
 
     <string name="title_activity_main">FHG Radolfzell</string>
@@ -22,4 +21,77 @@
 
     <string name="title_vplan">Vertretungsplan</string>
     <string name="vplan_text_no_warranty">Alle Angaben ohne Gewähr.</string>
+
+
+    <!-- About -->
+    <string name="title_activity_about">Fhg Radolfzell</string>
+
+    <string name="about_contact_title">Über den Entwickler</string>
+    <string name="about_contact_content">Die Applikation wird von Jannik Bamberger entwickelt. Bei Fragen kann eine Mail an dev.jbamberger@gmail.com geschrieben werden.</string>
+    <string name="about_contact_mail">Entwickler kontaktieren</string>
+
+    <string name="about_disclaimer_title">Nutzungshinweise</string>
+    <string name="about_disclaimer_content">Es werden Daten der Website fhg-radolfzell.de verarbeitet und angezeigt. Für die Korrektheit und Aktualität der Daten sowie korrekte Funktion der Anwendung übernimmt der Entwickler keinerlei Verantwortung.</string>
+
+    <string name="about_version_title">Version</string>
+    <string name="about_version_content">Application id: %1$s\nBuild type: %2$s\nVersion: %3$s (%4$d)</string>
+
+    <string name="about_library_title">Verwendete Bibliotheken</string>
+
+    <!-- VPlan -->
+    <string name="vplan_omitted">entfällt</string>
+    <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
+    <string name="vplan_subtitle_few_grades">Zeige %1$s</string>
+    <string name="vplan_subtitle_grades">Zeige %1$s&#8230;</string>
+    <string name="vplan_motd">Nachrichten zum Tag</string>
+    <string name="vplan_loading_error">Die gezeigten Daten sind nicht aktuell.</string>
+
+    <!-- Feed -->
+    <string name="feed_button_retry">Erneut versuchen</string>
+    <string name="feed_status_loading">Wird geladen&#8230;</string>
+
+    <!-- Settings -->
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <string name="settings_header_vplan_title">Vertretungsplan</string>
+    <string name="settings_header_vplan_summary">Einstellungen für den Vertretungsplan</string>
+
+    <string name="settings_grade_show_all_key">settings_grade_show_all_key</string>
+    <string name="settings_grade_show_all_title">Alle Klassen anzeigen</string>
+    <string name="settings_grade_show_all_summary">Es werden alle Klassen angezeigt, anstatt die nur die ausgewählten.</string>
+    <bool name="settings_grade_show_all_default">true</bool>
+
+    <string name="settings_grade_key">settings_grade_key</string>
+    <string name="settings_grade_title">Klasse/n</string>
+    <string name="settings_grade_summary">Es werden nur die ausgewählten Klassen angezeigt</string>
+    <string name="settings_grade_dialog_title">Klasse/n auswählen</string>
+
+    <string name="settings_course_key">settings_course_key</string>
+    <string name="settings_course_title">Kurse (nur für Kursstufe)</string>
+    <string name="settings_course_default" />
+    <string name="settings_course_summary">Mit Komma getrennt den Name der am Vertretungsplan steht eingeben (Bsp: M_5)</string>
+    <string name="settings_course_hint">M_5, D_2</string>
+    <string name="settings_course_dialog_title">Kurse eingeben</string>
+
+    <!-- Contact -->
+    <string name="title_contact">Kontakt</string>
+    <string name="contact_logo_description">FHG Logo</string>
+    <string name="contact_header">Friedrich-Hecker-Gymnasium</string>
+    <string name="contact_content">
+        Markelfinger Str. 15\n
+        D – 78315 Radolfzell\n
+        Tel: +49 (0) 77 32 / 94 78 0\n
+        Fax: +49 (0) 77 32 / 94 78 99\n
+        E-Mail: schule@fhg-radolfzell.de\n
+    </string>
+    <string name="contact_action_call">Anrufen</string>
+    <string name="contact_action_mail">Mail schreiben</string>
+    <string name="contact_action_navigate">Navigieren</string>
+
+    <string name="contact_mail_uri" translatable="false">mailto:schule@fhg-radolfzell.de</string>
+    <string name="contact_phone_uri" translatable="false">tel:0049773294780</string>
+    <string name="contact_navigation_uri" translatable="false">google.navigation:q=Friedrich-Hecker-Gymnasium,+Markelfinger+Straße,+Radolfzell+am+Bodensee</string>
+    <string name="contact_navigation_package" translatable="false">com.google.android.apps.maps</string>
+
+
 </resources>

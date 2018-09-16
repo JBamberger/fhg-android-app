@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="about_library_names">
+        <item>Kotlin</item>
+        <item>Android Open Source Project</item>
+        <item>Timber</item>
+        <item>JSoup</item>
+        <item>OkHttp</item>
+        <item>Retrofit2</item>
+        <item>JUnit</item>
+        <item>Gson</item>
+        <item>Dagger</item>
+        <item>Dagger Android Extension</item>
+    </string-array>
+
+    <string-array name="about_library_descriptions">
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>MIT -> https://jsoup.org/license</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>EPL v1.0 -> http://www.eclipse.org/legal/epl-v10.html</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+        <item>ASL v2.0 -> http://www.apache.org/licenses/LICENSE-2.0</item>
+    </string-array>
+
+    <string-array name="about_library_urls">
+        <item>https://kotlinlang.org/</item>
+        <item>https://source.android.com/</item>
+        <item>https://github.com/JakeWharton/timber</item>
+        <item>https://jsoup.org/</item>
+        <item>https://square.github.io/okhttp/</item>
+        <item>https://square.github.io/retrofit/</item>
+        <item>https://junit.org/junit4/</item>
+        <item>https://github.com/google/gson</item>
+        <item>https://google.github.io/dagger/</item>
+        <item>https://google.github.io/dagger/android</item>
+    </string-array>
+
+    <string-array name="listGrades">
+        <item>5a</item>
+        <item>5b</item>
+        <item>5c</item>
+        <item>5d</item>
+        <item>5e</item>
+        <item>6a</item>
+        <item>6b</item>
+        <item>6c</item>
+        <item>6d</item>
+        <item>6e</item>
+        <item>7a</item>
+        <item>7b</item>
+        <item>7c</item>
+        <item>7d</item>
+        <item>7e</item>
+        <item>8a</item>
+        <item>8b</item>
+        <item>8c</item>
+        <item>8d</item>
+        <item>8e</item>
+        <item>9a</item>
+        <item>9b</item>
+        <item>9c</item>
+        <item>9d</item>
+        <item>9e</item>
+        <item>10a</item>
+        <item>10b</item>
+        <item>10c</item>
+        <item>10d</item>
+        <item>10e</item>
+        <item>K1</item>
+        <item>K2</item>
+    </string-array>
+    <string-array name="listGradePatterns" tools:ignore="TypographyDashes">
+        <item>.*5[^0-9]*a.*</item>
+        <item>.*5[^0-9]*b.*</item>
+        <item>.*5[^0-9]*c.*</item>
+        <item>.*5[^0-9]*d.*</item>
+        <item>.*5[^0-9]*e.*</item>
+        <item>.*6[^0-9]*a.*</item>
+        <item>.*6[^0-9]*b.*</item>
+        <item>.*6[^0-9]*c.*</item>
+        <item>.*6[^0-9]*d.*</item>
+        <item>.*6[^0-9]*e.*</item>
+        <item>.*7[^0-9]*a.*</item>
+        <item>.*7[^0-9]*b.*</item>
+        <item>.*7[^0-9]*c.*</item>
+        <item>.*7[^0-9]*d.*</item>
+        <item>.*7[^0-9]*e.*</item>
+        <item>.*8[^0-9]*a.*</item>
+        <item>.*8[^0-9]*b.*</item>
+        <item>.*8[^0-9]*c.*</item>
+        <item>.*8[^0-9]*d.*</item>
+        <item>.*8[^0-9]*e.*</item>
+        <item>.*9[^0-9]*a.*</item>
+        <item>.*9[^0-9]*b.*</item>
+        <item>.*9[^0-9]*c.*</item>
+        <item>.*9[^0-9]*d.*</item>
+        <item>.*9[^0-9]*e.*</item>
+        <item>.*10[^0-9]*a.*</item>
+        <item>.*10[^0-9]*b.*</item>
+        <item>.*10[^0-9]*c.*</item>
+        <item>.*10[^0-9]*d.*</item>
+        <item>.*10[^0-9]*e.*</item>
+        <item>.*K.*1.*</item>
+        <item>.*K.*2.*</item>
+    </string-array>
+
+    <string-array name="listGradesDefault" />
+</resources>

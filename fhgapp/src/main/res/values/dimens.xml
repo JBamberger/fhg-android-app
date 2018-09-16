@@ -8,8 +8,16 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <!-- About -->
+    <dimen name="about_card_margin">8dp</dimen>
+    <dimen name="about_corner_radius">4dp</dimen>
+    <dimen name="about_card_elevation">8dp</dimen>
+    <dimen name="about_card_padding">8dp</dimen>
+    <dimen name="about_title_padding">8dp</dimen>
+    <dimen name="about_title_text_size">16sp</dimen>
+    <dimen name="about_content_padding">8dp</dimen>
 
-
-
+    <!-- VPlan -->
+    <dimen name="vplan_line_margin">4dp</dimen>
 
 </resources>

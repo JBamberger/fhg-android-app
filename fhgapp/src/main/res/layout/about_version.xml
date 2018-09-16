@@ -41,7 +41,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                tools:text="de.jbamberger.fhgapp ... version 2 324 32" />
+                tools:text="Application id: de.jbamberger.fhgapp\nBuild type: DEBUG\nVersion: 3.0.0-alpha1 (42)" />
 
         </android.support.constraint.ConstraintLayout>
 
