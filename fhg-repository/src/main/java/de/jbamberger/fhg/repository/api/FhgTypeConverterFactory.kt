@@ -2,10 +2,10 @@ package de.jbamberger.fhg.repository.api
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory.FeedConverter.Companion.FEED_TYPE
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory.VPlanConverter.Companion.VPLAN_TYPE
+import de.jbamberger.fhg.repository.data.FeedItem
+import de.jbamberger.fhg.repository.data.VPlanDay
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -36,7 +36,7 @@ private constructor(private val moshi: Moshi) : Converter.Factory() {
         @Throws(IOException::class)
         override fun convert(body: ResponseBody): VPlanDay {
             try {
-                return VPlanParser.parseVPlanDay(body)
+                return VPlanParserV2.parseVPlanDay(body)
             } catch (e: Exception) {
                 e.printStackTrace()
                 throw e;
