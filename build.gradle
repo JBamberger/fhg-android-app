@@ -2,7 +2,8 @@
 buildscript {
     ext {
         kotlin_version = '1.2.70'
-        android_plugin_version = '3.2.0-rc03'
+        android_plugin_version = '3.1.0'
+        play_oss_version = '0.9.3'
     }
     repositories {
         jcenter()
@@ -11,6 +12,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.android.gms:oss-licenses-plugin:$play_oss_version"
     }
 }
 
@@ -30,6 +32,7 @@ allprojects {
 ext {
     //general
     support_version = '27.1.1'
+    play_oss_licenses_version = '16.0.0'
     constraint_layout_version = "1.1.3"
     arch_room_version = "1.1.1"
     arch_lifecycle_version = "1.1.1"
@@ -67,6 +70,8 @@ ext {
     lib_support_preference_v14 = "com.android.support:preference-v14:$support_version"
     lib_support_vector_drawable = "com.android.support:support-vector-drawable:$support_version"
     lib_support_constraint_layout = "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+
+    play_oss_licenses = "com.google.android.gms:play-services-oss-licenses:$play_oss_licenses_version"
 
     lib_jsoup = "org.jsoup:jsoup:$jsoup_version"
 

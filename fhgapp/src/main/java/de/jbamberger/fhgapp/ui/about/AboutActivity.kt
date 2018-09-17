@@ -1,9 +1,10 @@
 package de.jbamberger.fhgapp.ui.about
 
+import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.VisibleForTesting
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.components.DataBindingAdapter
@@ -27,36 +28,18 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
         aboutContainer.layoutManager = LinearLayoutManager(this)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        adapter.replaceAll(addData())
-    }
-
-    fun libraryClicked(url: String) {
-        Utils.openUrl(this, url)
-    }
-
-    @VisibleForTesting
-    internal fun addData(): List<Item> {
-        val names = resources.getStringArray(R.array.about_library_names)
-        val licenses = resources.getStringArray(R.array.about_library_descriptions)
-        val urls = resources.getStringArray(R.array.about_library_urls)
-
-        if (names.size != licenses.size || names.size != urls.size) {
-            throw IllegalStateException("Resources are not correctly loaded or configured.")
-        }
-
-        val items: MutableList<Item> = mutableListOf(
+        adapter.replaceAll(listOf(
                 Item(R.layout.about_disclaimer, null, null),
                 Item(R.layout.about_contact, null,
                         View.OnClickListener { Utils.contactDeveloper(this) }),
                 Item(R.layout.about_version, null, null),
-                Item(R.layout.about_library_title, null, null)
-        )
+                Item(R.layout.about_oss_licenses, null,
+                        View.OnClickListener { startActivity(Intent(this, OssLicensesMenuActivity::class.java)) })
+                ))
+    }
 
-        for (i in names.indices) {
-            items.add(Item(R.layout.about_library, Library(names[i], licenses[i], urls[i]), this))
-        }
-
-        return items
+    fun libraryClicked(url: String) {
+        Utils.openUrl(this, url)
     }
 
     data class Library(val name: String, val description: String, val url: String)

@@ -36,6 +36,7 @@
     <string name="about_version_title">Version</string>
     <string name="about_version_content">Application id: %1$s\nBuild type: %2$s\nVersion: %3$s (%4$d)</string>
 
+    <string name="about_oss_licenses">Open Source Bibliotheken</string>
     <string name="about_library_title">Verwendete Bibliotheken</string>
 
     <!-- VPlan -->
