@@ -42,52 +42,63 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':utils')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation "com.android.support:support-annotations:$support_version"
+    implementation lib_kotlin_std_lib
 
-    implementation "org.jsoup:jsoup:$jsoup_version"
+    implementation lib_support_annotations
 
-    implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation lib_jsoup
 
-    implementation "joda-time:joda-time:$joda_version"
+    implementation lib_timber
 
-    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation lib_joda_time
 
-    implementation "com.squareup.moshi:moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    implementation lib_okhttp
+    implementation lib_okhttp_logging_interceptor
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:retrofit-converters:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
-    implementation("com.squareup.retrofit2:converter-simplexml:$retrofit_version") {
+    implementation lib_moshi
+    implementation lib_moshi_kotlin
+
+    implementation lib_retrofit
+    implementation lib_retrofit_converters
+    implementation lib_retrofit_converter_scalars
+    implementation lib_retrofit_converter_moshi
+    implementation lib_retrofit_converter_jaxb
+    implementation(lib_retrofit_converter_simplexml) {
         exclude module: "stax"
         exclude module: "stax-api"
         exclude module: "xpp3"
     }
 
-    api "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    api lib_glide
+    kapt apt_glide
 
-    api "android.arch.lifecycle:runtime:$arch_lifecycle_version"
-    api "android.arch.lifecycle:extensions:$arch_lifecycle_version"
-    kapt "android.arch.lifecycle:compiler:$arch_lifecycle_version"
+    api lib_lifecycle_runtime
+    api lib_lifecycle_extensions
+    kapt apt_lifecycle
 
-    api "android.arch.persistence.room:runtime:$arch_room_version"
-    kapt "android.arch.persistence.room:compiler:$arch_room_version"
+    api lib_room
+    kapt apt_room
 
-    api "android.arch.paging:runtime:$arch_paging_version"
+    api lib_paging_runtime
 
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation lib_dagger
+    kapt apt_dagger
 
+    testImplementation lib_jsr305
+    testImplementation lib_junit
+    testImplementation lib_assertj
+    testImplementation lib_robolectric
+    testImplementation lib_mockito
+    testImplementation lib_arch_testing
+    testImplementation lib_room_testing
+    testImplementation lib_paging_testing
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.robolectric:robolectric:$robolectric_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test:rules:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$support_espresso_version"
+    androidTestImplementation lib_jsr305
+    androidTestImplementation lib_support_test_runner
+    androidTestImplementation lib_support_test_rules
+    androidTestImplementation (lib_espresso_core) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
 }
