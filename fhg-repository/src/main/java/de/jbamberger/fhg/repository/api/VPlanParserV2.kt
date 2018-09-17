@@ -177,9 +177,8 @@ internal object VPlanParserV2 {
             throw ParseException("RowSize=${cells.size} differs from SCHEMA_SIZE=$SCHEMA_SIZE")
         }
 
-        val resolve: (String) -> String = { colName ->
-            colMap[colName]?.let { read(cells[it]) } ?: throw ParseException()
-        }
+        val resolveIndex: (String) -> Int = { colName -> colMap[colName] ?: throw ParseException() }
+        val resolve: (String) -> String = { colName -> read(cells[resolveIndex(colName)]) }
 
         try {
             if (cells.size >= 6) {
@@ -189,12 +188,22 @@ internal object VPlanParserV2 {
                 val valSubject = resolve(COL_SUBJECT)
                 val valRoom = resolve(COL_ROOM)
                 val valKind = resolve(COL_KIND)
+                val valSubNr = resolve(COL_SUB_NR)
+                val valSubTeacher = resolve(COL_SUBST_TEACHER)
+                val valSubFrom = resolve(COL_SUBST_FROM)
+                val valSubTo = resolve(COL_SUBST_TO)
 
-                val valOmitted = cells[KIND_C].text().toLowerCase().contains("entfall")
-                val valMarkedNew = cells[GRADE_C].attr("style").matches("background-color: #00[Ff][Ff]00".toRegex())
+                val valOmitted = cells[resolveIndex(COL_KIND)].text()
+                        .toLowerCase()
+                        .contains("entfall")
+                val valMarkedNew = cells[resolveIndex(COL_CLASS)]
+                        .attr("style")
+                        .matches("background-color: #00[Ff][Ff]00".toRegex())
 
-                return VPlanRow(valSubject, valOmitted, valHour, valRoom, valContent,
-                        valGrade, valKind, valMarkedNew)
+                return VPlanRow(
+                        valSubject, valOmitted, valHour, valRoom,
+                        valContent, valGrade, valKind, valMarkedNew,
+                        valSubNr, valSubTeacher, valSubFrom, valSubTo)
             }
             throw ParseException("Could not parse row, invalid format.")
         } catch (e: Exception) {

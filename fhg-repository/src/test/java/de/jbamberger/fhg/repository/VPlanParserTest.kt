@@ -1,11 +1,11 @@
 package de.jbamberger.fhg.repository
 
-import de.jbamberger.fhg.repository.api.VPlanParser.parseVPlanDay
-import de.jbamberger.fhg.repository.api.VPlanParser.readDayAndDate
-import de.jbamberger.fhg.repository.api.VPlanParser.readLastUpdated
-import de.jbamberger.fhg.repository.api.VPlanParser.readMotdTable
-import de.jbamberger.fhg.repository.api.VPlanParser.readVPlanTable
-import de.jbamberger.fhg.repository.api.VPlanParser.readWithEncoding
+import de.jbamberger.fhg.repository.api.VPlanParserV2.parseVPlanDay
+import de.jbamberger.fhg.repository.api.VPlanParserV2.readDayAndDate
+import de.jbamberger.fhg.repository.api.VPlanParserV2.readLastUpdated
+import de.jbamberger.fhg.repository.api.VPlanParserV2.readMotdTable
+import de.jbamberger.fhg.repository.api.VPlanParserV2.readVPlanTable
+import de.jbamberger.fhg.repository.api.VPlanParserV2.readWithEncoding
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
