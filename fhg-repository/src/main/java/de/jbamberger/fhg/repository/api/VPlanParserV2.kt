@@ -15,7 +15,23 @@ import java.util.regex.Pattern
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-internal object VPlanParser {
+internal object VPlanParserV2 {
+
+    private const val COL_SUB_NR = "vtr-nr."
+    private const val COL_KIND = "art"
+    private const val COL_HOUR = "stunde"
+    private const val COL_CLASS = "klasse(n)"
+    private const val COL_SUBST_TEACHER = "vertreter"
+    private const val COL_ROOM = "raum"
+    private const val COL_SUBJECT = "fach"
+    private const val COL_SUBST_FROM = "vertr. von"
+    private const val COL_SUBST_TO = "(le.) nach"
+    private const val COL_SUBST_TEXT = "vertretungs-text"
+
+    private val SCHEMA = setOf(
+            COL_SUB_NR, COL_KIND, COL_HOUR, COL_CLASS, COL_SUBST_TEACHER,
+            COL_ROOM, COL_SUBJECT, COL_SUBST_FROM, COL_SUBST_TO, COL_SUBST_TEXT)
+    private val SCHEMA_SIZE = SCHEMA.size
 
     private const val GRADE_C = 0
     private const val HOUR_C = 1
@@ -98,42 +114,96 @@ internal object VPlanParser {
                 }
     }
 
+
     @VisibleForTesting
     @Throws(ParseException::class)
-    internal fun readVPlanTable(doc: Document): List<VPlanRow> {
-        val vPlanTable = doc.getElementsByClass("list").select("tr")
-        try {
-            return vPlanTable
-                    .map { it.children() }
-                    .filter { it.select("th").size == 0 }
-                    .map { readVPlanTableCells(it) }
-        } catch (e: Exception) {
-            throw ParseException("Could not parse vplan table", e)
+    internal fun createHeaderColumnMapping(header: Element): Map<String, Int> {
+        if (header.tagName() != "tr") {
+            throw ParseException("First vplan row is not the header. tag=${header.tagName()}")
         }
+
+        val headCols = header.children()
+        if (headCols.size != SCHEMA_SIZE) {
+            throw ParseException("Header.size=${headCols.size} differs from SCHEMA_SIZE=$SCHEMA_SIZE")
+        }
+
+        val colMap = headCols.mapIndexed { index, col ->
+            if (col.tagName() != "th") {
+                throw ParseException("Header contained column with wrong tagName=${col.tagName()}.")
+            }
+
+            val colTitle = col.html().trim().toLowerCase()
+            if (SCHEMA.contains(colTitle)) {
+                return@mapIndexed colTitle to index
+            } else {
+                throw ParseException("Header contained column with unknown title=$colTitle")
+            }
+        }.toMap()
+
+
+        if (colMap.size != SCHEMA_SIZE) {
+            throw ParseException("ColMap has different size than schema.")
+        }
+        return colMap
     }
 
     @VisibleForTesting
     @Throws(ParseException::class)
-    internal fun readVPlanTableCells(cells: Elements): VPlanRow {
+    internal fun readVPlanTable(doc: Document): List<VPlanRow> {
+        val tables = doc.getElementsByTag("table")
+                .filter { it.hasClass("mon_list") }
+        if (tables.size != 1) throw ParseException("There is more than one table with correct class")
+
+        val rows = tables.first().getElementsByTag("tbody").first().children()
+        if (rows == null || rows.size < 1) {
+            throw ParseException("The VPlan table has no header")
+        }
+
+        val colMap = createHeaderColumnMapping(rows.removeAt(0))
+
+        return rows.map { readVPlanTableCells(it.children(), colMap) }
+    }
+
+    @VisibleForTesting
+    @Throws(ParseException::class)
+    internal fun readVPlanTableCells(cells: Elements, colMap: Map<String, Int>): VPlanRow {
         fun read(element: Element): String {
             val span = element.getElementsByTag("span")
             val out = if (span.first() != null) span.first().html() else element.text()
             return out.replace("&nbsp;", " ").trim()
         }
+
+        if (cells.size != SCHEMA_SIZE) {
+            throw ParseException("RowSize=${cells.size} differs from SCHEMA_SIZE=$SCHEMA_SIZE")
+        }
+
+        val resolveIndex: (String) -> Int = { colName -> colMap[colName] ?: throw ParseException() }
+        val resolve: (String) -> String = { colName -> read(cells[resolveIndex(colName)]) }
+
         try {
             if (cells.size >= 6) {
-                val valGrade = read(cells[GRADE_C])
-                val valHour = read(cells[HOUR_C])
-                val valContent = read(cells[CONTENT_C])
-                val valSubject = read(cells[SUBJECT_C])
-                val valRoom = read(cells[ROOM_C])
-                val valKind = read(cells[KIND_C])
+                val valGrade = resolve(COL_CLASS)
+                val valHour = resolve(COL_HOUR)
+                val valContent = resolve(COL_SUBST_TEXT)
+                val valSubject = resolve(COL_SUBJECT)
+                val valRoom = resolve(COL_ROOM)
+                val valKind = resolve(COL_KIND)
+                val valSubNr = resolve(COL_SUB_NR)
+                val valSubTeacher = resolve(COL_SUBST_TEACHER)
+                val valSubFrom = resolve(COL_SUBST_FROM)
+                val valSubTo = resolve(COL_SUBST_TO)
 
-                val valOmitted = cells[KIND_C].text().toLowerCase().contains("entfall")
-                val valMarkedNew = cells[GRADE_C].attr("style").matches("background-color: #00[Ff][Ff]00".toRegex())
+                val valOmitted = cells[resolveIndex(COL_KIND)].text()
+                        .toLowerCase()
+                        .contains("entfall")
+                val valMarkedNew = cells[resolveIndex(COL_CLASS)]
+                        .attr("style")
+                        .matches("background-color: #00[Ff][Ff]00".toRegex())
 
-                return VPlanRow(valSubject, valOmitted, valHour, valRoom, valContent,
-                        valGrade, valKind, valMarkedNew)
+                return VPlanRow(
+                        valSubject, valOmitted, valHour, valRoom,
+                        valContent, valGrade, valKind, valMarkedNew,
+                        valSubNr, valSubTeacher, valSubFrom, valSubTo)
             }
             throw ParseException("Could not parse row, invalid format.")
         } catch (e: Exception) {

@@ -5,9 +5,7 @@ import com.squareup.moshi.Moshi
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.equalTo
-import org.junit.Assert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,25 +30,28 @@ class KeyValueStorageTest {
     @Test
     fun test_saveAndLoadString() {
         store.save("s", "Hello World.")
-        assertThat("Hello World.", `is`(equalTo(store.get("s"))))
+        assertThat(store.get<String>("s")).isEqualTo("Hello World.")
     }
 
     @Test
     fun test_saveAndLoadComplexObject() {
         val o = VPlanDay(VPlanHeader("a", "a", "c"),
-                listOf(VPlanRow("a", false, "b", "c", "d", "e", "f", false)))
+                listOf(VPlanRow(
+                        "a", false, "b", "c",
+                        "d", "e", "f", false,
+                        "g", "h", "i", "j")))
         store.save("c", o)
-        assertThat(o, `is`(equalTo(store.get("c"))))
+        assertThat(store.get<VPlanDay>("c")).isEqualTo(o)
     }
 
     @Test
     fun test_restoreBroken() {
         store.save("c", "Hello broken Object")
-        assertThat(store.get("c"), `is`(equalTo(null as VPlanDay?)))
+        assertThat(store.get<VPlanDay>("c")).isEqualTo(null)
     }
 
     @Test
     fun test_loadNotPresent() {
-        assertThat(null, `is`(equalTo(store.get<String>("b"))))
+        assertThat(store.get<String>("b")).isEqualTo(null)
     }
 }

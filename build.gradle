@@ -3,6 +3,7 @@ buildscript {
     ext {
         kotlin_version = '1.2.70'
         android_plugin_version = '3.1.0'
+        play_oss_version = '0.9.3'
     }
     repositories {
         jcenter()
@@ -11,6 +12,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.google.android.gms:oss-licenses-plugin:$play_oss_version"
     }
 }
 
@@ -30,6 +32,7 @@ allprojects {
 ext {
     //general
     support_version = '27.1.1'
+    play_oss_licenses_version = '16.0.0'
     constraint_layout_version = "1.1.3"
     arch_room_version = "1.1.1"
     arch_lifecycle_version = "1.1.1"
@@ -43,9 +46,79 @@ ext {
     joda_version = "2.10"
     glide_version = "4.8.0"
 
-    //testing
+    // testing
+    jsr305_version = "3.0.2"
     junit_version = "4.12"
+    assertj_version = "3.1.0"
+    hamcrest_version = "1.3"
     robolectric_version = "3.8"
-    support_test_runner_version = "1.0.1"
-    support_espresso_version = "3.0.1"
+    mockito_version = "2.18.3"
+    espresso_version = "3.0.2"
+    testrunner_version = "1.0.2"
+    testrules_version = "1.0.2"
+
+    apt_databinding_compiler = "com.android.databinding:compiler:$android_plugin_version"
+
+    lib_kotlin_std_lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    lib_support_annotations = "com.android.support:support-annotations:$support_version"
+    lib_support_appcompat_v7 = "com.android.support:appcompat-v7:$support_version"
+    lib_support_v4 = "com.android.support:support-v4:$support_version"
+    lib_support_v13 = "com.android.support:support-v13:$support_version"
+    lib_support_design = "com.android.support:design:$support_version"
+    lib_support_cardview_v7 = "com.android.support:cardview-v7:$support_version"
+    lib_support_preference_v14 = "com.android.support:preference-v14:$support_version"
+    lib_support_vector_drawable = "com.android.support:support-vector-drawable:$support_version"
+    lib_support_constraint_layout = "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+
+    play_oss_licenses = "com.google.android.gms:play-services-oss-licenses:$play_oss_licenses_version"
+
+    lib_jsoup = "org.jsoup:jsoup:$jsoup_version"
+
+    lib_timber = "com.jakewharton.timber:timber:$timber_version"
+
+    lib_joda_time = "joda-time:joda-time:$joda_version"
+
+    lib_okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
+    lib_okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    lib_moshi = "com.squareup.moshi:moshi:$moshi_version"
+    lib_moshi_kotlin = "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
+    lib_retrofit = "com.squareup.retrofit2:retrofit:$retrofit_version"
+    lib_retrofit_converters = "com.squareup.retrofit2:retrofit-converters:$retrofit_version"
+    lib_retrofit_converter_scalars = "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    lib_retrofit_converter_moshi = "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    lib_retrofit_converter_jaxb = "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
+    lib_retrofit_converter_simplexml = "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
+
+    lib_glide = "com.github.bumptech.glide:glide:$glide_version"
+    apt_glide = "com.github.bumptech.glide:compiler:$glide_version"
+
+    lib_lifecycle_runtime = "android.arch.lifecycle:runtime:$arch_lifecycle_version"
+    lib_lifecycle_extensions = "android.arch.lifecycle:extensions:$arch_lifecycle_version"
+    apt_lifecycle = "android.arch.lifecycle:compiler:$arch_lifecycle_version"
+
+    lib_room = "android.arch.persistence.room:runtime:$arch_room_version"
+    apt_room = "android.arch.persistence.room:compiler:$arch_room_version"
+
+    lib_paging_runtime = "android.arch.paging:runtime:$arch_paging_version"
+
+    lib_dagger = "com.google.dagger:dagger:$dagger_version"
+    apt_dagger = "com.google.dagger:dagger-compiler:$dagger_version"
+    lib_dagger_android = "com.google.dagger:dagger-android:$dagger_version"
+    lib_dagger_android_support = "com.google.dagger:dagger-android-support:$dagger_version"
+    apt_dagger_android = "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    lib_jsr305 = "com.google.code.findbugs:jsr305:$jsr305_version"
+    lib_junit = "junit:junit:$junit_version"
+    lib_assertj = "org.assertj:assertj-core:$assertj_version"
+    lib_robolectric = "org.robolectric:robolectric:${robolectric_version}"
+    lib_mockito = "org.mockito:mockito-core:$mockito_version"
+    lib_arch_testing = "android.arch.core:core-testing:$arch_lifecycle_version"
+    lib_room_testing = "android.arch.persistence.room:testing:$arch_room_version"
+    lib_paging_testing = "android.arch.paging:common:$arch_paging_version"
+    lib_support_test_runner = "com.android.support.test:runner:$testrunner_version"
+    lib_support_test_rules = "com.android.support.test:rules:$testrules_version"
+    lib_espresso_core = "com.android.support.test.espresso:espresso-core:$espresso_version"
 }

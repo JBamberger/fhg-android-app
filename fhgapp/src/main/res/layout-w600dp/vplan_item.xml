@@ -72,12 +72,26 @@
             android:layout_height="wrap_content"
             app:html="@{obj.room}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_kind"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_sub_teacher"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/vplan_subject"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
             tools:text="@sample/sample.json/vplan/vPlanRows/room" />
+
+        <TextView
+            android:id="@+id/vplan_sub_teacher"
+            style="@style/VPlan.Row.Info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:html="@{obj.subTeacher}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_kind"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/vplan_room"
+            app:layout_constraintTop_toTopOf="parent"
+            app:vPlanTextColor="@{obj}"
+            tools:text="Karl" />
 
         <TextView
             android:id="@+id/vplan_kind"
@@ -88,7 +102,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/vplan_content"
             app:layout_constraintHorizontal_weight="2"
-            app:layout_constraintStart_toEndOf="@+id/vplan_room"
+            app:layout_constraintStart_toEndOf="@+id/vplan_sub_teacher"
             app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColorHighlighted="@{obj}"
             tools:text="@sample/sample.json/vplan/vPlanRows/kind" />
