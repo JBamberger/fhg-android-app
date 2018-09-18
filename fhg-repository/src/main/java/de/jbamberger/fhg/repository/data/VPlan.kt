@@ -4,7 +4,7 @@ package de.jbamberger.fhg.repository.data
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
+data class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
 
     class Builder {
         private var day1: VPlanDay? = null
@@ -35,7 +35,6 @@ data class VPlanDay(
 )
 
 data class VPlanRow(
-
         val subject: String,
         val isOmitted: Boolean,
         val hour: String,

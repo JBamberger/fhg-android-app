@@ -20,8 +20,8 @@ android {
         applicationId "xyz.jbapps.vplan"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 22
-        versionName '3.0.2'
+        versionCode 23
+        versionName '3.1.0'
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

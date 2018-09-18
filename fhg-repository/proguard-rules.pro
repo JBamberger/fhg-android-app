@@ -21,30 +21,70 @@
 #-renamesourcefileattribute SourceFile
 
 
-########
-# Gson #
-########
 
-# Gson uses generic type information stored in a class file when working with fields. Proguard
-# removes such information by default, so configure it to keep all of it.
--keepattributes Signature
 
-# for gsons @SerializedName
--keepattributes *Annotation*
+# Debugging proguard:
+# -dontobfuscate
 
+-dontwarn kotlin.reflect.jvm.internal.**
+-keep class kotlin.reflect.jvm.internal.** { *; }
+
+-keepclasseswithmembers class de.jbamberger.fhg.repository.data.** {
+    <init>(...);
+    <fields>;
+}
+
+#moshi
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+-keepclasseswithmembers class * {
+    @com.squareup.moshi.* <methods>;
+}
+
+-keep @com.squareup.moshi.JsonQualifier interface *
+
+# The name of @JsonClass types is used to look up the generated adapter.
+-keepnames @com.squareup.moshi.JsonClass class *
+
+# Retain generated JsonAdapters if annotated type is retained.
+-keep class <1>JsonAdapter {
+    <init>(...);
+    <fields>;
+}
+
+# moshi android
+
+-keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
+
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
+}
 
 ############
 # Retrofit #
 ############
 
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain service method parameters.
--keepclassmembernames interface * {
+# Retrofit does reflection on generic parameters and InnerClass is required to use Signature.
+-keepattributes Signature, InnerClasses
+
+# Retain service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+
 # Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.-KotlinExtensions
 
 
 ##########
@@ -65,16 +105,3 @@
 # Dagger #
 ##########
 -dontwarn com.google.errorprone.annotations.*
-
-
-#############
-# SimpleXml #
-#############
--keepattributes Signature, *Annotation*, ElementList, Root
-
--dontwarn org.simpleframework.xml.stream.**
--keep class org.simpleframework.xml.**{ *; }
--keepclassmembers class * {
-    @org.simpleframework.xml.* <fields>;
-    @org.simpleframework.xml.* <init>(...);
-}

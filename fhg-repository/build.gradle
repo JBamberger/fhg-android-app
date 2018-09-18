@@ -51,8 +51,6 @@ dependencies {
 
     implementation lib_timber
 
-    implementation lib_joda_time
-
     implementation lib_okhttp
     implementation lib_okhttp_logging_interceptor
 
@@ -63,12 +61,6 @@ dependencies {
     implementation lib_retrofit_converters
     implementation lib_retrofit_converter_scalars
     implementation lib_retrofit_converter_moshi
-    implementation lib_retrofit_converter_jaxb
-    implementation(lib_retrofit_converter_simplexml) {
-        exclude module: "stax"
-        exclude module: "stax-api"
-        exclude module: "xpp3"
-    }
 
     api lib_glide
     kapt apt_glide

@@ -32,8 +32,11 @@
 #-keep class * implements com.google.gson.JsonSerializer
 #-keep class * implements com.google.gson.JsonDeserializer
 
--verbose
--keep class de.jbamberger.api.data.** { *; }
+
+# debugging proguard
+# -dontobfuscate
+# -verbose
+
 
 # Dagger
 -dontwarn com.google.errorprone.annotations.*

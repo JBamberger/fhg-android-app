@@ -6,8 +6,6 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 
-class FeedChunk(val items: List<FeedItem>)
-
 @Entity(tableName = "feedItems")
 class FeedItem {
 
@@ -157,5 +155,4 @@ class FeedMedia {
             }
         }
     }
-
 }

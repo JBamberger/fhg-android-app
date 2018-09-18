@@ -1,7 +1,8 @@
 package de.jbamberger.fhg.repository.db
 
 import android.preference.PreferenceManager
-import com.squareup.moshi.Moshi
+import de.jbamberger.fhg.repository.api.NetModule
+import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
@@ -23,7 +24,7 @@ class KeyValueStorageTest {
     @Before
     fun setUp() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-        val moshi = Moshi.Builder().build()
+        val moshi = NetModule().providesMoshi()
         store = KeyValueStorage(moshi, prefs)
     }
 
@@ -54,4 +55,15 @@ class KeyValueStorageTest {
     fun test_loadNotPresent() {
         assertThat(store.get<String>("b")).isEqualTo(null)
     }
+
+    @Test
+    fun legacy() {
+        val x = "{\"day1\":{\"dateAndDay\":\"b\",\"lastUpdated\":\"a\",\"motd\":\"bla\",\"vPlanRows\":[{\"content\":\"---\",\"grade\":\"314\",\"hour\":\"Entfall\",\"isMarkedNew\":false,\"isOmitted\":false,\"kind\":\"\\u003cs\\u003eHenß\\u003c/s\\u003e\",\"room\":\"5a\",\"subject\":\"1\"}]}, \"day2\":{\"dateAndDay\":\"\",\"lastUpdated\":\"\",\"motd\":\"\",\"vPlanRows\":[]}}"
+
+        store.save("a", x)
+        assertThat(store.get<VPlan>("a")).isNull()
+    }
 }
+
+
+

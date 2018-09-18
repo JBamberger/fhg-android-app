@@ -103,6 +103,6 @@ internal constructor(
     fun postsOfFeed() = feedDataRepository.postsOfFeed(10)
 
     companion object {
-        const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cache"
+        const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cachev2"
     }
 }
