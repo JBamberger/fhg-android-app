@@ -1,18 +1,1 @@
-[
-  {
-    "outputType": {
-      "type": "APK"
-    },
-    "apkInfo": {
-      "type": "MAIN",
-      "splits": [],
-      "versionCode": 22
-    },
-    "path": "fhgapp-release.apk",
-    "properties": {
-      "packageId": "xyz.jbapps.vplan",
-      "split": "",
-      "minSdkVersion": "16"
-    }
-  }
-]
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":23,"versionName":"3.1.0","enabled":true,"outputFile":"fhgapp-release.apk","fullName":"release","baseName":"release"},"path":"fhgapp-release.apk","properties":{}}]

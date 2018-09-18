@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "94514b9437bff61f1f12b389213019ef",
+    "identityHash": "d5a83b698347300905117c5cc5ccda0a",
     "entities": [
       {
         "tableName": "feedItems",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `date` TEXT, `link` TEXT, `renderedTitle` TEXT, `renderedExcerpt` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `date` TEXT, `link` TEXT, `featuredMedia` INTEGER, `renderedTitle` TEXT, `renderedExcerpt` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,6 +24,12 @@
             "fieldPath": "link",
             "columnName": "link",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "featuredMedia",
+            "columnName": "featuredMedia",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -51,7 +57,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"94514b9437bff61f1f12b389213019ef\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d5a83b698347300905117c5cc5ccda0a\")"
     ]
   }
 }
