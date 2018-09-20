@@ -18,7 +18,7 @@ import java.util.regex.Pattern
 internal object VPlanParserV2 {
 
     private const val COL_SUB_NR = "vtr-nr."
-    private const val COL_KIND = "art"
+    private const val COL_KIND = "entfall" // "art"
     private const val COL_HOUR = "stunde"
     private const val COL_CLASS = "klasse(n)"
     private const val COL_SUBST_TEACHER = "vertreter"
@@ -28,17 +28,11 @@ internal object VPlanParserV2 {
     private const val COL_SUBST_TO = "(le.) nach"
     private const val COL_SUBST_TEXT = "vertretungs-text"
 
-    private val SCHEMA = setOf(
-            COL_SUB_NR, COL_KIND, COL_HOUR, COL_CLASS, COL_SUBST_TEACHER,
-            COL_ROOM, COL_SUBJECT, COL_SUBST_FROM, COL_SUBST_TO, COL_SUBST_TEXT)
-    private val SCHEMA_SIZE = SCHEMA.size
 
-    private const val GRADE_C = 0
-    private const val HOUR_C = 1
-    private const val SUBJECT_C = 2
-    private const val ROOM_C = 3
-    private const val KIND_C = 4
-    private const val CONTENT_C = 5
+    private val SCHEMA = setOf(
+            /*COL_SUB_NR, */COL_KIND, COL_HOUR, COL_CLASS, /*COL_SUBST_TEACHER,*/
+            COL_ROOM, COL_SUBJECT/*, COL_SUBST_FROM, COL_SUBST_TO*/, COL_SUBST_TEXT)
+    private val SCHEMA_SIZE = SCHEMA.size
 
     @Throws(ParseException::class)
     internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
@@ -187,23 +181,25 @@ internal object VPlanParserV2 {
                 val valContent = resolve(COL_SUBST_TEXT)
                 val valSubject = resolve(COL_SUBJECT)
                 val valRoom = resolve(COL_ROOM)
-                val valKind = resolve(COL_KIND)
-                val valSubNr = resolve(COL_SUB_NR)
-                val valSubTeacher = resolve(COL_SUBST_TEACHER)
-                val valSubFrom = resolve(COL_SUBST_FROM)
-                val valSubTo = resolve(COL_SUBST_TO)
+                val valKind = resolve(COL_KIND).let {
+                    if (it.toLowerCase() == "x") "entfall" else it
+                }
+//                val valSubNr = resolve(COL_SUB_NR)
+//                val valSubTeacher = resolve(COL_SUBST_TEACHER)
+//                val valSubFrom = resolve(COL_SUBST_FROM)
+//                val valSubTo = resolve(COL_SUBST_TO)
 
                 val valOmitted = cells[resolveIndex(COL_KIND)].text()
                         .toLowerCase()
-                        .contains("entfall")
+                        .matches("entfall|x".toRegex())
                 val valMarkedNew = cells[resolveIndex(COL_CLASS)]
                         .attr("style")
                         .matches("background-color: #00[Ff][Ff]00".toRegex())
 
                 return VPlanRow(
                         valSubject, valOmitted, valHour, valRoom,
-                        valContent, valGrade, valKind, valMarkedNew,
-                        valSubNr, valSubTeacher, valSubFrom, valSubTo)
+                        valContent, valGrade, valKind, valMarkedNew/*,
+                        valSubNr, valSubTeacher, valSubFrom, valSubTo*/)
             }
             throw ParseException("Could not parse row, invalid format.")
         } catch (e: Exception) {

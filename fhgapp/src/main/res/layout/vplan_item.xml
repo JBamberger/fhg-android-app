@@ -26,83 +26,78 @@
         <TextView
             android:id="@+id/vplan_grade"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/vplan_line_margin"
             app:html="@{obj.grade}"
             app:layout_constraintBottom_toTopOf="@+id/vplan_content"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_subject"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="10"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_hour"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/grade" />
+            tools:text="grade" />
 
         <TextView
             android:id="@+id/vplan_hour"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/vplan_line_margin"
             app:html="@{obj.hour}"
             app:layout_constraintBottom_toTopOf="@+id/vplan_content"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_room"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="5"
-            app:layout_constraintStart_toEndOf="@+id/vplan_subject"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_subject"
+            app:layout_constraintStart_toEndOf="@+id/vplan_grade"
+            app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/hour" />
+            tools:text="hour" />
 
 
         <TextView
             android:id="@+id/vplan_subject"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/vplan_line_margin"
             app:html="@{obj.subject}"
             app:layout_constraintBottom_toTopOf="@+id/vplan_content"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_hour"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="10"
-            app:layout_constraintStart_toEndOf="@+id/vplan_grade"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_room"
+            app:layout_constraintStart_toEndOf="@+id/vplan_hour"
+            app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/subject" />
+            tools:text="subject" />
 
         <TextView
             android:id="@+id/vplan_room"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/vplan_line_margin"
             app:html="@{obj.room}"
             app:layout_constraintBottom_toTopOf="@+id/vplan_content"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_sub_teacher"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="15"
-            app:layout_constraintStart_toEndOf="@+id/vplan_hour"
+            app:layout_constraintEnd_toStartOf="@+id/vplan_kind"
+            app:layout_constraintStart_toEndOf="@+id/vplan_subject"
+            app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColor="@{obj}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/room" />
+            tools:text="room" />
 
         <TextView
             android:id="@+id/vplan_kind"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/vplan_line_margin"
             app:html="@{obj.kind}"
             app:layout_constraintBottom_toTopOf="@+id/vplan_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="20"
-            app:layout_constraintStart_toEndOf="@+id/vplan_sub_teacher"
+            app:layout_constraintStart_toEndOf="@+id/vplan_room"
+            app:layout_constraintTop_toTopOf="parent"
             app:vPlanTextColorHighlighted="@{obj}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/kind" />
+            tools:text="kind" />
 
         <TextView
             android:id="@+id/vplan_content"
             style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:html="@{obj.content}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -110,22 +105,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:vPlanTextColor="@{obj}"
             app:visibleIfNotEmpty="@{obj.content}"
-            tools:text="@sample/sample.json/vplan/vPlanRows/content" />
-
-        <TextView
-            android:id="@+id/vplan_sub_teacher"
-            style="@style/VPlan.Row.Info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/vplan_line_margin"
-            app:html="@{obj.subTeacher}"
-            app:layout_constraintBottom_toTopOf="@+id/vplan_content"
-            app:layout_constraintEnd_toStartOf="@+id/vplan_kind"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="10"
-            app:layout_constraintStart_toEndOf="@+id/vplan_room"
-            app:vPlanTextColor="@{obj}"
-            tools:text="Karl" />
+            tools:text="content" />
 
 
     </android.support.constraint.ConstraintLayout>
