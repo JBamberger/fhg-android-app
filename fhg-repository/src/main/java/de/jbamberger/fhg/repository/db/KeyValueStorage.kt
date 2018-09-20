@@ -27,16 +27,11 @@ constructor(private val moshi: Moshi, private val prefs: SharedPreferences) {
         val base64 = prefs.getString(key, null) ?: return null
         val json = String(Base64.decode(base64, Base64.DEFAULT))
         val t = try {
-            println(type.canonicalName)
-            println(json)
-
             val adapter = moshi.adapter<T>(type)
-            println("adapter created")
             adapter.fromJson(json)
         } catch (e: JsonDataException) {
             null
         }
-        println(t)
         return t
     }
 }
