@@ -55,7 +55,7 @@ dependencies {
     implementation lib_okhttp_logging_interceptor
 
     implementation lib_moshi
-    implementation lib_moshi_kotlin
+    kapt apt_moshi_codegen
 
     implementation lib_retrofit
     implementation lib_retrofit_converters

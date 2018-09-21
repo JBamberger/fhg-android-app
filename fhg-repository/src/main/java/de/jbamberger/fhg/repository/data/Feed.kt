@@ -5,8 +5,10 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 @Entity(tableName = "feedItems")
+@JsonClass(generateAdapter = true)
 class FeedItem {
 
     @PrimaryKey
@@ -34,6 +36,7 @@ class FeedItem {
     var excerpt: Excerpt? = null
 
 
+    @JsonClass(generateAdapter = true)
     class Title {
         @ColumnInfo(name = "renderedTitle")
         @Json(name = "rendered")
@@ -47,6 +50,7 @@ class FeedItem {
     }
 
 
+    @JsonClass(generateAdapter = true)
     class Excerpt {
         @ColumnInfo(name = "renderedExcerpt")
         @Json(name = "rendered")
@@ -71,6 +75,7 @@ class FeedItem {
 }
 
 @Entity(tableName = "feedMedia")
+@JsonClass(generateAdapter = true)
 class FeedMedia {
 
     @PrimaryKey
@@ -96,11 +101,13 @@ class FeedMedia {
     @Json(name = "source_url")
     var sourceUrl: String? = null
 
+    @JsonClass(generateAdapter = true)
     class Caption {
         @Json(name = "rendered")
         var rendered: String? = null
     }
 
+    @JsonClass(generateAdapter = true)
     class MediaDetails {
         @Json(name = "width")
         var width: Int? = null
@@ -115,6 +122,7 @@ class FeedMedia {
         @Embedded(prefix = "sizes_")
         var sizes: Sizes? = null
 
+        @JsonClass(generateAdapter = true)
         class Sizes {
             @Json(name = "thumbnail")
             @Embedded
@@ -137,6 +145,7 @@ class FeedMedia {
             var full: Size? = null
 
 
+            @JsonClass(generateAdapter = true)
             class Size {
                 @Json(name = "file")
                 var file: String? = null
