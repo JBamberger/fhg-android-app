@@ -73,6 +73,7 @@ dependencies {
     kapt apt_room
 
     api lib_paging_runtime
+    implementation lib_support_recyclerview // overwrite the version from the paging library
 
     implementation lib_dagger
     kapt apt_dagger

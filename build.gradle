@@ -64,14 +64,21 @@ ext {
     lib_kotlin_std_lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     lib_support_annotations = "com.android.support:support-annotations:$support_version"
+    lib_support_compat = "com.android.support:support-compat:$support_version"
+    lib_support_core_utils = "com.android.support:support-core-utils:$support_version"
+    lib_support_core_ui = "com.android.support:support-core-ui:$support_version"
+    lib_support_fragment = "com.android.support:support-fragment:$support_version"
     lib_support_appcompat_v7 = "com.android.support:appcompat-v7:$support_version"
-    lib_support_v4 = "com.android.support:support-v4:$support_version"
-    lib_support_v13 = "com.android.support:support-v13:$support_version"
+    lib_support_appcompat_v7 = "com.android.support:appcompat-v7:$support_version"
     lib_support_design = "com.android.support:design:$support_version"
     lib_support_cardview_v7 = "com.android.support:cardview-v7:$support_version"
+    lib_support_preference_v7 = "com.android.support:preference-v7:$support_version"
     lib_support_preference_v14 = "com.android.support:preference-v14:$support_version"
     lib_support_vector_drawable = "com.android.support:support-vector-drawable:$support_version"
     lib_support_constraint_layout = "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    lib_support_recyclerview = "com.android.support:recyclerview-v7:$support_version"
+
+    // later... "com.android.support:palette-v7:$support_version"
 
     play_oss_licenses = "com.google.android.gms:play-services-oss-licenses:$play_oss_licenses_version"
 
