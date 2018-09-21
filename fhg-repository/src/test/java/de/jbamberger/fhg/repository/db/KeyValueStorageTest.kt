@@ -39,8 +39,8 @@ class KeyValueStorageTest {
         val o = VPlanDay(VPlanHeader("a", "a", "c"),
                 listOf(VPlanRow(
                         "a", false, "b", "c",
-                        "d", "e", "f", false,
-                        "g", "h", "i", "j")))
+                        "d", "e", "f", false/*,
+                        "g", "h", "i", "j"*/)))
         store.save("c", o)
         assertThat(store.get<VPlanDay>("c")).isEqualTo(o)
     }

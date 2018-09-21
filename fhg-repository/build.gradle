@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
+    buildToolsVersion build_tools_version
 
     defaultConfig {
         minSdkVersion 14
@@ -72,6 +73,7 @@ dependencies {
     kapt apt_room
 
     api lib_paging_runtime
+    implementation lib_support_recyclerview // overwrite the version from the paging library
 
     implementation lib_dagger
     kapt apt_dagger
