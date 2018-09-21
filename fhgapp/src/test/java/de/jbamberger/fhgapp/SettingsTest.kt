@@ -5,7 +5,6 @@ import android.preference.PreferenceManager
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
-import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -80,10 +79,5 @@ class SettingsTest {
         settings.vPlanCourses = setOf("Hello", "World")
         assertThat(settings.vPlanCourses, `is`(equalTo(setOf("Hello", "World"))))
         assertThat(prefs.getString(COURSES, null), `is`(equalTo("Hello,World")))
-    }
-
-    @Test
-    fun fail_test() {
-        fail()
     }
 }
