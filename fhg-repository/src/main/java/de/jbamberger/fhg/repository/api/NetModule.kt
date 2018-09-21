@@ -1,7 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
 import android.content.Context
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -29,7 +28,6 @@ internal class NetModule {
     @Singleton
     fun providesMoshi(): Moshi {
         return Moshi.Builder()
-                .add(KotlinJsonAdapterFactory())
                 .build()
     }
 

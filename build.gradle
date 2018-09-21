@@ -93,6 +93,7 @@ ext {
 
     lib_moshi = "com.squareup.moshi:moshi:$moshi_version"
     lib_moshi_kotlin = "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    apt_moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     lib_retrofit = "com.squareup.retrofit2:retrofit:$retrofit_version"
     lib_retrofit_converters = "com.squareup.retrofit2:retrofit-converters:$retrofit_version"

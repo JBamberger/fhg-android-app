@@ -12,29 +12,30 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-dontnote sun.misc.Unsafe
+-dontnote com.google.android.gms.common.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
-
-
-
-# Debugging proguard:
-# -dontobfuscate
-
--dontwarn kotlin.reflect.jvm.internal.**
--keep class kotlin.reflect.jvm.internal.** { *; }
-
--keepclasseswithmembers class de.jbamberger.fhg.repository.data.** {
+###################################################################################################
+# data classes
+###################################################################################################
+-keepnames class com.squareup.moshi.Moshi
+-keep class de.jbamberger.fhg.repository.data.* {
     <init>(...);
     <fields>;
 }
 
+###################################################################################################
+# kotlin
+###################################################################################################
+
+-dontnote kotlin.internal.PlatformImplementationsKt
+-dontnote kotlin.reflect.jvm.internal.**
+-dontwarn kotlin.reflect.jvm.internal.**
+-keep class kotlin.reflect.jvm.internal.** { *; }
+
+###################################################################################################
 #moshi
+###################################################################################################
 
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
@@ -49,22 +50,21 @@
 -keepnames @com.squareup.moshi.JsonClass class *
 
 # Retain generated JsonAdapters if annotated type is retained.
--keep class <1>JsonAdapter {
-    <init>(...);
-    <fields>;
-}
+#-if @com.squareup.moshi.JsonClass class *
+#-keep class <1>JsonAdapter {
+#    <init>(...);
+#    <fields>;
+#}
 
-# moshi android
+# moshi kotlin converter
+#-keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
+#-keepclassmembers class kotlin.Metadata {
+#    public <methods>;
+#}
 
--keep class kotlin.reflect.jvm.internal.impl.builtins.BuiltInsLoaderImpl
-
--keepclassmembers class kotlin.Metadata {
-    public <methods>;
-}
-
-############
-# Retrofit #
-############
+###################################################################################################
+# Retrofit
+###################################################################################################
 
 # Retrofit does reflection on generic parameters and InnerClass is required to use Signature.
 -keepattributes Signature, InnerClasses
@@ -87,21 +87,54 @@
 -dontwarn retrofit2.-KotlinExtensions
 
 
-##########
-# OkHttp #
-##########
--dontwarn okhttp3.**
--dontwarn okio.**
+###################################################################################################
+# OkHttp
+###################################################################################################
+
+# JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
+
 # A resource is loaded with a relative path so the package of this class must be preserved.
 -keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
-#########
-# JSoup #
-#########
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
+-dontnote okhttp3.internal.platform.*
+
+###################################################################################################
+# Okio
+###################################################################################################
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+###################################################################################################
+# JSoup
+###################################################################################################
+
 -keeppackagenames org.jsoup.nodes
 
-##########
-# Dagger #
-##########
+###################################################################################################
+# Dagger
+###################################################################################################
+
 -dontwarn com.google.errorprone.annotations.*
+
+###################################################################################################
+# build system classes
+###################################################################################################
+
+-dontnote org.apache.http.params.HttpConnectionParams
+-dontnote org.apache.http.params.CoreConnectionPNames
+-dontnote org.apache.http.params.HttpParams
+-dontnote org.apache.http.conn.scheme.LayeredSocketFactory
+-dontnote org.apache.http.conn.scheme.SocketFactory
+-dontnote org.apache.http.conn.scheme.HostNameResolver
+-dontnote org.apache.http.conn.ConnectTimeoutException
+-dontnote android.net.http.SslCertificate
+-dontnote android.net.http.SslCertificate$DName
+-dontnote android.net.http.SslError
+-dontnote android.net.http.HttpResponseCache
