@@ -30,6 +30,8 @@ allprojects {
 }
 
 ext {
+    build_tools_version = "27.0.3"
+
     //general
     support_version = '27.1.1'
     play_oss_licenses_version = '16.0.0'

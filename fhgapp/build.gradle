@@ -12,6 +12,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 27
+    buildToolsVersion build_tools_version
 
     dataBinding.enabled true
 
