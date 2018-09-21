@@ -77,7 +77,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':utils')
     implementation project(':fhg-repository')
 
     implementation lib_kotlin_std_lib

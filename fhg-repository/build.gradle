@@ -41,7 +41,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':utils')
 
     implementation lib_kotlin_std_lib
 
