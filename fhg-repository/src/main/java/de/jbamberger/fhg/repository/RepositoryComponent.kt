@@ -5,10 +5,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import dagger.BindsInstance
-import dagger.Component
-import dagger.Module
-import dagger.Provides
+import dagger.*
 import de.jbamberger.fhg.repository.api.FhgApiModule
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.db.AppDatabase
@@ -42,9 +39,6 @@ class RepoInitModule {
     }
 }
 
-/**
- * @author Jannik Bamberger (dev.jbamberger@gmail.com)
- */
 @Singleton
 @Component(modules = [RepositoryModule::class])
 internal interface RepositoryComponent {
@@ -62,27 +56,36 @@ internal interface RepositoryComponent {
 
 }
 
-/**
- * @author Jannik Bamberger (dev.jbamberger@gmail.com)
- */
 @Module(includes = [FhgApiModule::class])
-internal class RepositoryModule {
+internal abstract class RepositoryModule {
+    @Module
+    companion object {
 
-    @Provides
-    @Singleton
-    fun providesSharedPreferences(context: Context): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)
+        @JvmStatic
+        @Provides
+        @Singleton
+        internal fun providesSharedPreferences(context: Context): SharedPreferences {
+            return PreferenceManager.getDefaultSharedPreferences(context)
+        }
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        internal fun provideAppDatabase(application: Application): AppDatabase {
+            return Room.databaseBuilder(application, AppDatabase::class.java, "fhg-db.sglite")
+                    .build()
+        }
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        internal fun providesFeedMediaLoaderFactory(
+                api: FhgEndpoint, httpClient: OkHttpClient): FeedMediaLoaderFactory {
+            return FeedMediaLoaderFactory(api, httpClient)
+        }
     }
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideAppDatabase(application: Application): AppDatabase {
-        return Room.databaseBuilder(application, AppDatabase::class.java, "fhg-db.sglite").build()
-    }
-
-    @Provides
-    @Singleton
-    fun providesFeedMediaLoaderFactory(api: FhgEndpoint, httpClient: OkHttpClient): FeedMediaLoaderFactory {
-        return FeedMediaLoaderFactory(api, httpClient)
-    }
+    internal abstract fun bindRepository(impl: RepositoryImpl): Repository
 }

@@ -15,7 +15,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import de.jbamberger.fhg.repository.api.NetworkState
+import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.util.FeedMediaRequest
 import de.jbamberger.fhgapp.R

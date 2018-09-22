@@ -1,34 +1,17 @@
 package de.jbamberger.fhg.repository.api
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations.switchMap
 import android.arch.paging.DataSource
 import android.arch.paging.ItemKeyedDataSource
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
-import android.support.annotation.MainThread
+import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.util.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.Executor
-import javax.inject.Inject
-import javax.inject.Singleton
 
-/**
- * @author Jannik Bamberger (dev.jbamberger@gmail.com)
- */
-
-sealed class NetworkState {
-    object LOADED : NetworkState()
-    object LOADING : NetworkState()
-    data class ERROR(val message: String) : NetworkState()
-}
-
-internal class KeyedFeedDataSource(
+internal class FeedDataSource private constructor(
         private val api: FhgEndpoint,
         private val retryExecutor: Executor) : ItemKeyedDataSource<String, FeedItem>() {
 
@@ -117,61 +100,18 @@ internal class KeyedFeedDataSource(
     }
 
     override fun getKey(item: FeedItem): String = item.date!! //FIXME
-}
 
-internal class FeedDataSourceFactory(
-        private val api: FhgEndpoint,
-        private val retryExecutor: Executor) : DataSource.Factory<String, FeedItem>() {
+    internal class Factory(
+            private val api: FhgEndpoint,
+            private val retryExecutor: Executor) : DataSource.Factory<String, FeedItem>() {
 
-    val sourceLiveData = MutableLiveData<KeyedFeedDataSource>()
-    override fun create(): DataSource<String, FeedItem> {
-        val source = KeyedFeedDataSource(api, retryExecutor)
-        sourceLiveData.postValue(source)
-        return source
-    }
-}
+        val sourceLiveData = MutableLiveData<FeedDataSource>()
 
-@Singleton
-internal class FeedDataRepository @Inject constructor(
-        private val api: FhgEndpoint, executors: AppExecutors) {
-
-    private val networkExecutor = executors.networkIO()
-
-    @MainThread
-    fun postsOfFeed(pageSize: Int): Listing<FeedItem> {
-        val sourceFactory = FeedDataSourceFactory(api, networkExecutor)
-        val pagedListConfig = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(pageSize * 2)
-                .setPageSize(pageSize)
-                .build()
-        val pagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
-                .setFetchExecutor(networkExecutor)
-                .build()
-
-        val refreshState = switchMap(sourceFactory.sourceLiveData) {
-            it.initialLoad
+        override fun create(): DataSource<String, FeedItem> {
+            val source = FeedDataSource(api, retryExecutor)
+            sourceLiveData.postValue(source)
+            return source
         }
-
-        return Listing(
-                pagedList = pagedList,
-                networkState = switchMap(sourceFactory.sourceLiveData) { it.networkState },
-                retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
-                refresh = { sourceFactory.sourceLiveData.value?.invalidate() },
-                refreshState = refreshState
-        )
     }
 }
 
-data class Listing<T>(
-        // the LiveData of paged lists for the UI to observe
-        val pagedList: LiveData<PagedList<T>>,
-        // represents the network request status to show to the user
-        val networkState: LiveData<NetworkState>,
-        // represents the refresh status to show to the user. Separate from networkState, this
-        // value is importantly only when refresh is requested.
-        val refreshState: LiveData<NetworkState>,
-        // refreshes the whole data and fetches it from scratch.
-        val refresh: () -> Unit,
-        // retries any failed requests.
-        val retry: () -> Unit)
