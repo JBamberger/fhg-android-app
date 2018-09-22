@@ -7,7 +7,6 @@ import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
-import dagger.Lazy
 import de.jbamberger.fhg.repository.api.ApiResponse
 import de.jbamberger.fhg.repository.api.FeedDataSource
 import de.jbamberger.fhg.repository.api.FhgApi
@@ -33,18 +32,12 @@ interface Repository {
 }
 
 @Singleton
-class RepositoryImpl @Inject internal constructor(
-        appExecutors: Lazy<AppExecutors>,
-        api: Lazy<FhgApi>,
-        endpoint: Lazy<FhgEndpoint>,
-        db: Lazy<AppDatabase>,
-        kvStore: Lazy<KeyValueStorage>) : Repository {
-
-    private val appExecutors: AppExecutors by lazy { appExecutors.get() }
-    private val api: FhgApi  by lazy { api.get() }
-    private val endpoint: FhgEndpoint  by lazy { endpoint.get() }
-    private val db: AppDatabase by lazy { db.get() }
-    private val kvStore: KeyValueStorage  by lazy { kvStore.get() }
+internal class RepositoryImpl @Inject internal constructor(
+        private val appExecutors: AppExecutors,
+        private val api: FhgApi,
+        private val endpoint: FhgEndpoint,
+        private val db: AppDatabase,
+        private val kvStore: KeyValueStorage) : Repository {
 
     override fun getVPlan(): LiveData<Resource<VPlan>> {
         val provider = object : NetworkBoundResource.Provider<VPlan, VPlan> {

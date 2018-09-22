@@ -1,7 +1,7 @@
 package de.jbamberger.fhg.repository.db
 
 import android.preference.PreferenceManager
-import de.jbamberger.fhg.repository.api.NetModule
+import de.jbamberger.fhg.repository.RepoInstantiationModule
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
@@ -24,7 +24,7 @@ class KeyValueStorageTest {
     @Before
     fun setUp() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-        val moshi = NetModule().providesMoshi()
+        val moshi = RepoInstantiationModule().providesMoshi()
         store = KeyValueStorage(moshi, prefs)
     }
 
