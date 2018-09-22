@@ -28,11 +28,7 @@ internal class FeedDataSource private constructor(
     fun retryAllFailed() {
         val prevRetry = retry
         retry = null
-        prevRetry?.let {
-            retryExecutor.execute {
-                it.invoke()
-            }
-        }
+        prevRetry?.let { retryExecutor.execute { it.invoke() } }
     }
 
 
@@ -46,10 +42,6 @@ internal class FeedDataSource private constructor(
 
             if (response.isSuccessful) {
                 val items = response.body() ?: emptyList()
-                items.forEach {
-
-                }
-
                 retry = null
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
@@ -70,9 +62,7 @@ internal class FeedDataSource private constructor(
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<FeedItem>) {
         networkState.postValue(NetworkState.LOADING)
-        api.getFeedPage(
-                before = params.key,
-                count = params.requestedLoadSize).enqueue(
+        api.getFeedPage(before = params.key, count = params.requestedLoadSize).enqueue(
                 object : Callback<List<FeedItem>> {
                     override fun onFailure(call: Call<List<FeedItem>>, t: Throwable) {
                         retry = { loadAfter(params, callback) }

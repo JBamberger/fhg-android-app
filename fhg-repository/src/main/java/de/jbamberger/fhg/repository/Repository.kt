@@ -3,7 +3,6 @@ package de.jbamberger.fhg.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.support.annotation.MainThread
@@ -13,9 +12,9 @@ import de.jbamberger.fhg.repository.api.FhgApi
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlan
-import de.jbamberger.fhg.repository.db.AppDatabase
 import de.jbamberger.fhg.repository.db.KeyValueStorage
 import de.jbamberger.fhg.repository.util.AppExecutors
+import de.jbamberger.fhg.repository.util.switchMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,8 +25,6 @@ import javax.inject.Singleton
 interface Repository {
     fun getVPlan(): LiveData<Resource<VPlan>>
 
-    fun getFeed(): LiveData<Resource<List<FeedItem>>>
-
     fun postsOfFeed(): Listing<FeedItem>
 }
 
@@ -36,7 +33,6 @@ internal class RepositoryImpl @Inject internal constructor(
         private val appExecutors: AppExecutors,
         private val api: FhgApi,
         private val endpoint: FhgEndpoint,
-        private val db: AppDatabase,
         private val kvStore: KeyValueStorage) : Repository {
 
     override fun getVPlan(): LiveData<Resource<VPlan>> {
@@ -72,37 +68,6 @@ internal class RepositoryImpl @Inject internal constructor(
         return NetworkBoundResource(appExecutors, provider).asLiveData()
     }
 
-    override fun getFeed(): LiveData<Resource<List<FeedItem>>> {
-        val provider = object : NetworkBoundResource.Provider<List<FeedItem>, List<FeedItem>> {
-            var feedFromNet: Boolean = true
-
-            override fun onFetchFailed() {
-                feedFromNet = true
-            }
-
-            override fun saveCallResult(item: List<FeedItem>) {
-                db.feedItemDao.insertAll(item)
-            }
-
-            override fun shouldFetch(data: List<FeedItem>?): Boolean {
-                val fetch = feedFromNet
-                feedFromNet = false
-                return fetch
-            }
-
-            override fun loadFromDb(): LiveData<List<FeedItem>> {
-                return db.feedItemDao.getAll()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<List<FeedItem>>> {
-                val m = MediatorLiveData<ApiResponse<List<FeedItem>>>()
-                m.addSource(api.getFeed(), m::setValue)
-                return m
-            }
-        }
-        return NetworkBoundResource(appExecutors, provider).asLiveData()
-    }
-
     override fun postsOfFeed() = postsOfFeed(10)
 
     @MainThread
@@ -117,13 +82,11 @@ internal class RepositoryImpl @Inject internal constructor(
                 .setFetchExecutor(appExecutors.networkIO())
                 .build()
 
-        val refreshState = Transformations.switchMap(sourceFactory.sourceLiveData) {
-            it.initialLoad
-        }
+        val refreshState = sourceFactory.sourceLiveData.switchMap { it.initialLoad }
 
         return Listing(
                 pagedList = pagedList,
-                networkState = Transformations.switchMap(sourceFactory.sourceLiveData) { it.networkState },
+                networkState = sourceFactory.sourceLiveData.switchMap { it.networkState },
                 retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
                 refresh = { sourceFactory.sourceLiveData.value?.invalidate() },
                 refreshState = refreshState
