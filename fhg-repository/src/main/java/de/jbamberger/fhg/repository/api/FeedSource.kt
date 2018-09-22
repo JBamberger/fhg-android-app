@@ -132,10 +132,8 @@ internal class FeedDataSourceFactory(
 }
 
 @Singleton
-internal class FeedDataRepository
-@Inject constructor(
-        private val api: FhgEndpoint,
-        executors: AppExecutors) {
+internal class FeedDataRepository @Inject constructor(
+        private val api: FhgEndpoint, executors: AppExecutors) {
 
     private val networkExecutor = executors.networkIO()
 

@@ -9,7 +9,6 @@ import de.jbamberger.fhg.repository.data.VPlanDay
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
-import timber.log.Timber
 import java.io.IOException
 import java.lang.reflect.Type
 
@@ -19,12 +18,10 @@ import java.lang.reflect.Type
  */
 
 internal class FhgTypeConverterFactory
-private constructor(private val moshi: Moshi) : Converter.Factory() {
+internal constructor(private val moshi: Moshi) : Converter.Factory() {
 
     override fun responseBodyConverter(type: Type, annotations: Array<Annotation>,
                                        retrofit: Retrofit): Converter<ResponseBody, *>? {
-        Timber.d("get converter for type: $type")
-
         return when (type) {
             VPLAN_TYPE -> VPlanConverter()
             FEED_TYPE -> FeedConverter(moshi)
@@ -52,21 +49,11 @@ private constructor(private val moshi: Moshi) : Converter.Factory() {
         private val adapter = moshi.adapter<List<FeedItem>>(FEED_TYPE)
 
         override fun convert(value: ResponseBody?): List<FeedItem> {
-            return if (value != null) {
-                adapter.fromJson(value.source()) ?: emptyList()
-            } else {
-                emptyList()
-            }
+            return value?.let { adapter.fromJson(it.source()) } ?: emptyList()
         }
 
         companion object {
             val FEED_TYPE: Type = Types.newParameterizedType(List::class.java, FeedItem::class.java)
-        }
-    }
-
-    companion object {
-        fun create(moshi: Moshi) : FhgTypeConverterFactory {
-            return FhgTypeConverterFactory(moshi)
         }
     }
 }

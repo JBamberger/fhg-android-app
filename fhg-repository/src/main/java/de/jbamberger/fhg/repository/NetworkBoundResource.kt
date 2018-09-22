@@ -10,15 +10,13 @@ import de.jbamberger.fhg.repository.util.AppExecutors
 /**
  * A generic class that can provide a resource backed by both a database and the network.
  *
- * @param <ResultType> type of data that is passed to the user
- * @param <RequestType> type that is returned from the network calls
+ * @param <Result> type of data that is passed to the user
+ * @param <Request> type that is returned from the network calls
  */
-class NetworkBoundResource<ResultType, RequestType>
-@MainThread
-internal constructor(private val appExecutors: AppExecutors,
-                     private val provider: Provider<ResultType, RequestType>) {
+internal class NetworkBoundResource<Result, Request> @MainThread internal constructor(
+        private val appExecutors: AppExecutors, private val provider: Provider<Result, Request>) {
 
-    private val result = MediatorLiveData<Resource<ResultType>>()
+    private val result = MediatorLiveData<Resource<Result>>()
 
     init {
         result.value = Resource.Loading(null)
@@ -28,21 +26,15 @@ internal constructor(private val appExecutors: AppExecutors,
             if (provider.shouldFetch(it)) {
                 fetchFromNetwork(dbSource)
             } else {
-                result.addSource(dbSource) {
-                    if (it == null) {
-                        result.value = Resource.Error("db returned null", it)
-                    } else {
-                        result.value = Resource.Success(it)
-                    }
-                }
+                result.addSource(dbSource, this::handleDbResult)
             }
         }
     }
 
-    private fun fetchFromNetwork(dbSource: LiveData<ResultType>) {
+    private fun fetchFromNetwork(dbSource: LiveData<Result>) {
         val apiResponse = provider.createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(dbSource) { result.setValue(Resource.Loading(it)) }
+        result.addSource(dbSource) { result.value = Resource.Loading(it) }
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
@@ -54,13 +46,7 @@ internal constructor(private val appExecutors: AppExecutors,
                         // we specially request a new live data,
                         // otherwise we will get immediately last cached value,
                         // which may not be updated with latest results received from network.
-                        result.addSource(provider.loadFromDb()) {
-                            if (it == null) {
-                                result.value = Resource.Error("db returned null", it)
-                            } else {
-                                result.value = Resource.Success(it)
-                            }
-                        }
+                        result.addSource(provider.loadFromDb(), this::handleDbResult)
                     }
                 }
             } else {
@@ -72,7 +58,14 @@ internal constructor(private val appExecutors: AppExecutors,
         }
     }
 
-    fun asLiveData(): LiveData<Resource<ResultType>> {
+    private fun handleDbResult(value: Result?) {
+        when (value) {
+            null -> result.value = Resource.Error("db returned null", value)
+            else -> result.value = Resource.Success(value)
+        }
+    }
+
+    internal fun asLiveData(): LiveData<Resource<Result>> {
         return result
     }
 

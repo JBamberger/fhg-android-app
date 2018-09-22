@@ -20,9 +20,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class Repository
-@Inject
-internal constructor(
+class Repository @Inject internal constructor(
         appExecutors: Lazy<AppExecutors>,
         api: Lazy<FhgApi>,
         db: Lazy<AppDatabase>,

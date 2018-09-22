@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import de.jbamberger.fhg.repository.BuildConfig
 import okhttp3.Cache
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -59,7 +58,7 @@ internal class NetModule {
     fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
-                .addConverterFactory(FhgTypeConverterFactory.create(moshi))
+                .addConverterFactory(FhgTypeConverterFactory(moshi))
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)
     }
@@ -67,7 +66,7 @@ internal class NetModule {
     @Provides
     @Singleton
     fun provideFhgEndpoint(retrofitBuilder: Retrofit.Builder): FhgEndpoint {
-        return retrofitBuilder.baseUrl(HttpUrl.parse(FhgEndpoint.BASE_URL)!!)
+        return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL)
                 .build()
                 .create(FhgEndpoint::class.java)
     }

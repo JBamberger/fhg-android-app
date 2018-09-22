@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository.data.dao
+package de.jbamberger.fhg.repository.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*

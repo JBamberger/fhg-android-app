@@ -21,7 +21,7 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 class RepoHelper internal constructor(internal val component: RepositoryComponent) {
-    fun provideFeedMediaLoaderFactory() : FeedMediaLoaderFactory {
+    fun provideFeedMediaLoaderFactory(): FeedMediaLoaderFactory {
         return component.provideFeedMediaLoaderFactory()
     }
 }
@@ -46,8 +46,7 @@ class RepoInitModule {
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @Singleton
-@Component(modules = [
-    RepositoryModule::class])
+@Component(modules = [RepositoryModule::class])
 internal interface RepositoryComponent {
 
     @Component.Builder
