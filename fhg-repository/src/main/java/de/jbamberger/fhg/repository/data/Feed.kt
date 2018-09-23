@@ -74,94 +74,31 @@ class FeedItem {
     }
 }
 
-@Entity(tableName = "feedMedia")
 @JsonClass(generateAdapter = true)
-class FeedMedia {
-
-    @PrimaryKey
-    @Json(name = "id")
-    var id: Int = 0
-
-    @Json(name = "date")
-    var date: String? = null
-
-    @Json(name = "media_type")
-    var mediaType: String? = null
-
-    @Json(name = "mime_type")
-    var mimeType: String? = null
-
-    @Json(name = "media_details")
-    @Embedded(prefix = "detail_")
-    var mediaDetails: MediaDetails? = null
-
-    @Json(name = "caption")
-    var caption: Caption? = null
-
-    @Json(name = "source_url")
-    var sourceUrl: String? = null
+class FeedMedia(
+        var id: Int,
+        var date: String,
+        var media_type: String,
+        var mime_type: String,
+        var media_details: MediaDetails,
+        var caption: Caption,
+        var source_url: String) {
 
     @JsonClass(generateAdapter = true)
-    class Caption {
-        @Json(name = "rendered")
-        var rendered: String? = null
-    }
+    data class Caption(val rendered: String)
 
     @JsonClass(generateAdapter = true)
-    class MediaDetails {
-        @Json(name = "width")
-        var width: Int? = null
+    data class MediaDetails(
+            val width: Int,
+            val height: Int,
+            val file: String,
+            val sizes: Map<String, ImageSize>)
 
-        @Json(name = "height")
-        var height: Int? = null
-
-        @Json(name = "file")
-        var file: String? = null
-
-        @Json(name = "sizes")
-        @Embedded(prefix = "sizes_")
-        var sizes: Sizes? = null
-
-        @JsonClass(generateAdapter = true)
-        class Sizes {
-            @Json(name = "thumbnail")
-            @Embedded
-            var thumbnail: Size? = null
-
-            @Json(name = "medium")
-            @Embedded
-            var medium: Size? = null
-
-            @Json(name = "medium_large")
-            @Embedded
-            var mediumLarge: Size? = null
-
-            @Json(name = "large")
-            @Embedded
-            var large: Size? = null
-
-            @Json(name = "full")
-            @Embedded
-            var full: Size? = null
-
-
-            @JsonClass(generateAdapter = true)
-            class Size {
-                @Json(name = "file")
-                var file: String? = null
-
-                @Json(name = "width")
-                var width: Int? = null
-
-                @Json(name = "height")
-                var height: Int? = null
-
-                @Json(name = "mime_type")
-                var mimeType: String? = null
-
-                @Json(name = "source_url")
-                var sourceUrl: String? = null
-            }
-        }
-    }
+    @JsonClass(generateAdapter = true)
+    data class ImageSize(
+            val file: String,
+            val width: Int,
+            val height: Int,
+            val mime_type: String,
+            val source_url: String)
 }

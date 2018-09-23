@@ -9,7 +9,7 @@ import com.squareup.moshi.Moshi
 import dagger.*
 import de.jbamberger.fhg.repository.api.*
 import de.jbamberger.fhg.repository.db.AppDatabase
-import de.jbamberger.fhg.repository.util.FeedMediaLoaderFactory
+import de.jbamberger.fhg.repository.util.FeedMediaLoader
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,7 +23,7 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 class RepoHelper internal constructor(internal val component: RepositoryComponent) {
-    fun provideFeedMediaLoaderFactory(): FeedMediaLoaderFactory {
+    fun provideFeedMediaLoaderFactory(): FeedMediaLoader.Factory {
         return component.provideFeedMediaLoaderFactory()
     }
 }
@@ -57,7 +57,7 @@ internal interface RepositoryComponent {
     }
 
     fun provideRepository(): Repository
-    fun provideFeedMediaLoaderFactory(): FeedMediaLoaderFactory
+    fun provideFeedMediaLoaderFactory(): FeedMediaLoader.Factory
 
 }
 
@@ -148,8 +148,7 @@ internal class RepoInstantiationModule {
 
     @Provides
     @Singleton
-    internal fun providesFeedMediaLoaderFactory(
-            api: FhgEndpoint, httpClient: OkHttpClient): FeedMediaLoaderFactory {
-        return FeedMediaLoaderFactory(api, httpClient)
+    internal fun providesFeedMediaLoaderFactory(): FeedMediaLoader.Factory {
+        return FeedMediaLoader.Factory()
     }
 }

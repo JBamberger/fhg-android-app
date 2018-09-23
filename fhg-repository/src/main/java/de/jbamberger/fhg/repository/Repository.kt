@@ -11,6 +11,7 @@ import de.jbamberger.fhg.repository.api.FeedDataSource
 import de.jbamberger.fhg.repository.api.FhgApi
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.db.KeyValueStorage
 import de.jbamberger.fhg.repository.util.AppExecutors
@@ -25,7 +26,7 @@ import javax.inject.Singleton
 interface Repository {
     fun getVPlan(): LiveData<Resource<VPlan>>
 
-    fun postsOfFeed(): Listing<FeedItem>
+    fun postsOfFeed(): Listing<Pair<FeedItem, FeedMedia?>>
 }
 
 @Singleton
@@ -71,7 +72,7 @@ internal class RepositoryImpl @Inject internal constructor(
     override fun postsOfFeed() = postsOfFeed(10)
 
     @MainThread
-    fun postsOfFeed(pageSize: Int): Listing<FeedItem> {
+    fun postsOfFeed(pageSize: Int): Listing<Pair<FeedItem, FeedMedia?>> {
         val sourceFactory = FeedDataSource.Factory(endpoint, appExecutors.networkIO())
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)

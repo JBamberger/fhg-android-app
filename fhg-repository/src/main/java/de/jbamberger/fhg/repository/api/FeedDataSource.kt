@@ -3,17 +3,16 @@ package de.jbamberger.fhg.repository.api
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.DataSource
 import android.arch.paging.ItemKeyedDataSource
+import android.support.annotation.WorkerThread
 import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import de.jbamberger.fhg.repository.data.FeedMedia
 import java.io.IOException
 import java.util.concurrent.Executor
 
 internal class FeedDataSource private constructor(
         private val api: FhgEndpoint,
-        private val retryExecutor: Executor) : ItemKeyedDataSource<String, FeedItem>() {
+        private val retryExecutor: Executor) : ItemKeyedDataSource<String, Pair<FeedItem, FeedMedia?>>() {
 
     private var retry: (() -> Any)? = null
 
@@ -32,7 +31,7 @@ internal class FeedDataSource private constructor(
     }
 
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<FeedItem>) {
+    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<Pair<FeedItem, FeedMedia?>>) {
         val request = api.getFeedPage(count = params.requestedLoadSize)
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
@@ -45,7 +44,7 @@ internal class FeedDataSource private constructor(
                 retry = null
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
-                callback.onResult(items)
+                callback.onResult(items.map(::resolveMedia))
             } else {
                 retry = { loadInitial(params, callback) }
                 val error = NetworkState.ERROR("error code: ${response.code()}")
@@ -60,44 +59,57 @@ internal class FeedDataSource private constructor(
         }
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<FeedItem>) {
+    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
         networkState.postValue(NetworkState.LOADING)
-        api.getFeedPage(before = params.key, count = params.requestedLoadSize).enqueue(
-                object : Callback<List<FeedItem>> {
-                    override fun onFailure(call: Call<List<FeedItem>>, t: Throwable) {
-                        retry = { loadAfter(params, callback) }
-                        networkState.postValue(NetworkState.ERROR(t.message ?: "unknown error"))
-                    }
+        val request = api.getFeedPage(before = params.key, count = params.requestedLoadSize)
 
-                    override fun onResponse(
-                            call: Call<List<FeedItem>>, response: Response<List<FeedItem>>) {
-                        if (response.isSuccessful) {
-                            val items = response.body() ?: emptyList()
-                            retry = null
-                            callback.onResult(items)
-                            networkState.postValue(NetworkState.LOADED)
-                        } else {
-                            retry = { loadAfter(params, callback) }
-                            networkState.postValue(NetworkState.ERROR("error code: ${response.code()}"))
-                        }
-                    }
-                }
-        )
+        try {
+            val response = request.execute()
+            if (response.isSuccessful) {
+                val items = response.body() ?: emptyList()
+                retry = null
+                callback.onResult(items.map(::resolveMedia))
+                networkState.postValue(NetworkState.LOADED)
+            } else {
+                retry = { loadAfter(params, callback) }
+                networkState.postValue(NetworkState.ERROR("error code: ${response.code()}"))
+            }
+        } catch (e: IOException) {
+            retry = { loadAfter(params, callback) }
+            networkState.postValue(NetworkState.ERROR(e.message ?: "unknown error"))
+        }
     }
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<FeedItem>) {
+    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
         // ignore
     }
 
-    override fun getKey(item: FeedItem): String = item.date!! //FIXME
+    override fun getKey(pair: Pair<FeedItem, FeedMedia?>): String = pair.first.date!! //FIXME
+
+    @WorkerThread
+    private fun resolveMedia(item: FeedItem): Pair<FeedItem, FeedMedia?> {
+        val mediaId = item.featuredMedia
+        if (mediaId != null && mediaId > 0) {
+            try {
+                val response = api.getFeedMedia(mediaId).execute()
+                if (response.isSuccessful) {
+                    return Pair(item, response.body())
+                }
+            } catch (e: IOException) {
+            }
+            return Pair(item, null)
+        } else {
+            return Pair(item, null)
+        }
+    }
 
     internal class Factory(
             private val api: FhgEndpoint,
-            private val retryExecutor: Executor) : DataSource.Factory<String, FeedItem>() {
+            private val retryExecutor: Executor) : DataSource.Factory<String, Pair<FeedItem, FeedMedia?>>() {
 
         val sourceLiveData = MutableLiveData<FeedDataSource>()
 
-        override fun create(): DataSource<String, FeedItem> {
+        override fun create(): DataSource<String, Pair<FeedItem, FeedMedia?>> {
             val source = FeedDataSource(api, retryExecutor)
             sourceLiveData.postValue(source)
             return source

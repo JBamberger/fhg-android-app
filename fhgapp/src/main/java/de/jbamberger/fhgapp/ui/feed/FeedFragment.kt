@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedListAdapter
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
@@ -17,7 +19,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.util.FeedMediaRequest
+import de.jbamberger.fhg.repository.data.FeedMedia
+import de.jbamberger.fhg.repository.util.formatAsAspectRatio
+import de.jbamberger.fhg.repository.util.getSaveImgSize
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
@@ -83,7 +87,7 @@ class FeedFragment : Fragment(), Injectable {
     internal constructor(
             private val glide: GlideRequests,
             private val retryCallback: () -> Unit)
-        : PagedListAdapter<FeedItem, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+        : PagedListAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
         private var networkState: NetworkState? = null
 
@@ -133,53 +137,62 @@ class FeedFragment : Fragment(), Injectable {
         }
 
         companion object {
-            val POST_COMPARATOR = object : DiffUtil.ItemCallback<FeedItem>() {
-                override fun areItemsTheSame(oldItem: FeedItem?, newItem: FeedItem?) =
-                        oldItem?.id == newItem?.id
+            val POST_COMPARATOR = object : DiffUtil.ItemCallback<Pair<FeedItem, FeedMedia?>>() {
+                override fun areItemsTheSame(
+                        oldItem: Pair<FeedItem, FeedMedia?>?, newItem: Pair<FeedItem, FeedMedia?>?
+                ) = oldItem?.first?.id == newItem?.first?.id
 
-                override fun areContentsTheSame(oldItem: FeedItem?, newItem: FeedItem?) = oldItem == newItem
+                override fun areContentsTheSame(
+                        oldItem: Pair<FeedItem, FeedMedia?>?, newItem: Pair<FeedItem, FeedMedia?>?
+                ) = oldItem == newItem
             }
         }
 
         private class FeedItemHolder(
-                private val glide: GlideRequests,
-                view: View) : RecyclerView.ViewHolder(view) {
+                private val glide: GlideRequests, view: View) : RecyclerView.ViewHolder(view) {
+            private val layout = view.findViewById<ConstraintLayout>(R.id.feed_item_content)
             private val title = view.findViewById<TextView>(R.id.title)
             private val content = view.findViewById<TextView>(R.id.content)
             private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
 
             private val textLoading = view.context.getString(R.string.feed_status_loading)
 
-            private var post: FeedItem? = null
+            private var post: Pair<FeedItem, FeedMedia?>? = null
 
             init {
                 view.setOnClickListener {
-                    post?.link?.let {
+                    post?.first?.link?.let {
                         Utils.openUrl(view.context, it)
                     }
 
                 }
             }
 
-            fun bind(post: FeedItem?) {
+            fun bind(post: Pair<FeedItem, FeedMedia?>?) {
                 this.post = post
-                BindingUtils.bindHtml(title, post?.title?.rendered ?: textLoading)
-                BindingUtils.bindHtml(content, post?.excerpt?.rendered ?: textLoading)
+                BindingUtils.bindHtml(title, post?.first?.title?.rendered ?: textLoading)
+                BindingUtils.bindHtml(content, post?.first?.excerpt?.rendered ?: textLoading)
 
-                val media = post?.featuredMedia
-                if (media != null && media > 0) {
+                val media = post?.second
+                val size = media?.getSaveImgSize()
+                if (size != null) {
                     featuredMedia.visibility = View.VISIBLE
+                    val set = ConstraintSet()
+                    set.clone(layout)
+                    set.setDimensionRatio(R.id.featured_media, size.formatAsAspectRatio())
+                    set.applyTo(layout)
 
-                    glide.load(FeedMediaRequest(media))
+                    glide.load(media)
                             .centerInside()
                             .placeholder(R.drawable.ic_image_black_24dp)
                             .error(R.drawable.ic_broken_image_black_24dp)
                             .fallback(R.drawable.ic_broken_image_black_24dp)
                             .into(featuredMedia)
-                } else {
-                    featuredMedia.visibility = View.GONE
-                    glide.clear(featuredMedia)
+                    return
                 }
+                featuredMedia.visibility = View.GONE
+                glide.clear(featuredMedia)
+
             }
 
             companion object {
@@ -197,9 +210,7 @@ class FeedFragment : Fragment(), Injectable {
             private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
 
             init {
-                retry.setOnClickListener {
-                    retryCallback()
-                }
+                retry.setOnClickListener { retryCallback() }
             }
 
             fun bind(networkState: NetworkState?) {
