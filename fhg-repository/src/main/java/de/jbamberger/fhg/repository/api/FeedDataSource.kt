@@ -42,9 +42,9 @@ internal class FeedDataSource private constructor(
             if (response.isSuccessful) {
                 val items = response.body() ?: emptyList()
                 retry = null
+                callback.onResult(items.map(::resolveMedia))
                 networkState.postValue(NetworkState.LOADED)
                 initialLoad.postValue(NetworkState.LOADED)
-                callback.onResult(items.map(::resolveMedia))
             } else {
                 retry = { loadInitial(params, callback) }
                 val error = NetworkState.ERROR("error code: ${response.code()}")
