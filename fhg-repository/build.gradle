@@ -45,9 +45,7 @@ dependencies {
     implementation lib_kotlin_std_lib
 
     implementation lib_support_annotations
-
     implementation lib_jsoup
-
     implementation lib_timber
 
     implementation lib_okhttp
@@ -92,8 +90,4 @@ dependencies {
     androidTestImplementation lib_support_test_runner
     androidTestImplementation lib_support_test_rules
     androidTestImplementation lib_espresso_core
-//            {
-//        exclude group: 'com.android.support', module: 'support-annotations'
-//        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-//    }
 }

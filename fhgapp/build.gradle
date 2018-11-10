@@ -81,8 +81,6 @@ dependencies {
 
     implementation lib_kotlin_std_lib
 
-    //kapt apt_databinding_compiler
-
     implementation lib_support_annotations
     implementation lib_support_compat
     implementation lib_support_fragment
@@ -95,9 +93,7 @@ dependencies {
     implementation lib_support_recyclerview
 
     implementation play_oss_licenses
-
     kapt apt_glide
-
     implementation lib_timber
 
     implementation lib_lifecycle_runtime
@@ -124,8 +120,4 @@ dependencies {
     androidTestImplementation lib_support_test_runner
     androidTestImplementation lib_support_test_rules
     androidTestImplementation lib_espresso_core
-//            {
-//        exclude group: 'com.android.support', module: 'support-annotations'
-//        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-//    }
 }
