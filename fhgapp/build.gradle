@@ -85,14 +85,11 @@ dependencies {
 
     implementation lib_support_annotations
     implementation lib_support_compat
-    implementation lib_support_core_utils
-    implementation lib_support_core_ui
     implementation lib_support_fragment
     implementation lib_support_appcompat_v7
     implementation lib_support_design
     implementation lib_support_cardview_v7
     implementation lib_support_preference_v7
-    implementation lib_support_preference_v14
     implementation lib_support_vector_drawable
     implementation lib_support_constraint_layout
     implementation lib_support_recyclerview
