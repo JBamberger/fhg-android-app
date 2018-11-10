@@ -39,7 +39,7 @@ object Utils {
 
     fun openUrl(context: Context, url: String) {
         var uri = Uri.parse(url)
-        if (uri.scheme.isBlank()) {
+        if (uri.scheme?.isBlank() == true) {
             uri = Uri.parse("http://$url")
         }
         val intent = Intent(Intent.ACTION_VIEW, uri)

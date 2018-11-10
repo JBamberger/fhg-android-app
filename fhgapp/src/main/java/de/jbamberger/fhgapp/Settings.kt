@@ -19,12 +19,13 @@ constructor(private val app: Application, private val prefs: SharedPreferences) 
                 .putBoolean(app.getString(R.string.settings_grade_show_all_key), value)
                 .apply()
     var vPlanGrades: Set<String>
-        get() = prefs.getStringSet(app.getString(R.string.settings_grade_key), Collections.emptySet())
+        get() = prefs.getStringSet(app.getString(R.string.settings_grade_key),
+                Collections.emptySet())!! // should be safe due to default value
         set(value) = prefs.edit()
                 .putStringSet(app.getString(R.string.settings_grade_key), value)
                 .apply()
     var vPlanCourses: Set<String>
-        get() = prefs.getString(app.getString(R.string.settings_course_key), "")
+        get() = prefs.getString(app.getString(R.string.settings_course_key), "")!! // should be safe due to default val
                 .split(",")
                 .map { it.trim() }
                 .filter { !it.isBlank() }

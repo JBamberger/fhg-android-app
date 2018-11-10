@@ -1,13 +1,6 @@
 package de.jbamberger.fhgapp.ui.feed
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.paging.PagedListAdapter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +8,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import de.jbamberger.fhg.repository.api.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.util.FeedMediaRequest
@@ -135,7 +135,7 @@ class FeedFragment : Fragment(), Injectable {
         companion object {
             val POST_COMPARATOR = object : DiffUtil.ItemCallback<FeedItem>() {
                 override fun areItemsTheSame(oldItem: FeedItem, newItem: FeedItem) =
-                        oldItem?.id == newItem?.id
+                        oldItem.id == newItem.id
 
                 override fun areContentsTheSame(oldItem: FeedItem, newItem: FeedItem) = oldItem == newItem
             }
