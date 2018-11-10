@@ -11,8 +11,7 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion build_tools_version
+    compileSdkVersion 28
 
     dataBinding.enabled true
 
@@ -20,7 +19,7 @@ android {
         // legacy name. Replace with de.jbamberger.fhgapp to match package
         applicationId "xyz.jbapps.vplan"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 24
         versionName '3.1.1'
         vectorDrawables.useSupportLibrary = true
@@ -82,7 +81,7 @@ dependencies {
 
     implementation lib_kotlin_std_lib
 
-    kapt apt_databinding_compiler
+    //kapt apt_databinding_compiler
 
     implementation lib_support_annotations
     implementation lib_support_compat
