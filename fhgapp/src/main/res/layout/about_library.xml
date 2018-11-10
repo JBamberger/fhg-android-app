@@ -14,7 +14,7 @@
             type="de.jbamberger.fhgapp.ui.about.AboutActivity.Library" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/about_card_margin"
@@ -23,7 +23,7 @@
         app:elevation="@dimen/about_card_elevation"
         app:onClickListener="@{() -> listener.libraryClicked(obj.url)}">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -51,7 +51,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="@sample/sample.json/library/content" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

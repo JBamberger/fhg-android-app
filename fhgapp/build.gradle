@@ -24,7 +24,7 @@ android {
         versionName '3.1.1'
         vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         testOptions {
             unitTests {
@@ -89,7 +89,6 @@ dependencies {
     implementation lib_support_core_ui
     implementation lib_support_fragment
     implementation lib_support_appcompat_v7
-    implementation lib_support_appcompat_v7
     implementation lib_support_design
     implementation lib_support_cardview_v7
     implementation lib_support_preference_v7
@@ -108,6 +107,7 @@ dependencies {
     implementation lib_lifecycle_extensions
     kapt apt_lifecycle
 
+    implementation lib_jsr250
     implementation lib_dagger
     implementation lib_dagger_android
     implementation lib_dagger_android_support
@@ -126,8 +126,9 @@ dependencies {
     androidTestImplementation lib_jsr305
     androidTestImplementation lib_support_test_runner
     androidTestImplementation lib_support_test_rules
-    androidTestImplementation(lib_espresso_core) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    }
+    androidTestImplementation lib_espresso_core
+//            {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+//    }
 }

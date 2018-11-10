@@ -1,13 +1,13 @@
 package de.jbamberger.fhg.repository.api
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations.switchMap
-import android.arch.paging.DataSource
-import android.arch.paging.ItemKeyedDataSource
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
-import android.support.annotation.MainThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations.switchMap
+import androidx.paging.DataSource
+import androidx.paging.ItemKeyedDataSource
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import androidx.annotation.MainThread
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.util.AppExecutors
 import retrofit2.Call

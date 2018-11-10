@@ -1,9 +1,9 @@
 package de.jbamberger.fhgapp.ui.feed
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations.map
-import android.arch.lifecycle.Transformations.switchMap
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations.map
+import androidx.lifecycle.Transformations.switchMap
+import androidx.lifecycle.ViewModel
 import de.jbamberger.fhg.repository.Repository
 import javax.inject.Inject
 

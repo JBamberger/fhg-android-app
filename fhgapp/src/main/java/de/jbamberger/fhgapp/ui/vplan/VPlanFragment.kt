@@ -1,19 +1,19 @@
 package de.jbamberger.fhgapp.ui.vplan
 
-import android.arch.lifecycle.Observer
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
-import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.Settings
@@ -36,7 +36,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
     private lateinit var binding: RefreshableListFragmentBinding
     private var parent: MainActivity? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         if (activity is MainActivity) {
             parent = activity as MainActivity;
         } else {

@@ -7,7 +7,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.preference.*
-import android.support.v4.app.NavUtils
+import androidx.core.app.NavUtils
 import android.view.MenuItem
 import de.jbamberger.fhgapp.R
 

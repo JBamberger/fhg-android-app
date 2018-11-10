@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -123,6 +123,6 @@
                 app:onClickListener="@{listener::onClick}"
                 app:topVector="@{R.drawable.ic_contact_map_accent_24dp}"
                 tools:drawableTop="@drawable/ic_contact_map_accent_24dp" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

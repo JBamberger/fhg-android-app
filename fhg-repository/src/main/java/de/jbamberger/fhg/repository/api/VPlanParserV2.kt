@@ -1,6 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow

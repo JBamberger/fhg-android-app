@@ -1,7 +1,7 @@
 package de.jbamberger.fhg.repository.api
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlan
 import java.util.concurrent.atomic.AtomicBoolean

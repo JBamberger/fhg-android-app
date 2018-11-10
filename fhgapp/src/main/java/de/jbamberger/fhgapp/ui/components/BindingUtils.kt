@@ -1,11 +1,11 @@
 package de.jbamberger.fhgapp.ui.components
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import android.text.Html
 import android.view.View
 import android.widget.TextView

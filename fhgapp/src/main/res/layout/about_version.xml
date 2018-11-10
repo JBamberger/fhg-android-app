@@ -8,14 +8,14 @@
         <import type="de.jbamberger.fhgapp.BuildConfig" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/about_card_margin"
         app:cardCornerRadius="@dimen/about_corner_radius"
         app:elevation="@dimen/about_card_elevation">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="Application id: de.jbamberger.fhgapp\nBuild type: DEBUG\nVersion: 3.0.0-alpha1 (42)" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

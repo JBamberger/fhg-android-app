@@ -1,6 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import de.jbamberger.fhg.repository.data.EventCalendar
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia

@@ -10,7 +10,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 28
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -72,8 +72,10 @@ dependencies {
     kapt apt_room
 
     api lib_paging_runtime
-    implementation lib_support_recyclerview // overwrite the version from the paging library
+    implementation lib_support_recyclerview
+    // overwrite the version from the paging library
 
+    implementation lib_jsr250
     implementation lib_dagger
     kapt apt_dagger
 
@@ -89,8 +91,9 @@ dependencies {
     androidTestImplementation lib_jsr305
     androidTestImplementation lib_support_test_runner
     androidTestImplementation lib_support_test_rules
-    androidTestImplementation (lib_espresso_core) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    }
+    androidTestImplementation lib_espresso_core
+//            {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//        exclude group: 'com.google.code.findbugs', module: 'jsr305'
+//    }
 }
