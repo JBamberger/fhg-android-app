@@ -48,18 +48,22 @@ ext {
     lib_support_constraint_layout = 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     lib_support_recyclerview =      'androidx.recyclerview:recyclerview:1.0.0'
 
-    lib_lifecycle_runtime =         'androidx.lifecycle:lifecycle-runtime:2.0.0'
-    lib_lifecycle_extensions =      'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    apt_lifecycle =                 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    def androidx_lifecycle_version = "2.0.0"
+    lib_lifecycle_runtime =         "androidx.lifecycle:lifecycle-runtime:$androidx_lifecycle_version"
+    lib_lifecycle_extensions =      "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version"
+    apt_lifecycle =                 "androidx.lifecycle:lifecycle-compiler:$androidx_lifecycle_version"
+    lib_lifecycle_java8 =           "androidx.lifecycle:lifecycle-common-java8:$androidx_lifecycle_version"
+    lib_arch_testing =              "androidx.arch.core:core-testing:$androidx_lifecycle_version"
 
-    lib_room =                      'androidx.room:room-runtime:2.1.0-alpha02'
-    apt_room =                      'androidx.room:room-compiler:2.1.0-alpha02'
-    lib_room_testing =              'androidx.room:room-testing:2.1.0-alpha02'
+    def androidx_room_version = '2.1.0-alpha02'
+    lib_room =                      "androidx.room:room-runtime:$androidx_room_version"
+    apt_room =                      "androidx.room:room-compiler:$androidx_room_version"
+    lib_room_testing =              "androidx.room:room-testing:$androidx_room_version"
 
-    lib_paging_runtime =            'androidx.paging:paging-runtime:2.1.0-beta01'
-    lib_paging_testing =            'androidx.paging:paging-common:2.1.0-beta01'
+    def androidx_paging_version = '2.1.0-beta01'
+    lib_paging_runtime =            "androidx.paging:paging-runtime:$androidx_paging_version"
+    lib_paging_testing =            "androidx.paging:paging-common:$androidx_paging_version"
 
-    lib_arch_testing =              'androidx.arch.core:core-testing:2.0.0'
 
     lib_support_test_runner =       'androidx.test:runner:1.1.0'
     lib_support_test_rules =        'androidx.test:rules:1.1.0'
@@ -72,16 +76,16 @@ ext {
     lib_timber = "com.jakewharton.timber:timber:4.7.1"
     lib_joda_time = "joda-time:joda-time:2.10"
 
-    okhttp_version = "3.11.0"
+    def okhttp_version = "3.11.0"
     lib_okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
     lib_okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
-    moshi_version = "1.6.0"
+    def moshi_version = "1.6.0"
     lib_moshi = "com.squareup.moshi:moshi:$moshi_version"
     lib_moshi_kotlin = "com.squareup.moshi:moshi-kotlin:$moshi_version"
     apt_moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    retrofit_version = "2.4.0"
+    def retrofit_version = "2.4.0"
     lib_retrofit =                      "com.squareup.retrofit2:retrofit:$retrofit_version"
     lib_retrofit_converters =           "com.squareup.retrofit2:retrofit-converters:$retrofit_version"
     lib_retrofit_converter_scalars =    "com.squareup.retrofit2:converter-scalars:$retrofit_version"
@@ -89,11 +93,11 @@ ext {
     lib_retrofit_converter_jaxb =       "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
     lib_retrofit_converter_simplexml =  "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
 
-    glide_version = "4.8.0"
+    def glide_version = "4.8.0"
     lib_glide = "com.github.bumptech.glide:glide:$glide_version"
     apt_glide = "com.github.bumptech.glide:compiler:$glide_version"
 
-    dagger_version = "2.19"
+    def dagger_version = "2.19"
     lib_dagger =                    "com.google.dagger:dagger:$dagger_version"
     apt_dagger =                    "com.google.dagger:dagger-compiler:$dagger_version"
     lib_dagger_android =            "com.google.dagger:dagger-android:$dagger_version"

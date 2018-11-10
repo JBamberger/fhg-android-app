@@ -102,7 +102,7 @@ dependencies {
 
     implementation lib_lifecycle_runtime
     implementation lib_lifecycle_extensions
-    kapt apt_lifecycle
+    implementation lib_lifecycle_java8
 
     implementation lib_jsr250
     implementation lib_dagger
