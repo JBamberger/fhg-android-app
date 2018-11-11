@@ -159,7 +159,7 @@ class FeedMediaDataFetcher internal constructor(
                 }
                 else -> compareValues(abs(asp1 - aspectRatio), abs(asp2 - aspectRatio))
             }
-        });
+        })
         val chosenUrl = chosenSize?.sourceUrl
         if (chosenUrl == null) {
             val sourceUrl = media.sourceUrl ?: return null

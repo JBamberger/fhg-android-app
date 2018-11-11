@@ -19,9 +19,9 @@ import org.robolectric.shadows.ShadowPackageManager
 @RunWith(RobolectricTestRunner::class)
 class AboutActivityTest {
 
-    lateinit var context: Context
-    lateinit var controller: ActivityController<AboutActivity>
-    lateinit var shadowPackageManager: ShadowPackageManager
+    private lateinit var context: Context
+    private lateinit var controller: ActivityController<AboutActivity>
+    private lateinit var shadowPackageManager: ShadowPackageManager
 
     @Before
     fun setUp() {
@@ -49,7 +49,7 @@ class AboutActivityTest {
         controller
                 .pause()
                 .stop()
-                .destroy();
+                .destroy()
     }
 
 }

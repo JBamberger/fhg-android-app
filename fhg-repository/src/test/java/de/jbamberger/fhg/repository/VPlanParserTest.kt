@@ -51,9 +51,8 @@ class VPlanParserTest {
         }
 
         private fun load(name: String): ByteArray {
-            val inStream = VPlanParserTest::class.java.classLoader
-                    .getResourceAsStream(name)
-            return inStream.readBytes(2048)
+            val inStream = VPlanParserTest::class.java.classLoader!!.getResourceAsStream(name)
+            return inStream.readBytes()
         }
 
         private fun loadAsString(name: String) = String(load(name), DEFAULT_CHARSET)

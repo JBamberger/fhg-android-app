@@ -4,7 +4,7 @@ package de.jbamberger.fhgapp.ui.components
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 class DataBindingAdapter
-constructor(private val items: MutableList<Item> = ArrayList<Item>()) : DataBindingBaseAdapter() {
+constructor(private val items: MutableList<Item> = ArrayList()) : DataBindingBaseAdapter() {
 
     fun replaceAll(items: List<Item>) {
         this.items.clear()

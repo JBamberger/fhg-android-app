@@ -39,7 +39,7 @@ private constructor(private val moshi: Moshi) : Converter.Factory() {
                 return VPlanParserV2.parseVPlanDay(body)
             } catch (e: Exception) {
                 e.printStackTrace()
-                throw e;
+                throw e
             }
         }
 

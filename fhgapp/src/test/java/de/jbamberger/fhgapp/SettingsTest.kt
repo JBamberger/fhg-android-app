@@ -2,7 +2,6 @@ package de.jbamberger.fhgapp
 
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -17,9 +16,9 @@ import org.robolectric.RuntimeEnvironment.application
 @RunWith(RobolectricTestRunner::class)
 class SettingsTest {
 
-    val ALL : String = application.getString(R.string.settings_grade_show_all_key)
-    val GRADES : String = application.getString(R.string.settings_grade_key)
-    val COURSES : String = application.getString(R.string.settings_course_key)
+    private val ALL : String = application.getString(R.string.settings_grade_show_all_key)
+    private val GRADES : String = application.getString(R.string.settings_grade_key)
+    private val COURSES : String = application.getString(R.string.settings_course_key)
 
     lateinit var settings: Settings
     lateinit var prefs: SharedPreferences
@@ -32,52 +31,52 @@ class SettingsTest {
 
     @Test
     fun showAll_notSet() {
-        assertThat(settings.vPlanShowAll, `is`(equalTo(true)))
+        assertThat(settings.vPlanShowAll, equalTo(true))
     }
 
     @Test
     fun showAll_Set() {
 
         settings.vPlanShowAll = false
-        assertThat(settings.vPlanShowAll, `is`(equalTo(false)))
-        assertThat(prefs.getBoolean(ALL, true), `is`(equalTo(false)))
+        assertThat(settings.vPlanShowAll, equalTo(false))
+        assertThat(prefs.getBoolean(ALL, true), equalTo(false))
 
         settings.vPlanShowAll = true
-        assertThat(settings.vPlanShowAll, `is`(equalTo(true)))
-        assertThat(prefs.getBoolean(ALL, false), `is`(equalTo(true)))
+        assertThat(settings.vPlanShowAll, equalTo(true))
+        assertThat(prefs.getBoolean(ALL, false), equalTo(true))
     }
 
     @Test
     fun testVPlanGrades_notSet() {
-        assertThat(settings.vPlanGrades, `is`(equalTo(emptySet())))
+        assertThat(settings.vPlanGrades, equalTo(emptySet()))
     }
 
     @Test
     fun testVPlanGrades_Set() {
 
         settings.vPlanGrades = emptySet()
-        assertThat(settings.vPlanGrades, `is`(equalTo(emptySet())))
-        assertThat(prefs.getStringSet(GRADES, null), `is`(equalTo(emptySet())))
+        assertThat(settings.vPlanGrades, equalTo(emptySet()))
+        assertThat(prefs.getStringSet(GRADES, null), equalTo(emptySet()))
 
         settings.vPlanGrades = setOf("Hello", "World")
-        assertThat(settings.vPlanGrades, `is`(equalTo(setOf("Hello", "World"))))
-        assertThat(prefs.getStringSet(GRADES, null), `is`(equalTo(setOf("Hello", "World"))))
+        assertThat(settings.vPlanGrades, equalTo(setOf("Hello", "World")))
+        assertThat(prefs.getStringSet(GRADES, null), equalTo(setOf("Hello", "World")))
     }
 
     @Test
     fun testVPlanCourses_notSet() {
-        assertThat(settings.vPlanCourses, `is`(equalTo(emptySet())))
+        assertThat(settings.vPlanCourses, equalTo(emptySet()))
     }
 
     @Test
     fun testVPlanCourses_Set() {
 
         settings.vPlanCourses = emptySet()
-        assertThat(settings.vPlanCourses, `is`(equalTo(emptySet())))
-        assertThat(prefs.getString(COURSES, null), `is`(equalTo("")))
+        assertThat(settings.vPlanCourses, equalTo(emptySet()))
+        assertThat(prefs.getString(COURSES, null), equalTo(""))
 
         settings.vPlanCourses = setOf("Hello", "World")
-        assertThat(settings.vPlanCourses, `is`(equalTo(setOf("Hello", "World"))))
-        assertThat(prefs.getString(COURSES, null), `is`(equalTo("Hello,World")))
+        assertThat(settings.vPlanCourses, equalTo(setOf("Hello", "World")))
+        assertThat(prefs.getString(COURSES, null), equalTo("Hello,World"))
     }
 }

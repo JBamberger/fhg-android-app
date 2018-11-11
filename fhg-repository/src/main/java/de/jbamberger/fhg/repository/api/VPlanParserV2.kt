@@ -49,9 +49,7 @@ internal object VPlanParserV2 {
 
     @VisibleForTesting
     internal fun readWithEncoding(data: ByteArray, type: MediaType?): String {
-        type?.charset().let {
-            if (it != null) return String(data, it)
-        }
+        type?.charset()?.let { return String(data, it) }
 
         val dataDefaultEncoded = String(data)
         val matcher = Pattern
@@ -69,8 +67,7 @@ internal object VPlanParserV2 {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readLastUpdated(html: String): String {
-        val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)")
-                .matcher(html)
+        val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)").matcher(html)
 
         if (matcher.find()) {
             return matcher.group(1)
@@ -92,14 +89,17 @@ internal object VPlanParserV2 {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readMotdTable(doc: Document): String {
+        fun toTrimmedLines(elem: Element): String {
+            return elem.html().split("<br>")
+                    .joinToString(separator = "<br>", transform = String::trim)
+        }
+
         return doc.getElementsByClass("info")
                 .select("tr")
                 .map { it.select("td") }
                 .filter { it.isNotEmpty() }
                 .joinToString("<br>") {
-                    val content = it.joinToString(" | ") {
-                        it.html().split("<br>").joinToString("<br>") { it.trim() }
-                    }
+                    val content = it.joinToString(separator = " | ", transform = ::toTrimmedLines)
                     if (it.first().text().toLowerCase().contains("unterrichtsfrei")) {
                         "<font color=#FF5252>$content</font>"
                     } else {

@@ -1,14 +1,14 @@
 package de.jbamberger.fhgapp.ui.components
 
-import androidx.databinding.BindingAdapter
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
-import androidx.appcompat.content.res.AppCompatResources
 import android.text.Html
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.databinding.BindingAdapter
 import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 
@@ -21,10 +21,10 @@ object BindingUtils {
     @BindingAdapter("html")
     fun bindHtml(view: TextView, html: String) {
         view.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
         } else {
             @Suppress("DEPRECATION")
-            Html.fromHtml(html);
+            Html.fromHtml(html)
         }
     }
 

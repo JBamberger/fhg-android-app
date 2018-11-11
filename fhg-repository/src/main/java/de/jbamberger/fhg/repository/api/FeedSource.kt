@@ -1,5 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.switchMap
@@ -7,7 +8,6 @@ import androidx.paging.DataSource
 import androidx.paging.ItemKeyedDataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import androidx.annotation.MainThread
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.util.AppExecutors
 import retrofit2.Call
@@ -63,9 +63,6 @@ internal class KeyedFeedDataSource(
 
             if (response.isSuccessful) {
                 val items = response.body() ?: emptyList()
-                items.forEach {
-
-                }
 
                 retry = null
                 networkState.postValue(NetworkState.LOADED)

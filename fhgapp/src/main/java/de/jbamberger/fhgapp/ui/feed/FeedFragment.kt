@@ -154,10 +154,7 @@ class FeedFragment : Fragment(), Injectable {
 
             init {
                 view.setOnClickListener {
-                    post?.link?.let {
-                        Utils.openUrl(view.context, it)
-                    }
-
+                    post?.link?.let { link -> Utils.openUrl(view.context, link) }
                 }
             }
 

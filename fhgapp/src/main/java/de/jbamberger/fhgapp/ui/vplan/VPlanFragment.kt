@@ -37,10 +37,9 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
     private var parent: MainActivity? = null
 
     override fun onAttach(context: Context) {
-        if (activity is MainActivity) {
-            parent = activity as MainActivity;
-        } else {
-            throw IllegalStateException("Parent must be MainActivity.")
+        parent = when (activity) {
+            is MainActivity -> activity as MainActivity
+            else -> throw IllegalStateException("Parent must be MainActivity.")
         }
         super.onAttach(context)
     }
@@ -97,11 +96,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         return if (settings.showAll || settings.grades.isEmpty()) {
             getString(R.string.vplan_subtitle_all)
         } else {
-            if (settings.grades.size > 3) {
-                getString(R.string.vplan_subtitle_grades, settings.grades.take(3).joinToString(", "))
-            } else {
-                getString(R.string.vplan_subtitle_few_grades, settings.grades.take(3).joinToString(", "))
-            }
+            getString(R.string.vplan_subtitle_grades,
+                    settings.grades.joinToString(separator = ", ", limit = 3))
         }
     }
 
@@ -112,10 +108,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
         fun setData(showWarning: Boolean, vPlan: VPlan?) {
             this.showWarning = showWarning
-            indexedPlan = when {
-                vPlan != null -> IndexedVPlan(vPlan)
-                else -> null
-            }
+            indexedPlan = vPlan?.let { IndexedVPlan(it) }
 
             notifyDataSetChanged()
         }
@@ -129,11 +122,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                     else -> throw ArrayIndexOutOfBoundsException()
                 }
             } else {
-                if (p != null) {
-                    p[position]
-                } else {
-                    throw ArrayIndexOutOfBoundsException()
-                }
+                p?.get(position) ?: throw ArrayIndexOutOfBoundsException()
             }
         }
 
@@ -144,19 +133,13 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         override fun getLayoutIdForPosition(position: Int): Int {
             val p = indexedPlan
             return if (showWarning) {
-                if (position == 0) {
-                    return R.layout.list_flat_error
-                } else if (p != null) {
-                    p.getLayout(position - 1)
-                } else {
-                    throw ArrayIndexOutOfBoundsException()
+                when {
+                    position == 0 -> return R.layout.list_flat_error
+                    p != null -> p.getLayout(position - 1)
+                    else -> throw ArrayIndexOutOfBoundsException()
                 }
             } else {
-                if (p != null) {
-                    p.getLayout(position)
-                } else {
-                    throw ArrayIndexOutOfBoundsException()
-                }
+                p?.getLayout(position) ?: throw ArrayIndexOutOfBoundsException()
             }
         }
 
@@ -192,15 +175,14 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                 header2 = day2.header
             }
 
-
             operator fun get(position: Int): Any? {
-                if (position < 0 || position >= size) throw ArrayIndexOutOfBoundsException()
+                if (position !in 0 until size) throw ArrayIndexOutOfBoundsException()
 
                 return when (position) {
                     0 -> header1
-                    in 1..(bound1 - 1) -> rows1[position - 1]
+                    in 1 until bound1 -> rows1[position - 1]
                     bound1 -> header2
-                    in (bound1 + 1)..(bound2 - 1) -> rows2[position - bound1 - 1]
+                    in (bound1 + 1) until bound2 -> rows2[position - bound1 - 1]
                     bound2 -> null // footer
                     else -> throw ArrayIndexOutOfBoundsException()
                 }
@@ -209,7 +191,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
             fun getLayout(position: Int): Int {
                 return when (position) {
                     0, bound1 -> R.layout.vplan_header
-                    in 1..(bound1 - 1), in (bound1 + 1)..(bound2 - 1) -> R.layout.vplan_item
+                    in 1 until bound1, in (bound1 + 1) until bound2 -> R.layout.vplan_item
                     bound2 -> R.layout.vplan_footer
                     else -> throw ArrayIndexOutOfBoundsException()
                 }
