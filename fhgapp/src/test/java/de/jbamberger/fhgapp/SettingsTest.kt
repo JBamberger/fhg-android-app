@@ -17,9 +17,9 @@ import org.robolectric.RuntimeEnvironment.application
 @RunWith(RobolectricTestRunner::class)
 class SettingsTest {
 
-    val ALL = application.getString(R.string.settings_grade_show_all_key)
-    val GRADES = application.getString(R.string.settings_grade_key)
-    val COURSES = application.getString(R.string.settings_course_key)
+    val ALL : String = application.getString(R.string.settings_grade_show_all_key)
+    val GRADES : String = application.getString(R.string.settings_grade_key)
+    val COURSES : String = application.getString(R.string.settings_course_key)
 
     lateinit var settings: Settings
     lateinit var prefs: SharedPreferences
