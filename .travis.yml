@@ -17,15 +17,15 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-27.0.3
-    - android-27
+    - build-tools-28.0.3
+    - android-28
 
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
 
     - sys-img-armeabi-v7a-android-16
-    - sys-img-armeabi-v7a-android-27
+    - sys-img-armeabi-v7a-android-28
 
 
 before_script:
