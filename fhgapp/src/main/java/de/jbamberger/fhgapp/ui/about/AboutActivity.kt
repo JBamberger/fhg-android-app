@@ -26,7 +26,9 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
         binding = DataBindingUtil.setContentView(this, R.layout.about_activity)
 
         binding.setContactDevListener { Utils.contactDeveloper(this) }
+        binding.setVisitRepoListener { Utils.openUrl(this, R.string.repo_link) }
         binding.setShowOssLicencesListener { startActivity(Intent(this, OssLicensesMenuActivity::class.java)) }
+        binding.setVisitFhgListener { Utils.openUrl(this, R.string.fhg_link) }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

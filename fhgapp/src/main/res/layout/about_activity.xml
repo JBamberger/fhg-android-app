@@ -4,12 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
-        android:id="@+id/aboutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         tools:context="de.jbamberger.fhgapp.ui.about.AboutActivity">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,6 +27,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/about_disclaimer_content" />
 
+            <Button
+                style="@style/About.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/about_visit_fhg"
+                app:onClickListener="@{visit_fhg_listener}" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,14 +52,29 @@
                 android:layout_height="wrap_content"
                 android:text="@string/about_contact_content" />
 
-            <Button
-                android:id="@+id/about_contact_mail"
-                style="@style/About.Action"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="@string/about_contact_mail"
-                app:onClickListener="@{contact_dev_listener}" />
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/About.Action"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_visit_repo"
+                    app:onClickListener="@{visit_repo_listener}" />
+
+                <Button
+                    style="@style/About.Action"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_contact_mail"
+                    app:onClickListener="@{contact_dev_listener}" />
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -87,16 +108,20 @@
                 android:padding="@dimen/about_card_margin"
                 android:text="@string/about_oss_licenses"
                 app:onClickListener="@{show_oss_licences_listener}" />
-
-
         </LinearLayout>
-
-
     </ScrollView>
 
     <data>
 
         <import type="de.jbamberger.fhgapp.BuildConfig" />
+
+        <variable
+            name="visit_fhg_listener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="visit_repo_listener"
+            type="android.view.View.OnClickListener" />
 
         <variable
             name="contact_dev_listener"

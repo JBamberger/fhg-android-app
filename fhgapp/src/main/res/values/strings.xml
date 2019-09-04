@@ -1,6 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="de">
     <string name="app_name">FhgApp</string>
     <string name="play_link" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="repo_link" translatable="false">https://github.com/jbamberger/fhg-android-app</string>
+    <string name="fhg_link" translatable="false">https://www.fhg-radolfzell.de</string>
+    <string name="vplan_link" translatable="false">https://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm</string>
 
 
     <string name="title_activity_main">FHG Radolfzell</string>
@@ -29,6 +32,8 @@
     <string name="about_contact_title">Über den Entwickler</string>
     <string name="about_contact_content">Die Applikation wird von Jannik Bamberger entwickelt. Bei Fragen kann eine Mail an dev.jbamberger@gmail.com geschrieben werden.</string>
     <string name="about_contact_mail">Entwickler kontaktieren</string>
+    <string name="about_visit_repo">Source Code ansehen</string>
+    <string name="about_visit_fhg">FHG Website ansehen</string>
 
     <string name="about_disclaimer_title">Nutzungshinweise</string>
     <string name="about_disclaimer_content">Es werden Daten der Website fhg-radolfzell.de verarbeitet und angezeigt. Für die Korrektheit und Aktualität der Daten sowie korrekte Funktion der Anwendung übernimmt der Entwickler keinerlei Verantwortung.</string>
