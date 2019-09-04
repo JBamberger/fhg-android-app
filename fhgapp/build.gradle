@@ -91,6 +91,7 @@ dependencies {
     implementation lib_support_vector_drawable
     implementation lib_support_constraint_layout
     implementation lib_support_recyclerview
+    implementation lib_support_swiperefreshlayout
 
     implementation play_oss_licenses
     kapt apt_glide

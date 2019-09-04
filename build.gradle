@@ -32,7 +32,7 @@ allprojects {
 ext {
     lib_kotlin_std_lib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    lib_support_design =            'com.google.android.material:material:1.1.0-alpha01'
+    lib_support_design =            'com.google.android.material:material:1.1.0-alpha09'
 
     lib_support_annotations =       'androidx.annotation:annotation:1.0.2'
     lib_support_compat =            'androidx.core:core:1.1.0-rc03'
@@ -43,6 +43,7 @@ ext {
     lib_support_vector_drawable =   'androidx.vectordrawable:vectordrawable:1.1.0-rc01'
     lib_support_constraint_layout = 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     lib_support_recyclerview =      'androidx.recyclerview:recyclerview:1.1.0-beta03'
+    lib_support_swiperefreshlayout= 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
 
     lib_lifecycle_runtime =         'androidx.lifecycle:lifecycle-runtime:2.0.0'
     lib_lifecycle_extensions =      'androidx.lifecycle:lifecycle-extensions:2.0.0'
