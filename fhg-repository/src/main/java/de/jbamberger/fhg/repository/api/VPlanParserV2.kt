@@ -67,7 +67,7 @@ internal object VPlanParserV2 {
                 .matcher(dataDefaultEncoded)
 
         while (matcher.find()) {
-            MediaType.parse(matcher.group(1))?.charset().let {
+            MediaType.parse(matcher.group(1)!!)?.charset().let {
                 if (it != null) return String(data, it)
             }
         }
@@ -80,7 +80,7 @@ internal object VPlanParserV2 {
         val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)").matcher(html)
 
         if (matcher.find()) {
-            return matcher.group(1)
+            return matcher.group(1)!!
         } else {
             throw ParseException("Could not find lastUpdated value in the document.")
         }

@@ -75,8 +75,9 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_show_vplan -> Utils.openUrl(context!!, R.string.vplan_link)
+        if (item.itemId == R.id.action_show_vplan) {
+            Utils.openUrl(context!!, R.string.vplan_link)
+            return true
         }
         return super.onOptionsItemSelected(item)
     }
