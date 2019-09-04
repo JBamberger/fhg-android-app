@@ -1,19 +1,16 @@
 package de.jbamberger.fhgapp.ui.about
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.jbamberger.fhgapp.R
+import de.jbamberger.fhgapp.databinding.AboutActivityBinding
 import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.components.DataBindingAdapter
-import de.jbamberger.fhgapp.ui.components.DataBindingAdapter.Item
 import de.jbamberger.fhgapp.util.Utils
-import kotlinx.android.synthetic.main.about_activity.*
 
 class AboutActivity : BaseActivity<AboutViewModel>() {
 
@@ -22,25 +19,16 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
     override val viewModelClass: Class<AboutViewModel>
         get() = AboutViewModel::class.java
 
+    private lateinit var binding: AboutActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.about_activity)
+        binding = DataBindingUtil.setContentView(this, R.layout.about_activity)
 
-        aboutContainer.adapter = adapter
-        aboutContainer.layoutManager = LinearLayoutManager(this)
-        aboutContainer.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        binding.setContactDevListener { Utils.contactDeveloper(this) }
+        binding.setShowOssLicencesListener { startActivity(Intent(this, OssLicensesMenuActivity::class.java)) }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        adapter.replaceAll(listOf(
-                Item(R.layout.about_disclaimer, null, null),
-                Item(R.layout.about_contact, null,
-                        View.OnClickListener { Utils.contactDeveloper(this) }),
-                Item(R.layout.about_version, null, null),
-                Item(R.layout.about_oss_licenses, null,
-                        View.OnClickListener {
-                            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
-                        })
-        ))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
