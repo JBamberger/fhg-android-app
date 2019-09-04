@@ -1,53 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="de.jbamberger.fhgapp.ui.about.AboutActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
-        android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/aboutContainer"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:itemCount="3"
-        tools:listitem="@layout/about_library"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:fitsSystemWindows="true"
+        tools:context="de.jbamberger.fhgapp.ui.about.AboutActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/about_action_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_share_light_24dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/about_card_margin">
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <TextView
+                style="@style/About.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_disclaimer_title" />
+
+            <TextView
+                style="@style/About.Content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_disclaimer_content" />
+
+            <Button
+                style="@style/About.Action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/about_visit_fhg"
+                app:onClickListener="@{visit_fhg_listener}" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                style="@style/About.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_contact_title" />
+
+            <TextView
+                style="@style/About.Content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_contact_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    style="@style/About.Action"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_visit_repo"
+                    app:onClickListener="@{visit_repo_listener}" />
+
+                <Button
+                    style="@style/About.Action"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_contact_mail"
+                    app:onClickListener="@{contact_dev_listener}" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                style="@style/About.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/about_version_title" />
+
+            <TextView
+                style="@style/About.Content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{@string/about_version_content(BuildConfig.APPLICATION_ID, BuildConfig.BUILD_TYPE, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)}"
+                tools:text="Application id: de.jbamberger.fhgapp\nBuild type: DEBUG\nVersion: 3.0.0-alpha1 (42)" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                style="@style/About.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/about_card_margin"
+                android:text="@string/about_oss_licenses"
+                app:onClickListener="@{show_oss_licences_listener}" />
+        </LinearLayout>
+    </ScrollView>
+
+    <data>
+
+        <import type="de.jbamberger.fhgapp.BuildConfig" />
+
+        <variable
+            name="visit_fhg_listener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="visit_repo_listener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="contact_dev_listener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="show_oss_licences_listener"
+            type="android.view.View.OnClickListener" />
+    </data>
+</layout>

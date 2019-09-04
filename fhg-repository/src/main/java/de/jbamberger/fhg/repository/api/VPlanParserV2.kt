@@ -17,22 +17,32 @@ import java.util.regex.Pattern
  */
 internal object VPlanParserV2 {
 
-    private const val COL_SUB_NR = "vtr-nr."
-    private const val COL_KIND = "entfall" // "art"
-    private const val COL_HOUR = "stunde"
-    private const val COL_CLASS = "klasse(n)"
-    private const val COL_SUBST_TEACHER = "vertreter"
-    private const val COL_ROOM = "raum"
-    private const val COL_SUBJECT = "fach"
-    private const val COL_SUBST_FROM = "vertr. von"
-    private const val COL_SUBST_TO = "(le.) nach"
-    private const val COL_SUBST_TEXT = "vertretungs-text"
+    private const val COL_KIND = "kind"
+    private const val COL_HOUR = "hour"
+    private const val COL_CLASS = "class"
+    private const val COL_ROOM = "room"
+    private const val COL_SUBJECT = "subject"
+    private const val COL_SUBST_TEXT = "text"
 
+    private val SCHEMA = mapOf(
+            "entfall" to COL_KIND,
+            "art" to COL_KIND,
 
-    private val SCHEMA = setOf(
-            /*COL_SUB_NR, */COL_KIND, COL_HOUR, COL_CLASS, /*COL_SUBST_TEACHER,*/
-            COL_ROOM, COL_SUBJECT/*, COL_SUBST_FROM, COL_SUBST_TO*/, COL_SUBST_TEXT)
-    private val SCHEMA_SIZE = SCHEMA.size
+            "stunde" to COL_HOUR,
+
+            "klasse(n)" to COL_CLASS,
+            "klassen" to COL_CLASS,
+            "klasse" to COL_CLASS,
+
+            "raum" to COL_ROOM,
+
+            "fach" to COL_SUBJECT,
+
+            "vertretungs-text" to COL_SUBST_TEXT,
+            "vertretungstext" to COL_SUBST_TEXT,
+            "text" to COL_SUBST_TEXT
+    )
+    private val SCHEMA_SIZE = 6
 
     @Throws(ParseException::class)
     internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
@@ -127,11 +137,10 @@ internal object VPlanParserV2 {
             }
 
             val colTitle = col.html().trim().toLowerCase()
-            if (SCHEMA.contains(colTitle)) {
-                return@mapIndexed colTitle to index
-            } else {
-                throw ParseException("Header contained column with unknown title=$colTitle")
-            }
+            val key = SCHEMA[colTitle]
+                    ?: throw ParseException("Header contained column with unknown title=$colTitle")
+            return@mapIndexed key to index
+
         }.toMap()
 
 

@@ -20,6 +20,7 @@ import de.jbamberger.fhgapp.Settings
 import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
+import de.jbamberger.fhgapp.util.Utils
 
 
 /**
@@ -49,6 +50,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         super.onDetach()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        this.setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
         val layoutManager = LinearLayoutManager(context)
@@ -63,6 +69,18 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         super.onActivityCreated(savedInstanceState)
         binding.isRefreshing = true
         viewModel.vPlan.observe(this, this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.vplan, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.action_show_vplan -> Utils.openUrl(context!!, R.string.vplan_link)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onRefresh() {
