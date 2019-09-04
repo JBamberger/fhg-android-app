@@ -3,15 +3,19 @@ package de.jbamberger.fhg.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import dagger.Lazy
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import androidx.annotation.MainThread
 import de.jbamberger.fhg.repository.api.ApiResponse
-import de.jbamberger.fhg.repository.api.FeedDataRepository
+import de.jbamberger.fhg.repository.api.FeedDataSource
 import de.jbamberger.fhg.repository.api.FhgApi
+import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.data.FeedItem
+import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlan
-import de.jbamberger.fhg.repository.db.AppDatabase
 import de.jbamberger.fhg.repository.db.KeyValueStorage
 import de.jbamberger.fhg.repository.util.AppExecutors
+import de.jbamberger.fhg.repository.util.switchMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,23 +23,20 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
+interface Repository {
+    fun getVPlan(): LiveData<Resource<VPlan>>
+
+    fun postsOfFeed(): Listing<Pair<FeedItem, FeedMedia?>>
+}
+
 @Singleton
-class Repository
-@Inject
-internal constructor(
-        appExecutors: Lazy<AppExecutors>,
-        api: Lazy<FhgApi>,
-        db: Lazy<AppDatabase>,
-        kvStore: Lazy<KeyValueStorage>,
-        feedDataRepository: Lazy<FeedDataRepository>) {
+internal class RepositoryImpl @Inject internal constructor(
+        private val appExecutors: AppExecutors,
+        private val api: FhgApi,
+        private val endpoint: FhgEndpoint,
+        private val kvStore: KeyValueStorage) : Repository {
 
-    private val appExecutors: AppExecutors by lazy { appExecutors.get() }
-    private val api: FhgApi  by lazy { api.get() }
-    private val db: AppDatabase by lazy { db.get() }
-    private val kvStore: KeyValueStorage  by lazy { kvStore.get() }
-    private val feedDataRepository: FeedDataRepository by lazy { feedDataRepository.get() }
-
-    fun getVPlan(): LiveData<Resource<VPlan>> {
+    override fun getVPlan(): LiveData<Resource<VPlan>> {
         val provider = object : NetworkBoundResource.Provider<VPlan, VPlan> {
             var vplanFromNet = true
 
@@ -68,39 +69,30 @@ internal constructor(
         return NetworkBoundResource(appExecutors, provider).asLiveData()
     }
 
+    override fun postsOfFeed() = postsOfFeed(10)
 
-    fun getFeed(): LiveData<Resource<List<FeedItem>>> {
-        val provider = object : NetworkBoundResource.Provider<List<FeedItem>, List<FeedItem>> {
-            var feedFromNet: Boolean = true
+    @MainThread
+    fun postsOfFeed(pageSize: Int): Listing<Pair<FeedItem, FeedMedia?>> {
+        val sourceFactory = FeedDataSource.Factory(endpoint, appExecutors.networkIO())
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(pageSize * 2)
+                .setPageSize(pageSize)
+                .build()
+        val pagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
+                .setFetchExecutor(appExecutors.networkIO())
+                .build()
 
-            override fun onFetchFailed() {
-                feedFromNet = true
-            }
+        val refreshState = sourceFactory.sourceLiveData.switchMap { it.initialLoad }
 
-            override fun saveCallResult(item: List<FeedItem>) {
-                db.feedItemDao.insertAll(item)
-            }
-
-            override fun shouldFetch(data: List<FeedItem>?): Boolean {
-                val fetch = feedFromNet
-                feedFromNet = false
-                return fetch
-            }
-
-            override fun loadFromDb(): LiveData<List<FeedItem>> {
-                return db.feedItemDao.getAll()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<List<FeedItem>>> {
-                val m = MediatorLiveData<ApiResponse<List<FeedItem>>>()
-                m.addSource(api.getFeed(), m::setValue)
-                return m
-            }
-        }
-        return NetworkBoundResource(appExecutors, provider).asLiveData()
+        return Listing(
+                pagedList = pagedList,
+                networkState = sourceFactory.sourceLiveData.switchMap { it.networkState },
+                retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
+                refresh = { sourceFactory.sourceLiveData.value?.invalidate() },
+                refreshState = refreshState
+        )
     }
-
-    fun postsOfFeed() = feedDataRepository.postsOfFeed(10)
 
     companion object {
         const val VPLAN_KEY = "de.jbamberger.fhgapp.source.vplan_cachev2"
