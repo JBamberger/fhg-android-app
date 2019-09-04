@@ -1,9 +1,8 @@
 package de.jbamberger.fhg.repository.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.data.dao.FeedItemDao
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)

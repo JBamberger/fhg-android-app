@@ -44,13 +44,10 @@
     <string name="about_version_content">Application id: %1$s\nBuild type: %2$s\nVersion: %3$s (%4$d)</string>
 
     <string name="about_oss_licenses">Open Source Bibliotheken</string>
-    <string name="about_library_title">Verwendete Bibliotheken</string>
 
     <!-- VPlan -->
-    <string name="vplan_omitted">entfällt</string>
     <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
-    <string name="vplan_subtitle_few_grades">Zeige %1$s</string>
-    <string name="vplan_subtitle_grades">Zeige %1$s&#8230;</string>
+    <string name="vplan_subtitle_grades">Zeige %1$s</string>
     <string name="vplan_motd">Nachrichten zum Tag</string>
     <string name="vplan_loading_error">Die gezeigten Daten sind nicht aktuell.</string>
 
@@ -70,7 +67,6 @@
     <bool name="settings_grade_show_all_default">true</bool>
 
     <string name="settings_grade_key">settings_grade_key</string>
-    <string name="settings_grade_title">Klasse/n</string>
     <string name="settings_grade_summary">Es werden nur die ausgewählten Klassen angezeigt</string>
     <string name="settings_grade_dialog_title">Klasse/n auswählen</string>
 

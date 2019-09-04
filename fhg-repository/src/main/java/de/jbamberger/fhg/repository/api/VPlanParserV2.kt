@@ -1,6 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
@@ -59,9 +59,7 @@ internal object VPlanParserV2 {
 
     @VisibleForTesting
     internal fun readWithEncoding(data: ByteArray, type: MediaType?): String {
-        type?.charset().let {
-            if (it != null) return String(data, it)
-        }
+        type?.charset()?.let { return String(data, it) }
 
         val dataDefaultEncoded = String(data)
         val matcher = Pattern
@@ -69,7 +67,7 @@ internal object VPlanParserV2 {
                 .matcher(dataDefaultEncoded)
 
         while (matcher.find()) {
-            MediaType.parse(matcher.group(1))?.charset().let {
+            MediaType.parse(matcher.group(1)!!)?.charset().let {
                 if (it != null) return String(data, it)
             }
         }
@@ -79,11 +77,10 @@ internal object VPlanParserV2 {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readLastUpdated(html: String): String {
-        val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)")
-                .matcher(html)
+        val matcher = Pattern.compile("(Stand: ..\\...\\..... ..:..)").matcher(html)
 
         if (matcher.find()) {
-            return matcher.group(1)
+            return matcher.group(1)!!
         } else {
             throw ParseException("Could not find lastUpdated value in the document.")
         }
@@ -102,14 +99,17 @@ internal object VPlanParserV2 {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readMotdTable(doc: Document): String {
+        fun toTrimmedLines(elem: Element): String {
+            return elem.html().split("<br>")
+                    .joinToString(separator = "<br>", transform = String::trim)
+        }
+
         return doc.getElementsByClass("info")
                 .select("tr")
                 .map { it.select("td") }
                 .filter { it.isNotEmpty() }
                 .joinToString("<br>") {
-                    val content = it.joinToString(" | ") {
-                        it.html().split("<br>").joinToString("<br>") { it.trim() }
-                    }
+                    val content = it.joinToString(separator = " | ", transform = ::toTrimmedLines)
                     if (it.first().text().toLowerCase().contains("unterrichtsfrei")) {
                         "<font color=#FF5252>$content</font>"
                     } else {

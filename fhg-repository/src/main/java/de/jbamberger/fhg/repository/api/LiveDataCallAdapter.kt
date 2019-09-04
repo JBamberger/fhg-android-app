@@ -1,7 +1,7 @@
 package de.jbamberger.fhg.repository.api
 
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
@@ -22,7 +22,7 @@ internal class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdap
 
     override fun adapt(call: Call<R>): LiveData<ApiResponse<R>> {
         return object : LiveData<ApiResponse<R>>() {
-            internal var started = AtomicBoolean(false)
+            var started = AtomicBoolean(false)
 
             override fun onActive() {
                 super.onActive()

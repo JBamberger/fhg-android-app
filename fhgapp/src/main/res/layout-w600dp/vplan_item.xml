@@ -15,7 +15,7 @@
 
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -107,5 +107,5 @@
             app:vPlanTextColor="@{obj}"
             tools:text="content" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

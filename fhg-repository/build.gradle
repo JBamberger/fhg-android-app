@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 27
+        targetSdkVersion 29
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -41,21 +41,18 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':utils')
 
     implementation lib_kotlin_std_lib
 
     implementation lib_support_annotations
-
     implementation lib_jsoup
-
     implementation lib_timber
 
     implementation lib_okhttp
     implementation lib_okhttp_logging_interceptor
 
     implementation lib_moshi
-    implementation lib_moshi_kotlin
+    kapt apt_moshi_codegen
 
     implementation lib_retrofit
     implementation lib_retrofit_converters
@@ -67,13 +64,16 @@ dependencies {
 
     api lib_lifecycle_runtime
     api lib_lifecycle_extensions
-    kapt apt_lifecycle
+    implementation lib_lifecycle_java8
 
     api lib_room
     kapt apt_room
 
     api lib_paging_runtime
+    implementation lib_support_recyclerview
+    // overwrite the version from the paging library
 
+    implementation lib_jsr250
     implementation lib_dagger
     kapt apt_dagger
 
@@ -89,8 +89,5 @@ dependencies {
     androidTestImplementation lib_jsr305
     androidTestImplementation lib_support_test_runner
     androidTestImplementation lib_support_test_rules
-    androidTestImplementation (lib_espresso_core) {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs', module: 'jsr305'
-    }
+    androidTestImplementation lib_espresso_core
 }

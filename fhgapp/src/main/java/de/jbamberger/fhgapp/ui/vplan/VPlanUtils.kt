@@ -11,8 +11,8 @@ import de.jbamberger.fhgapp.Settings
 
 object VPlanUtils {
 
-    private val PATTERN_START = "(.*"
-    private val PATTERN_END = ".*)"
+    private const val PATTERN_START = "(.*"
+    private const val PATTERN_END = ".*)"
     private val GRADE_PATTERNS = arrayOf(
             "(.*5[^0-9]*[aA].*)", "(.*5[^0-9]*[bB].*)", "(.*5[^0-9]*[cC].*)", "(.*5[^0-9]*[dD].*)", "(.*5[^0-9]*[eE].*)",
             "(.*6[^0-9]*[aA].*)", "(.*6[^0-9]*[bB].*)", "(.*6[^0-9]*[cC].*)", "(.*6[^0-9]*[dD].*)", "(.*6[^0-9]*[eE].*)",

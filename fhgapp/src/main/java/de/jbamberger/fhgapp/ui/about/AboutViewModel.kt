@@ -1,6 +1,6 @@
 package de.jbamberger.fhgapp.ui.about
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
 /**

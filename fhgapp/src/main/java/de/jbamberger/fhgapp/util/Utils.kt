@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import de.jbamberger.fhgapp.BuildConfig
 import de.jbamberger.fhgapp.R
 
@@ -40,7 +40,7 @@ object Utils {
 
     fun openUrl(context: Context, url: String) {
         var uri = Uri.parse(url)
-        if (uri.scheme?.isBlank() != false) {
+        if (uri.scheme?.isBlank() == true) {
             uri = Uri.parse("http://$url")
         }
         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -49,15 +49,7 @@ object Utils {
         context.startActivity(intent)
     }
 
-    fun openUrl(context: Context, @StringRes urlId: Int) {
-        val url = context.getString(urlId)
-        var uri = Uri.parse(url)
-        if (uri.scheme?.isBlank() != false) {
-            uri = Uri.parse("http://$url")
-        }
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-
-        if (intent.resolveActivity(context.packageManager) == null) return
-        context.startActivity(intent)
+    fun openUrl(context: Context, urlId: Int) {
+        openUrl(context, context.getString(urlId))
     }
 }

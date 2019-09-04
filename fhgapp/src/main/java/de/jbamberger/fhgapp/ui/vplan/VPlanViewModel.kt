@@ -1,8 +1,8 @@
 package de.jbamberger.fhgapp.ui.vplan
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations.map
+import androidx.lifecycle.ViewModel
 import de.jbamberger.fhg.repository.Repository
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhg.repository.data.VPlan
@@ -25,13 +25,14 @@ internal constructor(
 
     private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>):
             LiveData<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
-        return Transformations.map(unfiltered, {
+        return map(unfiltered) {
             val settings = settings.vPlanSettings
-            Pair(settings, when (it) {
+
+            return@map Pair(settings, when (it) {
                 is Resource.Success -> Resource.Success(
                         VPlanUtils.filter(it.data, VPlanUtils.getVPlanMatcher(settings)))
                 else -> it
             })
-        })
+        }
     }
 }

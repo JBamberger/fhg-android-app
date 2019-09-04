@@ -1,10 +1,11 @@
 package de.jbamberger.fhgapp.ui.about
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.view.View
 import android.view.Menu
 import android.view.MenuItem
+import androidx.databinding.DataBindingUtil
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.AboutActivityBinding

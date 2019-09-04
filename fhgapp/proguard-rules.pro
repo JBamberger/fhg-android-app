@@ -12,39 +12,34 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
+
+###################################################################################################
+# Debugging proguard:
+###################################################################################################
+
+# -dontobfuscate
+
+# Uncomment this to preserve the line number information for debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
+# If you keep the line number information, uncomment this to hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-#-dontobfuscate
-#-keepattributes Signature
-#-keepattributes *Annotation*
-#-dontwarn sun.misc.**
-#
-#
-## Prevent proguard from stripping interface information from TypeAdapterFactory,
-## JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
-#-keep class * implements com.google.gson.TypeAdapterFactory
-#-keep class * implements com.google.gson.JsonSerializer
-#-keep class * implements com.google.gson.JsonDeserializer
-
-
-# debugging proguard
-# -dontobfuscate
-# -verbose
-
-
+###################################################################################################
 # Dagger
+###################################################################################################
+
 -dontwarn com.google.errorprone.annotations.*
 
+###################################################################################################
 # Glide
+###################################################################################################
+
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
 }
+
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
