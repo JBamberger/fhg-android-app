@@ -2,7 +2,6 @@ package de.jbamberger.fhgapp.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceActivity
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
@@ -10,7 +9,7 @@ import androidx.preference.PreferenceFragmentCompat
 import de.jbamberger.fhgapp.R
 
 /**
- * A [PreferenceActivity] that presents a set of application settings. On
+ * A PreferenceActivity that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
  * settings are split by category, with category headers shown to the left of
  * the list of settings.
