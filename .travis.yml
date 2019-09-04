@@ -17,19 +17,27 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-28.0.3
-    - android-28
+    - build-tools-29.0.2
+    - android-29
 
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
 
     - sys-img-armeabi-v7a-android-16
-    - sys-img-armeabi-v7a-android-28
+    - sys-img-armeabi-v7a-android-29
+
+before_install:
+  - touch $HOME/.android/repositories.cfg
+  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "build-tools;28.0.3"
+
 
 
 before_script:
-  - keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US"
+#  - keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-alias
+  - keytool -genkey -v  -keyalg RSA -keysize 2048 -validity 10000 -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US"
+#  - rm ~/.android/debug.keystore
   - cp debug-keystore.properties keystore.properties
 #  - echo no | android create avd --force -n test -t android-27 --abi armeabi-v7a
 #  - emulator -avd test -no-skin -no-audio -no-window &
