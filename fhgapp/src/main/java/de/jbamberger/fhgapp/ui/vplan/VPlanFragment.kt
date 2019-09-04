@@ -7,9 +7,7 @@ import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
@@ -20,6 +18,7 @@ import de.jbamberger.fhgapp.Settings
 import de.jbamberger.fhgapp.ui.MainActivity
 import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
+import de.jbamberger.fhgapp.util.Utils
 
 
 /**
@@ -38,7 +37,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
     override fun onAttach(context: Context?) {
         if (activity is MainActivity) {
-            parent = activity as MainActivity;
+            parent = activity as MainActivity
         } else {
             throw IllegalStateException("Parent must be MainActivity.")
         }
@@ -48,6 +47,11 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
     override fun onDetach() {
         parent = null
         super.onDetach()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        this.setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,6 +68,18 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         super.onActivityCreated(savedInstanceState)
         binding.isRefreshing = true
         viewModel.vPlan.observe(this, this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.vplan, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId) {
+            R.id.action_show_vplan -> Utils.openUrl(context!!, R.string.vplan_link)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onRefresh() {
