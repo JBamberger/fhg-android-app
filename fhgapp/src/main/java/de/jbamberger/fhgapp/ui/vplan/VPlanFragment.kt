@@ -2,9 +2,7 @@ package de.jbamberger.fhgapp.ui.vplan
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -71,13 +69,13 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         viewModel.vPlan.observe(this, this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.vplan, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.vplan, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_show_vplan -> Utils.openUrl(context!!, R.string.vplan_link)
         }
         return super.onOptionsItemSelected(item)
@@ -133,14 +131,17 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
         override fun getObjForPosition(position: Int): Any? {
             val p = indexedPlan
-            return if (showWarning) {
-                when {
-                    position == 0 -> null
-                    p != null -> p[position - 1]
-                    else -> throw ArrayIndexOutOfBoundsException()
+            var pos = position
+            if (showWarning) {
+                if (pos == 0) {
+                    return null
                 }
+                pos -= 1
+            }
+            if (p == null) {
+                throw ArrayIndexOutOfBoundsException("There is no vplan available but pos = $pos")
             } else {
-                p?.get(position) ?: throw ArrayIndexOutOfBoundsException()
+                return p[position]
             }
         }
 
