@@ -77,13 +77,13 @@ ext {
     lib_moshi_kotlin =  "com.squareup.moshi:moshi-kotlin:$moshi_version"
     apt_moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    def retrofit_version = "2.4.0"
+    def retrofit_version = "2.6.1"
     lib_retrofit =                      "com.squareup.retrofit2:retrofit:$retrofit_version"
     lib_retrofit_converters =           "com.squareup.retrofit2:retrofit-converters:$retrofit_version"
     lib_retrofit_converter_scalars =    "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     lib_retrofit_converter_moshi =      "com.squareup.retrofit2:converter-moshi:$retrofit_version"
-    lib_retrofit_converter_jaxb =       "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
-    lib_retrofit_converter_simplexml =  "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
+//    lib_retrofit_converter_jaxb =       "com.squareup.retrofit2:converter-jaxb:$retrofit_version"
+//    lib_retrofit_converter_simplexml =  "com.squareup.retrofit2:converter-simplexml:$retrofit_version"
 
     def glide_version = "4.9.0"
     lib_glide = "com.github.bumptech.glide:glide:$glide_version"
