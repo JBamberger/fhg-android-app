@@ -1,10 +1,10 @@
 package de.jbamberger.fhg.repository
 
 import android.app.Application
-import androidx.room.Room
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
+import androidx.room.Room
 import com.squareup.moshi.Moshi
 import dagger.*
 import de.jbamberger.fhg.repository.api.*

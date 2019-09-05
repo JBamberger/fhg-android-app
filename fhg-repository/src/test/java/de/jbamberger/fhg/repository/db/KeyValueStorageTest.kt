@@ -1,6 +1,6 @@
 package de.jbamberger.fhg.repository.db
 
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import de.jbamberger.fhg.repository.RepoInstantiationModule
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanDay

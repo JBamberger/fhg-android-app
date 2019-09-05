@@ -69,6 +69,8 @@ dependencies {
     api lib_room
     kapt apt_room
 
+    implementation lib_support_preference_v7
+
     api lib_paging_runtime
     implementation lib_support_recyclerview
     // overwrite the version from the paging library
