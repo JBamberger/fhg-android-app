@@ -50,37 +50,20 @@ class FeedFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initAdapter()
-        initSwipeRefresh()
+        val glide = GlideApp.with(this)
+        val adapter = FeedAdapter(glide) { model.retry() }
+        feedContainer.adapter = adapter
+
+        model.posts.observe(this, Observer { adapter.submitList(it) })
+        model.networkState.observe(this, Observer { adapter.setNetworkState(it) })
+        model.refreshState.observe(this, Observer { feedRefresh.isRefreshing = it == NetworkState.LOADING })
+
+        feedRefresh.setOnRefreshListener { model.refresh() }
     }
 
     private fun getViewModel(): FeedViewModel {
         return ViewModelProviders.of(this, viewModelFactory)
                 .get(FeedViewModel::class.java)
-    }
-
-    private fun initSwipeRefresh() {
-        model.refreshState.observe(this, Observer {
-            feedRefresh.isRefreshing = it == NetworkState.LOADING
-        })
-        feedRefresh.setOnRefreshListener {
-            model.refresh()
-        }
-    }
-
-    private fun initAdapter() {
-        val glide = GlideApp.with(this)
-        val adapter = FeedAdapter(glide) {
-            model.retry()
-        }
-        feedContainer.adapter = adapter
-        model.posts.observe(this, Observer {
-            adapter.submitList(it)
-        })
-        model.networkState.observe(this, Observer {
-            adapter.setNetworkState(it)
-        })
-
     }
 
     private class FeedAdapter
@@ -95,14 +78,15 @@ class FeedFragment : Fragment(), Injectable {
             return when (viewType) {
                 R.layout.feed_item -> FeedItemHolder.create(glide, parent)
                 R.layout.network_state_item -> ErrorHolder.create(parent, retryCallback)
-                else -> throw IllegalArgumentException("unknown view Type $viewType")
+                else -> throw IllegalArgumentException("Unknown view type $viewType")
             }
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            when (getItemViewType(position)) {
-                R.layout.feed_item -> (holder as FeedItemHolder).bind(getItem(position))
-                R.layout.network_state_item -> (holder as ErrorHolder).bind(networkState)
+            when (holder) {
+                is FeedItemHolder -> holder.bind(getItem(position))
+                is ErrorHolder -> holder.bind(networkState)
+                else -> throw IllegalArgumentException("Unknown ViewHolder type ${holder.javaClass}")
             }
         }
 
@@ -111,10 +95,9 @@ class FeedFragment : Fragment(), Injectable {
         }
 
         override fun getItemViewType(position: Int): Int {
-            return if (hasExtraRow() && position == itemCount - 1) {
-                R.layout.network_state_item
-            } else {
-                R.layout.feed_item
+            return when {
+                hasExtraRow() && position == itemCount - 1 -> R.layout.network_state_item
+                else -> R.layout.feed_item
             }
         }
 

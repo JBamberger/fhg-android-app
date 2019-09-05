@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.moshi.Moshi
 import dagger.*
 import de.jbamberger.fhg.repository.api.*
@@ -143,6 +145,7 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun provideAppDatabase(application: Application): AppDatabase {
         return Room.databaseBuilder(application, AppDatabase::class.java, DB_NAME)
+                .fallbackToDestructiveMigrationFrom(1)
                 .build()
     }
 

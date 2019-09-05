@@ -1,7 +1,6 @@
 package de.jbamberger.fhg.repository.api
 
 import androidx.lifecycle.LiveData
-import de.jbamberger.fhg.repository.data.EventCalendar
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlanDay
@@ -41,25 +40,23 @@ internal interface FhgEndpoint {
     @GET("vertretungsplan/f2/subst_001.htm")
     fun getVPlanFrame2(): LiveData<ApiResponse<VPlanDay>>
 
-    @GET("$JSON_V2/posts")
-    fun getFeed(): LiveData<ApiResponse<List<FeedItem>>>
-
-    @GET("$JSON_V2/posts")
-    fun getFeedPaged(@Query(value = "page") page: Int): Call<List<FeedItem>>
-
-    @GET("$JSON_V2/posts")
+    @GET("$JSON_V2/posts?context=embed")
     fun getFeedPage(
             @Query(value = "before") before: String? = null,
             @Query(value = "after") after: String? = null,
             @Query(value = "per_page") count: Int? = null,
-            @Query(value = "order") order: String? = "desc"): Call<List<FeedItem>>
+            @Query(value = "order") order: String? = "desc"
+    ): Call<List<FeedItem>>
 
-    @GET("$JSON_V2/media/{mediaId}")
+    @GET("$JSON_V2/media/{mediaId}?context=embed")
     fun getFeedMedia(@Path("mediaId") mediaId: Int): Call<FeedMedia>
 
-    @GET("$CALENDAR_BASE&no_html=true")
-    fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
+    @GET("$JSON_V2/media?context=embed")
+    fun getFeedMediaElements(@Query("include") ids: String): Call<List<FeedMedia>>
 
-    @GET("$CALENDAR_BASE&xml=true")
-    fun getXmlCalendar(): LiveData<ApiResponse<EventCalendar>>
+//    @GET("$CALENDAR_BASE&no_html=true")
+//    fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
+//
+//    @GET("$CALENDAR_BASE&xml=true")
+//    fun getXmlCalendar(): LiveData<ApiResponse<EventCalendar>>
 }

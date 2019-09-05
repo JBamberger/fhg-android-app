@@ -19,13 +19,17 @@ class FeedItem {
     @Json(name = "date")
     var date: String? = null
 
+    @ColumnInfo(name = "slug")
+    @Json(name = "slug")
+    var slug: String? = null
+
+    @ColumnInfo(name = "type")
+    @Json(name = "type")
+    var type: String? = null
+
     @ColumnInfo(name = "link")
     @Json(name = "link")
     var link: String? = null
-
-    @ColumnInfo(name = "featuredMedia")
-    @Json(name = "featured_media")
-    var featuredMedia: Int? = null
 
     @Embedded
     @Json(name = "title")
@@ -35,6 +39,13 @@ class FeedItem {
     @Json(name = "excerpt")
     var excerpt: Excerpt? = null
 
+    @ColumnInfo(name = "author")
+    @Json(name = "author")
+    var author: Int? = null
+
+    @ColumnInfo(name = "featuredMedia")
+    @Json(name = "featured_media")
+    var featuredMedia: Int? = null
 
     @JsonClass(generateAdapter = true)
     class Title {
@@ -61,13 +72,23 @@ class FeedItem {
 
 @JsonClass(generateAdapter = true)
 class FeedMedia(
-        var id: Int,
-        var date: String,
-        var media_type: String,
-        var mime_type: String,
-        var media_details: MediaDetails,
-        var caption: Caption,
-        var source_url: String) {
+        val id: Int,
+        val date: String,
+        val slug: String,
+        val type: String,
+        val link: String,
+        val title: Title,
+        val author: Int,
+        val caption: Caption,
+        val alt_text: String,
+        val media_type: String,
+        val mime_type: String,
+        val media_details: MediaDetails,
+        val source_url: String
+) {
+
+    @JsonClass(generateAdapter = true)
+    data class Title(val rendered: String)
 
     @JsonClass(generateAdapter = true)
     data class Caption(val rendered: String)
