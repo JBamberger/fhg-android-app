@@ -42,11 +42,7 @@ class FeedItem {
         @Json(name = "rendered")
         var rendered: String? = null
 
-        override fun toString(): String {
-            return "Title{" +
-                    "rendered='" + rendered + '\'' +
-                    '}'
-        }
+        override fun toString() = "Title{rendered='$rendered'}"
     }
 
 
@@ -56,22 +52,11 @@ class FeedItem {
         @Json(name = "rendered")
         var rendered: String? = null
 
-        override fun toString(): String {
-            return "Excerpt{" +
-                    "rendered='" + rendered + '\'' +
-                    '}'
-        }
+        override fun toString() = "Excerpt{rendered='$rendered'}"
     }
 
-    override fun toString(): String {
-        return "FeedItem{" +
-                "id=" + id +
-                ", date='" + date + '\'' +
-                ", link='" + link + '\'' +
-                ", title=" + title +
-                ", excerpt=" + excerpt +
-                '}'
-    }
+    override fun toString() =
+            "FeedItem{id=$id, date='$date', link='$link', title=$title, excerpt=$excerpt}"
 }
 
 @JsonClass(generateAdapter = true)
