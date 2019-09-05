@@ -1,10 +1,9 @@
 package de.jbamberger.fhgapp
 
-import android.app.Activity
 import android.app.Application
 import android.util.Log
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.HasAndroidInjector
 import de.jbamberger.fhg.repository.RepoHelper
 import de.jbamberger.fhgapp.di.AppInjector
 import timber.log.Timber
@@ -14,10 +13,10 @@ import javax.inject.Inject
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class App : Application(), HasActivityInjector {
+class App : Application(), HasAndroidInjector {
 
     @Inject
-    internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var repoHelper: RepoHelper
@@ -32,7 +31,7 @@ class App : Application(), HasActivityInjector {
         AppInjector.init(this)
     }
 
-    override fun activityInjector(): DispatchingAndroidInjector<Activity>? {
+    override fun androidInjector(): DispatchingAndroidInjector<Any> {
         return dispatchingAndroidInjector
     }
 
