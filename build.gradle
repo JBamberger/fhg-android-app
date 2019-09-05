@@ -68,7 +68,7 @@ ext {
     lib_timber =        "com.jakewharton.timber:timber:4.7.1"
     lib_joda_time =     "joda-time:joda-time:2.10"
 
-    def okhttp_version = "3.11.0"
+    def okhttp_version = "3.14.2"
     lib_okhttp =                        "com.squareup.okhttp3:okhttp:$okhttp_version"
     lib_okhttp_logging_interceptor =    "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
