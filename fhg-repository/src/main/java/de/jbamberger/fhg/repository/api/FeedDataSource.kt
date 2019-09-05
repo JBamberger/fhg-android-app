@@ -12,7 +12,7 @@ import java.io.IOException
 import java.util.concurrent.Executor
 
 internal class FeedDataSource private constructor(
-        private val api: FhgEndpoint,
+        private val api: FhgApi,
         private val retryExecutor: Executor) : ItemKeyedDataSource<String, Pair<FeedItem, FeedMedia?>>() {
 
     private var retry: (() -> Any)? = null
@@ -33,52 +33,41 @@ internal class FeedDataSource private constructor(
 
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<Pair<FeedItem, FeedMedia?>>) {
-        val request = api.getFeedPage(count = params.requestedLoadSize)
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
 
-        try {
-            val response = request.execute()
-
-            if (response.isSuccessful) {
-                val items = response.body() ?: emptyList()
+        val result = when (val response = api.getFeed(params.requestedLoadSize, null)) {
+            is Download.Success -> {
                 retry = null
-                callback.onResult(items.map(::resolveMedia))
-                networkState.postValue(NetworkState.LOADED)
-                initialLoad.postValue(NetworkState.LOADED)
-            } else {
-                retry = { loadInitial(params, callback) }
-                val error = NetworkState.ERROR("error code: ${response.code()}")
-                networkState.postValue(error)
-                initialLoad.postValue(error)
+                callback.onResult(response.data)
+                NetworkState.LOADED
             }
-        } catch (e: IOException) {
-            retry = { loadInitial(params, callback) }
-            val error = NetworkState.ERROR(e.message ?: "unknown error")
-            networkState.postValue(error)
-            initialLoad.postValue(error)
+            is Download.Error -> {
+                retry = { loadInitial(params, callback) }
+                NetworkState.ERROR(response.message)
+            }
         }
+
+        networkState.postValue(result)
+        initialLoad.postValue(result)
     }
 
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
         networkState.postValue(NetworkState.LOADING)
-        val request = api.getFeedPage(before = params.key, count = params.requestedLoadSize)
 
-        try {
-            val response = request.execute()
-            if (response.isSuccessful) {
-                val items = response.body() ?: emptyList()
+        val result = when (val response = api.getFeed(params.requestedLoadSize, params.key)) {
+            is Download.Success -> {
                 retry = null
-                callback.onResult(items.map(::resolveMedia))
-                networkState.postValue(NetworkState.LOADED)
-            } else {
-                retry = { loadAfter(params, callback) }
-                networkState.postValue(NetworkState.ERROR("error code: ${response.code()}"))
+                callback.onResult(response.data)
+                NetworkState.LOADED
             }
-        } catch (e: IOException) {
-            retry = { loadAfter(params, callback) }
-            networkState.postValue(NetworkState.ERROR(e.message ?: "unknown error"))
+            is Download.Error -> {
+                retry = { loadAfter(params, callback) }
+                NetworkState.ERROR(response.message)
+            }
         }
+
+        networkState.postValue(result)
     }
 
     override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
@@ -87,25 +76,8 @@ internal class FeedDataSource private constructor(
 
     override fun getKey(pair: Pair<FeedItem, FeedMedia?>): String = pair.first.date!! //FIXME
 
-    @WorkerThread
-    private fun resolveMedia(item: FeedItem): Pair<FeedItem, FeedMedia?> {
-        val mediaId = item.featuredMedia
-        if (mediaId != null && mediaId > 0) {
-            try {
-                val response = api.getFeedMedia(mediaId).execute()
-                if (response.isSuccessful) {
-                    return Pair(item, response.body())
-                }
-            } catch (e: IOException) {
-            }
-            return Pair(item, null)
-        } else {
-            return Pair(item, null)
-        }
-    }
-
     internal class Factory(
-            private val api: FhgEndpoint,
+            private val api: FhgApi,
             private val retryExecutor: Executor) : DataSource.Factory<String, Pair<FeedItem, FeedMedia?>>() {
 
         val sourceLiveData = MutableLiveData<FeedDataSource>()
