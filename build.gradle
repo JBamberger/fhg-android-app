@@ -72,7 +72,7 @@ ext {
     lib_okhttp =                        "com.squareup.okhttp3:okhttp:$okhttp_version"
     lib_okhttp_logging_interceptor =    "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
-    def moshi_version = "1.6.0"
+    def moshi_version = "1.8.0"
     lib_moshi =         "com.squareup.moshi:moshi:$moshi_version"
     lib_moshi_kotlin =  "com.squareup.moshi:moshi-kotlin:$moshi_version"
     apt_moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
