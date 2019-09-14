@@ -72,10 +72,6 @@ internal abstract class RepoBindingModule {
 
     @Binds
     @Singleton
-    internal abstract fun bindsFhgApi(impl: FhgApiImpl): FhgApi
-
-    @Binds
-    @Singleton
     internal abstract fun bindsContext(app: Application): Context
 }
 
@@ -121,7 +117,7 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
-                .addCallAdapterFactory(LiveDataCallAdapterFactory())
+                .addCallAdapterFactory(LiveDataCallAdapter.Factory())
                 .addConverterFactory(FhgTypeConverterFactory(moshi))
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .client(okHttpClient)

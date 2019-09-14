@@ -131,7 +131,6 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
 
         override fun getObjForPosition(position: Int): Any? {
-            val p = indexedPlan
             var pos = position
             if (showWarning) {
                 if (pos == 0) {
@@ -139,11 +138,8 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
                 }
                 pos -= 1
             }
-            if (p == null) {
-                throw ArrayIndexOutOfBoundsException("There is no vplan available but pos = $pos")
-            } else {
-                return p[position]
-            }
+            return indexedPlan?.get(pos)
+                    ?: throw ArrayIndexOutOfBoundsException("There is no VPlan available but pos = $pos")
         }
 
         override fun getListenerForPosition(position: Int): Any? {
@@ -151,29 +147,20 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         }
 
         override fun getLayoutIdForPosition(position: Int): Int {
-            val p = indexedPlan
-            return if (showWarning) {
-                when {
-                    position == 0 -> return R.layout.list_flat_error
-                    p != null -> p.getLayout(position - 1)
-                    else -> throw ArrayIndexOutOfBoundsException()
+            var pos = position
+            if (showWarning) {
+                if (pos == 0) {
+                    return R.layout.list_flat_error
                 }
-            } else {
-                p?.getLayout(position) ?: throw ArrayIndexOutOfBoundsException()
+                pos -= 1
             }
+            return indexedPlan?.getLayout(pos)
+                    ?: throw ArrayIndexOutOfBoundsException("There is no VPlan available but pos = $pos")
         }
 
-        override fun getItemCount(): Int {
-            val p = indexedPlan
-            var c = 0
-            if (showWarning) c += 1
-            if (p != null) c += p.size
-
-            return c
-        }
+        override fun getItemCount() = (indexedPlan?.size ?: 0) + (if (showWarning) 1 else 0)
 
         private class IndexedVPlan(plan: VPlan) {
-
             val size = plan.day1.vPlanRows.size + plan.day2.vPlanRows.size + 3
 
             private val header1: VPlanHeader

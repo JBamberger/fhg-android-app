@@ -12,7 +12,7 @@ import java.io.IOException
 import java.util.concurrent.Executor
 
 internal class FeedDataSource private constructor(
-        private val api: FhgApi,
+        private val endpoint: FhgEndpoint,
         private val retryExecutor: Executor) : ItemKeyedDataSource<String, Pair<FeedItem, FeedMedia?>>() {
 
     private var retry: (() -> Any)? = null
@@ -36,7 +36,7 @@ internal class FeedDataSource private constructor(
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
 
-        val result = when (val response = api.getFeed(params.requestedLoadSize, null)) {
+        val result = when (val response = getFeed(params.requestedLoadSize, null)) {
             is Download.Success -> {
                 retry = null
                 callback.onResult(response.data)
@@ -55,7 +55,7 @@ internal class FeedDataSource private constructor(
     override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
         networkState.postValue(NetworkState.LOADING)
 
-        val result = when (val response = api.getFeed(params.requestedLoadSize, params.key)) {
+        val result = when (val response = getFeed(params.requestedLoadSize, params.key)) {
             is Download.Success -> {
                 retry = null
                 callback.onResult(response.data)
@@ -76,14 +76,51 @@ internal class FeedDataSource private constructor(
 
     override fun getKey(pair: Pair<FeedItem, FeedMedia?>): String = pair.first.date!! //FIXME
 
+
+
+
+
+    private fun getFeed(count: Int, before: String?): Download<List<Pair<FeedItem, FeedMedia?>>> {
+        return try {
+            val response = when (before) {
+                null -> endpoint.getFeedPage(count = count)
+                else -> endpoint.getFeedPage(count = count, before = before)
+            }.execute()
+
+            if (response.isSuccessful) {
+                Download.Success(response.body()?.map(::resolveMedia) ?: emptyList())
+            } else {
+                Download.Error("Feed download failed with response code ${response.code()}")
+            }
+        } catch (e: IOException) {
+            Download.Error(e.message ?: "Feed download failed with unknown exception.")
+        }
+    }
+
+    @WorkerThread
+    private fun resolveMedia(item: FeedItem): Pair<FeedItem, FeedMedia?> {
+        val mediaId = item.featuredMedia
+        if (mediaId != null && mediaId > 0) {
+            try {
+                val response = endpoint.getFeedMedia(mediaId).execute()
+                if (response.isSuccessful) {
+                    return Pair(item, response.body())
+                }
+            } catch (e: IOException) {
+            }
+        }
+        return Pair(item, null)
+    }
+
+
     internal class Factory(
-            private val api: FhgApi,
+            private val endpoint: FhgEndpoint,
             private val retryExecutor: Executor) : DataSource.Factory<String, Pair<FeedItem, FeedMedia?>>() {
 
         val sourceLiveData = MutableLiveData<FeedDataSource>()
 
         override fun create(): DataSource<String, Pair<FeedItem, FeedMedia?>> {
-            val source = FeedDataSource(api, retryExecutor)
+            val source = FeedDataSource(endpoint, retryExecutor)
             sourceLiveData.postValue(source)
             return source
         }

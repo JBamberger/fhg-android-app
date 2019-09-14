@@ -33,7 +33,7 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
         @Throws(IOException::class)
         override fun convert(body: ResponseBody): VPlanDay {
             try {
-                return VPlanParserV2.parseVPlanDay(body)
+                return VPlanParser.parseVPlanDay(body)
             } catch (e: Exception) {
                 e.printStackTrace()
                 throw e

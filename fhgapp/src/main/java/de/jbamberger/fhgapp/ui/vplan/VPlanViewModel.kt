@@ -7,6 +7,7 @@ import de.jbamberger.fhg.repository.Repository
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhgapp.Settings
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -17,15 +18,16 @@ class VPlanViewModel @Inject
 internal constructor(
         private val settings: Settings,
         private val repo: Repository) : ViewModel() {
-    internal var vPlan = filterVPlan(repo.getVPlan())
+    internal var vPlan = filteredVPlan()
 
     internal fun refresh() {
-        vPlan = filterVPlan(repo.getVPlan())
+        vPlan = filteredVPlan()
     }
 
-    private fun filterVPlan(unfiltered: LiveData<Resource<VPlan>>):
-            LiveData<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
-        return map(unfiltered) {
+    private fun filteredVPlan(): LiveData<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
+        return map(repo.getVPlan()) {
+            Timber.d("Result: %s", it)
+
             val settings = settings.vPlanSettings
 
             return@map Pair(settings, when (it) {

@@ -1,15 +1,16 @@
 package de.jbamberger.fhg.repository
 
-import de.jbamberger.fhg.repository.api.VPlanParserV2.parseVPlanDay
-import de.jbamberger.fhg.repository.api.VPlanParserV2.readDayAndDate
-import de.jbamberger.fhg.repository.api.VPlanParserV2.readLastUpdated
-import de.jbamberger.fhg.repository.api.VPlanParserV2.readMotdTable
-import de.jbamberger.fhg.repository.api.VPlanParserV2.readVPlanTable
-import de.jbamberger.fhg.repository.api.VPlanParserV2.readWithEncoding
+import de.jbamberger.fhg.repository.api.VPlanParser.parseVPlanDay
+import de.jbamberger.fhg.repository.api.VPlanParser.readDayAndDate
+import de.jbamberger.fhg.repository.api.VPlanParser.readLastUpdated
+import de.jbamberger.fhg.repository.api.VPlanParser.readMotdTable
+import de.jbamberger.fhg.repository.api.VPlanParser.readVPlanTable
+import de.jbamberger.fhg.repository.api.VPlanParser.readWithEncoding
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
 import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.jsoup.Jsoup
@@ -32,7 +33,7 @@ class VPlanParserTest {
         private const val v1_lastUpdated = "Stand: 23.03.2018 10:22"
         private const val v1_dayAndDate = "23.3.2018 Freitag"
 
-        private const val v2_motd = "<font color=#FF5252>K1/2 haben unterrichtsfrei.</font><br>" +
+        private const val v2_motd = "K1/2 haben unterrichtsfrei.<br>" +
                 "Die Schüler aus der 10b nehmen diese Woche am Unterricht der 10a Teil.<br>" +
                 "<b>SMV-Treffen</b> heute (Mo) in der 6. Std. im Olymp!"
 
@@ -61,10 +62,9 @@ class VPlanParserTest {
     @Test
     @Throws(Exception::class)
     fun test_parseVPlanDay() {
-        val plan = String(load("v1.html"), Charset.forName("windows-1252"))
         val day = VPlanDay(VPlanHeader(v1_dayAndDate, v1_lastUpdated, v1_motd), getV1Table())
 
-        assertThat(parseVPlanDay(plan), `is`(equalTo(day)))
+        assertThat(parseVPlanDay(ResponseBody.create(MediaType.parse("text/html; charset=\"windows-1252\""), load("v1.html"))), `is`(equalTo(day)))
     }
 
     @Test
@@ -102,16 +102,15 @@ class VPlanParserTest {
     @Throws(Exception::class)
     fun test_readWithEncoding() {
         val withEnc = load("v1.html")
-
-        assertThat(readWithEncoding(withEnc, null),
+        assertThat(readWithEncoding(ResponseBody.create(null, withEnc)),
                 `is`(equalTo(String(withEnc, Charset.forName("windows-1252")))))
 
-        assertThat(readWithEncoding(withEnc, MediaType.parse("text/html; charset=\"utf-8\"")),
+        assertThat(readWithEncoding(ResponseBody.create(MediaType.parse("text/html; charset=\"utf-8\""), withEnc)),
                 `is`(equalTo(String(withEnc, Charset.forName("utf-8")))))
 
         val withoutEncoding = load("v1-nohead.html")
 
-        assertThat(readWithEncoding(withoutEncoding, null),
+        assertThat(readWithEncoding(ResponseBody.create(null, withoutEncoding)),
                 `is`(equalTo(String(withoutEncoding, Charset.defaultCharset()))))
     }
 }

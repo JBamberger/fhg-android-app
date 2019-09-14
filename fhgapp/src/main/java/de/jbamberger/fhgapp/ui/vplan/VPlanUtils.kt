@@ -4,6 +4,7 @@ import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.Settings
+import java.util.*
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -74,19 +75,17 @@ object VPlanUtils {
         val patternBuilder = StringBuilder()
 
         courses.forEachIndexed { index, course ->
-            run {
-                if (index > 0) {
-                    patternBuilder.append("|")
-                }
-                patternBuilder.append(PATTERN_START)
-                patternBuilder.append(course.toLowerCase().trim { it <= ' ' })
-                patternBuilder.append(PATTERN_END)
+            if (index > 0) {
+                patternBuilder.append("|")
             }
+            patternBuilder.append(PATTERN_START)
+            patternBuilder.append(course.toLowerCase(Locale.ROOT).trim { it <= ' ' })
+            patternBuilder.append(PATTERN_END)
         }
-        val pattern = patternBuilder.toString().toRegex()
+        val pattern = patternBuilder.toString().toRegex(RegexOption.IGNORE_CASE)
 
         return {
-            it.grade.matches(IS_COURSE_PATTERN) && it.subject.toLowerCase().matches(pattern)
+            it.grade.matches(IS_COURSE_PATTERN) && it.subject.matches(pattern)
         }
     }
 }
