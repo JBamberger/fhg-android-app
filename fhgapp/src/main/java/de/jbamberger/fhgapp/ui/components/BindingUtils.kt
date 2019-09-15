@@ -19,8 +19,10 @@ object BindingUtils {
 
     @JvmStatic
     @BindingAdapter("html")
-    fun bindHtml(view: TextView, html: String) {
-        view.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    fun bindHtml(view: TextView, html: String?) {
+        view.text = if (html == null) {
+            ""
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
         } else {
             @Suppress("DEPRECATION")

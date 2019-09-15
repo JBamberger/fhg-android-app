@@ -198,7 +198,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
             fun getLayout(position: Int): Int {
                 return when (position) {
                     0, bound1 -> R.layout.vplan_header
-                    in 1 until bound1, in (bound1 + 1) until bound2 -> R.layout.vplan_item
+                    in 1 until bound1, in (bound1 + 1) until bound2 -> R.layout.vplan_item_variant
                     bound2 -> R.layout.vplan_footer
                     else -> throw ArrayIndexOutOfBoundsException()
                 }

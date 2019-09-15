@@ -42,11 +42,11 @@ data class VPlanRow(
         val content: String,
         val grade: String,
         val kind: String,
-        val isMarkedNew: Boolean/*,
-        val subNr: String,
-        val subTeacher: String,
-        val subFrom: String,
-        val subTo: String*/
+        val isMarkedNew: Boolean,
+        val subNr: String? = null,
+        val subTeacher: String? = null,
+        val subFrom: String? = null,
+        val subTo: String? = null
 )
 
 data class VPlanHeader(
