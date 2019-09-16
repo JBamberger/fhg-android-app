@@ -5,9 +5,7 @@ import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import de.jbamberger.fhg.repository.Repository
 import de.jbamberger.fhg.repository.Resource
-import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhgapp.Settings
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -24,16 +22,14 @@ internal constructor(
         vPlan = filteredVPlan()
     }
 
-    private fun filteredVPlan(): LiveData<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
+    private fun filteredVPlan(): LiveData<Pair<Settings.VPlanSettings, Resource<List<VPlanListItem>>>> {
         return map(repo.getVPlan()) {
-            Timber.d("Result: %s", it)
-
             val settings = settings.vPlanSettings
 
             return@map Pair(settings, when (it) {
-                is Resource.Success -> Resource.Success(
-                        VPlanUtils.filter(it.data, VPlanUtils.getVPlanMatcher(settings)))
-                else -> it
+                is Resource.Success -> Resource.Success(VPlanUtils.filterV2(it.data, VPlanUtils.getVPlanMatcher(settings)))
+                is Resource.Loading -> Resource.Loading(it.data?.let { VPlanUtils.filterV2(it, VPlanUtils.getVPlanMatcher(settings)) })
+                is Resource.Error -> Resource.Error(it.message, it.data?.let { VPlanUtils.filterV2(it, VPlanUtils.getVPlanMatcher(settings)) })
             })
         }
     }

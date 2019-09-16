@@ -31,6 +31,16 @@ object VPlanUtils {
                 .build()
     }
 
+    fun filterV2(plan: VPlan, matcher: (VPlanRow) -> Boolean): List<VPlanListItem> {
+        val out = mutableListOf<VPlanListItem>()
+        out.add(VPlanListItem.Header(plan.day1.header))
+        out.addAll(plan.day1.vPlanRows.filter(matcher).map { VPlanListItem.Row(it) })
+        out.add(VPlanListItem.Header(plan.day2.header))
+        out.addAll(plan.day2.vPlanRows.filter(matcher).map { VPlanListItem.Row(it) })
+        out.add(VPlanListItem.Footer)
+        return out
+    }
+
     private fun filter(day: VPlanDay, matcher: (VPlanRow) -> Boolean): VPlanDay {
         return VPlanDay(day.header, day.vPlanRows.filter(matcher))
     }

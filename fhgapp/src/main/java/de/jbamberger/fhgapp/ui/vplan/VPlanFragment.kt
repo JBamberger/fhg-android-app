@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhg.repository.data.VPlan
-import de.jbamberger.fhg.repository.data.VPlanHeader
-import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.Settings
@@ -26,7 +24,7 @@ import de.jbamberger.fhgapp.util.Utils
  */
 class VPlanFragment : BaseFragment<VPlanViewModel>(),
         SwipeRefreshLayout.OnRefreshListener,
-        Observer<Pair<Settings.VPlanSettings, Resource<VPlan>>> {
+        Observer<Pair<Settings.VPlanSettings, Resource<List<VPlanListItem>>>> {
 
     override val viewModelClass: Class<VPlanViewModel>
         get() = VPlanViewModel::class.java
@@ -89,21 +87,21 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
         viewModel.vPlan.observe(this, this)
     }
 
-    override fun onChanged(filteredPlan: Pair<Settings.VPlanSettings, Resource<VPlan>>?) {
+    override fun onChanged(filteredPlan: Pair<Settings.VPlanSettings, Resource<List<VPlanListItem>>>?) {
         if (filteredPlan == null) return
 
         parent?.setSubtitle(getSubtitle(filteredPlan.first))
         val vPlanResource = filteredPlan.second
         when (vPlanResource) {
             is Resource.Loading -> {
-                adapter.setData(false, vPlanResource.data)
+                adapter.setData(false, vPlanResource.data ?: emptyList())
             }
             is Resource.Success -> {
                 adapter.setData(false, vPlanResource.data)
                 binding.isRefreshing = false
             }
             is Resource.Error -> {
-                adapter.setData(true, vPlanResource.data)
+                adapter.setData(true, vPlanResource.data?: emptyList())
                 binding.isRefreshing = false
             }
         }
@@ -120,89 +118,23 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(),
 
     private class VPlanAdapter : DataBindingBaseAdapter() {
 
-        private var showWarning = true
-        private var indexedPlan: IndexedVPlan? = null
+        private var content: List<VPlanListItem> = emptyList()
 
-        fun setData(showWarning: Boolean, vPlan: VPlan?) {
-            this.showWarning = showWarning
-            indexedPlan = vPlan?.let { IndexedVPlan(it) }
-
+        fun setData(showWarning: Boolean, plan: List<VPlanListItem>) {
+            content = if (showWarning) {
+                val tmp = mutableListOf<VPlanListItem>()
+                tmp.add(VPlanListItem.Warning)
+                tmp.addAll(plan)
+                tmp
+            } else {
+                plan
+            }
             notifyDataSetChanged()
         }
 
-        override fun getObjForPosition(position: Int): Any? {
-            var pos = position
-            if (showWarning) {
-                if (pos == 0) {
-                    return null
-                }
-                pos -= 1
-            }
-            return indexedPlan?.get(pos)
-                    ?: throw ArrayIndexOutOfBoundsException("There is no VPlan available but pos = $pos")
-        }
-
-        override fun getListenerForPosition(position: Int): Any? {
-            return null
-        }
-
-        override fun getLayoutIdForPosition(position: Int): Int {
-            var pos = position
-            if (showWarning) {
-                if (pos == 0) {
-                    return R.layout.list_flat_error
-                }
-                pos -= 1
-            }
-            return indexedPlan?.getLayout(pos)
-                    ?: throw ArrayIndexOutOfBoundsException("There is no VPlan available but pos = $pos")
-        }
-
-        override fun getItemCount() = (indexedPlan?.size ?: 0) + (if (showWarning) 1 else 0)
-
-        private class IndexedVPlan(plan: VPlan) {
-            val size = plan.day1.vPlanRows.size + plan.day2.vPlanRows.size + 3
-
-            private val header1: VPlanHeader
-            private val rows1: List<VPlanRow>
-            private val rows2: List<VPlanRow>
-            private val header2: VPlanHeader
-            private val bound1: Int
-            private val bound2: Int
-
-            init {
-                val day1 = plan.day1
-                val day2 = plan.day2
-
-                rows1 = day1.vPlanRows
-                rows2 = day2.vPlanRows
-                bound1 = rows1.size + 1
-                bound2 = bound1 + rows2.size + 1
-                header1 = day1.header
-                header2 = day2.header
-            }
-
-            operator fun get(position: Int): Any? {
-                if (position !in 0 until size) throw ArrayIndexOutOfBoundsException()
-
-                return when (position) {
-                    0 -> header1
-                    in 1 until bound1 -> rows1[position - 1]
-                    bound1 -> header2
-                    in (bound1 + 1) until bound2 -> rows2[position - bound1 - 1]
-                    bound2 -> null // footer
-                    else -> throw ArrayIndexOutOfBoundsException()
-                }
-            }
-
-            fun getLayout(position: Int): Int {
-                return when (position) {
-                    0, bound1 -> R.layout.vplan_header
-                    in 1 until bound1, in (bound1 + 1) until bound2 -> R.layout.vplan_item_variant
-                    bound2 -> R.layout.vplan_footer
-                    else -> throw ArrayIndexOutOfBoundsException()
-                }
-            }
-        }
+        override fun getItemCount() = content.size
+        override fun getObjForPosition(position: Int) = content[position].getData()
+        override fun getLayoutIdForPosition(position: Int) = content[position].getLayoutId()
+        override fun getListenerForPosition(position: Int): Nothing? = null
     }
 }
