@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import de.jbamberger.fhgapp.App
 import javax.inject.Singleton
 
 /**
@@ -14,6 +15,10 @@ import javax.inject.Singleton
 
 @Module(includes = [(ViewModelModule::class)])
 internal class AppModule {
+
+    @Provides
+    @Singleton
+    fun providesApplication(app: App): Application = app
 
     @Provides
     @Singleton

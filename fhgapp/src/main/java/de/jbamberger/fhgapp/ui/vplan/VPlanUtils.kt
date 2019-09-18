@@ -1,7 +1,6 @@
 package de.jbamberger.fhgapp.ui.vplan
 
 import de.jbamberger.fhg.repository.data.VPlan
-import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.Settings
 import java.util.*
@@ -15,23 +14,16 @@ object VPlanUtils {
     private const val PATTERN_START = "(.*"
     private const val PATTERN_END = ".*)"
     private val GRADE_PATTERNS = arrayOf(
-            "(.*5[^0-9]*[aA].*)", "(.*5[^0-9]*[bB].*)", "(.*5[^0-9]*[cC].*)", "(.*5[^0-9]*[dD].*)", "(.*5[^0-9]*[eE].*)",
-            "(.*6[^0-9]*[aA].*)", "(.*6[^0-9]*[bB].*)", "(.*6[^0-9]*[cC].*)", "(.*6[^0-9]*[dD].*)", "(.*6[^0-9]*[eE].*)",
-            "(.*7[^0-9]*[aA].*)", "(.*7[^0-9]*[bB].*)", "(.*7[^0-9]*[cC].*)", "(.*7[^0-9]*[dD].*)", "(.*7[^0-9]*[eE].*)",
-            "(.*8[^0-9]*[aA].*)", "(.*8[^0-9]*[bB].*)", "(.*8[^0-9]*[cC].*)", "(.*8[^0-9]*[dD].*)", "(.*8[^0-9]*[eE].*)",
-            "(.*9[^0-9]*[aA].*)", "(.*9[^0-9]*[bB].*)", "(.*9[^0-9]*[cC].*)", "(.*9[^0-9]*[dD].*)", "(.*9[^0-9]*[eE].*)",
-            "(.*10[^0-9]*[aA].*)", "(.*10[^0-9]*[bB].*)", "(.*10[^0-9]*[cC].*)", "(.*10[^0-9]*[dD].*)", "(.*10[^0-9]*[eE].*)",
+            "(.*5\\D*[aA].*)", "(.*5\\D*[bB].*)", "(.*5\\D*[cC].*)", "(.*5\\D*[dD].*)", "(.*5\\D*[eE].*)",
+            "(.*6\\D*[aA].*)", "(.*6\\D*[bB].*)", "(.*6\\D*[cC].*)", "(.*6\\D*[dD].*)", "(.*6\\D*[eE].*)",
+            "(.*7\\D*[aA].*)", "(.*7\\D*[bB].*)", "(.*7\\D*[cC].*)", "(.*7\\D*[dD].*)", "(.*7\\D*[eE].*)",
+            "(.*8\\D*[aA].*)", "(.*8\\D*[bB].*)", "(.*8\\D*[cC].*)", "(.*8\\D*[dD].*)", "(.*8\\D*[eE].*)",
+            "(.*9\\D*[aA].*)", "(.*9\\D*[bB].*)", "(.*9\\D*[cC].*)", "(.*9\\D*[dD].*)", "(.*9\\D*[eE].*)",
+            "(.*10\\D*[aA].*)", "(.*10\\D*[bB].*)", "(.*10\\D*[cC].*)", "(.*10\\D*[dD].*)", "(.*10\\D*[eE].*)",
             "(.*[kK].*1.*)", "(.*[kK].*2.*)")
     private val IS_COURSE_PATTERN = "(.*[kK].*2.*)|(.*[kK].*1.*)".toRegex()
 
-    fun filter(plan: VPlan, matcher: (VPlanRow) -> Boolean): VPlan {
-        return VPlan.Builder()
-                .addDay1(filter(plan.day1, matcher))
-                .addDay2(filter(plan.day2, matcher))
-                .build()
-    }
-
-    fun filterV2(plan: VPlan, matcher: (VPlanRow) -> Boolean): List<VPlanListItem> {
+    fun filter(plan: VPlan, matcher: (VPlanRow) -> Boolean): List<VPlanListItem> {
         val out = mutableListOf<VPlanListItem>()
         out.add(VPlanListItem.Header(plan.day1.header))
         out.addAll(plan.day1.vPlanRows.filter(matcher).map { VPlanListItem.Row(it) })
@@ -41,61 +33,29 @@ object VPlanUtils {
         return out
     }
 
-    private fun filter(day: VPlanDay, matcher: (VPlanRow) -> Boolean): VPlanDay {
-        return VPlanDay(day.header, day.vPlanRows.filter(matcher))
-    }
-
-    fun getVPlanMatcher(settings: Settings.VPlanSettings): (VPlanRow) -> Boolean {
-        if (settings.showAll) {
-            return { true }
-        } else {
-            if (settings.grades.isEmpty()) {
-                return { true }
-            }
-            val gradeMatcher = getGradeMatcher(settings.grades)
-            if (settings.courses.isEmpty()) {
-                return gradeMatcher
-            }
-            val courseMatcher = getCourseMatcher(settings.courses)
-            return { gradeMatcher(it) && courseMatcher(it) }
-        }
+    fun getVPlanMatcher(settings: Settings.VPlanSettings): (VPlanRow) -> Boolean = when {
+        settings.showAll || settings.grades.isEmpty() -> { it -> true }
+        settings.courses.isEmpty() -> getGradeMatcher(settings.grades)
+        else -> { it -> getGradeMatcher(settings.grades)(it) && getCourseMatcher(settings.courses)(it) }
     }
 
     private fun getGradeMatcher(grades: Set<String>): (VPlanRow) -> Boolean {
-        val patternBuilder = StringBuilder()
-
-        grades.forEachIndexed { index, grade ->
-            run {
-                GRADE_PATTERNS.forEach {
-                    if (grade.matches(it.toRegex())) {
-                        if (index > 0) {
-                            patternBuilder.append("|")
-                        }
-                        patternBuilder.append(it)
-                    }
-                }
-            }
-        }
-
-        val pattern = patternBuilder.toString().toRegex()
+        val pattern = grades
+                .flatMap { grade -> GRADE_PATTERNS.filter { grade.matches(it.toRegex()) } }
+                .joinToString("|")
+                .toRegex()
         return { it.grade.matches(pattern) }
     }
 
     private fun getCourseMatcher(courses: Set<String>): (VPlanRow) -> Boolean {
-        val patternBuilder = StringBuilder()
+        val pattern = courses.joinToString(
+                separator = "$PATTERN_END|$PATTERN_START",
+                prefix = PATTERN_START,
+                postfix = PATTERN_END
+        ) { course ->
+            course.toLowerCase(Locale.ROOT).trim { it <= ' ' }
+        }.toRegex(RegexOption.IGNORE_CASE)
 
-        courses.forEachIndexed { index, course ->
-            if (index > 0) {
-                patternBuilder.append("|")
-            }
-            patternBuilder.append(PATTERN_START)
-            patternBuilder.append(course.toLowerCase(Locale.ROOT).trim { it <= ' ' })
-            patternBuilder.append(PATTERN_END)
-        }
-        val pattern = patternBuilder.toString().toRegex(RegexOption.IGNORE_CASE)
-
-        return {
-            it.grade.matches(IS_COURSE_PATTERN) && it.subject.matches(pattern)
-        }
+        return { it.grade.matches(IS_COURSE_PATTERN) && it.subject.matches(pattern) }
     }
 }
