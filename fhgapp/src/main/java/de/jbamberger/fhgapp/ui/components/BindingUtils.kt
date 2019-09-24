@@ -20,20 +20,17 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("html")
     fun bindHtml(view: TextView, html: String?) {
-        view.text = if (html == null) {
-            ""
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
-        } else {
-            @Suppress("DEPRECATION")
-            Html.fromHtml(html)
+        view.text = when {
+            html == null -> ""
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+            else -> @Suppress("DEPRECATION") Html.fromHtml(html)
         }
     }
 
     @JvmStatic
     @BindingAdapter("visibleIfNotEmpty")
-    fun bindVisibilityIfEmpty(view: View, value: String) {
-        view.visibility = if (!value.isBlank()) View.VISIBLE else View.GONE
+    fun bindVisibilityIfEmpty(view: View, value: String?) {
+        view.visibility = if (value == null || value.isBlank()) View.GONE else View.VISIBLE
     }
 
     @JvmStatic

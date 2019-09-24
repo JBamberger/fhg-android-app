@@ -84,6 +84,7 @@
             android:layout_height="wrap_content"
             app:html="@{obj.subTeacher}"
             app:vPlanTextColor="@{obj}"
+            app:visibleIfNotEmpty="@{obj.subTeacher}"
             tools:text="teacher" />
 
         <TextView
@@ -94,6 +95,7 @@
             android:layout_height="wrap_content"
             app:html='@{obj.subFrom}'
             app:vPlanTextColor="@{obj}"
+            app:visibleIfNotEmpty="@{obj.subFrom}"
             tools:text="from" />
 
         <TextView
@@ -104,6 +106,7 @@
             android:layout_height="wrap_content"
             app:html='@{obj.subTo}'
             app:vPlanTextColor="@{obj}"
+            app:visibleIfNotEmpty="@{obj.subTo}"
             tools:text="to" />
 
 
