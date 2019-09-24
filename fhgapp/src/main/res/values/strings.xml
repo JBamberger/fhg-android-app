@@ -30,6 +30,7 @@
 
     <!-- About -->
     <string name="title_activity_about">Fhg Radolfzell</string>
+    <string name="title_activity_license">Open Source Licenses</string>
 
     <string name="about_contact_title">Über den Entwickler</string>
     <string name="about_contact_content">Die Applikation wird von Jannik Bamberger entwickelt. Bei Fragen kann eine Mail an dev.jbamberger@gmail.com geschrieben werden.</string>

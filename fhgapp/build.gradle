@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -77,7 +76,6 @@ dependencies {
     implementation lib_support_recyclerview
     implementation lib_support_swiperefreshlayout
 
-    implementation play_oss_licenses
     kapt apt_glide
     implementation lib_timber
 

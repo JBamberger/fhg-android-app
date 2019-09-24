@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.AboutActivityBinding
 import de.jbamberger.fhgapp.ui.components.BaseActivity
@@ -24,8 +23,8 @@ class AboutActivity : BaseActivity<AboutViewModel>() {
 
         binding.setContactDevListener { Utils.contactDeveloper(this) }
         binding.setVisitRepoListener { Utils.openUrl(this, R.string.repo_link) }
-        binding.setShowOssLicencesListener { startActivity(Intent(this, OssLicensesMenuActivity::class.java)) }
         binding.setVisitFhgListener { Utils.openUrl(this, R.string.fhg_link) }
+        binding.setShowOssLicencesListener { this.startActivity(Intent(this, LicenseActivity::class.java)) }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
