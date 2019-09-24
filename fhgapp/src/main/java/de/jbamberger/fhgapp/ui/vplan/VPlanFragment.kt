@@ -102,6 +102,5 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         override fun getItemCount() = content.size
         override fun getObjForPosition(position: Int) = content[position].getData()
         override fun getLayoutIdForPosition(position: Int) = content[position].getLayoutId()
-        override fun getListenerForPosition(position: Int): Nothing? = null
     }
 }

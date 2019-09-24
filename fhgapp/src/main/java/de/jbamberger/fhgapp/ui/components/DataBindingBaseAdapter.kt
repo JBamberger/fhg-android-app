@@ -1,11 +1,10 @@
 package de.jbamberger.fhgapp.ui.components
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.ViewGroup
-
 import de.jbamberger.fhgapp.BR
 
 /**
@@ -36,12 +35,8 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
      * @param holder   View to bind to
      * @param position index of the data item
      */
-    override fun onBindViewHolder(holder: DataBindingViewHolder,
-                                  position: Int) {
-        val obj = getObjForPosition(position)
-        val listener = getListenerForPosition(position)
-        holder.bind(obj, listener)
-    }
+    override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) =
+            holder.bind(getObjForPosition(position))
 
     /**
      * Returns the view type of the data item at the given position
@@ -53,7 +48,6 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
         return getLayoutIdForPosition(position)
     }
 
-
     /**
      * Returns the data item at a given position.
      *
@@ -61,14 +55,6 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
      * @return data item at position
      */
     protected abstract fun getObjForPosition(position: Int): Any?
-
-    /**
-     * Returns the event listener for the given position.
-     *
-     * @param position index of the data item
-     * @return event handler at position
-     */
-    protected abstract fun getListenerForPosition(position: Int): Any?
 
     /**
      * Returns the layout id for the View at position
@@ -88,11 +74,9 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
          * Binds the data object and event listener to the View.
          *
          * @param obj      data object
-         * @param listener event listener
          */
-        fun bind(obj: Any?, listener: Any?) {
+        fun bind(obj: Any?) {
             binding.setVariable(BR.obj, obj)
-            binding.setVariable(BR.listener, listener)
             binding.executePendingBindings()
         }
 

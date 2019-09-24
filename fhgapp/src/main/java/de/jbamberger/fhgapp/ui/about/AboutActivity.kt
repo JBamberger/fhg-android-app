@@ -2,7 +2,6 @@ package de.jbamberger.fhgapp.ui.about
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
@@ -10,12 +9,9 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.AboutActivityBinding
 import de.jbamberger.fhgapp.ui.components.BaseActivity
-import de.jbamberger.fhgapp.ui.components.DataBindingAdapter
 import de.jbamberger.fhgapp.util.Utils
 
 class AboutActivity : BaseActivity<AboutViewModel>() {
-
-    private val adapter: DataBindingAdapter = DataBindingAdapter()
 
     override val viewModelClass: Class<AboutViewModel>
         get() = AboutViewModel::class.java
