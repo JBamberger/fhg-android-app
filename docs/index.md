@@ -2,8 +2,6 @@
 layout: home
 ---
 
-# FHG Android App
-
 Die FHG Android App erlaubt es einfach den Vertretungsplan anzuschauen und zu
 filtern.
 
