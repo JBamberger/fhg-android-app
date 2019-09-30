@@ -12,6 +12,7 @@ import androidx.databinding.BindingAdapter
 import de.jbamberger.fhg.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
@@ -24,6 +25,16 @@ object BindingUtils {
             html == null -> ""
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
             else -> @Suppress("DEPRECATION") Html.fromHtml(html)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("stripHtml")
+    fun bindStrippingHtml(view: TextView, html: String?) {
+        view.text =  when {
+            html == null -> ""
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString()
+            else -> @Suppress("DEPRECATION") Html.fromHtml(html).toString()
         }
     }
 

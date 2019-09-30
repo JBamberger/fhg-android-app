@@ -8,20 +8,18 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia
-import de.jbamberger.fhg.repository.util.formatAsAspectRatio
-import de.jbamberger.fhg.repository.util.getSaveImgSize
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
@@ -52,7 +50,11 @@ class FeedFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         val glide = GlideApp.with(this)
         val adapter = FeedAdapter(glide) { model.retry() }
+
+        val layoutManager = LinearLayoutManager(context)
+        feedContainer.layoutManager = layoutManager
         feedContainer.adapter = adapter
+        feedContainer.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
 
         model.posts.observe(this, Observer { adapter.submitList(it) })
         model.networkState.observe(this, Observer { adapter.setNetworkState(it) })
@@ -133,46 +135,69 @@ class FeedFragment : Fragment(), Injectable {
 
         private class FeedItemHolder(
                 private val glide: GlideRequests, view: View) : RecyclerView.ViewHolder(view) {
-            private val layout = view.findViewById<ConstraintLayout>(R.id.feed_item_content)
             private val title = view.findViewById<TextView>(R.id.title)
-            private val content = view.findViewById<TextView>(R.id.content)
             private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
 
             private val textLoading = view.context.getString(R.string.feed_status_loading)
 
             private var post: Pair<FeedItem, FeedMedia?>? = null
+            private var link: String? = null
 
             init {
                 view.setOnClickListener {
-                    post?.first?.link?.let { link -> Utils.openUrl(view.context, link) }
+                    this.link?.let { Utils.openUrl(view.context, it) }
+                }
+            }
+
+            private fun FeedMedia.selectMediaVariant(): FeedMedia.ImageSize? {
+                val sizes = this.media_details.sizes
+                return try {
+                    sizes.entries.first { it.key == "thumbnail" }.value
+                } catch (e: NoSuchElementException) {
+                    sizes.values.firstOrNull()
                 }
             }
 
             fun bind(post: Pair<FeedItem, FeedMedia?>?) {
                 this.post = post
-                BindingUtils.bindHtml(title, post?.first?.title?.rendered ?: textLoading)
-                BindingUtils.bindHtml(content, post?.first?.excerpt?.rendered ?: textLoading)
+                this.link = post?.first?.link
+
+                if (post == null) {
+                    this.post = null
+                    this.link = null
+                } else {
+                    val item = post.first
+                    val itemTitle = item.title?.rendered
+                    val itemExcerpt = item.excerpt?.rendered
+
+                    val titleString = when {
+                        itemTitle?.isNotBlank() == true -> itemTitle
+                        itemExcerpt?.isNotBlank() == true -> itemExcerpt
+                        else -> ""
+                    }
+                    BindingUtils.bindStrippingHtml(title, titleString)
+                }
 
                 val media = post?.second
-                val size = media?.getSaveImgSize()
-                if (size != null) {
+                val variant = post?.second?.selectMediaVariant()
+                if (media != null && variant != null) {
                     featuredMedia.visibility = View.VISIBLE
-                    val set = ConstraintSet()
-                    set.clone(layout)
-                    set.setDimensionRatio(R.id.featured_media, size.formatAsAspectRatio())
-                    set.applyTo(layout)
-
-                    glide.load(media)
+                    featuredMedia.contentDescription = when {
+                        media.caption.rendered.isNotBlank() -> media.caption.rendered
+                        else -> featuredMedia.context.getString(R.string.feed_media_content_desctiption)
+                    }
+                    glide.load(variant.source_url)
                             .centerInside()
                             .placeholder(R.drawable.ic_image_black_24dp)
                             .error(R.drawable.ic_broken_image_black_24dp)
                             .fallback(R.drawable.ic_broken_image_black_24dp)
                             .into(featuredMedia)
-                    return
+                } else {
+                    featuredMedia.visibility = View.INVISIBLE
+                    featuredMedia.contentDescription = featuredMedia.context
+                            .getString(R.string.feed_media_content_desctiption)
+                    glide.clear(featuredMedia)
                 }
-                featuredMedia.visibility = View.GONE
-                glide.clear(featuredMedia)
-
             }
 
             companion object {

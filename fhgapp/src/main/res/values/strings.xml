@@ -97,6 +97,7 @@
     <string name="contact_phone_uri" translatable="false">tel:0049773294780</string>
     <string name="contact_navigation_uri" translatable="false">google.navigation:q=Friedrich-Hecker-Gymnasium,+Markelfinger+Straße,+Radolfzell+am+Bodensee</string>
     <string name="contact_navigation_package" translatable="false">com.google.android.apps.maps</string>
+    <string name="feed_media_content_desctiption">Begleitendes Bild zu dem Beitrag</string>
 
 
 </resources>
