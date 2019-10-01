@@ -4,41 +4,53 @@ Things you can do:
 - reporting bugs
 - submitting feature requests and ideas
 - submit pull requests
-- or just ask me what to do ;)
+- or just ask me
 
 
 # Bug reports:
 
-Create an issue with the bug report template and include as much information as possible.
-The more information is available, the easier it is to fix the issue.
+Create an issue with the bug report template and include as much information as possible. The more
+information is available, the easier it is to fix the issue.
 
 # Feature requests:
 
-Create a detailed description, using the feature request template.
-I will then give my opinion on the topic and then we can decide what to do with the idea.
+Describe what you would like to see in the Application using the feature request template. Then we
+can negotiate if and how this can be done.
 
+# Contributing code or updating the repository:
 
+If you'd like to contribute code or update some other file in the repository you create a fork of
+the repository. Then you make the desired changes in your copy of the repository and push them. If
+you are happy with what you've done you can create a pull request. Describe your the changes you
+made and why they are necessary. Then I'll take a look at it and merge the changes if appropriate.
+If there are some further changes required, you can just add another commit in your copy and the PR
+is updated automatically.
 
-# The development:
-
-In the issues view you can also see the milestones of the application.
-each milestone, consists of a major.minor version number and has a corresponding development branch called dev-major.minor
-If you want to fix an issue for some milestone, fork the repository and create a branch dev-major.minor-#issue
-After you finished the development, create a pull request from your branch to the dev-major.minor branch.
-
-There is only one exception. The currently deployed version has no dev-major.minor branch, since the code is on the master branch.
-If there are some issues for the current version, there should be a branch called dev-major.minor.patch.
-This branch should only contain bug fixes and no functional changes.
-For an issue in the deployed app, create a branch called dev-major.minor.patch-#issue and create a pull request against the patch branch.
 
 Some points about PRs:
-Make sure, that travis thrown no errors and include test cases if possible 
-(Yes, i am aware, that the test coverage is not great at the moment, but it is on the todo list :P).
+- If you want to solve an issue leave a short comment at the issue so that others know
+  about it and don't solve the same problem.
+- Make sure, that the CI does not throw any errors
+- Ideally add some test cases to the PR (Yes, i am aware that the test coverage is not great at the
+  moment, but it is on the todo list :P).
 
-# Deployment
+# Deployment and releases:
 
-At the moment, i will do all the deployment work. Maybe i'll automate this at some point, but at the moment there is no need to do so.
+There is no automation for deployment and releases because there was no need to do so. This might
+change in the future but for now I'll do it by hand.
+
+## Release checklist:
+
+- Make sure the app builds cleanly and the CI has no errors.
+- Bump the version code and version name.
+- Build release bundle with upload certificate.
+- Check if the release binary is not broken.
+- Create a git tag describing the changes.
+- Push the release to git.
+- Update the Github release.
+- Create a new release in Google Play.
+- Upload the deobfuscation files if necessary.
 
 # Questions
 
-Just write a mail. You can do so from the application if you do not want to search my address.
+Just write a mail to me or add a comment on an issue if the question is related.

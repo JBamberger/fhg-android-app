@@ -5,7 +5,10 @@ about: Create a report to help us improve
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+Describe what happens when the bug appears.
+
+**Expected behavior**
+Describe what you would expect to happen.
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -14,12 +17,8 @@ Steps to reproduce the behavior:
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
-
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
-
 
 **Smartphone (please complete the following information):**
  - Device: [e.g. Samsung Galaxy S8]
@@ -27,4 +26,4 @@ If applicable, add screenshots to help explain your problem.
  - Version code [e.g. 22]
 
 **Additional context**
-Add any other context about the problem here.
+Add any other information that might help, e.g. stack traces.
