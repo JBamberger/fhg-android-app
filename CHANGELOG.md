@@ -1,6 +1,41 @@
 Change Log
 ==========
 
+Version 3.1.5 *(2018-09-24)*
+----------------------------
+- Entfernt Abhängigkeit von Google OSS License Bibliothek um Größe zu sparen und Drittanbietersoftware zu reduzieren.
+
+Version 3.1.4 *(2018-09-24)*
+----------------------------
+- Verbessert die Code-Qualität
+- Anpassung an verändertes Vertretungsplan-Layout
+
+Version 3.1.3 *(2018-09-16)*
+----------------------------
+- Behebt Abstürze die in der vorherigen Version eingeführt wurden.
+
+Version 3.1.2 *(2019-09-15)*
+----------------------------
+- Anpassung an verändertes Vertretungsplan-Layout
+
+Version 3.1.1-1 *(2019-07-07)*
+----------------------------
+- Der Vertretungsplan-Parser ist jetzt robuster gegenüber Änderungen am Layout 
+
+Version 3.1.1 *(2018-09-20)*
+----------------------------
+- Anpassung an verändertes Vertretungsplan-Layout
+
+Version 3.1.0 *(2018-09-18)*
+----------------------------
+- Viele interne Verbesserungen welche die Stabilität der App verbessern.
+- Dynamisches nachladen älterer Beiträge im Feed.
+- Anpassung an verändertes Vertretungsplan-Layout
+
+Version 3.0.2 *(2018-04-09)*
+----------------------------
+- Umgekehrte Reihenfolge des Feeds so dass die neusten Beiträge oben stehen.
+
 Version 3.0.1 *(2018-03-08)*
 ----------------------------
 - Absturz auf Geräten mit Android Versionen älter als Android Lollipop behoben.
