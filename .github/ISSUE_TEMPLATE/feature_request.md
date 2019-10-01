@@ -4,7 +4,7 @@ about: Suggest an idea for this project
 
 ---
 
-**Problem solved by the requested Feature**
+**Problem solved by the requested feature**
 Describe what problem the requested feature would solve.
 
 **Description of the feature**
