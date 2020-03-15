@@ -43,9 +43,8 @@ internal class VPlanResource
     }
 
     private fun fetchFromNetwork(dbSource: LiveData<VPlan>) {
-        val m = MediatorLiveData<ApiResponse<VPlan>>()
-        m.addSource(getVPlan(), m::setValue)
-        val apiResponse = m
+        val apiResponse = MediatorLiveData<ApiResponse<VPlan>>()
+        apiResponse.addSource(getVPlan(), apiResponse::setValue)
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
         result.addSource(dbSource) { result.value = Resource.Loading(it) }
         result.addSource(apiResponse) { response ->
