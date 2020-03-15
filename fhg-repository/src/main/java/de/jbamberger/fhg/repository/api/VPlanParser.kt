@@ -136,6 +136,12 @@ internal object VPlanParser {
             throw ParseException("The VPlan table has no header")
         }
 
+        if (rows.size == 1) {
+            val firstRow = rows.removeAt(0)
+            firstRow.text().contains("keine\\s+vertretungen".toRegex(RegexOption.IGNORE_CASE))
+            return emptyList()
+        }
+
         val colMap = createHeaderColumnMapping(rows.removeAt(0))
 
         return rows.map { readVPlanTableCells(it.children(), colMap) }
