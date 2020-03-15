@@ -92,6 +92,7 @@
     <string name="contact_action_call">Anrufen</string>
     <string name="contact_action_mail">Mail schreiben</string>
     <string name="contact_action_navigate">Navigieren</string>
+    <string name="contact_action_activity_not_found">Es ist keine nutzbare Anwendung für diese Aktion installiert.</string>
 
     <string name="contact_mail_uri" translatable="false">mailto:schule@fhg-radolfzell.de</string>
     <string name="contact_phone_uri" translatable="false">tel:0049773294780</string>

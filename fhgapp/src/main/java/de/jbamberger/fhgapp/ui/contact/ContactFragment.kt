@@ -1,5 +1,6 @@
 package de.jbamberger.fhgapp.ui.contact
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.databinding.DataBindingUtil
 import android.net.Uri
@@ -8,10 +9,10 @@ import androidx.appcompat.content.res.AppCompatResources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.ContactFragmentBinding
 import de.jbamberger.fhgapp.ui.components.BaseFragment
-
 
 
 /**
@@ -35,20 +36,28 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.contact_action_call -> {
-                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.contact_phone_uri))))
+                safeStartActivity(Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.contact_phone_uri))))
             }
             R.id.contact_action_mail -> {
-                startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.contact_mail_uri))))
+                safeStartActivity(Intent(Intent.ACTION_SENDTO, Uri.parse(getString(R.string.contact_mail_uri))))
             }
             R.id.contact_action_navigate -> {
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.data = Uri.parse(getString(R.string.contact_navigation_uri))
                 intent.`package` = getString(R.string.contact_navigation_package)
-                startActivity(intent)
+                safeStartActivity(intent)
             }
         }
     }
 
     override val viewModelClass: Class<ContactViewModel>
         get() = ContactViewModel::class.java
+
+    private fun safeStartActivity(intent: Intent) {
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.contact_action_activity_not_found, Toast.LENGTH_LONG).show()
+        }
+    }
 }
