@@ -55,6 +55,7 @@
     <!-- Feed -->
     <string name="feed_button_retry">Erneut versuchen</string>
     <string name="feed_status_loading">Wird geladen&#8230;</string>
+    <string name="feed_item_no_title">-- Kein Titel vorhanden --</string>
 
     <!-- Settings -->
     <string name="title_activity_settings">Einstellungen</string>

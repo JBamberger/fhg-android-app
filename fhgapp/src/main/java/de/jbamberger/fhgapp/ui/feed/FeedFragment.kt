@@ -173,7 +173,7 @@ class FeedFragment : Fragment(), Injectable {
                     val titleString = when {
                         itemTitle?.isNotBlank() == true -> itemTitle
                         itemExcerpt?.isNotBlank() == true -> itemExcerpt
-                        else -> ""
+                        else -> itemView.context.getString(R.string.feed_item_no_title)
                     }
                     BindingUtils.bindStrippingHtml(title, titleString)
                 }
