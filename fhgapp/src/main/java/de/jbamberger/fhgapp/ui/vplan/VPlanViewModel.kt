@@ -44,23 +44,24 @@ internal constructor(
 
 
         val update = repo.getVPlan()
-        _plan.addSource(update) {
-            if (it == null) return@addSource
+        _plan.addSource(update) { resource ->
+            if (resource == null) return@addSource
 
             val vpMatcher = VPlanUtils.getVPlanMatcher(settings)
 
-            _plan.value = when (it) {
+            _plan.value = when (resource) {
                 is Resource.Success -> {
                     _refreshing.value = false
                     _plan.removeSource(update)
-                    VPlanUtils.filter(it.data, vpMatcher)
+                    VPlanUtils.filter(resource.data, vpMatcher)
                 }
-                is Resource.Loading -> it.data?.let { VPlanUtils.filter(it, vpMatcher) }
+                is Resource.Loading -> resource.data?.let { VPlanUtils.filter(it, vpMatcher) }
                         ?: emptyList()
                 is Resource.Error -> {
+                    _refreshing.value = false
                     val tmp = mutableListOf<VPlanListItem>()
                     tmp.add(VPlanListItem.Warning)
-                    it.data?.let { tmp.addAll(VPlanUtils.filter(it, vpMatcher)) }
+                    resource.data?.let { tmp.addAll(VPlanUtils.filter(it, vpMatcher)) }
                     _plan.removeSource(update)
                     tmp
                 }
