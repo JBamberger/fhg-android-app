@@ -81,7 +81,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_show_vplan) {
-            Utils.openUrl(context!!, R.string.vplan_link)
+            Utils.openUrl(requireContext(), R.string.vplan_link)
             return true
         }
         return super.onOptionsItemSelected(item)

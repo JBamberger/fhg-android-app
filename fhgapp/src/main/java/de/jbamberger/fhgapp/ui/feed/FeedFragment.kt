@@ -56,9 +56,9 @@ class FeedFragment : Fragment(), Injectable {
         feedContainer.adapter = adapter
         feedContainer.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
 
-        model.posts.observe(this, Observer { adapter.submitList(it) })
-        model.networkState.observe(this, Observer { adapter.setNetworkState(it) })
-        model.refreshState.observe(this, Observer { feedRefresh.isRefreshing = it == NetworkState.LOADING })
+        model.posts.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
+        model.networkState.observe(viewLifecycleOwner, Observer { adapter.setNetworkState(it) })
+        model.refreshState.observe(viewLifecycleOwner, Observer { feedRefresh.isRefreshing = it == NetworkState.LOADING })
 
         feedRefresh.setOnRefreshListener { model.refresh() }
     }
