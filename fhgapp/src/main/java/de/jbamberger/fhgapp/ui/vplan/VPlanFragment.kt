@@ -59,15 +59,15 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.plan.observe(this, Observer {
+        viewModel.plan.observe(viewLifecycleOwner, Observer {
             if (it != null) adapter.setData(it)
             Timber.d("plan update: %s", it);
         })
-        viewModel.refreshing.observe(this, Observer {
+        viewModel.refreshing.observe(viewLifecycleOwner, Observer {
             if (it != null) binding.isRefreshing = it
             Timber.d("refreshing update: %s", it);
         })
-        viewModel.title.observe(this, Observer {
+        viewModel.title.observe(viewLifecycleOwner, Observer {
             if (it != null) parent?.setSubtitle(it)
             Timber.d("title update: %s", it);
         })
