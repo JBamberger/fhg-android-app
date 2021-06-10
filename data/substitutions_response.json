@@ -1,0 +1,308 @@
+{
+  "payload": {
+    "importInProgress": null,
+    "date": 20210610,
+    "nextDate": 20210611,
+    "showingNextDate": false,
+    "rows": [
+      {
+        "data": [
+          "1 - 2",
+          "07:45-09:20",
+          "10b",
+          "E",
+          "223",
+          "Entfall",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "10b"
+      },
+      {
+        "data": [
+          "2",
+          "08:35-09:20",
+          "5a, 5c",
+          "kRel",
+          "<span class=\"substMonitorSubstElem\">105</span> (061)",
+          "Raum&auml;nderung",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "5a"
+      },
+      {
+        "data": [
+          "2",
+          "08:35-09:20",
+          "5a, 5c",
+          "kRel",
+          "<span class=\"substMonitorSubstElem\">105</span> (061)",
+          "Raum&auml;nderung",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "5c"
+      },
+      {
+        "data": [
+          "1 - 2",
+          "07:45-09:20",
+          "5d",
+          "BNT",
+          "025",
+          "Entfall",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "5d"
+      },
+      {
+        "data": [
+          "6",
+          "12:15-13:00",
+          "5d",
+          "Mus",
+          "063",
+          "Verlegung nach 11.6. / 10:20",
+          "verlegt auf Freitag"
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "5d"
+      },
+      {
+        "data": [
+          "6 - 7",
+          "12:15-13:50",
+          "6a",
+          "BNT",
+          "021",
+          "Entfall",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "6a"
+      },
+      {
+        "data": [
+          "7",
+          "13:05-13:50",
+          "6c",
+          "G",
+          "125",
+          "Verlegung nach 11.6. / 10:20",
+          "verlegt auf Fr 4. Std"
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "6c"
+      },
+      {
+        "data": [
+          "4",
+          "10:20-11:05",
+          "9a, 9c",
+          "kRel",
+          "211",
+          "",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "9a"
+      },
+      {
+        "data": [
+          "1",
+          "07:45-08:30",
+          "9b",
+          "G",
+          "213",
+          "Verlegung nach 9.6. / 11:25",
+          "vorgeholt"
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "9b"
+      },
+      {
+        "data": [
+          "2",
+          "08:35-09:20",
+          "9b",
+          "G",
+          "<span class=\"substMonitorSubstElem\">124</span> (213)",
+          "Raum&auml;nderung",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "9b"
+      },
+      {
+        "data": [
+          "3",
+          "09:35-10:20",
+          "9c",
+          "G",
+          "<span class=\"substMonitorSubstElem\">126</span> (214)",
+          "Raum&auml;nderung",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "9c"
+      },
+      {
+        "data": [
+          "4",
+          "10:20-11:05",
+          "9a, 9c",
+          "kRel",
+          "211",
+          "",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "9c"
+      },
+      {
+        "data": [
+          "1 - 2",
+          "07:45-09:20",
+          "K1",
+          "Gk1",
+          "<span class=\"substMonitorSubstElem\">104</span> (127)",
+          "Entfall",
+          "[ZanderM]:  Raumänderung"
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "K1"
+      },
+      {
+        "data": [
+          "3 - 4",
+          "09:35-11:05",
+          "K1",
+          "E1",
+          "118",
+          "Entfall",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {
+          "2": [
+            "cancelStyle"
+          ],
+          "3": [
+            "cancelStyle"
+          ],
+          "4": [
+            "cancelStyle"
+          ]
+        },
+        "group": "K1"
+      },
+      {
+        "data": [
+          "3 - 4",
+          "09:35-11:05",
+          "K1",
+          "E2",
+          "<span class=\"substMonitorSubstElem\">105</span> (127)",
+          "Raum&auml;nderung",
+          ""
+        ],
+        "cssClasses": [],
+        "cellClasses": {},
+        "group": "K1"
+      }
+    ],
+    "lastUpdate": "09.06.2021 10:56:35",
+    "absentElements": null,
+    "affectedElements": null,
+    "messageData": {
+      "messages": []
+    },
+    "weekDay": "Donnerstag",
+    "regularFreeData": null
+  }
+}

@@ -1,0 +1,135 @@
+
+POST https://hepta.webuntis.com/WebUntis/monitor/substitution/data?school=FHG%20Radolfzell
+Content-Type: application/json
+
+###
+# groupBy:
+# 0 = no grouping
+# 1 = class
+# 2 = teacher
+
+
+POST https://hepta.webuntis.com/WebUntis/monitor/substitution/data?school=FHG%20Radolfzell
+Content-Type: application/json
+
+{
+    "formatName": "VP_Internet",
+    "schoolName": "FHG Radolfzell",
+    "date": 20210610,
+    "dateOffset": 1,
+    "strikethrough": false,
+    "mergeBlocks": true,
+    "showOnlyFutureSub": true,
+    "showBreakSupervisions": false,
+    "showTeacher": true,
+    "showClass": true,
+    "showHour": true,
+    "showInfo": true,
+    "showRoom": true,
+    "showSubject": true,
+    "groupBy": 0,
+    "hideAbsent": false,
+    "departmentIds": [],
+    "departmentElementType": -1,
+    "hideCancelWithSubstitution": false,
+    "hideCancelCausedByEvent": false,
+    "showTime": true,
+    "showSubstText": true,
+    "showAbsentElements": [],
+    "showAffectedElements": [],
+    "showUnitTime": false,
+    "showMessages": true,
+    "showStudentgroup": false,
+    "enableSubstitutionFrom": false,
+    "showSubstitutionFrom": 0,
+    "showTeacherOnEvent": false,
+    "showAbsentTeacher": false,
+    "strikethroughAbsentTeacher": false,
+    "activityTypeIds": [
+        4,
+        3,
+        2
+    ],
+    "showEvent": false,
+    "showCancel": true,
+    "showOnlyCancel": false,
+    "showSubstTypeColor": false,
+    "showExamSupervision": false,
+    "showUnheraldedExams": true
+}
+
+###
+
+POST https://hepta.webuntis.com/WebUntis/monitor/ticker/data?school=FHG%20Radolfzell
+Content-Type: application/json
+
+{
+    "formatName": "VP_Internet",
+    "schoolName": "FHG Radolfzell",
+    "date": 20210610,
+    "dateOffset": 0,
+    "numberOfDays": 2,
+    "departmentIds": []
+}
+
+###
+
+POST https://hepta.webuntis.com/WebUntis/monitor/substitution/format?school=FHG%20Radolfzell
+Content-Type: application/json
+
+{
+    "formatName":"VP_Internet",
+    "schoolName":"FHG Radolfzell"
+}
+
+
+###
+
+POST https://hepta.webuntis.com/WebUntis/monitor/substitution/data?school=FHG%20Radolfzell
+Content-Type: application/json
+
+{
+    "formatName": "VP_Internet",
+    "schoolName": "FHG Radolfzell",
+    "date": 20210610,
+    "dateOffset": 6,
+    "strikethrough": true,
+    "mergeBlocks": true,
+    "showOnlyFutureSub": true,
+    "showBreakSupervisions": false,
+    "showTeacher": false,
+    "showClass": true,
+    "showHour": true,
+    "showInfo": true,
+    "showRoom": true,
+    "showSubject": true,
+    "groupBy": 1,
+    "hideAbsent": false,
+    "departmentIds": [],
+    "departmentElementType": -1,
+    "hideCancelWithSubstitution": false,
+    "hideCancelCausedByEvent": false,
+    "showTime": true,
+    "showSubstText": true,
+    "showAbsentElements": [],
+    "showAffectedElements": [],
+    "showUnitTime": false,
+    "showMessages": true,
+    "showStudentgroup": false,
+    "enableSubstitutionFrom": false,
+    "showSubstitutionFrom": 0,
+    "showTeacherOnEvent": false,
+    "showAbsentTeacher": false,
+    "strikethroughAbsentTeacher": false,
+    "activityTypeIds": [
+        4,
+        3,
+        2
+    ],
+    "showEvent": false,
+    "showCancel": true,
+    "showOnlyCancel": false,
+    "showSubstTypeColor": false,
+    "showExamSupervision": false,
+    "showUnheraldedExams": true
+}
