@@ -34,7 +34,7 @@ object VPlanUtils {
     }
 
     fun getVPlanMatcher(settings: Settings.VPlanSettings): (VPlanRow) -> Boolean = when {
-        settings.showAll || settings.grades.isEmpty() -> { it -> true }
+        settings.showAll || settings.grades.isEmpty() -> { _ -> true }
         settings.courses.isEmpty() -> getGradeMatcher(settings.grades)
         else -> { it -> getGradeMatcher(settings.grades)(it) && getCourseMatcher(settings.courses)(it) }
     }
@@ -53,7 +53,7 @@ object VPlanUtils {
                 prefix = PATTERN_START,
                 postfix = PATTERN_END
         ) { course ->
-            course.toLowerCase(Locale.ROOT).trim { it <= ' ' }
+            course.lowercase(Locale.ROOT).trim { it <= ' ' }
         }.toRegex(RegexOption.IGNORE_CASE)
 
         return { it.grade.matches(IS_COURSE_PATTERN) && it.subject.matches(pattern) }

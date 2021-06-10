@@ -3,11 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 29
+        targetSdkVersion 30
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -54,7 +54,6 @@ dependencies {
     kapt apt_moshi_codegen
 
     implementation lib_retrofit
-    implementation lib_retrofit_converters
     implementation lib_retrofit_converter_scalars
     implementation lib_retrofit_converter_moshi
 

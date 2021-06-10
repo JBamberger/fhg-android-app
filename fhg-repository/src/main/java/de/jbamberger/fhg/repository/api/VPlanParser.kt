@@ -6,6 +6,7 @@ import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -61,7 +62,7 @@ internal object VPlanParser {
             .matcher(dataDefaultEncoded)
 
         while (matcher.find()) {
-            MediaType.parse(matcher.group(1)!!)?.charset().let {
+            matcher.group(1)!!.toMediaTypeOrNull()?.charset().let {
                 if (it != null) return String(data, it)
             }
         }
