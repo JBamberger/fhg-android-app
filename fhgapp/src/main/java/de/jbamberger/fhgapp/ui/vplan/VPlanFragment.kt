@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -47,7 +46,7 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
         val layoutManager = LinearLayoutManager(context)
         binding.container.layoutManager = layoutManager
@@ -57,19 +56,19 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel.plan.observe(viewLifecycleOwner, Observer {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.plan.observe(viewLifecycleOwner, {
             if (it != null) adapter.setData(it)
-            Timber.d("plan update: %s", it);
+            Timber.d("plan update: %s", it)
         })
-        viewModel.refreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.refreshing.observe(viewLifecycleOwner, {
             if (it != null) binding.isRefreshing = it
-            Timber.d("refreshing update: %s", it);
+            Timber.d("refreshing update: %s", it)
         })
-        viewModel.title.observe(viewLifecycleOwner, Observer {
+        viewModel.title.observe(viewLifecycleOwner, {
             if (it != null) parent?.setSubtitle(it)
-            Timber.d("title update: %s", it);
+            Timber.d("title update: %s", it)
         })
 
     }

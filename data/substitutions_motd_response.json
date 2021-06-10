@@ -1,0 +1,20 @@
+{
+  "payload": {
+    "importInProgress": null,
+    "date": 20210610,
+    "nextDate": 20210611,
+    "showingNextDate": false,
+    "rows": [],
+    "affectedElements": null,
+    "messageData": {
+      "messages": [
+        {
+          "subject": "",
+          "body": "<font face=\"Courier New\" size=\"5\">Schülergruppe B im Präsenzunterricht,</font><div><font face=\"Courier New\" size=\"5\">Schülergruppe A im Homeschooling</font></div>"
+        }
+      ]
+    },
+    "weekDay": "Donnerstag",
+    "regularFreeData": null
+  }
+}

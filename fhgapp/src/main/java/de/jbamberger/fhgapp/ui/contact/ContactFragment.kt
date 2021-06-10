@@ -23,7 +23,7 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
 
     private lateinit var binding: ContactFragmentBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.contact_fragment, container, false)
         binding.listener = this
 

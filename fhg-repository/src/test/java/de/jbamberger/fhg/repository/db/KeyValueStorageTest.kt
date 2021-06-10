@@ -19,7 +19,7 @@ import org.robolectric.RuntimeEnvironment.application
 @RunWith(RobolectricTestRunner::class)
 class KeyValueStorageTest {
 
-    internal lateinit var store: KeyValueStorage
+    private lateinit var store: KeyValueStorage
 
     @Before
     fun setUp() {

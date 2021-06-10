@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class LicenseActivity : AppCompatActivity() {
 
-    var webView: WebView? = null
+    private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

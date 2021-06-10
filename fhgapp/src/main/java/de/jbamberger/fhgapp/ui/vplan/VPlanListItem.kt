@@ -10,12 +10,12 @@ sealed class VPlanListItem {
 
     data class Row(val data: VPlanRow) : VPlanListItem() {
         override fun getLayoutId(): Int = R.layout.vplan_item_variant
-        override fun getData(): Any? = data
+        override fun getData(): Any = data
     }
 
     data class Header(val data: VPlanHeader) : VPlanListItem() {
         override fun getLayoutId(): Int = R.layout.vplan_header
-        override fun getData(): Any? = data
+        override fun getData(): Any = data
     }
 
     object Footer : VPlanListItem() {

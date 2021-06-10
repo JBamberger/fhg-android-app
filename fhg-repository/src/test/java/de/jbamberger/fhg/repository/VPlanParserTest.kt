@@ -10,11 +10,13 @@ import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.jsoup.Jsoup
-import org.junit.Assert.assertThat
 import org.junit.Test
 import java.nio.charset.Charset
 
@@ -64,7 +66,7 @@ class VPlanParserTest {
     fun test_parseVPlanDay() {
         val day = VPlanDay(VPlanHeader(v1_dayAndDate, v1_lastUpdated, v1_motd), getV1Table())
 
-        assertThat(parseVPlanDay(ResponseBody.create(MediaType.parse("text/html; charset=\"windows-1252\""), load("v1.html"))), `is`(equalTo(day)))
+        assertThat(parseVPlanDay(load("v1.html").toResponseBody("text/html; charset=\"windows-1252\"".toMediaTypeOrNull())), `is`(equalTo(day)))
     }
 
     @Test
@@ -102,15 +104,15 @@ class VPlanParserTest {
     @Throws(Exception::class)
     fun test_readWithEncoding() {
         val withEnc = load("v1.html")
-        assertThat(readWithEncoding(ResponseBody.create(null, withEnc)),
+        assertThat(readWithEncoding(withEnc.toResponseBody(null)),
                 `is`(equalTo(String(withEnc, Charset.forName("windows-1252")))))
 
-        assertThat(readWithEncoding(ResponseBody.create(MediaType.parse("text/html; charset=\"utf-8\""), withEnc)),
+        assertThat(readWithEncoding(withEnc.toResponseBody("text/html; charset=\"utf-8\"".toMediaTypeOrNull())),
                 `is`(equalTo(String(withEnc, Charset.forName("utf-8")))))
 
         val withoutEncoding = load("v1-nohead.html")
 
-        assertThat(readWithEncoding(ResponseBody.create(null, withoutEncoding)),
+        assertThat(readWithEncoding(withoutEncoding.toResponseBody(null)),
                 `is`(equalTo(String(withoutEncoding, Charset.defaultCharset()))))
     }
 }

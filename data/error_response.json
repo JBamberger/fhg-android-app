@@ -1,0 +1,7 @@
+{
+  "error": {
+    "data": null,
+    "code": 0,
+    "message": "Required request body is missing: public com.grupet.web.mvc.info.MonitorResponse<com.grupet.web.mvc.info.substitution.SubstitutionData> com.grupet.web.mvc.info.substitution.SubstitutionListMonitorController.getSubstitutionData(com.grupet.web.mvc.info.substitution.DataRequest,javax.servlet.http.HttpServletRequest) throws java.io.IOException"
+  }
+}

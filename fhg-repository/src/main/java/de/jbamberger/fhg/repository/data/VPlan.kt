@@ -1,9 +1,12 @@
 package de.jbamberger.fhg.repository.data
 
+import com.squareup.moshi.JsonClass
+
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
+@JsonClass(generateAdapter = true)
 data class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
 
     class Builder {
@@ -29,11 +32,13 @@ data class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
     }
 }
 
+@JsonClass(generateAdapter = true)
 data class VPlanDay(
         val header: VPlanHeader,
         val vPlanRows: List<VPlanRow>
 )
 
+@JsonClass(generateAdapter = true)
 data class VPlanRow(
         val subject: String,
         val isOmitted: Boolean,
@@ -49,6 +54,7 @@ data class VPlanRow(
         val subTo: String? = null
 )
 
+@JsonClass(generateAdapter = true)
 data class VPlanHeader(
         val dateAndDay: String,
         val lastUpdated: String,

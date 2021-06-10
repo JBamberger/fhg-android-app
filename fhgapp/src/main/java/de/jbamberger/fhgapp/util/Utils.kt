@@ -1,12 +1,13 @@
 package de.jbamberger.fhgapp.util
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.StringRes
 import de.jbamberger.fhgapp.BuildConfig
 import de.jbamberger.fhgapp.R
+import timber.log.Timber
 
 
 /**
@@ -23,8 +24,11 @@ object Utils {
         sendIntent.putExtra(Intent.EXTRA_TEXT, content)
         val intent = Intent.createChooser(sendIntent, chooserTitle)
 
-        if (intent.resolveActivity(activity.packageManager) == null) return
-        activity.startActivity(intent)
+        try {
+            activity.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.i(e, "Could not find app capable of sharing.")
+        }
     }
 
     fun contactDeveloper(activity: Activity) {
@@ -34,8 +38,11 @@ object Utils {
         val intent = Intent(Intent.ACTION_SENDTO, recipientUri)
         intent.putExtra(Intent.EXTRA_SUBJECT, subject)
 
-        if (intent.resolveActivity(activity.packageManager) == null) return
-        activity.startActivity(intent)
+        try {
+            activity.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.i(e, "Could not find email application.")
+        }
     }
 
     fun openUrl(context: Context, url: String) {
@@ -45,8 +52,11 @@ object Utils {
         }
         val intent = Intent(Intent.ACTION_VIEW, uri)
 
-        if (intent.resolveActivity(context.packageManager) == null) return
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Timber.i(e, "Could not find app capable of handling urls.")
+        }
     }
 
     fun openUrl(context: Context, urlId: Int) {

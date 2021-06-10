@@ -37,12 +37,12 @@ internal class FeedDataSource private constructor(
         initialLoad.postValue(NetworkState.LOADING)
 
         val result = when (val response = getFeed(params.requestedLoadSize, null)) {
-            is Download.Success -> {
+            is FeedDownload.Success -> {
                 retry = null
                 callback.onResult(response.data)
                 NetworkState.LOADED
             }
-            is Download.Error -> {
+            is FeedDownload.Error -> {
                 retry = { loadInitial(params, callback) }
                 NetworkState.ERROR(response.message)
             }
@@ -56,12 +56,12 @@ internal class FeedDataSource private constructor(
         networkState.postValue(NetworkState.LOADING)
 
         val result = when (val response = getFeed(params.requestedLoadSize, params.key)) {
-            is Download.Success -> {
+            is FeedDownload.Success -> {
                 retry = null
                 callback.onResult(response.data)
                 NetworkState.LOADED
             }
-            is Download.Error -> {
+            is FeedDownload.Error -> {
                 retry = { loadAfter(params, callback) }
                 NetworkState.ERROR(response.message)
             }
@@ -80,7 +80,7 @@ internal class FeedDataSource private constructor(
 
 
 
-    private fun getFeed(count: Int, before: String?): Download<List<Pair<FeedItem, FeedMedia?>>> {
+    private fun getFeed(count: Int, before: String?): FeedDownload<List<Pair<FeedItem, FeedMedia?>>> {
         return try {
             val response = when (before) {
                 null -> endpoint.getFeedPage(count = count)
@@ -88,12 +88,12 @@ internal class FeedDataSource private constructor(
             }.execute()
 
             if (response.isSuccessful) {
-                Download.Success(response.body()?.map(::resolveMedia) ?: emptyList())
+                FeedDownload.Success(response.body()?.map(::resolveMedia) ?: emptyList())
             } else {
-                Download.Error("Feed download failed with response code ${response.code()}")
+                FeedDownload.Error("Feed download failed with response code ${response.code()}")
             }
         } catch (e: IOException) {
-            Download.Error(e.message ?: "Feed download failed with unknown exception.")
+            FeedDownload.Error(e.message ?: "Feed download failed with unknown exception.")
         }
     }
 

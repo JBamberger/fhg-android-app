@@ -1,16 +1,26 @@
 Change Log
 ==========
 
-Version 3.1.5 *(2018-09-24)*
+Version 3.2.0 *(2021-06-10)*
+----------------------------
+- Vorläufige Anpassungen um WebUntis Vertretungsplan anzuzeigen
+- Anpassungen an Android 11
+
+Version 3.1.6 *(2020-03-16)*
+----------------------------
+- Update behebt Absturz falls die Vertretungstabelle nicht vorhanden ist.
+- Behebt Fehler in der Ladeanzeige des Vertretungsplans.
+
+Version 3.1.5 *(2019-09-24)*
 ----------------------------
 - Entfernt Abhängigkeit von Google OSS License Bibliothek um Größe zu sparen und Drittanbietersoftware zu reduzieren.
 
-Version 3.1.4 *(2018-09-24)*
+Version 3.1.4 *(2019-09-24)*
 ----------------------------
 - Verbessert die Code-Qualität
 - Anpassung an verändertes Vertretungsplan-Layout
 
-Version 3.1.3 *(2018-09-16)*
+Version 3.1.3 *(2019-09-16)*
 ----------------------------
 - Behebt Abstürze die in der vorherigen Version eingeführt wurden.
 

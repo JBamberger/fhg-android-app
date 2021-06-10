@@ -28,7 +28,7 @@ constructor(private val app: Application, private val prefs: SharedPreferences) 
         get() = prefs.getString(app.getString(R.string.settings_course_key), "")!! // should be safe due to default val
                 .split(",")
                 .map { it.trim() }
-                .filter { !it.isBlank() }
+                .filter { it.isNotBlank() }
                 .toSet()
         set(value) = prefs.edit()
                 .putString(app.getString(R.string.settings_course_key), value.joinToString(separator = ","))
