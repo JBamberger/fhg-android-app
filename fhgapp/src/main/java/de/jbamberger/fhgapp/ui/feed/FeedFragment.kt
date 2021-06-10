@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -44,10 +43,10 @@ class FeedFragment : Fragment(), Injectable {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
         val view = binding.root
-        model = getViewModel()
+        model = ViewModelProvider(this, viewModelFactory).get(FeedViewModel::class.java)
         return view
     }
 
@@ -77,16 +76,11 @@ class FeedFragment : Fragment(), Injectable {
         binding.feedRefresh.setOnRefreshListener { model.refresh() }
     }
 
-    private fun getViewModel(): FeedViewModel {
-        return ViewModelProviders.of(this, viewModelFactory)
-            .get(FeedViewModel::class.java)
-    }
-
     private class FeedAdapter
     internal constructor(
-            private val glide: GlideRequests,
-            private val retryCallback: () -> Unit)
-        : PagedListAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+        private val glide: GlideRequests,
+        private val retryCallback: () -> Unit
+    ) : PagedListAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
         private var networkState: NetworkState? = null
 
@@ -138,17 +132,18 @@ class FeedFragment : Fragment(), Injectable {
         companion object {
             val POST_COMPARATOR = object : DiffUtil.ItemCallback<Pair<FeedItem, FeedMedia?>>() {
                 override fun areItemsTheSame(
-                        oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
+                    oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
                 ) = oldItem.first.id == newItem.first.id
 
                 override fun areContentsTheSame(
-                        oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
+                    oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
                 ) = oldItem == newItem
             }
         }
 
         private class FeedItemHolder(
-                private val glide: GlideRequests, view: View) : RecyclerView.ViewHolder(view) {
+            private val glide: GlideRequests, view: View
+        ) : RecyclerView.ViewHolder(view) {
             private val title = view.findViewById<TextView>(R.id.title)
             private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
 
@@ -201,15 +196,15 @@ class FeedFragment : Fragment(), Injectable {
                         else -> featuredMedia.context.getString(R.string.feed_media_content_desctiption)
                     }
                     glide.load(variant.source_url)
-                            .centerInside()
-                            .placeholder(R.drawable.ic_image_black_24dp)
-                            .error(R.drawable.ic_broken_image_black_24dp)
-                            .fallback(R.drawable.ic_broken_image_black_24dp)
-                            .into(featuredMedia)
+                        .centerInside()
+                        .placeholder(R.drawable.ic_image_black_24dp)
+                        .error(R.drawable.ic_broken_image_black_24dp)
+                        .fallback(R.drawable.ic_broken_image_black_24dp)
+                        .into(featuredMedia)
                 } else {
                     featuredMedia.visibility = View.INVISIBLE
                     featuredMedia.contentDescription = featuredMedia.context
-                            .getString(R.string.feed_media_content_desctiption)
+                        .getString(R.string.feed_media_content_desctiption)
                     glide.clear(featuredMedia)
                 }
             }
@@ -217,13 +212,14 @@ class FeedFragment : Fragment(), Injectable {
             companion object {
                 fun create(glide: GlideRequests, parent: ViewGroup): FeedItemHolder {
                     val view = LayoutInflater.from(parent.context)
-                            .inflate(R.layout.feed_item, parent, false)
+                        .inflate(R.layout.feed_item, parent, false)
                     return FeedItemHolder(glide, view)
                 }
             }
         }
 
-        private class ErrorHolder(view: View, private val retryCallback: () -> Unit) : RecyclerView.ViewHolder(view) {
+        private class ErrorHolder(view: View, private val retryCallback: () -> Unit) :
+            RecyclerView.ViewHolder(view) {
             private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
             private val retry = view.findViewById<Button>(R.id.retry_button)
             private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
@@ -243,7 +239,7 @@ class FeedFragment : Fragment(), Injectable {
             companion object {
                 fun create(parent: ViewGroup, retryCallback: () -> Unit): ErrorHolder {
                     val view = LayoutInflater.from(parent.context)
-                            .inflate(R.layout.network_state_item, parent, false)
+                        .inflate(R.layout.network_state_item, parent, false)
                     return ErrorHolder(view, retryCallback)
                 }
             }

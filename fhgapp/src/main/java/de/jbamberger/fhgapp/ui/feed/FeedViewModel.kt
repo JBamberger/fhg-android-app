@@ -15,9 +15,9 @@ internal constructor(private val repo: Repository) : ViewModel() {
     private val source = MutableLiveData<String>()
     private val repoResult = map(source) { repo.postsOfFeed() }
 
-    val posts = switchMap(repoResult) { it.pagedList }!!
-    val networkState = switchMap(repoResult) { it.networkState }!!
-    val refreshState = switchMap(repoResult) { it.refreshState }!!
+    val posts = switchMap(repoResult) { it.pagedList }
+    val networkState = switchMap(repoResult) { it.networkState }
+    val refreshState = switchMap(repoResult) { it.refreshState }
 
     init {
         source.postValue("")
