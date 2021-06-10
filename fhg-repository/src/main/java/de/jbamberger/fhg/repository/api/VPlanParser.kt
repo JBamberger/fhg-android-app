@@ -41,8 +41,10 @@ internal object VPlanParser {
     internal fun parseVPlanDay(body: ResponseBody): VPlanDay {
         val docString = readWithEncoding(body)
         val doc = Jsoup.parse(docString)
-        return VPlanDay(VPlanHeader(readDayAndDate(doc), readLastUpdated(docString), readMotdTable(doc)),
-                readVPlanTable(doc))
+        return VPlanDay(
+            VPlanHeader(readDayAndDate(doc), readLastUpdated(docString), readMotdTable(doc)),
+            readVPlanTable(doc)
+        )
     }
 
     @VisibleForTesting
@@ -55,8 +57,8 @@ internal object VPlanParser {
 
         val dataDefaultEncoded = String(data)
         val matcher = Pattern
-                .compile("<meta\\s+http-equiv=\"Content-Type\"\\s+content=\"([^\"]*)\"\\s*/?>")
-                .matcher(dataDefaultEncoded)
+            .compile("<meta\\s+http-equiv=\"Content-Type\"\\s+content=\"([^\"]*)\"\\s*/?>")
+            .matcher(dataDefaultEncoded)
 
         while (matcher.find()) {
             MediaType.parse(matcher.group(1)!!)?.charset().let {
@@ -69,37 +71,37 @@ internal object VPlanParser {
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readLastUpdated(html: String) = REGEX_LAST_UPDATE.find(html)?.value
-            ?: throw ParseException("Could not find lastUpdated value in the document.")
+        ?: throw ParseException("Could not find lastUpdated value in the document.")
 
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readDayAndDate(vplanDoc: Document) = vplanDoc
-            .getElementsByClass("mon_title")
-            .singleOrNull()
-            ?.allElements
-            ?.firstOrNull()
-            ?.text()
-            ?: throw ParseException("Could not parse VPlan date and day.")
+        .getElementsByClass("mon_title")
+        .singleOrNull()
+        ?.allElements
+        ?.firstOrNull()
+        ?.text()
+        ?: throw ParseException("Could not parse VPlan date and day.")
 
     @VisibleForTesting
     @Throws(ParseException::class)
     internal fun readMotdTable(doc: Document) = doc
-            .getElementsByClass("info")
-            .select("tr")
-            .map { it.select("td") }
-            .filter(Elements::isNotEmpty)
-            .joinToString(separator = "<br>") { cells ->
-                cells.joinToString(separator = " | ") { cell ->
-                    cell.html()
-                            .split("<br>")
-                            .joinToString(separator = "<br>", transform = String::trim)
-                }
+        .getElementsByClass("info")
+        .select("tr")
+        .map { it.select("td") }
+        .filter(Elements::isNotEmpty)
+        .joinToString(separator = "<br>") { cells ->
+            cells.joinToString(separator = " | ") { cell ->
+                cell.html()
+                    .split("<br>")
+                    .joinToString(separator = "<br>", transform = String::trim)
+            }
 //                    if (it.first().text().toLowerCase(Locale.ROOT).contains("unterrichtsfrei")) {
 //                        "<font color=#FF5252>$content</font>"
 //                    } else {
 //                        content
 //                    }
-            }
+        }
 
 
     @VisibleForTesting
@@ -114,10 +116,10 @@ internal object VPlanParser {
                 throw ParseException("Header contained column with wrong tagName=${col.tagName()}.")
             }
 
-            val colTitle = col.html().trim().toLowerCase(Locale.ROOT)
+            val colTitle = col.html().trim().lowercase(Locale.ROOT)
             val colName = Columns.values()
-                    .singleOrNull { it.regex.matches(colTitle) }
-                    ?: throw ParseException("Header column could not be assigned uniquely. Title=$colTitle")
+                .singleOrNull { it.regex.matches(colTitle) }
+                ?: throw ParseException("Header column could not be assigned uniquely. Title=$colTitle")
             return@mapIndexed colName to index
         }.toMap()
     }
@@ -126,11 +128,11 @@ internal object VPlanParser {
     @Throws(ParseException::class)
     internal fun readVPlanTable(doc: Document): List<VPlanRow> {
         val rows = doc.getElementsByTag("table")
-                .singleOrNull { it.hasClass("mon_list") }
-                ?.getElementsByTag("tbody")
-                ?.singleOrNull()
-                ?.children()
-                ?: throw ParseException("Couldn't locate VPlan table.")
+            .singleOrNull { it.hasClass("mon_list") }
+            ?.getElementsByTag("tbody")
+            ?.singleOrNull()
+            ?.children()
+            ?: throw ParseException("Couldn't locate VPlan table.")
 
         if (rows.isEmpty()) {
             throw ParseException("The VPlan table has no header")
@@ -151,13 +153,13 @@ internal object VPlanParser {
     @Throws(ParseException::class)
     internal fun readVPlanTableCells(cells: Elements, colMap: Map<Columns, Int>): VPlanRow {
         fun read(element: Element) = (element.getElementsByTag("span")
-                .singleOrNull()
-                ?.html() ?: element.text())
-                .replace("&nbsp;", " ")
-                .trim()
+            .singleOrNull()
+            ?.html() ?: element.text())
+            .replace("&nbsp;", " ")
+            .trim()
 
         fun resolveIndex(colName: Columns) = colMap[colName]
-                ?: throw ParseException("could not resolve column name $colName")
+            ?: throw ParseException("could not resolve column name $colName")
 
         fun resolve(colName: Columns) = read(cells[resolveIndex(colName)])
 
@@ -170,25 +172,25 @@ internal object VPlanParser {
         if (cells.size >= 6) {
 
             val isOmitted = cells[resolveIndex(KIND)].text()
-                    .toLowerCase(Locale.ROOT)
-                    .matches(PATTERN_OMITTED)
+                .lowercase(Locale.ROOT)
+                .matches(PATTERN_OMITTED)
             val isNew = cells[resolveIndex(CLASS)]
-                    .attr("style")
-                    .matches("background-color: #00[Ff][Ff]00".toRegex())
+                .attr("style")
+                .matches("background-color: #00[Ff][Ff]00".toRegex())
 
             return VPlanRow(
-                    resolve(SUBJECT),
-                    isOmitted,
-                    resolve(HOUR),
-                    resolve(ROOM),
-                    resolve(CONTENT),
-                    resolve(CLASS),
-                    resolve(KIND).let { if (it.toLowerCase(Locale.ROOT) == "x") "entfall" else it },
-                    isNew,
-                    resolveOptional(NR),
-                    resolveOptional(TEACHER),
-                    resolveOptional(SUBST_FROM),
-                    resolveOptional(SUBST_TO)
+                resolve(SUBJECT),
+                isOmitted,
+                resolve(HOUR),
+                resolve(ROOM),
+                resolve(CONTENT),
+                resolve(CLASS),
+                resolve(KIND).let { if (it.lowercase(Locale.ROOT) == "x") "entfall" else it },
+                isNew,
+                resolveOptional(NR),
+                resolveOptional(TEACHER),
+                resolveOptional(SUBST_FROM),
+                resolveOptional(SUBST_TO)
             )
         }
         throw ParseException("Could not parse row, invalid format.")

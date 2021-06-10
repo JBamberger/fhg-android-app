@@ -106,7 +106,7 @@ internal class RepoInstantiationModule {
             val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
                 Timber.d(it)
             })
-            logger.level = HttpLoggingInterceptor.Level.BASIC
+            logger.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(logger)
         }
 
@@ -129,6 +129,14 @@ internal class RepoInstantiationModule {
         return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL)
                 .build()
                 .create(FhgEndpoint::class.java)
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideUntisEndpoint(retrofitBuilder: Retrofit.Builder): UntisFhgEndpoint {
+        return retrofitBuilder.baseUrl(UntisFhgEndpoint.BASE_URL)
+            .build()
+            .create(UntisFhgEndpoint::class.java)
     }
 
     @Provides

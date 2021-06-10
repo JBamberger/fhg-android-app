@@ -5,6 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import de.jbamberger.fhg.repository.api.FeedDataSource
 import de.jbamberger.fhg.repository.api.FhgEndpoint
+import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlan
@@ -18,11 +19,12 @@ import javax.inject.Singleton
 internal class RepositoryImpl @Inject internal constructor(
         private val appExecutors: AppExecutors,
         private val endpoint: FhgEndpoint,
+        private val untisEndpoint: UntisFhgEndpoint,
         private val kvStore: KeyValueStorage) : Repository {
 
     override fun getVPlan(): LiveData<Resource<VPlan>> {
 
-        return VPlanResource(appExecutors, kvStore, endpoint).asLiveData()
+        return VPlanResource(appExecutors, kvStore, endpoint, untisEndpoint).asLiveData()
     }
 
     override fun postsOfFeed(): Listing<Pair<FeedItem, FeedMedia?>> {
