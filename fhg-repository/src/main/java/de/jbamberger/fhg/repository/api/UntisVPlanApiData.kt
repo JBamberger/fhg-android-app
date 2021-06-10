@@ -85,14 +85,18 @@ class UntisVPlanRow {
     var fields: List<String> = emptyList()
 
 
-    val hour: String get() = if (fields.size == 7) fields[0] else ""
-    val time: String get() = if (fields.size == 7) fields[1] else ""
-    val grade: String get() = if (fields.size == 7) fields[2] else ""
-    val subject: String get() = if (fields.size == 7) fields[3] else ""
-    val room: String get() = if (fields.size == 7) fields[4] else ""
-    val info: String get() = if (fields.size == 7) fields[5] else ""
-    val substitution_text: String get() = if (fields.size == 7) fields[6] else ""
+    val hour: String get() = if (fields.size == SIZE) fields[0] else ""
+    val time: String get() = if (fields.size == SIZE) fields[1] else ""
+    val grade: String get() = if (fields.size == SIZE) fields[2] else ""
+    val subject: String get() = if (fields.size == SIZE) fields[3] else ""
+    val room: String get() = if (fields.size == SIZE) fields[4] else ""
+    val teacher: String get() = if (fields.size == SIZE) fields[5] else ""
+    val info: String get() = if (fields.size == SIZE) fields[6] else ""
+    val substitution_text: String get() = if (fields.size == SIZE) fields[7] else ""
 
+    companion object {
+        const val SIZE = 8
+    }
 
 }
 
@@ -119,7 +123,7 @@ data class UntisVPlanRequest(
     val schoolName: String? = "FHG Radolfzell",
 
     @Json(name = "strikethrough")
-    val strikethrough: Boolean? = true,
+    val strikethrough: Boolean? = false,
 
     @Json(name = "mergeBlocks")
     val mergeBlocks: Boolean? = true,
@@ -131,7 +135,7 @@ data class UntisVPlanRequest(
     val showBreakSupervisions: Boolean? = false,
 
     @Json(name = "showTeacher")
-    val showTeacher: Boolean? = false,
+    val showTeacher: Boolean? = true,
 
     @Json(name = "showClass")
     val showClass: Boolean? = true,

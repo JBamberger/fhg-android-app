@@ -9,6 +9,7 @@ import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
+import de.jbamberger.fhg.repository.util.unescapeHtml
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -117,10 +118,18 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
                 VPlanHeader(dateAndDay.toString(), payload.lastUpdate ?: "", motdBuilder.toString())
 
             val rows = payload.rows.map { row ->
-                val isOmitted = row.info.trim().lowercase(Locale.ROOT) == "entfall"
-                val content = row.substitution_text
-                val kind =
-                    row.info.let { if (it.lowercase(Locale.ROOT) == "x") "entfall" else it }
+                val cleanInfo = row.info.unescapeHtml().trim().lowercase()
+                val kind = when {
+                    cleanInfo.startsWith("entfall") || cleanInfo == "x" -> "Entfall"
+                    cleanInfo.startsWith("raumänderung") -> "Raumänderung"
+                    cleanInfo.startsWith("verlegung") -> "Verlegung"
+                    else -> ""
+                }
+                val isOmitted = kind == "Entfall"
+                val content = when (kind) {
+                    "Entfall", "Raumänderung" -> ""
+                    else -> row.info + " "
+                } + row.substitution_text
                 val isMarkedNew = false
 
                 VPlanRow(
@@ -134,6 +143,7 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
                     isMarkedNew
                 )
             }
+            //.sortedBy { it.grade }
 
             return VPlanDay(header, rows)
         }
