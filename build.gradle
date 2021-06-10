@@ -1,22 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        kotlin_version = '1.3.70'
-        android_plugin_version = '3.5.0'
+        kotlin_version = '1.5.10'
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     //print more error messages (data binding generates a lot of errors if compilation fails)
@@ -68,7 +67,7 @@ ext {
     lib_okhttp =                        "com.squareup.okhttp3:okhttp:$okhttp_version"
     lib_okhttp_logging_interceptor =    "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
-    def moshi_version = "1.8.0"
+    def moshi_version = "1.12.0"
     lib_moshi =         "com.squareup.moshi:moshi:$moshi_version"
     lib_moshi_kotlin =  "com.squareup.moshi:moshi-kotlin:$moshi_version"
     apt_moshi_codegen = "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
@@ -85,7 +84,7 @@ ext {
     lib_glide = "com.github.bumptech.glide:glide:$glide_version"
     apt_glide = "com.github.bumptech.glide:compiler:$glide_version"
 
-    def dagger_version = "2.27"
+    def dagger_version = "2.36"
     lib_dagger =                    "com.google.dagger:dagger:$dagger_version"
     apt_dagger =                    "com.google.dagger:dagger-compiler:$dagger_version"
     lib_dagger_android =            "com.google.dagger:dagger-android:$dagger_version"
