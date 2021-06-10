@@ -12,3 +12,16 @@ Die App ist nur für Schüler, Eltern und Lehrer des FHGs gedacht.
 
 [Download](https://play.google.com/store/apps/details?id=xyz.jbapps.vplan)
 
+## Release Checklist
+
+1. Increment `versionCode` and `versionName` in `build.gradle`
+2. Update `CHANGELOG.md` with the build number, date, and list of changes
+3. Build signed and optimized release APK
+4. Perform manual testing on device
+   - Check if migration from previous app versions works
+   - Check if fresh start works
+5. Create PR and merge when all checks pass
+6. Create a tag with the value of `versionName` at the merge commit
+7. Build signed apk bundle and upload to Google Play
+8. Download and test Device-specific version
+9. Publish release
