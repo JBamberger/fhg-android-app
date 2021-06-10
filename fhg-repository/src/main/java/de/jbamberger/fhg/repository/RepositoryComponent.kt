@@ -5,11 +5,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.squareup.moshi.Moshi
 import dagger.*
-import de.jbamberger.fhg.repository.api.*
+import de.jbamberger.fhg.repository.api.FhgEndpoint
+import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory
+import de.jbamberger.fhg.repository.api.LiveDataCallAdapter
+import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
 import de.jbamberger.fhg.repository.db.AppDatabase
 import de.jbamberger.fhg.repository.util.FeedMediaLoader
 import okhttp3.Cache
@@ -103,9 +104,9 @@ internal class RepoInstantiationModule {
         builder.cache(cache)
 
         if (BuildConfig.DEBUG) {
-            val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
+            val logger = HttpLoggingInterceptor {
                 Timber.d(it)
-            })
+            }
             logger.level = HttpLoggingInterceptor.Level.BASIC
             builder.addInterceptor(logger)
         }

@@ -41,7 +41,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.navigation.setOnNavigationItemSelectedListener(navigationListener)
 
-        viewModel.getFragment().observe(this, Observer { frag -> showFragment(frag) })
+        viewModel.getFragment().observe(this, this::showFragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

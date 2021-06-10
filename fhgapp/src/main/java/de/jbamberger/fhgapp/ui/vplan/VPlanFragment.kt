@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -61,15 +60,15 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         super.onViewCreated(view, savedInstanceState)
         viewModel.plan.observe(viewLifecycleOwner, {
             if (it != null) adapter.setData(it)
-            Timber.d("plan update: %s", it);
+            Timber.d("plan update: %s", it)
         })
         viewModel.refreshing.observe(viewLifecycleOwner, {
             if (it != null) binding.isRefreshing = it
-            Timber.d("refreshing update: %s", it);
+            Timber.d("refreshing update: %s", it)
         })
         viewModel.title.observe(viewLifecycleOwner, {
             if (it != null) parent?.setSubtitle(it)
-            Timber.d("title update: %s", it);
+            Timber.d("title update: %s", it)
         })
 
     }

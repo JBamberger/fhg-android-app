@@ -92,7 +92,7 @@ class UntisVPlanRow {
     val room: String get() = if (fields.size == SIZE) fields[4] else ""
     val teacher: String get() = if (fields.size == SIZE) fields[5] else ""
     val info: String get() = if (fields.size == SIZE) fields[6] else ""
-    val substitution_text: String get() = if (fields.size == SIZE) fields[7] else ""
+    val substText: String get() = if (fields.size == SIZE) fields[7] else ""
 
     companion object {
         const val SIZE = 8
@@ -159,7 +159,7 @@ data class UntisVPlanRequest(
     val hideAbsent: Boolean? = false,
 
     @Json(name = "departmentIds")
-    val departmentIds: List<Int>? = emptyList<Int>(),
+    val departmentIds: List<Int>? = emptyList(),
 
     @Json(name = "departmentElementType")
     val departmentElementType: Int? = -1,
@@ -177,10 +177,10 @@ data class UntisVPlanRequest(
     val showSubstText: Boolean? = true,
 
     @Json(name = "showAbsentElements")
-    val showAbsentElements: List<Int>? = emptyList<Int>(),
+    val showAbsentElements: List<Int>? = emptyList(),
 
     @Json(name = "showAffectedElements")
-    val showAffectedElements: List<Int>? = emptyList<Int>(),
+    val showAffectedElements: List<Int>? = emptyList(),
 
     @Json(name = "showUnitTime")
     val showUnitTime: Boolean? = false,

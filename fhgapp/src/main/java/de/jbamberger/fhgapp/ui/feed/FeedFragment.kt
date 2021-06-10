@@ -76,8 +76,7 @@ class FeedFragment : Fragment(), Injectable {
         binding.feedRefresh.setOnRefreshListener { model.refresh() }
     }
 
-    private class FeedAdapter
-    internal constructor(
+    private class FeedAdapter(
         private val glide: GlideRequests,
         private val retryCallback: () -> Unit
     ) : PagedListAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {

@@ -14,7 +14,7 @@ internal class ApiResponse<T> {
 
 
     val code: Int
-    val headers: Headers?
+    private val headers: Headers?
     val body: T?
     val errorMessage: String?
 

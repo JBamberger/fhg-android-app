@@ -129,7 +129,7 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
                 val content = when (kind) {
                     "Entfall", "Raumänderung" -> ""
                     else -> row.info + " "
-                } + row.substitution_text
+                } + row.substText
                 val isMarkedNew = false
 
                 VPlanRow(

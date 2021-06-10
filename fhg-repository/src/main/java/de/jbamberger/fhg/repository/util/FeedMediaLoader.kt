@@ -8,7 +8,7 @@ import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
 import de.jbamberger.fhg.repository.data.FeedMedia
 import java.io.InputStream
-import java.lang.Math.abs
+import kotlin.math.abs
 
 
 /**

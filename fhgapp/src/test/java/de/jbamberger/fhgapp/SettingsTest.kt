@@ -22,8 +22,8 @@ class SettingsTest {
     private val GRADES : String = application.getString(R.string.settings_grade_key)
     private val COURSES : String = application.getString(R.string.settings_course_key)
 
-    lateinit var settings: Settings
-    lateinit var prefs: SharedPreferences
+    private lateinit var settings: Settings
+    private lateinit var prefs: SharedPreferences
 
     @Before
     fun setUp() {

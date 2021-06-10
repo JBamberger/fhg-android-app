@@ -1,11 +1,10 @@
 package de.jbamberger.fhg.repository.api
 
 import androidx.lifecycle.LiveData
-import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhg.repository.data.VPlanDay
-import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.Headers
+import retrofit2.http.POST
 
 internal interface UntisFhgEndpoint {
     companion object {

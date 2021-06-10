@@ -4,14 +4,13 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import de.jbamberger.fhg.repository.api.*
 import de.jbamberger.fhg.repository.api.ApiResponse
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
+import de.jbamberger.fhg.repository.api.UntisVPlanRequest
 import de.jbamberger.fhg.repository.data.VPlan
 import de.jbamberger.fhg.repository.db.KeyValueStorage
 import de.jbamberger.fhg.repository.util.AppExecutors
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
