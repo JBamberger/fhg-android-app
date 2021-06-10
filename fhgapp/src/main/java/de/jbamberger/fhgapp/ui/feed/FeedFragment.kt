@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedListAdapter
@@ -21,12 +20,12 @@ import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhgapp.R
+import de.jbamberger.fhgapp.databinding.FeedFragmentBinding
 import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
 import de.jbamberger.fhgapp.util.GlideApp
 import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
-import kotlinx.android.synthetic.main.feed_fragment.*
 import javax.inject.Inject
 
 
@@ -39,11 +38,22 @@ class FeedFragment : Fragment(), Injectable {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var model: FeedViewModel
 
+
+    private var _binding: FeedFragmentBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.feed_fragment, container, false)
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        _binding = FeedFragmentBinding.inflate(inflater, container, false)
+        val view = binding.root
         model = getViewModel()
-        return v
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,20 +62,24 @@ class FeedFragment : Fragment(), Injectable {
         val adapter = FeedAdapter(glide) { model.retry() }
 
         val layoutManager = LinearLayoutManager(context)
-        feedContainer.layoutManager = layoutManager
-        feedContainer.adapter = adapter
-        feedContainer.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+        binding.feedContainer.layoutManager = layoutManager
+        binding.feedContainer.adapter = adapter
+        binding.feedContainer.addItemDecoration(
+            DividerItemDecoration(context, layoutManager.orientation)
+        )
 
-        model.posts.observe(viewLifecycleOwner, Observer { adapter.submitList(it) })
-        model.networkState.observe(viewLifecycleOwner, Observer { adapter.setNetworkState(it) })
-        model.refreshState.observe(viewLifecycleOwner, Observer { feedRefresh.isRefreshing = it == NetworkState.LOADING })
+        model.posts.observe(viewLifecycleOwner) { adapter.submitList(it) }
+        model.networkState.observe(viewLifecycleOwner) { adapter.setNetworkState(it) }
+        model.refreshState.observe(viewLifecycleOwner) {
+            binding.feedRefresh.isRefreshing = it == NetworkState.LOADING
+        }
 
-        feedRefresh.setOnRefreshListener { model.refresh() }
+        binding.feedRefresh.setOnRefreshListener { model.refresh() }
     }
 
     private fun getViewModel(): FeedViewModel {
         return ViewModelProviders.of(this, viewModelFactory)
-                .get(FeedViewModel::class.java)
+            .get(FeedViewModel::class.java)
     }
 
     private class FeedAdapter

@@ -1,12 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
-
-    dataBinding.enabled true
 
     defaultConfig {
         // legacy name. Replace with de.jbamberger.fhgapp to match package
@@ -27,6 +24,11 @@ android {
                 jvmArgs '-noverify'
             }
         }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
 
     buildTypes {

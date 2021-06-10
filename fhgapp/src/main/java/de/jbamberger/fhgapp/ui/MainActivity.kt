@@ -14,7 +14,6 @@ import de.jbamberger.fhgapp.ui.about.AboutActivity
 import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.settings.SettingsActivity
 import de.jbamberger.fhgapp.util.Utils
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
@@ -40,7 +39,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        navigation.setOnNavigationItemSelectedListener(navigationListener)
+        binding.navigation.setOnNavigationItemSelectedListener(navigationListener)
 
         viewModel.getFragment().observe(this, Observer { frag -> showFragment(frag) })
     }
