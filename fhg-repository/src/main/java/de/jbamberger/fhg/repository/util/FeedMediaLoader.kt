@@ -31,17 +31,17 @@ class FeedMediaLoader private constructor(
         val size = width * height
 
         val x = model.media_details.sizes.values
-        val chosenSize = x.maxWith(Comparator { o1, o2 ->
+        val chosenSize = x.maxWithOrNull { o1, o2 ->
             val asp1 = o1.width / o1.height
             val size1 = o1.width * o1.height
             val asp2 = o2.width / o2.height
             val size2 = o2.width * o2.height
 
-            when {
-                asp1 == asp2 -> compareValues(abs(size1 - size), abs(size2 - size))
+            when (asp1) {
+                asp2 -> compareValues(abs(size1 - size), abs(size2 - size))
                 else -> compareValues(abs(asp1 - aspectRatio), abs(asp2 - aspectRatio))
             }
-        })
+        }
         return chosenSize?.source_url ?: model.source_url
     }
 
