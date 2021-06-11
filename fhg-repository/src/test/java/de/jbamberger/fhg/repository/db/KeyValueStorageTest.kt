@@ -36,11 +36,10 @@ class KeyValueStorageTest {
 
     @Test
     fun test_saveAndLoadComplexObject() {
-        val o = VPlanDay(VPlanHeader("a", "a", "c"),
-                listOf(VPlanRow(
-                        "a", false, "b", "c",
-                        "d", "e", "f", false/*,
-                        "g", "h", "i", "j"*/)))
+        val o = VPlanDay(
+            VPlanHeader("a", "a", "c"),
+            listOf(VPlanRow("a", false, "b", "c", "d", "e", "f", false))
+        )
         store.save("c", o)
         assertThat(store.get<VPlanDay>("c")).isEqualTo(o)
     }
@@ -58,7 +57,13 @@ class KeyValueStorageTest {
 
     @Test
     fun legacy() {
-        val x = "{\"day1\":{\"dateAndDay\":\"b\",\"lastUpdated\":\"a\",\"motd\":\"bla\",\"vPlanRows\":[{\"content\":\"---\",\"grade\":\"314\",\"hour\":\"Entfall\",\"isMarkedNew\":false,\"isOmitted\":false,\"kind\":\"\\u003cs\\u003eHenß\\u003c/s\\u003e\",\"room\":\"5a\",\"subject\":\"1\"}]}, \"day2\":{\"dateAndDay\":\"\",\"lastUpdated\":\"\",\"motd\":\"\",\"vPlanRows\":[]}}"
+        val x = "{\"day1\":" +
+                "{\"dateAndDay\":\"b\",\"lastUpdated\":\"a\",\"motd\":\"bla\",\"vPlanRows\":[" +
+                "{\"content\":\"---\",\"grade\":\"314\",\"hour\":\"Entfall\"," +
+                "\"isMarkedNew\":false,\"isOmitted\":false," +
+                "\"kind\":\"\\u003cs\\u003eHenß\\u003c/s\\u003e\",\"room\":\"5a\"," +
+                "\"subject\":\"1\"}]}, \"day2\":" +
+                "{\"dateAndDay\":\"\",\"lastUpdated\":\"\",\"motd\":\"\",\"vPlanRows\":[]}}"
 
         store.save("a", x)
         assertThat(store.get<VPlan>("a")).isNull()

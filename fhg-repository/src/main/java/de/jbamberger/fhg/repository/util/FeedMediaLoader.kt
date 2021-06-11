@@ -16,7 +16,8 @@ import kotlin.math.abs
  */
 
 class FeedMediaLoader private constructor(
-        urlLoader: ModelLoader<GlideUrl, InputStream>) : BaseGlideUrlLoader<FeedMedia>(urlLoader) {
+    urlLoader: ModelLoader<GlideUrl, InputStream>
+) : BaseGlideUrlLoader<FeedMedia>(urlLoader) {
 
     override fun handles(model: FeedMedia): Boolean {
         return true
@@ -47,7 +48,9 @@ class FeedMediaLoader private constructor(
 
     class Factory : ModelLoaderFactory<FeedMedia, InputStream> {
         override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<FeedMedia, InputStream> {
-            return FeedMediaLoader(multiFactory.build(GlideUrl::class.java, InputStream::class.java))
+            return FeedMediaLoader(
+                multiFactory.build(GlideUrl::class.java, InputStream::class.java)
+            )
         }
 
         override fun teardown() {}

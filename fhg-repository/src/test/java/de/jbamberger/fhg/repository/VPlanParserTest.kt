@@ -9,9 +9,7 @@ import de.jbamberger.fhg.repository.api.VPlanParser.readWithEncoding
 import de.jbamberger.fhg.repository.data.VPlanDay
 import de.jbamberger.fhg.repository.data.VPlanHeader
 import de.jbamberger.fhg.repository.data.VPlanRow
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
@@ -28,10 +26,10 @@ class VPlanParserTest {
     companion object {
         private val DEFAULT_CHARSET: Charset = Charset.forName("windows-1252")
         private const val v1_motd =
-                "<b>SMV-Treffen</b> am Montag, 9.4.18 in der 6. Std. im Olymp!<br>" +
-                        "<b>K1 Französisch: Klausurbeginn um 09:20 Uhr!</b><br>" +
-                        "<br>" +
-                        "K1 Studienfahrt Hamburg trifft sich in der zweiten großen Pause in Raum 127!"
+            "<b>SMV-Treffen</b> am Montag, 9.4.18 in der 6. Std. im Olymp!<br>" +
+                    "<b>K1 Französisch: Klausurbeginn um 09:20 Uhr!</b><br>" +
+                    "<br>" +
+                    "K1 Studienfahrt Hamburg trifft sich in der zweiten großen Pause in Raum 127!"
         private const val v1_lastUpdated = "Stand: 23.03.2018 10:22"
         private const val v1_dayAndDate = "23.3.2018 Freitag"
 
@@ -41,15 +39,42 @@ class VPlanParserTest {
 
         private fun getV1Table(): List<VPlanRow> {
             return listOf(
-                    VPlanRow("Gmk_1", false, "3 - 4", "104", "[WolflenzA]: Raumänderung", "K2", "Raum-Vtr.", false),
-                    VPlanRow("<s>gk_1</s>", true, "5 - 6", "---", "", "K2", "Entfall", false),
-                    VPlanRow("<s>M-Diff</s>", true, "4", "<s>224</s>", "", "<s>10c</s>", "Entfall", false),
-                    VPlanRow("<s>L</s>", true, "5", "<s>226</s>", "", "<s>10c, 10a, 10b</s>", "Entfall", false),
-                    VPlanRow("<s>F</s>", true, "5", "<s>224</s>", "", "<s>10c</s>", "Entfall", false),
-                    VPlanRow("M", false, "1 - 2", "207", "Mathe", "9a", "Vertretung", false),
-                    VPlanRow("F", false, "1", "119", "F bei Fr. E. findet statt", "7a, 7b, 7c", "Unterricht geändert", false),
-                    VPlanRow("L", false, "1 - 2", "<s>118</s>?105", "", "7a, 7b, 7c", "Raum-Vtr.", true),
-                    VPlanRow("Bio", false, "5", "<s>023, 028</s>?067", "", "5d", "Vertretung", true)
+                VPlanRow(
+                    "Gmk_1", false, "3 - 4", "104", "[WolflenzA]: Raumänderung", "K2",
+                    "Raum-Vtr.", false
+                ),
+                VPlanRow(
+                    "<s>gk_1</s>", true, "5 - 6", "---", "", "K2",
+                    "Entfall", false
+                ),
+                VPlanRow(
+                    "<s>M-Diff</s>", true, "4", "<s>224</s>", "", "<s>10c</s>",
+                    "Entfall", false
+                ),
+                VPlanRow(
+                    "<s>L</s>", true, "5", "<s>226</s>", "", "<s>10c, 10a, 10b</s>",
+                    "Entfall", false
+                ),
+                VPlanRow(
+                    "<s>F</s>", true, "5", "<s>224</s>", "", "<s>10c</s>",
+                    "Entfall", false
+                ),
+                VPlanRow(
+                    "M", false, "1 - 2", "207", "Mathe", "9a",
+                    "Vertretung", false
+                ),
+                VPlanRow(
+                    "F", false, "1", "119", "F bei Fr. E. findet statt", "7a, 7b, 7c",
+                    "Unterricht geändert", false
+                ),
+                VPlanRow(
+                    "L", false, "1 - 2", "<s>118</s>?105", "", "7a, 7b, 7c",
+                    "Raum-Vtr.", true
+                ),
+                VPlanRow(
+                    "Bio", false, "5", "<s>023, 028</s>?067", "", "5d",
+                    "Vertretung", true
+                )
             )
         }
 
@@ -66,7 +91,8 @@ class VPlanParserTest {
     fun test_parseVPlanDay() {
         val day = VPlanDay(VPlanHeader(v1_dayAndDate, v1_lastUpdated, v1_motd), getV1Table())
 
-        assertThat(parseVPlanDay(load("v1.html").toResponseBody("text/html; charset=\"windows-1252\"".toMediaTypeOrNull())), `is`(equalTo(day)))
+        val contentType = "text/html; charset=\"windows-1252\"".toMediaTypeOrNull()
+        assertThat(parseVPlanDay(load("v1.html").toResponseBody(contentType)), `is`(equalTo(day)))
     }
 
     @Test
@@ -104,15 +130,15 @@ class VPlanParserTest {
     @Throws(Exception::class)
     fun test_readWithEncoding() {
         val withEnc = load("v1.html")
-        assertThat(readWithEncoding(withEnc.toResponseBody(null)),
-                `is`(equalTo(String(withEnc, Charset.forName("windows-1252")))))
-
-        assertThat(readWithEncoding(withEnc.toResponseBody("text/html; charset=\"utf-8\"".toMediaTypeOrNull())),
-                `is`(equalTo(String(withEnc, Charset.forName("utf-8")))))
-
         val withoutEncoding = load("v1-nohead.html")
 
-        assertThat(readWithEncoding(withoutEncoding.toResponseBody(null)),
-                `is`(equalTo(String(withoutEncoding, Charset.defaultCharset()))))
+        val contentType = "text/html; charset=\"utf-8\"".toMediaTypeOrNull()
+        val encWin1252 = String(withEnc, Charset.forName("windows-1252"))
+        val encUtf8 = String(withEnc, Charset.forName("utf-8"))
+        val encSys = String(withoutEncoding, Charset.defaultCharset())
+
+        assertThat(readWithEncoding(withEnc.toResponseBody(null)), `is`(equalTo(encWin1252)))
+        assertThat(readWithEncoding(withEnc.toResponseBody(contentType)), `is`(equalTo(encUtf8)))
+        assertThat(readWithEncoding(withoutEncoding.toResponseBody(null)), `is`(equalTo(encSys)))
     }
 }

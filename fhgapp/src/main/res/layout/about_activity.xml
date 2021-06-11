@@ -59,19 +59,19 @@
 
                 <Button
                     style="@style/About.Action"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:text="@string/about_visit_repo"
                     app:onClickListener="@{visit_repo_listener}" />
 
                 <Button
                     style="@style/About.Action"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:text="@string/about_contact_mail"
                     app:onClickListener="@{contact_dev_listener}" />
             </LinearLayout>

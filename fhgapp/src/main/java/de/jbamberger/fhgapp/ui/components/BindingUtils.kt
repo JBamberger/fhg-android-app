@@ -23,7 +23,10 @@ object BindingUtils {
     fun bindHtml(view: TextView, html: String?) {
         view.text = when {
             html == null -> ""
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(
+                html,
+                Html.FROM_HTML_MODE_LEGACY
+            )
             else -> @Suppress("DEPRECATION") Html.fromHtml(html)
         }
     }
@@ -31,9 +34,12 @@ object BindingUtils {
     @JvmStatic
     @BindingAdapter("stripHtml")
     fun bindStrippingHtml(view: TextView, html: String?) {
-        view.text =  when {
+        view.text = when {
             html == null -> ""
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString()
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> Html.fromHtml(
+                html,
+                Html.FROM_HTML_MODE_LEGACY
+            ).toString()
             else -> @Suppress("DEPRECATION") Html.fromHtml(html).toString()
         }
     }
@@ -87,13 +93,17 @@ object BindingUtils {
     @BindingAdapter("leftVector")
     fun bindLeftVectorDrawable(view: TextView, @DrawableRes icon: Int) {
         val x = view.compoundDrawables
-        view.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(view.context, icon), x[1], x[2], x[3])
+        view.setCompoundDrawablesWithIntrinsicBounds(
+            AppCompatResources.getDrawable(view.context, icon), x[1], x[2], x[3]
+        )
     }
 
     @JvmStatic
     @BindingAdapter("topVector")
     fun bindTopVectorDrawable(view: TextView, @DrawableRes icon: Int) {
         val x = view.compoundDrawables
-        view.setCompoundDrawablesWithIntrinsicBounds(x[0], AppCompatResources.getDrawable(view.context, icon), x[2], x[3])
+        view.setCompoundDrawablesWithIntrinsicBounds(
+            x[0], AppCompatResources.getDrawable(view.context, icon), x[2], x[3]
+        )
     }
 }

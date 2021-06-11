@@ -17,10 +17,11 @@ import javax.inject.Singleton
 
 @Singleton
 internal class RepositoryImpl @Inject internal constructor(
-        private val appExecutors: AppExecutors,
-        private val endpoint: FhgEndpoint,
-        private val untisEndpoint: UntisFhgEndpoint,
-        private val kvStore: KeyValueStorage) : Repository {
+    private val appExecutors: AppExecutors,
+    private val endpoint: FhgEndpoint,
+    private val untisEndpoint: UntisFhgEndpoint,
+    private val kvStore: KeyValueStorage
+) : Repository {
 
     override fun getVPlan(): LiveData<Resource<VPlan>> {
 
@@ -31,20 +32,20 @@ internal class RepositoryImpl @Inject internal constructor(
         val pageSize = 10
         val sourceFactory = FeedDataSource.Factory(endpoint, appExecutors.networkIO())
         val pagedListConfig = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setInitialLoadSizeHint(pageSize * 2)
-                .setPageSize(pageSize)
-                .build()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(pageSize * 2)
+            .setPageSize(pageSize)
+            .build()
         val pagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
-                .setFetchExecutor(appExecutors.networkIO())
-                .build()
+            .setFetchExecutor(appExecutors.networkIO())
+            .build()
 
         return Listing(
-                pagedList = pagedList,
-                networkState = sourceFactory.sourceLiveData.switchMap { it.networkState },
-                refreshState = sourceFactory.sourceLiveData.switchMap { it.initialLoad },
-                retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
-                refresh = { sourceFactory.sourceLiveData.value?.invalidate() }
+            pagedList = pagedList,
+            networkState = sourceFactory.sourceLiveData.switchMap { it.networkState },
+            refreshState = sourceFactory.sourceLiveData.switchMap { it.initialLoad },
+            retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
+            refresh = { sourceFactory.sourceLiveData.value?.invalidate() }
         )
     }
 

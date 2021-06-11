@@ -13,7 +13,8 @@ import de.jbamberger.fhgapp.BR
  *
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdapter.DataBindingViewHolder>() {
+abstract class DataBindingBaseAdapter :
+    RecyclerView.Adapter<DataBindingBaseAdapter.DataBindingViewHolder>() {
 
 
     /**
@@ -25,7 +26,8 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
+        val binding =
+            DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, viewType, parent, false)
         return DataBindingViewHolder(binding)
     }
 
@@ -36,7 +38,7 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
      * @param position index of the data item
      */
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) =
-            holder.bind(getObjForPosition(position))
+        holder.bind(getObjForPosition(position))
 
     /**
      * Returns the view type of the data item at the given position
@@ -68,7 +70,8 @@ abstract class DataBindingBaseAdapter : RecyclerView.Adapter<DataBindingBaseAdap
     /**
      * ViewHolder class containing a reference to the ViewDataBinding of the associated view.
      */
-    class DataBindingViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    class DataBindingViewHolder(val binding: ViewDataBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         /**
          * Binds the data object and event listener to the View.

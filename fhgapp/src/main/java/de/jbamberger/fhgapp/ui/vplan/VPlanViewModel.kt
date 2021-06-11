@@ -17,9 +17,10 @@ import javax.inject.Inject
 
 class VPlanViewModel @Inject
 internal constructor(
-        app: App,
-        private val settings: Settings,
-        private val repo: Repository) : AndroidViewModel(app) {
+    app: App,
+    private val settings: Settings,
+    private val repo: Repository
+) : AndroidViewModel(app) {
 
     private val _plan = MediatorLiveData<List<VPlanListItem>>()
     private val _title: MutableLiveData<String> = MutableLiveData()
@@ -56,7 +57,7 @@ internal constructor(
                     VPlanUtils.filter(resource.data, vpMatcher)
                 }
                 is Resource.Loading -> resource.data?.let { VPlanUtils.filter(it, vpMatcher) }
-                        ?: emptyList()
+                    ?: emptyList()
                 is Resource.Error -> {
                     _refreshing.value = false
                     val tmp = mutableListOf<VPlanListItem>()
@@ -73,8 +74,10 @@ internal constructor(
         return if (settings.showAll || settings.grades.isEmpty()) {
             getApplication<App>().getString(R.string.vplan_subtitle_all)
         } else {
-            getApplication<App>().getString(R.string.vplan_subtitle_grades,
-                    settings.grades.joinToString(separator = ", ", limit = 3))
+            getApplication<App>().getString(
+                R.string.vplan_subtitle_grades,
+                settings.grades.joinToString(separator = ", ", limit = 3)
+            )
         }
     }
 }

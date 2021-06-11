@@ -12,7 +12,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * @param <R> result type
  */
-internal class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdapter<R, LiveData<ApiResponse<R>>> {
+internal class LiveDataCallAdapter<R>(private val responseType: Type) :
+    CallAdapter<R, LiveData<ApiResponse<R>>> {
 
     override fun responseType(): Type {
         return responseType
@@ -41,7 +42,11 @@ internal class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdap
 
     internal class Factory : CallAdapter.Factory() {
 
-        override fun get(returnType: Type, annotations: Array<Annotation>, retrofit: Retrofit): CallAdapter<*, *>? {
+        override fun get(
+            returnType: Type,
+            annotations: Array<Annotation>,
+            retrofit: Retrofit
+        ): CallAdapter<*, *>? {
             if (getRawType(returnType) != LiveData::class.java) {
                 return null
             }

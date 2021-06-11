@@ -14,12 +14,14 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @Singleton
-@Component(modules = [
-    AppModule::class,
-    RepoInitModule::class,
-    BuildersModule::class,
-    AndroidInjectionModule::class,
-    AndroidSupportInjectionModule::class])
+@Component(
+    modules = [
+        AppModule::class,
+        RepoInitModule::class,
+        BuildersModule::class,
+        AndroidInjectionModule::class,
+        AndroidSupportInjectionModule::class]
+)
 interface AppComponent : AndroidInjector<App> {
 
     @Component.Builder

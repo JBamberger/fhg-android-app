@@ -26,8 +26,8 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.preferenceContainer, VPlanPreferenceFragment())
-                .commit()
+            .replace(R.id.preferenceContainer, VPlanPreferenceFragment())
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -40,7 +40,6 @@ class SettingsActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 
     /**

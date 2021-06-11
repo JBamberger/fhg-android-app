@@ -30,7 +30,9 @@ import retrofit2.http.Query
 internal interface FhgEndpoint {
     companion object {
         internal const val BASE_URL = "https://fhg-radolfzell.de/"
-        private const val CALENDAR_BASE = "?plugin=all-in-one-event-calendar&controller=ai1ec_exporter_controller&action=export_events"
+        private const val CALENDAR_BASE = "?plugin=all-in-one-event-calendar" +
+                "&controller=ai1ec_exporter_controller" +
+                "&action=export_events"
         private const val JSON_V2 = "/wp-json/wp/v2"
     }
 
@@ -42,10 +44,10 @@ internal interface FhgEndpoint {
 
     @GET("$JSON_V2/posts?context=embed")
     fun getFeedPage(
-            @Query(value = "before") before: String? = null,
-            @Query(value = "after") after: String? = null,
-            @Query(value = "per_page") count: Int? = null,
-            @Query(value = "order") order: String? = "desc"
+        @Query(value = "before") before: String? = null,
+        @Query(value = "after") after: String? = null,
+        @Query(value = "per_page") count: Int? = null,
+        @Query(value = "order") order: String? = "desc"
     ): Call<List<FeedItem>>
 
     @GET("$JSON_V2/media/{mediaId}?context=embed")

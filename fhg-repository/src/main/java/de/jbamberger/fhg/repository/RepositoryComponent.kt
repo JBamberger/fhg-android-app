@@ -87,8 +87,7 @@ internal class RepoInstantiationModule {
     @Provides
     @Singleton
     internal fun providesMoshi(): Moshi {
-        return Moshi.Builder()
-                .build()
+        return Moshi.Builder().build()
     }
 
     @Provides
@@ -118,18 +117,18 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun provideRetrofitAPI(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
         return Retrofit.Builder()
-                .addCallAdapterFactory(LiveDataCallAdapter.Factory())
-                .addConverterFactory(FhgTypeConverterFactory(moshi))
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .client(okHttpClient)
+            .addCallAdapterFactory(LiveDataCallAdapter.Factory())
+            .addConverterFactory(FhgTypeConverterFactory(moshi))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
     }
 
     @Provides
     @Singleton
     internal fun provideFhgEndpoint(retrofitBuilder: Retrofit.Builder): FhgEndpoint {
         return retrofitBuilder.baseUrl(FhgEndpoint.BASE_URL)
-                .build()
-                .create(FhgEndpoint::class.java)
+            .build()
+            .create(FhgEndpoint::class.java)
     }
 
     @Provides
@@ -150,8 +149,8 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun provideAppDatabase(application: Application): AppDatabase {
         return Room.databaseBuilder(application, AppDatabase::class.java, DB_NAME)
-                .fallbackToDestructiveMigrationFrom(1)
-                .build()
+            .fallbackToDestructiveMigrationFrom(1)
+            .build()
     }
 
     @Provides

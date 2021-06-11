@@ -67,24 +67,24 @@ class FeedItem {
     }
 
     override fun toString() =
-            "FeedItem{id=$id, date='$date', link='$link', title=$title, excerpt=$excerpt}"
+        "FeedItem{id=$id, date='$date', link='$link', title=$title, excerpt=$excerpt}"
 }
 
 @JsonClass(generateAdapter = true)
 class FeedMedia(
-        val id: Int,
-        val date: String,
-        val slug: String,
-        val type: String,
-        val link: String,
-        val title: Title,
-        val author: Int,
-        val caption: Caption,
-        val alt_text: String,
-        val media_type: String,
-        val mime_type: String,
-        val media_details: MediaDetails,
-        val source_url: String
+    val id: Int,
+    val date: String,
+    val slug: String,
+    val type: String,
+    val link: String,
+    val title: Title,
+    val author: Int,
+    val caption: Caption,
+    val alt_text: String,
+    val media_type: String,
+    val mime_type: String,
+    val media_details: MediaDetails,
+    val source_url: String
 ) {
 
     @JsonClass(generateAdapter = true)
@@ -95,16 +95,18 @@ class FeedMedia(
 
     @JsonClass(generateAdapter = true)
     data class MediaDetails(
-            val width: Int,
-            val height: Int,
-            val file: String,
-            val sizes: Map<String, ImageSize>)
+        val width: Int,
+        val height: Int,
+        val file: String,
+        val sizes: Map<String, ImageSize>
+    )
 
     @JsonClass(generateAdapter = true)
     data class ImageSize(
-            val file: String,
-            val width: Int,
-            val height: Int,
-            val mime_type: String,
-            val source_url: String)
+        val file: String,
+        val width: Int,
+        val height: Int,
+        val mime_type: String,
+        val source_url: String
+    )
 }

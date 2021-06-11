@@ -46,11 +46,18 @@ class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
         val layoutManager = LinearLayoutManager(context)
         binding.container.layoutManager = layoutManager
-        binding.container.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+        binding.container.addItemDecoration(
+            DividerItemDecoration(context, layoutManager.orientation)
+        )
         binding.container.adapter = adapter
         binding.listener = this
         return binding.root

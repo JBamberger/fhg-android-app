@@ -12,8 +12,9 @@ import java.io.IOException
 import java.util.concurrent.Executor
 
 internal class FeedDataSource private constructor(
-        private val endpoint: FhgEndpoint,
-        private val retryExecutor: Executor) : ItemKeyedDataSource<String, Pair<FeedItem, FeedMedia?>>() {
+    private val endpoint: FhgEndpoint,
+    private val retryExecutor: Executor
+) : ItemKeyedDataSource<String, Pair<FeedItem, FeedMedia?>>() {
 
     private var retry: (() -> Any)? = null
 
@@ -32,7 +33,10 @@ internal class FeedDataSource private constructor(
     }
 
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<Pair<FeedItem, FeedMedia?>>) {
+    override fun loadInitial(
+        params: LoadInitialParams<String>,
+        callback: LoadInitialCallback<Pair<FeedItem, FeedMedia?>>
+    ) {
         networkState.postValue(NetworkState.LOADING)
         initialLoad.postValue(NetworkState.LOADING)
 
@@ -52,7 +56,10 @@ internal class FeedDataSource private constructor(
         initialLoad.postValue(result)
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
+    override fun loadAfter(
+        params: LoadParams<String>,
+        callback: LoadCallback<Pair<FeedItem, FeedMedia?>>
+    ) {
         networkState.postValue(NetworkState.LOADING)
 
         val result = when (val response = getFeed(params.requestedLoadSize, params.key)) {
@@ -70,17 +77,20 @@ internal class FeedDataSource private constructor(
         networkState.postValue(result)
     }
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<Pair<FeedItem, FeedMedia?>>) {
+    override fun loadBefore(
+        params: LoadParams<String>,
+        callback: LoadCallback<Pair<FeedItem, FeedMedia?>>
+    ) {
         // ignore
     }
 
     override fun getKey(pair: Pair<FeedItem, FeedMedia?>): String = pair.first.date!! //FIXME
 
 
-
-
-
-    private fun getFeed(count: Int, before: String?): FeedDownload<List<Pair<FeedItem, FeedMedia?>>> {
+    private fun getFeed(
+        count: Int,
+        before: String?
+    ): FeedDownload<List<Pair<FeedItem, FeedMedia?>>> {
         return try {
             val response = when (before) {
                 null -> endpoint.getFeedPage(count = count)
@@ -114,8 +124,9 @@ internal class FeedDataSource private constructor(
 
 
     internal class Factory(
-            private val endpoint: FhgEndpoint,
-            private val retryExecutor: Executor) : DataSource.Factory<String, Pair<FeedItem, FeedMedia?>>() {
+        private val endpoint: FhgEndpoint,
+        private val retryExecutor: Executor
+    ) : DataSource.Factory<String, Pair<FeedItem, FeedMedia?>>() {
 
         val sourceLiveData = MutableLiveData<FeedDataSource>()
 

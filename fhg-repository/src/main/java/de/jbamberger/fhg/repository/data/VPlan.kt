@@ -34,29 +34,29 @@ data class VPlan constructor(val day1: VPlanDay, val day2: VPlanDay) {
 
 @JsonClass(generateAdapter = true)
 data class VPlanDay(
-        val header: VPlanHeader,
-        val vPlanRows: List<VPlanRow>
+    val header: VPlanHeader,
+    val vPlanRows: List<VPlanRow>
 )
 
 @JsonClass(generateAdapter = true)
 data class VPlanRow(
-        val subject: String,
-        val isOmitted: Boolean,
-        val hour: String,
-        val room: String,
-        val content: String,
-        val grade: String,
-        val kind: String,
-        val isMarkedNew: Boolean,
-        val subNr: String? = null,
-        val subTeacher: String? = null,
-        val subFrom: String? = null,
-        val subTo: String? = null
+    val subject: String,
+    val isOmitted: Boolean,
+    val hour: String,
+    val room: String,
+    val content: String,
+    val grade: String,
+    val kind: String,
+    val isMarkedNew: Boolean,
+    val subNr: String? = null,
+    val subTeacher: String? = null,
+    val subFrom: String? = null,
+    val subTo: String? = null
 )
 
 @JsonClass(generateAdapter = true)
 data class VPlanHeader(
-        val dateAndDay: String,
-        val lastUpdated: String,
-        val motd: String
+    val dateAndDay: String,
+    val lastUpdated: String,
+    val motd: String
 )

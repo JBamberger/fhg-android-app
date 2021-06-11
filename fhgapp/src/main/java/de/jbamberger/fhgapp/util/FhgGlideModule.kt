@@ -17,8 +17,9 @@ import java.io.InputStream
 class FhgGlideModule : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         registry.prepend(
-                FeedMedia::class.java,
-                InputStream::class.java,
-                (context.applicationContext as App).repoHelper.provideFeedMediaLoaderFactory())
+            FeedMedia::class.java,
+            InputStream::class.java,
+            (context.applicationContext as App).repoHelper.provideFeedMediaLoaderFactory()
+        )
     }
 }
