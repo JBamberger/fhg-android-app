@@ -34,7 +34,7 @@
 # data classes
 ###################################################################################################
 -keepnames class com.squareup.moshi.Moshi
--keep class de.jbamberger.fhg.repository.data.* {
+-keep class de.jbamberger.fhgapp.repository.data.* {
     <init>(...);
     <fields>;
 }

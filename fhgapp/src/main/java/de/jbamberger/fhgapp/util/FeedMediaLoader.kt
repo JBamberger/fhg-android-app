@@ -6,7 +6,7 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader
-import de.jbamberger.fhg.repository.data.FeedMedia
+import de.jbamberger.fhgapp.repository.data.FeedMedia
 import java.io.InputStream
 import kotlin.math.abs
 

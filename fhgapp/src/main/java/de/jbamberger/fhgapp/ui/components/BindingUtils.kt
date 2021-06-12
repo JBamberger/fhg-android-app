@@ -9,7 +9,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import de.jbamberger.fhg.repository.data.VPlanRow
+import de.jbamberger.fhgapp.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 
 

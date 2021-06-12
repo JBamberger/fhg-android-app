@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.jbamberger.fhg.repository.Repository
-import de.jbamberger.fhg.repository.Resource
+import de.jbamberger.fhgapp.repository.Repository
+import de.jbamberger.fhgapp.repository.Resource
 import de.jbamberger.fhgapp.App
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.Settings

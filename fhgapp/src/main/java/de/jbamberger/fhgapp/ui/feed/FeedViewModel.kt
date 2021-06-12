@@ -5,7 +5,7 @@ import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.jbamberger.fhg.repository.Repository
+import de.jbamberger.fhgapp.repository.Repository
 import javax.inject.Inject
 
 /**

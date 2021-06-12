@@ -1,7 +1,7 @@
 package de.jbamberger.fhgapp.ui.vplan
 
-import de.jbamberger.fhg.repository.data.VPlan
-import de.jbamberger.fhg.repository.data.VPlanRow
+import de.jbamberger.fhgapp.repository.data.VPlan
+import de.jbamberger.fhgapp.repository.data.VPlanRow
 import de.jbamberger.fhgapp.Settings
 import java.util.*
 

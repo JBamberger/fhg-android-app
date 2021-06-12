@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import de.jbamberger.fhg.repository.NetworkState
-import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.data.FeedMedia
+import de.jbamberger.fhgapp.repository.NetworkState
+import de.jbamberger.fhgapp.repository.data.FeedItem
+import de.jbamberger.fhgapp.repository.data.FeedMedia
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.FeedFragmentBinding
 import de.jbamberger.fhgapp.ui.components.BindingUtils
