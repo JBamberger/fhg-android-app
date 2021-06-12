@@ -11,6 +11,7 @@ import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory
 import de.jbamberger.fhg.repository.api.LiveDataCallAdapter
 import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
 import de.jbamberger.fhg.repository.util.FeedMediaLoader
+import de.jbamberger.fhgapp.BuildConfig
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -62,7 +62,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':fhg-repository')
 
     implementation lib_kotlin_std_lib
 
@@ -78,8 +77,23 @@ dependencies {
     implementation lib_support_recyclerview
     implementation lib_support_swiperefreshlayout
 
-    kapt apt_glide
+
     implementation lib_timber
+    implementation lib_jsoup
+
+    implementation lib_okhttp
+    implementation lib_okhttp_logging_interceptor
+
+    implementation lib_moshi
+    kapt apt_moshi_codegen
+
+    implementation lib_retrofit
+    implementation lib_retrofit_converter_scalars
+    implementation lib_retrofit_converter_moshi
+
+    implementation lib_glide
+    kapt apt_glide
+    implementation lib_paging_runtime
 
     implementation lib_lifecycle_runtime
     implementation lib_lifecycle_extensions
