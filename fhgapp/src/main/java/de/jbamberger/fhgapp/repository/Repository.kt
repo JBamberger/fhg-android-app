@@ -1,6 +1,7 @@
 package de.jbamberger.fhgapp.repository
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import de.jbamberger.fhgapp.repository.data.FeedItem
 import de.jbamberger.fhgapp.repository.data.FeedMedia
 import de.jbamberger.fhgapp.repository.data.VPlan
@@ -12,6 +13,6 @@ import de.jbamberger.fhgapp.repository.data.VPlan
 interface Repository {
     fun getVPlan(): LiveData<Resource<VPlan>>
 
-    fun postsOfFeed(): Listing<Pair<FeedItem, FeedMedia?>>
+    fun getFeed(): PagingSource<String, Pair<FeedItem, FeedMedia?>>
 }
 

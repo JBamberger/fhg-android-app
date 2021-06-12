@@ -1,9 +1,10 @@
 package de.jbamberger.fhgapp.ui.feed
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations.map
-import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.jbamberger.fhgapp.repository.Repository
 import javax.inject.Inject
@@ -14,22 +15,17 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
-    private val source = MutableLiveData<String>()
-    private val repoResult = map(source) { repo.postsOfFeed() }
+    private val pageSize = 10
+    private val config = PagingConfig(
+        pageSize = pageSize,
+        enablePlaceholders = false,
+        initialLoadSize = pageSize * 2
+    )
 
-    val posts = switchMap(repoResult) { it.pagedList }
-    val networkState = switchMap(repoResult) { it.networkState }
-    val refreshState = switchMap(repoResult) { it.refreshState }
+    private val pager = Pager(
+        config = config,
+        pagingSourceFactory = repo::getFeed
+    )
 
-    init {
-        source.postValue("")
-    }
-
-    fun refresh() {
-        repoResult.value?.refresh?.invoke()
-    }
-
-    fun retry() {
-        repoResult.value?.retry?.invoke()
-    }
+    val feed = pager.flow.cachedIn(viewModelScope)
 }

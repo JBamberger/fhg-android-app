@@ -1,8 +1,7 @@
 package de.jbamberger.fhgapp.repository
 
 import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
+import androidx.paging.PagingSource
 import de.jbamberger.fhgapp.repository.api.FeedDataSource
 import de.jbamberger.fhgapp.repository.api.FhgEndpoint
 import de.jbamberger.fhgapp.repository.api.UntisFhgEndpoint
@@ -11,7 +10,6 @@ import de.jbamberger.fhgapp.repository.data.FeedMedia
 import de.jbamberger.fhgapp.repository.data.VPlan
 import de.jbamberger.fhgapp.repository.db.KeyValueStorage
 import de.jbamberger.fhgapp.repository.util.AppExecutors
-import de.jbamberger.fhgapp.repository.util.switchMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,25 +26,8 @@ class RepositoryImpl @Inject internal constructor(
         return VPlanResource(appExecutors, kvStore, endpoint, untisEndpoint).asLiveData()
     }
 
-    override fun postsOfFeed(): Listing<Pair<FeedItem, FeedMedia?>> {
-        val pageSize = 10
-        val sourceFactory = FeedDataSource.Factory(endpoint, appExecutors.networkIO())
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(pageSize * 2)
-            .setPageSize(pageSize)
-            .build()
-        val pagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)
-            .setFetchExecutor(appExecutors.networkIO())
-            .build()
-
-        return Listing(
-            pagedList = pagedList,
-            networkState = sourceFactory.sourceLiveData.switchMap { it.networkState },
-            refreshState = sourceFactory.sourceLiveData.switchMap { it.initialLoad },
-            retry = { sourceFactory.sourceLiveData.value?.retryAllFailed() },
-            refresh = { sourceFactory.sourceLiveData.value?.invalidate() }
-        )
+    override fun getFeed(): PagingSource<String, Pair<FeedItem, FeedMedia?>> {
+        return FeedDataSource(endpoint)
     }
 
     companion object {

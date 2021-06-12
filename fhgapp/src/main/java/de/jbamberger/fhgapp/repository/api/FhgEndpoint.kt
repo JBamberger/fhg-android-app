@@ -56,6 +56,18 @@ internal interface FhgEndpoint {
     @GET("$JSON_V2/media?context=embed")
     fun getFeedMediaElements(@Query("include") ids: String): Call<List<FeedMedia>>
 
+    @GET("$JSON_V2/posts?context=embed")
+    suspend fun getFeedPage2(
+        @Query(value = "before") before: String? = null,
+        @Query(value = "after") after: String? = null,
+        @Query(value = "per_page") count: Int? = null,
+        @Query(value = "order") order: String? = "desc"
+    ): List<FeedItem>
+
+    @GET("$JSON_V2/media/{mediaId}?context=embed")
+    suspend fun getFeedMedia2(@Path("mediaId") mediaId: Int): FeedMedia
+
+
 //    @GET("$CALENDAR_BASE&no_html=true")
 //    fun getIcsCalendar(): LiveData<ApiResponse<EventCalendar>>
 //
