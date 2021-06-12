@@ -16,6 +16,7 @@ import retrofit2.Retrofit
 import timber.log.Timber
 import java.io.IOException
 import java.lang.reflect.Type
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,6 +64,58 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
             val payload =
                 response.payload ?: throw IOException("Received message with empty payload.")
 
+            val motdBuilder = convertMessageOfTheDay(payload)
+            val lastUpdated = payload.lastUpdate ?: ""
+            val dateAndDay = convertDateAndDay(payload)
+
+            val header = VPlanHeader(dateAndDay, lastUpdated, motdBuilder)
+            val rows = payload.rows.map(this@UntisVPlanConverter::convertVPlanRow)
+
+            return VPlanDay(header, rows)
+        }
+
+        private fun convertVPlanRow(row: UntisVPlanRow): VPlanRow {
+            val cleanInfo = row.info.unescapeHtml().trim().lowercase()
+            val kind = when {
+                cleanInfo.startsWith("entfall") || cleanInfo == "x" -> "Entfall"
+                cleanInfo.startsWith("raumänderung") -> "Raumänderung"
+                cleanInfo.startsWith("verlegung") -> "Verlegung"
+                else -> ""
+            }
+            val isOmitted = kind == "Entfall"
+            val content = when (kind) {
+                "Entfall", "Raumänderung" -> ""
+                else -> row.info + " "
+            } + row.substText
+            val isMarkedNew = false
+
+            return VPlanRow(
+                row.subject,
+                isOmitted,
+                row.hour,
+                row.room,
+                content,
+                row.grade,
+                kind,
+                isMarkedNew
+            )
+        }
+
+        private fun convertDateAndDay(payload: UntisVPlanDay): String {
+            val dateAndDay = StringBuilder()
+            payload.weekDay?.let {
+                dateAndDay.append(it).append(", ")
+            }
+            try {
+                val date = originalFormat.parse(payload.date.toString())
+                dateAndDay.append(newFormat.format(date!!))
+            } catch (e: ParseException) {
+                dateAndDay.append(payload.date.toString())
+            }
+            return dateAndDay.toString()
+        }
+
+        private fun convertMessageOfTheDay(payload: UntisVPlanDay): String {
             val motdBuilder = StringBuilder()
             payload.messageData?.messages?.forEach {
                 var isNotEmpty = false
@@ -81,50 +134,7 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
                     motdBuilder.append("\n<br>\n")
                 }
             }
-
-            val lastUpdated = payload.lastUpdate ?: ""
-
-            val dateAndDay = StringBuilder()
-            payload.weekDay?.let {
-                dateAndDay.append(it).append(", ")
-            }
-            try {
-                val date = originalFormat.parse(payload.date.toString())
-                dateAndDay.append(newFormat.format(date!!))
-            } catch (e: java.text.ParseException) {
-                dateAndDay.append(payload.date.toString())
-            }
-
-            val header = VPlanHeader(dateAndDay.toString(), lastUpdated, motdBuilder.toString())
-
-            val rows = payload.rows.map { row ->
-                val cleanInfo = row.info.unescapeHtml().trim().lowercase()
-                val kind = when {
-                    cleanInfo.startsWith("entfall") || cleanInfo == "x" -> "Entfall"
-                    cleanInfo.startsWith("raumänderung") -> "Raumänderung"
-                    cleanInfo.startsWith("verlegung") -> "Verlegung"
-                    else -> ""
-                }
-                val isOmitted = kind == "Entfall"
-                val content = when (kind) {
-                    "Entfall", "Raumänderung" -> ""
-                    else -> row.info + " "
-                } + row.substText
-                val isMarkedNew = false
-
-                VPlanRow(
-                    row.subject,
-                    isOmitted,
-                    row.hour,
-                    row.room,
-                    content,
-                    row.grade,
-                    kind,
-                    isMarkedNew
-                )
-            }
-
-            return VPlanDay(header, rows)
+            return motdBuilder.toString()
         }
 
         companion object {
