@@ -63,59 +63,64 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation lib_kotlin_std_lib
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    implementation lib_support_annotations
-    implementation lib_support_compat
-    implementation lib_support_fragment
-    implementation lib_support_appcompat_v7
-    implementation lib_support_design
-    implementation lib_support_cardview_v7
-    implementation lib_support_preference_v7
-    implementation lib_support_vector_drawable
-    implementation lib_support_constraint_layout
-    implementation lib_support_recyclerview
-    implementation lib_support_swiperefreshlayout
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.core:core:1.5.0'
+    implementation 'androidx.fragment:fragment:1.3.4'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
+    implementation 'androidx.paging:paging-runtime:2.1.0'
 
 
-    implementation lib_timber
-    implementation lib_jsoup
+    implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation "org.jsoup:jsoup:1.13.1"
 
-    implementation lib_okhttp
-    implementation lib_okhttp_logging_interceptor
+    def okhttp_version = '4.9.1'
+    def moshi_version = "1.12.0"
+    def retrofit_version = '2.9.0'
+    def glide_version = '4.12.0'
+    def dagger_version = "2.36"
 
-    implementation lib_moshi
-    kapt apt_moshi_codegen
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
 
-    implementation lib_retrofit
-    implementation lib_retrofit_converter_scalars
-    implementation lib_retrofit_converter_moshi
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
-    implementation lib_glide
-    kapt apt_glide
-    implementation lib_paging_runtime
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
-    implementation lib_lifecycle_runtime
-    implementation lib_lifecycle_extensions
-    implementation lib_lifecycle_java8
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
 
-    implementation lib_jsr250
-    implementation lib_dagger
-    implementation lib_dagger_android
-    implementation lib_dagger_android_support
-    kapt apt_dagger
-    kapt apt_dagger_android
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
+    implementation "com.google.dagger:dagger:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
-    testImplementation lib_jsr305
-    testImplementation lib_junit
-    testImplementation lib_assertj
-    testImplementation lib_robolectric
-    testImplementation lib_mockito
-    testImplementation lib_arch_testing
-    testImplementation lib_paging_testing
+    testImplementation "com.google.code.findbugs:jsr305:3.0.2"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "org.assertj:assertj-core:3.19.0"
+    testImplementation "org.robolectric:robolectric:4.3"
+    testImplementation "org.mockito:mockito-core:3.11.0"
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.paging:paging-common:2.1.0'
 
-    androidTestImplementation lib_jsr305
-    androidTestImplementation lib_support_test_runner
-    androidTestImplementation lib_support_test_rules
-    androidTestImplementation lib_espresso_core
+    androidTestImplementation "com.google.code.findbugs:jsr305:3.0.2"
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
