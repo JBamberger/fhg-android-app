@@ -16,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-internal class RepositoryImpl @Inject internal constructor(
+class RepositoryImpl @Inject internal constructor(
     private val appExecutors: AppExecutors,
     private val endpoint: FhgEndpoint,
     private val untisEndpoint: UntisFhgEndpoint,

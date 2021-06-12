@@ -12,37 +12,23 @@
 #   public *;
 #}
 
--dontnote sun.misc.Unsafe
--dontnote com.google.android.gms.common.**
 
 ###################################################################################################
 # Debugging proguard:
 ###################################################################################################
 
-# -dontobfuscate
 -dontobfuscate
 -dontshrink
 
 # Uncomment this to preserve the line number information for debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
 -keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to hide the original source file name.
-#-renamesourcefileattribute SourceFile
 -renamesourcefileattribute SourceFile
 
-###################################################################################################
-# Glide
-###################################################################################################
 
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
--dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
+-dontnote sun.misc.Unsafe
+-dontnote com.google.android.gms.common.**
 
 ###################################################################################################
 # data classes
@@ -167,3 +153,16 @@
 -dontnote "android.net.http.SslCertificate$DName"
 -dontnote "android.net.http.SslError"
 -dontnote "android.net.http.HttpResponseCache"
+
+###################################################################################################
+# Glide
+###################################################################################################
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder

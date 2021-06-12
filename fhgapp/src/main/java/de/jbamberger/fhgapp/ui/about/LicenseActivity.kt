@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class LicenseActivity : AppCompatActivity() {
 
     private var webView: WebView? = null

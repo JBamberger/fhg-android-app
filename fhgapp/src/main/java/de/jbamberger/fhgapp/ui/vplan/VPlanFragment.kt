@@ -4,14 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.RefreshableListFragmentBinding
 import de.jbamberger.fhgapp.ui.MainActivity
-import de.jbamberger.fhgapp.ui.components.BaseFragment
 import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
+import de.jbamberger.fhgapp.ui.feed.FeedViewModel
 import de.jbamberger.fhgapp.util.Utils
 import timber.log.Timber
 
@@ -19,10 +22,10 @@ import timber.log.Timber
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class VPlanFragment : BaseFragment<VPlanViewModel>(), SwipeRefreshLayout.OnRefreshListener {
+@AndroidEntryPoint
+class VPlanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    override val viewModelClass: Class<VPlanViewModel>
-        get() = VPlanViewModel::class.java
+    private val viewModel: VPlanViewModel by viewModels()
 
     private val adapter: VPlanAdapter = VPlanAdapter()
     private lateinit var binding: RefreshableListFragmentBinding

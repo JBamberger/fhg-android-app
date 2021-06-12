@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.di
+package de.jbamberger.fhgapp
 
 import android.app.Application
 import android.content.Context
@@ -6,6 +6,9 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import de.jbamberger.fhgapp.App
 import javax.inject.Singleton
 
@@ -13,22 +16,13 @@ import javax.inject.Singleton
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-@Module(includes = [(ViewModelModule::class)])
+@InstallIn(ActivityComponent::class)
+@Module
 internal class AppModule {
 
     @Provides
     @Singleton
-    fun providesApplication(app: App): Application = app
-
-    @Provides
-    @Singleton
-    fun providesApplicationContext(application: Application): Context {
-        return application.applicationContext
-    }
-
-    @Provides
-    @Singleton
-    fun providesSharedPreferences(context: Context): SharedPreferences {
+    fun providesSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
     }
 }

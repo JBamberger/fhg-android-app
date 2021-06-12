@@ -2,24 +2,15 @@ package de.jbamberger.fhgapp
 
 import android.app.Application
 import android.util.Log
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import de.jbamberger.fhg.repository.RepoHelper
-import de.jbamberger.fhgapp.di.AppInjector
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class App : Application(), HasAndroidInjector {
-
-    @Inject
-    internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var repoHelper: RepoHelper
+@HiltAndroidApp
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -28,13 +19,7 @@ class App : Application(), HasAndroidInjector {
         } else {
             Timber.plant(CrashReportingTree())
         }
-        AppInjector.init(this)
     }
-
-    override fun androidInjector(): DispatchingAndroidInjector<Any> {
-        return dispatchingAndroidInjector
-    }
-
 
     /**
      * A tree which logs important information for crash reporting.

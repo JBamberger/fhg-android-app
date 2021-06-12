@@ -4,12 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.jbamberger.fhg.repository.Repository
 import javax.inject.Inject
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
+@HiltViewModel
 class FeedViewModel @Inject
 internal constructor(private val repo: Repository) : ViewModel() {
     private val source = MutableLiveData<String>()

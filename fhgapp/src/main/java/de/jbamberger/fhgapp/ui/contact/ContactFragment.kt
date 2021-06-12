@@ -10,16 +10,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.ContactFragmentBinding
-import de.jbamberger.fhgapp.ui.components.BaseFragment
 
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
+@AndroidEntryPoint
+class ContactFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: ContactFragmentBinding
 
@@ -73,8 +76,6 @@ class ContactFragment : BaseFragment<ContactViewModel>(), View.OnClickListener {
         }
     }
 
-    override val viewModelClass: Class<ContactViewModel>
-        get() = ContactViewModel::class.java
 
     private fun safeStartActivity(intent: Intent) {
         try {

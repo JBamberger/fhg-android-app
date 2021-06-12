@@ -1,9 +1,11 @@
 package de.jbamberger.fhgapp.ui.vplan
 
+import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.jbamberger.fhg.repository.Repository
 import de.jbamberger.fhg.repository.Resource
 import de.jbamberger.fhgapp.App
@@ -14,10 +16,10 @@ import javax.inject.Inject
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-
+@HiltViewModel
 class VPlanViewModel @Inject
 internal constructor(
-    app: App,
+    app: Application,
     private val settings: Settings,
     private val repo: Repository
 ) : AndroidViewModel(app) {

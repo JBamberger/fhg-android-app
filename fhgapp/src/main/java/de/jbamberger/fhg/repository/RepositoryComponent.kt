@@ -5,12 +5,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
-import dagger.*
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory
 import de.jbamberger.fhg.repository.api.LiveDataCallAdapter
 import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
-import de.jbamberger.fhg.repository.util.FeedMediaLoader
 import de.jbamberger.fhgapp.BuildConfig
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -24,62 +28,21 @@ import javax.inject.Singleton
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class RepoHelper internal constructor(internal val component: RepositoryComponent) {
-    fun provideFeedMediaLoaderFactory(): FeedMediaLoader.Factory {
-        return component.provideFeedMediaLoaderFactory()
-    }
-}
 
+@InstallIn(SingletonComponent::class)
 @Module
-class RepoInitModule {
-
-    @Singleton
-    @Provides
-    fun providesRepoHelper(app: Application): RepoHelper {
-        return RepoHelper(DaggerRepositoryComponent.builder().application(app).build())
-    }
-
-    @Singleton
-    @Provides
-    fun provideRepository(helper: RepoHelper): Repository {
-        return helper.component.provideRepository()
-    }
-}
-
-@Singleton
-@Component(modules = [RepoBindingModule::class])
-internal interface RepositoryComponent {
-
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        fun application(application: Application): Builder
-
-        fun build(): RepositoryComponent
-    }
-
-    fun provideRepository(): Repository
-    fun provideFeedMediaLoaderFactory(): FeedMediaLoader.Factory
-
-}
-
-@Module(includes = [RepoInstantiationModule::class])
-internal abstract class RepoBindingModule {
+abstract class RepoBindingModule {
 
     @Binds
     @Singleton
     internal abstract fun bindRepository(impl: RepositoryImpl): Repository
-
-    @Binds
-    @Singleton
-    internal abstract fun bindsContext(app: Application): Context
 }
 
+@InstallIn(SingletonComponent::class)
 @Module
-internal class RepoInstantiationModule {
+internal class FhgRepositoryModule {
 
     companion object {
-        private const val DB_NAME = "fhg-db.sglite"
         private const val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
     }
 
@@ -91,7 +54,7 @@ internal class RepoInstantiationModule {
 
     @Provides
     @Singleton
-    internal fun provideOkHttpCache(context: Context): Cache {
+    internal fun provideOkHttpCache(@ApplicationContext context: Context): Cache {
         return Cache(context.cacheDir, CACHE_SIZE)
     }
 
@@ -142,11 +105,5 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun providesSharedPreferences(app: Application): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(app)
-    }
-
-    @Provides
-    @Singleton
-    internal fun providesFeedMediaLoaderFactory(): FeedMediaLoader.Factory {
-        return FeedMediaLoader.Factory()
     }
 }

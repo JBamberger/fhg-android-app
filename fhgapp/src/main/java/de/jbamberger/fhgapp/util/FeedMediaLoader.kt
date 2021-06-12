@@ -1,4 +1,4 @@
-package de.jbamberger.fhg.repository.util
+package de.jbamberger.fhgapp.util
 
 import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.GlideUrl
@@ -15,7 +15,7 @@ import kotlin.math.abs
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 
-class FeedMediaLoader private constructor(
+class FeedMediaLoader internal constructor(
     urlLoader: ModelLoader<GlideUrl, InputStream>
 ) : BaseGlideUrlLoader<FeedMedia>(urlLoader) {
 
@@ -49,14 +49,13 @@ class FeedMediaLoader private constructor(
     class Factory : ModelLoaderFactory<FeedMedia, InputStream> {
         override fun build(multiFactory: MultiModelLoaderFactory): ModelLoader<FeedMedia, InputStream> {
             return FeedMediaLoader(
-                multiFactory.build(GlideUrl::class.java, InputStream::class.java)
+                multiFactory.build(
+                    GlideUrl::class.java,
+                    InputStream::class.java
+                )
             )
         }
 
         override fun teardown() {}
     }
 }
-
-
-
-

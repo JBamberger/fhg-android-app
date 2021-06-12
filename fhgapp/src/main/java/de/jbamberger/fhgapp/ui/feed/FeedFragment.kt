@@ -9,34 +9,31 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhg.repository.NetworkState
 import de.jbamberger.fhg.repository.data.FeedItem
 import de.jbamberger.fhg.repository.data.FeedMedia
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.FeedFragmentBinding
-import de.jbamberger.fhgapp.di.Injectable
 import de.jbamberger.fhgapp.ui.components.BindingUtils
 import de.jbamberger.fhgapp.util.GlideApp
 import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
-import javax.inject.Inject
 
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class FeedFragment : Fragment(), Injectable {
+@AndroidEntryPoint
+class FeedFragment : Fragment() {
 
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var model: FeedViewModel
-
+    private val model: FeedViewModel by viewModels()
 
     private var _binding: FeedFragmentBinding? = null
     private val binding get() = _binding!!
@@ -45,9 +42,7 @@ class FeedFragment : Fragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
-        val view = binding.root
-        model = ViewModelProvider(this, viewModelFactory).get(FeedViewModel::class.java)
-        return view
+        return binding.root
     }
 
     override fun onDestroyView() {

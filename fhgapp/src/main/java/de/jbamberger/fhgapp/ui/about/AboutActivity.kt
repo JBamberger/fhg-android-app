@@ -4,16 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.AboutActivityBinding
-import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.util.Utils
 
-class AboutActivity : BaseActivity<AboutViewModel>() {
-
-    override val viewModelClass: Class<AboutViewModel>
-        get() = AboutViewModel::class.java
+@AndroidEntryPoint
+class AboutActivity : AppCompatActivity() {
 
     private lateinit var binding: AboutActivityBinding
 
