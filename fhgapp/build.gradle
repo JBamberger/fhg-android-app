@@ -98,7 +98,6 @@ dependencies {
     testImplementation lib_robolectric
     testImplementation lib_mockito
     testImplementation lib_arch_testing
-    testImplementation lib_room_testing
     testImplementation lib_paging_testing
 
     androidTestImplementation lib_jsr305

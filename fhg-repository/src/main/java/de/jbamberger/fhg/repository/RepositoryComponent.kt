@@ -4,14 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import androidx.room.Room
 import com.squareup.moshi.Moshi
 import dagger.*
 import de.jbamberger.fhg.repository.api.FhgEndpoint
 import de.jbamberger.fhg.repository.api.FhgTypeConverterFactory
 import de.jbamberger.fhg.repository.api.LiveDataCallAdapter
 import de.jbamberger.fhg.repository.api.UntisFhgEndpoint
-import de.jbamberger.fhg.repository.db.AppDatabase
 import de.jbamberger.fhg.repository.util.FeedMediaLoader
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -143,14 +141,6 @@ internal class RepoInstantiationModule {
     @Singleton
     internal fun providesSharedPreferences(app: Application): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(app)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideAppDatabase(application: Application): AppDatabase {
-        return Room.databaseBuilder(application, AppDatabase::class.java, DB_NAME)
-            .fallbackToDestructiveMigrationFrom(1)
-            .build()
     }
 
     @Provides
