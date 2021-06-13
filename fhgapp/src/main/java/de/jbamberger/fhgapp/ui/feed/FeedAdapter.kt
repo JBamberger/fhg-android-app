@@ -14,7 +14,7 @@ import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.repository.NetworkState
 import de.jbamberger.fhgapp.repository.data.FeedItem
 import de.jbamberger.fhgapp.repository.data.FeedMedia
-import de.jbamberger.fhgapp.ui.components.BindingUtils
+import de.jbamberger.fhgapp.ui.BindingUtils
 import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
 

@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.ui.components
+package de.jbamberger.fhgapp.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

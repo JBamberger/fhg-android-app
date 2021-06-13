@@ -3,32 +3,29 @@ package de.jbamberger.fhgapp.ui.vplan
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
-import de.jbamberger.fhgapp.RefreshableListFragmentBinding
+import de.jbamberger.fhgapp.databinding.VplanFragmentBinding
+import de.jbamberger.fhgapp.ui.DataBindingBaseAdapter
 import de.jbamberger.fhgapp.ui.MainActivity
-import de.jbamberger.fhgapp.ui.components.DataBindingBaseAdapter
-import de.jbamberger.fhgapp.ui.feed.FeedViewModel
 import de.jbamberger.fhgapp.util.Utils
-import timber.log.Timber
 
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @AndroidEntryPoint
-class VPlanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class VPlanFragment : Fragment() {
 
     private val viewModel: VPlanViewModel by viewModels()
 
-    private val adapter: VPlanAdapter = VPlanAdapter()
-    private lateinit var binding: RefreshableListFragmentBinding
+    private var _binding: VplanFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private var parent: MainActivity? = null
 
     override fun onAttach(context: Context) {
@@ -50,35 +47,41 @@ class VPlanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding =
-            DataBindingUtil.inflate(inflater, R.layout.refreshable_list_fragment, container, false)
-        val layoutManager = LinearLayoutManager(context)
-        binding.container.layoutManager = layoutManager
-        binding.container.addItemDecoration(
-            DividerItemDecoration(context, layoutManager.orientation)
-        )
-        binding.container.adapter = adapter
-        binding.listener = this
+        _binding = VplanFragmentBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val layoutManager = LinearLayoutManager(context)
+
+        val adapter = VPlanAdapter()
+
+        binding.vplanContainer.layoutManager = layoutManager
+        binding.vplanContainer.addItemDecoration(
+            DividerItemDecoration(context, layoutManager.orientation)
+        )
+        binding.vplanContainer.adapter = adapter
+        binding.vplanRefresh.setOnRefreshListener(viewModel::refresh)
+
         viewModel.plan.observe(viewLifecycleOwner, {
             if (it != null) adapter.setData(it)
-            Timber.d("plan update: %s", it)
+//            Timber.d("plan update: %s", it)
         })
         viewModel.refreshing.observe(viewLifecycleOwner, {
-            if (it != null) binding.isRefreshing = it
-            Timber.d("refreshing update: %s", it)
+            if (it != null) binding.vplanRefresh.isRefreshing = it
+//            Timber.d("refreshing update: %s", it)
         })
         viewModel.title.observe(viewLifecycleOwner, {
             if (it != null) parent?.setSubtitle(it)
-            Timber.d("title update: %s", it)
+//            Timber.d("title update: %s", it)
         })
 
     }
@@ -94,10 +97,6 @@ class VPlanFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onRefresh() {
-        viewModel.refresh()
     }
 
     private class VPlanAdapter : DataBindingBaseAdapter() {

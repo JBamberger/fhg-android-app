@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.ui.components
+package de.jbamberger.fhgapp.ui
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Build

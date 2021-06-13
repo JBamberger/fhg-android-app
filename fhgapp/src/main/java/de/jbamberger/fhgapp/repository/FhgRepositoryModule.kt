@@ -11,11 +11,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import de.jbamberger.fhgapp.BuildConfig
 import de.jbamberger.fhgapp.repository.api.FhgEndpoint
 import de.jbamberger.fhgapp.repository.api.FhgTypeConverterFactory
 import de.jbamberger.fhgapp.repository.api.LiveDataCallAdapter
 import de.jbamberger.fhgapp.repository.api.UntisFhgEndpoint
-import de.jbamberger.fhgapp.BuildConfig
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,16 +31,7 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-abstract class RepoBindingModule {
-
-    @Binds
-    @Singleton
-    internal abstract fun bindRepository(impl: RepositoryImpl): Repository
-}
-
-@InstallIn(SingletonComponent::class)
-@Module
-internal class FhgRepositoryModule {
+class FhgRepositoryModule {
 
     companion object {
         private const val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
@@ -68,7 +59,7 @@ internal class FhgRepositoryModule {
             val logger = HttpLoggingInterceptor {
                 Timber.d(it)
             }
-            logger.level = HttpLoggingInterceptor.Level.BASIC
+            logger.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(logger)
         }
 

@@ -63,6 +63,8 @@ internal interface FhgEndpoint {
         @Query(value = "per_page") count: Int? = null,
         @Query(value = "order") order: String? = "desc"
     ): List<FeedItem>
+    // Error:
+    // {"code":"rest_invalid_param","message":"Ung\u00fcltige(r) Parameter: before","data":{"status":400,"params":{"before":"Ung\u00fcltiges Datum."},"details":{"before":{"code":"rest_invalid_date","message":"Ung\u00fcltiges Datum.","data":null}}}}
 
     @GET("$JSON_V2/media/{mediaId}?context=embed")
     suspend fun getFeedMedia2(@Path("mediaId") mediaId: Int): FeedMedia
