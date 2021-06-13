@@ -1,10 +1,7 @@
-package de.jbamberger.fhgapp.repository.api
+package com.jbamberger.fhgapp.legacyvplanparser
 
 import androidx.annotation.VisibleForTesting
-import de.jbamberger.fhgapp.repository.api.VPlanParser.Columns.*
-import de.jbamberger.fhgapp.repository.data.VPlanDay
-import de.jbamberger.fhgapp.repository.data.VPlanHeader
-import de.jbamberger.fhgapp.repository.data.VPlanRow
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.Columns.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup

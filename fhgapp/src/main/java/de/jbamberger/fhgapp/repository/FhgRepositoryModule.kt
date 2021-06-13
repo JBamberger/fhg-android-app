@@ -59,7 +59,7 @@ class FhgRepositoryModule {
             val logger = HttpLoggingInterceptor {
                 Timber.d(it)
             }
-            logger.level = HttpLoggingInterceptor.Level.BODY
+            logger.level = HttpLoggingInterceptor.Level.BASIC
             builder.addInterceptor(logger)
         }
 

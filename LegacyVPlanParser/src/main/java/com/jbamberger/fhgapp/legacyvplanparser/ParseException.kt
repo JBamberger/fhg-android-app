@@ -1,4 +1,4 @@
-package de.jbamberger.fhgapp.repository.api
+package com.jbamberger.fhgapp.legacyvplanparser
 
 import java.io.IOException
 

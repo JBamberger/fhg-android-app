@@ -1,20 +1,15 @@
-package de.jbamberger.fhgapp.repository
+package com.jbamberger.fhgapp.legacyvplanparser
 
-import de.jbamberger.fhgapp.repository.api.VPlanParser.parseVPlanDay
-import de.jbamberger.fhgapp.repository.api.VPlanParser.readDayAndDate
-import de.jbamberger.fhgapp.repository.api.VPlanParser.readLastUpdated
-import de.jbamberger.fhgapp.repository.api.VPlanParser.readMotdTable
-import de.jbamberger.fhgapp.repository.api.VPlanParser.readVPlanTable
-import de.jbamberger.fhgapp.repository.api.VPlanParser.readWithEncoding
-import de.jbamberger.fhgapp.repository.data.VPlanDay
-import de.jbamberger.fhgapp.repository.data.VPlanHeader
-import de.jbamberger.fhgapp.repository.data.VPlanRow
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.parseVPlanDay
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.readDayAndDate
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.readLastUpdated
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.readMotdTable
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.readVPlanTable
+import com.jbamberger.fhgapp.legacyvplanparser.VPlanParser.readWithEncoding
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
 import org.jsoup.Jsoup
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.nio.charset.Charset
 
@@ -92,21 +87,21 @@ class VPlanParserTest {
         val day = VPlanDay(VPlanHeader(v1_dayAndDate, v1_lastUpdated, v1_motd), getV1Table())
 
         val contentType = "text/html; charset=\"windows-1252\"".toMediaTypeOrNull()
-        assertThat(parseVPlanDay(load("v1.html").toResponseBody(contentType)), `is`(equalTo(day)))
+        assertEquals(parseVPlanDay(load("v1.html").toResponseBody(contentType)), day)
     }
 
     @Test
     @Throws(Exception::class)
     fun test_readVPlanTable() {
         val plan = loadAsString("v1.html")
-        assertThat(readVPlanTable(Jsoup.parse(plan)), `is`(equalTo(getV1Table())))
+        assertEquals(readVPlanTable(Jsoup.parse(plan)), getV1Table())
     }
 
     @Test
     @Throws(Exception::class)
     fun test_readDayAndDate() {
         val plan = loadAsString("v1.html")
-        assertThat(readDayAndDate(Jsoup.parse(plan)), `is`(equalTo(v1_dayAndDate)))
+        assertEquals(readDayAndDate(Jsoup.parse(plan)), v1_dayAndDate)
     }
 
     @Test
@@ -114,16 +109,16 @@ class VPlanParserTest {
     fun test_readLastUpdated() {
         val plan = loadAsString("v1.html")
 
-        assertThat(readLastUpdated(plan), `is`(equalTo(v1_lastUpdated)))
+        assertEquals(readLastUpdated(plan), v1_lastUpdated)
     }
 
     @Test
     @Throws(Exception::class)
     fun test_readMotdTable() {
         val v1 = loadAsString("v1.html")
-        assertThat(readMotdTable(Jsoup.parse(v1)), `is`(equalTo(v1_motd)))
+        assertEquals(readMotdTable(Jsoup.parse(v1)), v1_motd)
         val v2 = loadAsString("v2.html")
-        assertThat(readMotdTable(Jsoup.parse(v2)), `is`(equalTo(v2_motd)))
+        assertEquals(readMotdTable(Jsoup.parse(v2)), v2_motd)
     }
 
     @Test
@@ -137,8 +132,8 @@ class VPlanParserTest {
         val encUtf8 = String(withEnc, Charset.forName("utf-8"))
         val encSys = String(withoutEncoding, Charset.defaultCharset())
 
-        assertThat(readWithEncoding(withEnc.toResponseBody(null)), `is`(equalTo(encWin1252)))
-        assertThat(readWithEncoding(withEnc.toResponseBody(contentType)), `is`(equalTo(encUtf8)))
-        assertThat(readWithEncoding(withoutEncoding.toResponseBody(null)), `is`(equalTo(encSys)))
+        assertEquals(readWithEncoding(withEnc.toResponseBody(null)), encWin1252)
+        assertEquals(readWithEncoding(withEnc.toResponseBody(contentType)), encUtf8)
+        assertEquals(readWithEncoding(withoutEncoding.toResponseBody(null)), encSys)
     }
 }

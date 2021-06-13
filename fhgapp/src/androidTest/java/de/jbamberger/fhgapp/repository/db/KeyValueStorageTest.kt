@@ -1,37 +1,39 @@
 package de.jbamberger.fhgapp.repository.db
 
 import androidx.preference.PreferenceManager
-import de.jbamberger.fhgapp.repository.RepoInstantiationModule
+import androidx.test.filters.SmallTest
+import androidx.test.platform.app.InstrumentationRegistry
+import de.jbamberger.fhgapp.repository.FhgRepositoryModule
 import de.jbamberger.fhgapp.repository.data.VPlan
 import de.jbamberger.fhgapp.repository.data.VPlanDay
 import de.jbamberger.fhgapp.repository.data.VPlanHeader
 import de.jbamberger.fhgapp.repository.data.VPlanRow
-import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment.application
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-@RunWith(RobolectricTestRunner::class)
+@SmallTest
 class KeyValueStorageTest {
 
     private lateinit var store: KeyValueStorage
 
     @Before
     fun setUp() {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(application)
-        val moshi = RepoInstantiationModule().providesMoshi()
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        prefs.edit().clear().commit()
+        val moshi = FhgRepositoryModule().providesMoshi()
         store = KeyValueStorage(moshi, prefs)
     }
 
     @Test
     fun test_saveAndLoadString() {
         store.save("s", "Hello World.")
-        assertThat(store.get<String>("s")).isEqualTo("Hello World.")
+        assertEquals("Hello World.", store.get<String>("s"))
     }
 
     @Test
@@ -41,18 +43,18 @@ class KeyValueStorageTest {
             listOf(VPlanRow("a", false, "b", "c", "d", "e", "f", false))
         )
         store.save("c", o)
-        assertThat(store.get<VPlanDay>("c")).isEqualTo(o)
+        assertEquals(o, store.get<VPlanDay>("c"))
     }
 
     @Test
     fun test_restoreBroken() {
         store.save("c", "Hello broken Object")
-        assertThat(store.get<VPlanDay>("c")).isEqualTo(null)
+        assertEquals(null, store.get<VPlanDay>("c"))
     }
 
     @Test
     fun test_loadNotPresent() {
-        assertThat(store.get<String>("b")).isEqualTo(null)
+        assertEquals(null, store.get<String>("b"))
     }
 
     @Test
@@ -66,7 +68,7 @@ class KeyValueStorageTest {
                 "{\"dateAndDay\":\"\",\"lastUpdated\":\"\",\"motd\":\"\",\"vPlanRows\":[]}}"
 
         store.save("a", x)
-        assertThat(store.get<VPlan>("a")).isNull()
+        assertNull(store.get<VPlan>("a"))
     }
 }
 
