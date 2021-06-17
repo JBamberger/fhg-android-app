@@ -1,11 +1,13 @@
 package de.jbamberger.fhgapp.ui.vplan
 
+import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import de.jbamberger.fhg.repository.Repository
-import de.jbamberger.fhg.repository.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import de.jbamberger.fhgapp.repository.Repository
+import de.jbamberger.fhgapp.repository.Resource
 import de.jbamberger.fhgapp.App
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.Settings
@@ -14,12 +16,13 @@ import javax.inject.Inject
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-
+@HiltViewModel
 class VPlanViewModel @Inject
 internal constructor(
-        app: App,
-        private val settings: Settings,
-        private val repo: Repository) : AndroidViewModel(app) {
+    app: Application,
+    private val settings: Settings,
+    private val repo: Repository
+) : AndroidViewModel(app) {
 
     private val _plan = MediatorLiveData<List<VPlanListItem>>()
     private val _title: MutableLiveData<String> = MutableLiveData()
@@ -56,7 +59,7 @@ internal constructor(
                     VPlanUtils.filter(resource.data, vpMatcher)
                 }
                 is Resource.Loading -> resource.data?.let { VPlanUtils.filter(it, vpMatcher) }
-                        ?: emptyList()
+                    ?: emptyList()
                 is Resource.Error -> {
                     _refreshing.value = false
                     val tmp = mutableListOf<VPlanListItem>()
@@ -73,8 +76,10 @@ internal constructor(
         return if (settings.showAll || settings.grades.isEmpty()) {
             getApplication<App>().getString(R.string.vplan_subtitle_all)
         } else {
-            getApplication<App>().getString(R.string.vplan_subtitle_grades,
-                    settings.grades.joinToString(separator = ", ", limit = 3))
+            getApplication<App>().getString(
+                R.string.vplan_subtitle_grades,
+                settings.grades.joinToString(separator = ", ", limit = 3)
+            )
         }
     }
 }

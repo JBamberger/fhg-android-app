@@ -4,39 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import de.jbamberger.fhg.repository.NetworkState
-import de.jbamberger.fhg.repository.data.FeedItem
-import de.jbamberger.fhg.repository.data.FeedMedia
-import de.jbamberger.fhgapp.R
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.databinding.FeedFragmentBinding
-import de.jbamberger.fhgapp.di.Injectable
-import de.jbamberger.fhgapp.ui.components.BindingUtils
 import de.jbamberger.fhgapp.util.GlideApp
-import de.jbamberger.fhgapp.util.GlideRequests
-import de.jbamberger.fhgapp.util.Utils
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class FeedFragment : Fragment(), Injectable {
+@AndroidEntryPoint
+class FeedFragment : Fragment() {
 
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var model: FeedViewModel
-
+    private val model: FeedViewModel by viewModels()
 
     private var _binding: FeedFragmentBinding? = null
     private val binding get() = _binding!!
@@ -45,9 +33,7 @@ class FeedFragment : Fragment(), Injectable {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FeedFragmentBinding.inflate(inflater, container, false)
-        val view = binding.root
-        model = ViewModelProvider(this, viewModelFactory).get(FeedViewModel::class.java)
-        return view
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -58,189 +44,33 @@ class FeedFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val glide = GlideApp.with(this)
-        val adapter = FeedAdapter(glide) { model.retry() }
+        val pagingAdapter = FeedAdapter(glide)
+        val refreshStateAdapter = FeedLoadStateAdapter(pagingAdapter::retry)
+        val footerStateAdapter = FeedLoadStateAdapter(pagingAdapter::retry)
+
+        pagingAdapter.addLoadStateListener { loadStates ->
+            refreshStateAdapter.loadState = loadStates.refresh
+            footerStateAdapter.loadState = loadStates.append
+        }
+        val errorShowingAdapter =
+            ConcatAdapter(refreshStateAdapter, pagingAdapter, footerStateAdapter)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            pagingAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.feedRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+            }
+        }
 
         val layoutManager = LinearLayoutManager(context)
         binding.feedContainer.layoutManager = layoutManager
-        binding.feedContainer.adapter = adapter
+        binding.feedContainer.adapter = errorShowingAdapter
         binding.feedContainer.addItemDecoration(
             DividerItemDecoration(context, layoutManager.orientation)
         )
-
-        model.posts.observe(viewLifecycleOwner) { adapter.submitList(it) }
-        model.networkState.observe(viewLifecycleOwner) { adapter.setNetworkState(it) }
-        model.refreshState.observe(viewLifecycleOwner) {
-            binding.feedRefresh.isRefreshing = it == NetworkState.LOADING
-        }
-
-        binding.feedRefresh.setOnRefreshListener { model.refresh() }
-    }
-
-    private class FeedAdapter(
-        private val glide: GlideRequests,
-        private val retryCallback: () -> Unit
-    ) : PagedListAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {
-
-        private var networkState: NetworkState? = null
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return when (viewType) {
-                R.layout.feed_item -> FeedItemHolder.create(glide, parent)
-                R.layout.network_state_item -> ErrorHolder.create(parent, retryCallback)
-                else -> throw IllegalArgumentException("Unknown view type $viewType")
-            }
-        }
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            when (holder) {
-                is FeedItemHolder -> holder.bind(getItem(position))
-                is ErrorHolder -> holder.bind(networkState)
-                else -> throw IllegalArgumentException("Unknown ViewHolder type ${holder.javaClass}")
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return super.getItemCount() + if (hasExtraRow()) 1 else 0
-        }
-
-        override fun getItemViewType(position: Int): Int {
-            return when {
-                hasExtraRow() && position == itemCount - 1 -> R.layout.network_state_item
-                else -> R.layout.feed_item
-            }
-        }
-
-        private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
-
-        fun setNetworkState(newNetworkState: NetworkState?) {
-            val previousState = this.networkState
-            val hadExtraRow = hasExtraRow()
-            this.networkState = newNetworkState
-            val hasExtraRow = hasExtraRow()
-            if (hadExtraRow != hasExtraRow) {
-                if (hadExtraRow) {
-                    notifyItemRemoved(super.getItemCount())
-                } else {
-                    notifyItemInserted(super.getItemCount())
-                }
-            } else if (hasExtraRow && previousState != newNetworkState) {
-                notifyItemChanged(itemCount - 1)
-            }
-        }
-
-        companion object {
-            val POST_COMPARATOR = object : DiffUtil.ItemCallback<Pair<FeedItem, FeedMedia?>>() {
-                override fun areItemsTheSame(
-                    oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
-                ) = oldItem.first.id == newItem.first.id
-
-                override fun areContentsTheSame(
-                    oldItem: Pair<FeedItem, FeedMedia?>, newItem: Pair<FeedItem, FeedMedia?>
-                ) = oldItem == newItem
-            }
-        }
-
-        private class FeedItemHolder(
-            private val glide: GlideRequests, view: View
-        ) : RecyclerView.ViewHolder(view) {
-            private val title = view.findViewById<TextView>(R.id.title)
-            private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
-
-            private val textLoading = view.context.getString(R.string.feed_status_loading)
-
-            private var post: Pair<FeedItem, FeedMedia?>? = null
-            private var link: String? = null
-
-            init {
-                view.setOnClickListener {
-                    this.link?.let { Utils.openUrl(view.context, it) }
-                }
-            }
-
-            private fun FeedMedia.selectMediaVariant(): FeedMedia.ImageSize? {
-                val sizes = this.media_details.sizes
-                return try {
-                    sizes.entries.first { it.key == "thumbnail" }.value
-                } catch (e: NoSuchElementException) {
-                    sizes.values.firstOrNull()
-                }
-            }
-
-            fun bind(post: Pair<FeedItem, FeedMedia?>?) {
-                this.post = post
-                this.link = post?.first?.link
-
-                if (post == null) {
-                    this.post = null
-                    this.link = null
-                } else {
-                    val item = post.first
-                    val itemTitle = item.title?.rendered
-                    val itemExcerpt = item.excerpt?.rendered
-
-                    val titleString = when {
-                        itemTitle?.isNotBlank() == true -> itemTitle
-                        itemExcerpt?.isNotBlank() == true -> itemExcerpt
-                        else -> itemView.context.getString(R.string.feed_item_no_title)
-                    }
-                    BindingUtils.bindStrippingHtml(title, titleString)
-                }
-
-                val media = post?.second
-                val variant = post?.second?.selectMediaVariant()
-                if (media != null && variant != null) {
-                    featuredMedia.visibility = View.VISIBLE
-                    featuredMedia.contentDescription = when {
-                        media.caption.rendered.isNotBlank() -> media.caption.rendered
-                        else -> featuredMedia.context.getString(R.string.feed_media_content_desctiption)
-                    }
-                    glide.load(variant.source_url)
-                        .centerInside()
-                        .placeholder(R.drawable.ic_image_black_24dp)
-                        .error(R.drawable.ic_broken_image_black_24dp)
-                        .fallback(R.drawable.ic_broken_image_black_24dp)
-                        .into(featuredMedia)
-                } else {
-                    featuredMedia.visibility = View.INVISIBLE
-                    featuredMedia.contentDescription = featuredMedia.context
-                        .getString(R.string.feed_media_content_desctiption)
-                    glide.clear(featuredMedia)
-                }
-            }
-
-            companion object {
-                fun create(glide: GlideRequests, parent: ViewGroup): FeedItemHolder {
-                    val view = LayoutInflater.from(parent.context)
-                        .inflate(R.layout.feed_item, parent, false)
-                    return FeedItemHolder(glide, view)
-                }
-            }
-        }
-
-        private class ErrorHolder(view: View, private val retryCallback: () -> Unit) :
-            RecyclerView.ViewHolder(view) {
-            private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
-            private val retry = view.findViewById<Button>(R.id.retry_button)
-            private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
-
-            init {
-                retry.setOnClickListener { retryCallback() }
-            }
-
-            fun bind(networkState: NetworkState?) {
-                BindingUtils.bindVisibility(progressBar, networkState is NetworkState.LOADING)
-                val isError = networkState is NetworkState.ERROR
-                BindingUtils.bindVisibility(retry, isError)
-                BindingUtils.bindVisibility(errorMsg, isError)
-                errorMsg.text = if (isError) (networkState as NetworkState.ERROR).message else null
-            }
-
-            companion object {
-                fun create(parent: ViewGroup, retryCallback: () -> Unit): ErrorHolder {
-                    val view = LayoutInflater.from(parent.context)
-                        .inflate(R.layout.network_state_item, parent, false)
-                    return ErrorHolder(view, retryCallback)
-                }
+        binding.feedRefresh.setOnRefreshListener(pagingAdapter::refresh)
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.feed.collectLatest { pagingData ->
+                pagingAdapter.submitData(pagingData)
             }
         }
     }

@@ -1,1 +1,2 @@
-include ':fhgapp', ':fhg-repository'
+include ':fhgapp'
+// include ':LegacyVPlanParser'

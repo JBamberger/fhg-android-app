@@ -7,7 +7,7 @@
 
         <variable
             name="obj"
-            type="de.jbamberger.fhg.repository.data.VPlanHeader" />
+            type="de.jbamberger.fhgapp.repository.data.VPlanHeader" />
 
     </data>
 

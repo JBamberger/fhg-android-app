@@ -1,38 +1,39 @@
 package de.jbamberger.fhgapp.ui
 
-import androidx.lifecycle.Observer
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.ActivityMainBinding
 import de.jbamberger.fhgapp.ui.about.AboutActivity
-import de.jbamberger.fhgapp.ui.components.BaseActivity
 import de.jbamberger.fhgapp.ui.settings.SettingsActivity
 import de.jbamberger.fhgapp.util.Utils
 
 /**
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
-class MainActivity : BaseActivity<MainViewModel>() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-    override val viewModelClass: Class<MainViewModel>
-        get() = MainViewModel::class.java
+    private val viewModel: MainViewModel by viewModels()
 
     private val navigationListener =
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.navigation_vplan -> viewModel.selectedVPlan()
-                    R.id.navigation_feed -> viewModel.selectedFeed()
-                    R.id.navigation_contact -> viewModel.selectedContact()
-                    else -> return@OnNavigationItemSelectedListener false
-                }
-                return@OnNavigationItemSelectedListener true
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_vplan -> viewModel.selectedVPlan()
+                R.id.navigation_feed -> viewModel.selectedFeed()
+                R.id.navigation_contact -> viewModel.selectedContact()
+                else -> return@OnNavigationItemSelectedListener false
             }
+            return@OnNavigationItemSelectedListener true
+        }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -64,8 +65,8 @@ class MainActivity : BaseActivity<MainViewModel>() {
         supportActionBar?.subtitle = null
         val fragment: Fragment = frag ?: Fragment()
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .commit()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
     }
 
     fun setSubtitle(subtitle: String) {

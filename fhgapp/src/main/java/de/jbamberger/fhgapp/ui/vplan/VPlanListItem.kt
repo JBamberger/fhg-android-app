@@ -1,7 +1,7 @@
 package de.jbamberger.fhgapp.ui.vplan
 
-import de.jbamberger.fhg.repository.data.VPlanHeader
-import de.jbamberger.fhg.repository.data.VPlanRow
+import de.jbamberger.fhgapp.repository.data.VPlanHeader
+import de.jbamberger.fhgapp.repository.data.VPlanRow
 import de.jbamberger.fhgapp.R
 
 sealed class VPlanListItem {
