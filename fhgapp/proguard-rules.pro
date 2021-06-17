@@ -27,6 +27,8 @@
 -renamesourcefileattribute SourceFile
 
 
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+
 -dontnote sun.misc.Unsafe
 -dontnote com.google.android.gms.common.**
 
