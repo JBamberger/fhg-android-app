@@ -1,6 +1,6 @@
 # FHG APP
 
-[![Build Status](https://travis-ci.org/JBamberger/fhg-android-app.svg?branch=master)](https://travis-ci.org/JBamberger/fhg-android-app)
+[![Android CI](https://github.com/JBamberger/fhg-android-app/actions/workflows/android.yml/badge.svg)](https://github.com/JBamberger/fhg-android-app/actions/workflows/android.yml)
 
 Dieses Repository enthält den Code der FHG-App (früher VPlan-App).
 
