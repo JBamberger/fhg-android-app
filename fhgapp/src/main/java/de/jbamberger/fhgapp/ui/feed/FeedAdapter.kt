@@ -3,70 +3,27 @@ package de.jbamberger.fhgapp.ui.feed
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import de.jbamberger.fhgapp.R
-import de.jbamberger.fhgapp.repository.NetworkState
 import de.jbamberger.fhgapp.repository.data.FeedItem
 import de.jbamberger.fhgapp.repository.data.FeedMedia
 import de.jbamberger.fhgapp.ui.BindingUtils
 import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
 
-internal class FeedAdapter(
-    private val glide: GlideRequests
-) : PagingDataAdapter<Pair<FeedItem, FeedMedia?>, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+internal class FeedAdapter(private val glide: GlideRequests) :
+    PagingDataAdapter<Pair<FeedItem, FeedMedia?>, FeedAdapter.FeedItemHolder>(POST_COMPARATOR) {
 
-    private var networkState: NetworkState? = null
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            R.layout.feed_item -> FeedItemHolder.create(glide, parent)
-            R.layout.network_state_item -> ErrorHolder.create(parent, this::retry)
-            else -> throw IllegalArgumentException("Unknown view type $viewType")
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder {
+        return FeedItemHolder.create(glide, parent)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is FeedItemHolder -> holder.bind(getItem(position))
-            is ErrorHolder -> holder.bind(networkState)
-            else -> throw IllegalArgumentException("Unknown ViewHolder type ${holder.javaClass}")
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return super.getItemCount() + if (hasExtraRow()) 1 else 0
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when {
-            hasExtraRow() && position == itemCount - 1 -> R.layout.network_state_item
-            else -> R.layout.feed_item
-        }
-    }
-
-    private fun hasExtraRow() = networkState != null && networkState != NetworkState.LOADED
-
-    fun setNetworkState(newNetworkState: NetworkState?) {
-        val previousState = this.networkState
-        val hadExtraRow = hasExtraRow()
-        this.networkState = newNetworkState
-        val hasExtraRow = hasExtraRow()
-        if (hadExtraRow != hasExtraRow) {
-            if (hadExtraRow) {
-                notifyItemRemoved(super.getItemCount())
-            } else {
-                notifyItemInserted(super.getItemCount())
-            }
-        } else if (hasExtraRow && previousState != newNetworkState) {
-            notifyItemChanged(itemCount - 1)
-        }
+    override fun onBindViewHolder(holder: FeedItemHolder, position: Int) {
+        return holder.bind(getItem(position))
     }
 
     companion object {
@@ -81,7 +38,7 @@ internal class FeedAdapter(
         }
     }
 
-    private class FeedItemHolder(
+    class FeedItemHolder(
         private val glide: GlideRequests, view: View
     ) : RecyclerView.ViewHolder(view) {
         private val title = view.findViewById<TextView>(R.id.title)
@@ -158,30 +115,4 @@ internal class FeedAdapter(
         }
     }
 
-    private class ErrorHolder(view: View, private val retryCallback: () -> Unit) :
-        RecyclerView.ViewHolder(view) {
-        private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
-        private val retry = view.findViewById<Button>(R.id.retry_button)
-        private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
-
-        init {
-            retry.setOnClickListener { retryCallback() }
-        }
-
-        fun bind(networkState: NetworkState?) {
-            BindingUtils.bindVisibility(progressBar, networkState is NetworkState.LOADING)
-            val isError = networkState is NetworkState.ERROR
-            BindingUtils.bindVisibility(retry, isError)
-            BindingUtils.bindVisibility(errorMsg, isError)
-            errorMsg.text = if (isError) (networkState as NetworkState.ERROR).message else null
-        }
-
-        companion object {
-            fun create(parent: ViewGroup, retryCallback: () -> Unit): ErrorHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.network_state_item, parent, false)
-                return ErrorHolder(view, retryCallback)
-            }
-        }
-    }
 }

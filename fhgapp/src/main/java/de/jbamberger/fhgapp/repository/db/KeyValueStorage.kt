@@ -7,6 +7,10 @@ import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
 /**
+ * Key-value storage backed by SharedPreferences of the application. Data is serialized to json and
+ * then encoded as Base64. Therefore, only objects serializable by Moshi can be saved with this
+ * class.
+ *
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 

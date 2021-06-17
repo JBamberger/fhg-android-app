@@ -22,8 +22,7 @@ class RepositoryImpl @Inject internal constructor(
 ) : Repository {
 
     override fun getVPlan(): LiveData<Resource<VPlan>> {
-
-        return VPlanResource(appExecutors, kvStore, endpoint, untisEndpoint).asLiveData()
+        return VPlanResource(appExecutors, kvStore, untisEndpoint).asLiveData()
     }
 
     override fun getFeed(): PagingSource<String, Pair<FeedItem, FeedMedia?>> {
