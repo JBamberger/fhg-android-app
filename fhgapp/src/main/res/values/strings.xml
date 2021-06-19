@@ -3,7 +3,7 @@
     <string name="play_link" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="repo_link" translatable="false">https://github.com/jbamberger/fhg-android-app</string>
     <string name="fhg_link" translatable="false">https://www.fhg-radolfzell.de</string>
-    <string name="vplan_link" translatable="false">https://www.fhg-radolfzell.de/vertretungsplan/v_plan.htm</string>
+    <string name="vplan_link" translatable="false">https://hepta.webuntis.com/WebUntis/monitor?school=FHG%20Radolfzell&amp;monitorType=subst&amp;format=VP_Internet</string>
 
 
     <string name="title_activity_main">FHG Radolfzell</string>
