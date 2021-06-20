@@ -78,7 +78,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     implementation("androidx.annotation:annotation:1.2.0")
     implementation("androidx.core:core-ktx:1.5.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.4")
+    implementation("androidx.fragment:fragment-ktx:1.3.5")
     implementation("com.google.android.material:material:1.3.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.vectordrawable:vectordrawable:1.1.0")
