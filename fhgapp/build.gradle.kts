@@ -3,6 +3,28 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("app.cash.licensee")
+}
+
+licensee {
+    allow("Apache-2.0")
+    allow("MIT")
+
+    allowDependency("com.github.bumptech.glide", "glide", "4.12.0") {
+        because("BSD-2-Clause license but the URL is not recognized.")
+    }
+    allowDependency("com.github.bumptech.glide", "annotations", "4.12.0") {
+        because("BSD-2-Clause license but the URL is not recognized.")
+    }
+    allowDependency("com.github.bumptech.glide", "disklrucache", "4.12.0") {
+        because("Apache-2.0 declared with wrong URL.")
+    }
+    allowDependency("com.github.bumptech.glide", "gifdecoder", "4.12.0") {
+        because("MIT declared with wrong URL.")
+    }
+    allowDependency("org.jetbrains", "annotations", "16.0.1") {
+        because("Apache-2.0, but typo in license URL fixed in newer versions")
+    }
 }
 
 val kotlin_version: String by rootProject.extra
