@@ -45,7 +45,7 @@
                 android:value="de.jbamberger.fhgapp.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.about.LicenseActivity"
+            android:name=".ui.about.license.LicenseActivity"
             android:label="@string/title_activity_license"
             android:parentActivityName=".ui.about.AboutActivity">
             <meta-data
