@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.tasks.factory.dependsOn
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -92,7 +94,24 @@ android {
         exclude("license.html")
         exclude("META-INF/eclipse.inf")
     }
+
+    sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/dependencyAssets/"))
+
+    applicationVariants.configureEach {
+        val variant = this
+        val copyArtifactsTask =
+            tasks.register<Copy>("copy${variant.name.capitalize()}ArtifactList") {
+                from(
+                    project.extensions.getByType(ReportingExtension::class.java)
+                        .file("licensee/${variant.name}/artifacts.json")
+                )
+                into(layout.buildDirectory.dir("generated/dependencyAssets/"))
+            }
+        copyArtifactsTask.dependsOn("licensee${variant.name.capitalize()}")
+        tasks["merge${variant.name.capitalize()}Assets"].dependsOn(copyArtifactsTask)
+    }
 }
+
 
 dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))

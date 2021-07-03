@@ -11,7 +11,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:4.2.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
-        classpath("app.cash.licensee:licensee-gradle-plugin:1.0.2")
+        classpath("app.cash.licensee:licensee-gradle-plugin:1.1.0")
     }
 }
 
