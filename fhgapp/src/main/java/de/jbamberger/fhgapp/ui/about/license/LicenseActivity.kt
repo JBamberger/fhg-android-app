@@ -17,7 +17,8 @@ class LicenseActivity : AppCompatActivity() {
 
     private val viewModel: LicenseViewModel by viewModels()
 
-    private class DependencyAdapter(val deps: List<DependencyItem>) : DataBindingBaseAdapter() {
+    private class DependencyAdapter(val deps: List<DependencyInformation>) :
+        DataBindingBaseAdapter() {
         override fun getObjForPosition(position: Int) = deps[position]
         override fun getLayoutIdForPosition(position: Int) = R.layout.license_list_item
         override fun getItemCount() = deps.size
@@ -35,31 +36,8 @@ class LicenseActivity : AppCompatActivity() {
             DividerItemDecoration(this, layoutManager.orientation)
         )
 
-        viewModel.dependencies.observe(this) { depInfoList ->
-            if (depInfoList != null) {
-                val items = depInfoList.map { dep ->
-                    val name = dep.groupId + ":" + dep.artifactId + ":" + dep.version
-
-                    val license = StringBuilder()
-
-                    for (lo in dep.knownLicenses) {
-                        if (license.isNotEmpty()) {
-                            license.append("\n")
-                        }
-                        license.append(lo.name)
-                    }
-                    for (lo in dep.unknownLicenses) {
-                        if (license.isNotEmpty()) {
-                            license.append("\n")
-                        }
-                        if (lo.name.isNullOrBlank()) {
-                            license.append(lo.url)
-                        } else {
-                            license.append(lo.name)
-                        }
-                    }
-                    DependencyItem(name, license.toString(), null)
-                }
+        viewModel.dependencies.observe(this) { items ->
+            if (items != null) {
                 binding.licenseList.adapter = DependencyAdapter(items)
             }
         }

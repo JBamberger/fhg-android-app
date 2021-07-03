@@ -3,6 +3,7 @@ package de.jbamberger.fhgapp.repository
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Moshi
 import dagger.Binds
@@ -35,6 +36,12 @@ class FhgRepositoryModule {
 
     companion object {
         private const val CACHE_SIZE = 10 * 1024 * 1024.toLong() //10 MiB
+    }
+
+    @Provides
+    @Singleton
+    internal fun providesAssetManager(@ApplicationContext context: Context): AssetManager {
+        return context.assets
     }
 
     @Provides

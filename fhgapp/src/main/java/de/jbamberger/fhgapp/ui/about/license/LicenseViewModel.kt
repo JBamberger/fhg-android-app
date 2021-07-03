@@ -4,43 +4,38 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.jbamberger.fhgapp.App
 import de.jbamberger.fhgapp.repository.util.AppExecutors
-import okio.*
+import timber.log.Timber
 import javax.inject.Inject
-import kotlin.io.use
 
 
 @HiltViewModel
 class LicenseViewModel
-@Inject internal constructor(app: Application, executors: AppExecutors, moshi: Moshi) :
+@Inject internal constructor(
+    app: Application,
+    executors: AppExecutors,
+    dependencyReader: DependencyReader
+) :
     AndroidViewModel(app) {
 
-    private val _dependencies = MutableLiveData<List<LicenseeArtifactInfo>>()
+    private val _dependencies = MutableLiveData<List<DependencyInformation>>()
 
-    val dependencies: LiveData<List<LicenseeArtifactInfo>>
+    val dependencies: LiveData<List<DependencyInformation>>
         get() = _dependencies
 
     init {
         executors.diskIO().execute {
-            val jsonAdapter = moshi.adapter<List<LicenseeArtifactInfo>>(
-                Types.newParameterizedType(
-                    List::class.java,
-                    LicenseeArtifactInfo::class.java
-                )
-            )
             try {
-                getApplication<App>().assets.open("artifacts.json").source().buffer().use {
-                    val depsList = jsonAdapter.fromJson(it) ?: emptyList()
-                    executors.mainThread().execute {
-                        _dependencies.value = depsList
-                    }
+                val dependencyList = dependencyReader.getDependencies()
+                executors.mainThread().execute {
+                    _dependencies.value = dependencyList
                 }
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
+            } catch (e: DependencyReadingException) {
+                Timber.e(e, "Failed to load dependency list.")
+                throw NotImplementedError(
+                    e.message ?: "Failed to load dep. list. Error message missing."
+                )
             }
         }
     }
