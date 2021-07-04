@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+        
+    <data>
+        <variable
+            name="obj"
+            type="de.jbamberger.fhgapp.ui.about.license.OssDependencyListItem.Header" />
+    </data>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="@{obj.name}"
+        tools:text="Android Open Source Project" />
+</layout>

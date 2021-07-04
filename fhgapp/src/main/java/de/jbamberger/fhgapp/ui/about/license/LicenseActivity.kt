@@ -11,17 +11,15 @@ import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.LicenseActivityBinding
 import de.jbamberger.fhgapp.ui.DataBindingBaseAdapter
 
-
 @AndroidEntryPoint
 class LicenseActivity : AppCompatActivity() {
-
     private val viewModel: LicenseViewModel by viewModels()
 
-    private class DependencyAdapter(val deps: List<DependencyInformation>) :
+    private class DependencyAdapter(val items: List<OssDependencyListItem>) :
         DataBindingBaseAdapter() {
-        override fun getObjForPosition(position: Int) = deps[position]
-        override fun getLayoutIdForPosition(position: Int) = R.layout.license_list_item
-        override fun getItemCount() = deps.size
+        override fun getObjForPosition(position: Int) = items[position]
+        override fun getLayoutIdForPosition(position: Int) = items[position].layoutId
+        override fun getItemCount() = items.size
     }
 
     private lateinit var binding: LicenseActivityBinding
@@ -41,6 +39,11 @@ class LicenseActivity : AppCompatActivity() {
                 binding.licenseList.adapter = DependencyAdapter(items)
             }
         }
+    }
+
+//    fun handleItemClick(item: DependencyInformation) {
+//
+//    }
 
 
 //        private var webView: WebView? = null
@@ -59,5 +62,4 @@ class LicenseActivity : AppCompatActivity() {
 //                    it.goBack()
 //                    return
 //        }
-    }
 }

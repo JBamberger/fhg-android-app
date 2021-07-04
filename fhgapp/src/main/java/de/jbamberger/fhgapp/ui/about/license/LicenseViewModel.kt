@@ -19,17 +19,26 @@ class LicenseViewModel
 ) :
     AndroidViewModel(app) {
 
-    private val _dependencies = MutableLiveData<List<DependencyInformation>>()
+    private val _dependencies = MutableLiveData<List<OssDependencyListItem>>()
 
-    val dependencies: LiveData<List<DependencyInformation>>
+    val dependencies: LiveData<List<OssDependencyListItem>>
         get() = _dependencies
 
     init {
         executors.diskIO().execute {
             try {
                 val dependencyList = dependencyReader.getDependencies()
+                    .flatMap {
+                        val groupList = mutableListOf<OssDependencyListItem>(
+                            OssDependencyListItem.Header(it.key)
+                        )
+                        it.value.mapTo(groupList, OssDependencyListItem::Library)
+
+                        groupList
+                    }
+
                 executors.mainThread().execute {
-                    _dependencies.value = dependencyList
+                    publishOssDependencyList(dependencyList)
                 }
             } catch (e: DependencyReadingException) {
                 Timber.e(e, "Failed to load dependency list.")
@@ -38,5 +47,9 @@ class LicenseViewModel
                 )
             }
         }
+    }
+
+    private fun publishOssDependencyList(deps: List<OssDependencyListItem>) {
+        _dependencies.value = deps
     }
 }

@@ -29,6 +29,30 @@ private val NAME_TO_LICENSE = mapOf(
     "The Apache Software License, Version 2.0" to APACHE_2_0,
 )
 
+enum class DependencyGroup(val key: String, val displayName: String) {
+    AOSP("androidx", "Android Open Source Project"),
+    GLIDE("com.github.bumptech.glide", "Bumptech: Glide"),
+    DAGGER("com.google.dagger", "Dagger 2"),
+    MOSHI("com.squareup.moshi", "Square: Moshi"),
+    OKHTTP("com.squareup.okhttp3", "Square: OkHttp 3"),
+    OKIO("com.squareup.okio", "Square: OkIo"),
+    RETROFIT("com.squareup.retrofit2", "Square: Retrofit 2"),
+    KOTLIN("org.jetbrains.kotlin", "Kotlin"),
+    KOTLINX("org.jetbrains.kotlinx", "Kotlin Extensions"),
+    OTHERS("", "Others");
+
+    companion object {
+        private val GROUPID_TO_NAME = values().map { it.key to it }.toMap()
+
+        fun getGroup(artifact: LicenseeArtifactInfo): DependencyGroup {
+            val key = if (artifact.groupId.startsWith("androidx")) "androidx" else artifact.groupId
+
+            return GROUPID_TO_NAME[key] ?: OTHERS
+        }
+    }
+}
+
+
 class DependencyReadingException(message: String? = null, cause: Throwable? = null) :
     Exception(message, cause)
 
@@ -43,10 +67,10 @@ class DependencyReader
     )
 
     private fun mapUnknownLicense(inLicense: LicenseeUnknownLicense): DependencyLicense {
-        if (!inLicense.url.isNullOrBlank() && URL_TO_LICENSE.contains(inLicense.url)) {
+        if (!inLicense.url.isNullOrBlank() && inLicense.url in URL_TO_LICENSE) {
             return URL_TO_LICENSE.getValue(inLicense.url)
         }
-        if (!inLicense.name.isNullOrBlank() && NAME_TO_LICENSE.contains(inLicense.name)) {
+        if (!inLicense.name.isNullOrBlank() && inLicense.name in NAME_TO_LICENSE) {
             return NAME_TO_LICENSE.getValue(inLicense.name)
         }
         throw DependencyReadingException("Failed to map unknown license to known license.")
@@ -65,26 +89,27 @@ class DependencyReader
     }
 
     private fun convertArtifacts(artifacts: List<LicenseeArtifactInfo>): List<DependencyInformation> {
-        return artifacts.map { artifact ->
-            val licenses = LinkedHashSet<DependencyLicense>()
-            artifact.knownLicenses.mapTo(licenses) {
-                DependencyLicense(it.name, it.url)
-            }
-            artifact.unknownLicenses.mapTo(licenses) {
-                mapUnknownLicense(it)
-            }
-
-            val name = artifact.groupId + ":" + artifact.artifactId + ":" + artifact.version
-            DependencyInformation(
-                name = name,
-                licenses = licenses,
-                url = artifact.scm?.url
-            )
-        }
+        return artifacts.map(::convertArtifact)
     }
 
-    fun getDependencies(): List<DependencyInformation> {
-        val artifacts = readArtifacts()
-        return convertArtifacts(artifacts)
+    private fun convertArtifact(artifact: LicenseeArtifactInfo): DependencyInformation {
+        val licenses = LinkedHashSet<DependencyLicense>()
+        artifact.knownLicenses.mapTo(licenses) { DependencyLicense(it.name, it.url) }
+        artifact.unknownLicenses.mapTo(licenses, this::mapUnknownLicense)
+
+        val name = artifact.groupId + ":" + artifact.artifactId + ":" + artifact.version
+        return DependencyInformation(
+            name = name,
+            licenses = licenses,
+            url = artifact.scm?.url
+        )
     }
+
+
+    fun getDependencies(): Map<String, List<DependencyInformation>> =
+        readArtifacts()
+            .groupBy(DependencyGroup::getGroup)
+            .toSortedMap()
+            .map { it.key.displayName to convertArtifacts(it.value) }
+            .toMap()
 }
