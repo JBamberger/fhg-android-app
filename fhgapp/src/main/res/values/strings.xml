@@ -32,19 +32,23 @@
     <string name="title_activity_about">Fhg Radolfzell</string>
     <string name="title_activity_license">Open Source Licenses</string>
 
-    <string name="about_contact_title">Über den Entwickler</string>
-    <string name="about_contact_content">Die Applikation wird von Jannik Bamberger entwickelt. Bei Fragen kann eine Mail an dev.jbamberger@gmail.com geschrieben werden.</string>
-    <string name="about_contact_mail">Entwickler kontaktieren</string>
-    <string name="about_visit_repo">Source Code ansehen</string>
     <string name="about_visit_fhg">FHG Website ansehen</string>
 
+
     <string name="about_disclaimer_title">Nutzungshinweise</string>
-    <string name="about_disclaimer_content">Es werden Daten der Website fhg-radolfzell.de verarbeitet und angezeigt. Für die Korrektheit und Aktualität der Daten sowie korrekte Funktion der Anwendung übernimmt der Entwickler keinerlei Verantwortung.</string>
+    <string name="about_disclaimer_content">Es werden Daten der Websites fhg-radolfzell.de und webuntis.com verarbeitet und angezeigt. Für die Korrektheit und Aktualität der Daten sowie korrekte Funktion der Anwendung übernimmt der Entwickler keinerlei Verantwortung.</string>
+
+    <string name="about_contact_title">Über die App</string>
+    <string name="about_contact_content">Die Applikation wird als Open Source entwickelt. Der Source Code kann über den untenstehenden Link auf Github angesehen werden. Bei Bugs oder sonstigen Problemen können dort gerne Issues erstellt werden.</string>
+    <string name="about_contact_mail">Entwickler kontaktieren</string>
+    <string name="about_visit_repo">Source Code ansehen</string>
 
     <string name="about_version_title">Version</string>
     <string name="about_version_content">Application id: %1$s\nBuild type: %2$s\nVersion: %3$s (%4$d)</string>
 
-    <string name="about_oss_licenses">Open Source Bibliotheken</string>
+    <string name="about_oss_licenses_title">Open Source Bibliotheken</string>
+    <string name="about_oss_licenses_content">Diese App verwendet einige Open Source Bibliotheken. Um deren Lizenzanforderungen gerecht zu werden kann über den untenstehenden Button eine Liste mit allen Lizenzen angezeigt werden.</string>
+    <string name="about_visit_oss_libs">Bibliotheken ansehen</string>
 
     <!-- VPlan -->
     <string name="vplan_subtitle_all">Alles wird angezeigt.</string>
