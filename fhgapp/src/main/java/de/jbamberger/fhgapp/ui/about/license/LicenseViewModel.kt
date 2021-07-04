@@ -28,11 +28,23 @@ class LicenseViewModel
         executors.diskIO().execute {
             try {
                 val dependencyList = dependencyReader.getDependencies()
-                    .flatMap {
+                    .flatMap { entry ->
+                        val (group, libs) = entry
+
+                        val licenseString = if (group != DependencyGroup.OTHERS)
+                            getLicenseString(libs.flatMap { it.licenses }.toSet()) else null
+
                         val groupList = mutableListOf<OssDependencyListItem>(
-                            OssDependencyListItem.Header(it.key)
+                            OssDependencyListItem.Header(group.displayName, licenseString)
                         )
-                        it.value.mapTo(groupList, OssDependencyListItem::Library)
+
+                        libs.mapTo(groupList) {
+                            if (licenseString != null) {
+                                OssDependencyListItem.Library(it.name)
+                            } else {
+                                OssDependencyListItem.Library(it.name, getLicenseString(it.licenses))
+                            }
+                        }
 
                         groupList
                     }
@@ -48,6 +60,11 @@ class LicenseViewModel
             }
         }
     }
+
+    private fun getLicenseString(licenses: Set<DependencyLicense>) =
+        licenses.joinToString(separator = "\n") { license ->
+            license.url?.let { "${license.name}: $it" } ?: license.name
+        }
 
     private fun publishOssDependencyList(deps: List<OssDependencyListItem>) {
         _dependencies.value = deps

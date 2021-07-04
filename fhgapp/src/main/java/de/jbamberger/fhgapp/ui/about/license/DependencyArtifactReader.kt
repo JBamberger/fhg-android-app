@@ -97,7 +97,7 @@ class DependencyReader
         artifact.knownLicenses.mapTo(licenses) { DependencyLicense(it.name, it.url) }
         artifact.unknownLicenses.mapTo(licenses, this::mapUnknownLicense)
 
-        val name = artifact.groupId + ":" + artifact.artifactId + ":" + artifact.version
+        val name = artifact.groupId + ":" + artifact.artifactId // + ":" + artifact.version
         return DependencyInformation(
             name = name,
             licenses = licenses,
@@ -106,10 +106,10 @@ class DependencyReader
     }
 
 
-    fun getDependencies(): Map<String, List<DependencyInformation>> =
+    fun getDependencies(): Map<DependencyGroup, List<DependencyInformation>> =
         readArtifacts()
             .groupBy(DependencyGroup::getGroup)
             .toSortedMap()
-            .map { it.key.displayName to convertArtifacts(it.value) }
+            .map { it.key to convertArtifacts(it.value) }
             .toMap()
 }

@@ -16,37 +16,30 @@
         android:layout_height="wrap_content">
 
         <TextView
-            tools:text="Dependency Name"
-            android:id="@+id/dependency_name"
+            android:id="@+id/group_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@{obj.data.name}"
-            app:layout_constraintBottom_toTopOf="@+id/dependency_license"
+            android:padding="8dp"
+            android:text="@{obj.name}"
+            app:layout_constraintBottom_toTopOf="@+id/header_license"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dependency Name" />
 
         <TextView
-            tools:text="Apache 2.0: https://www.apache.org/licenses/LICENSE-2.0"
-            android:id="@+id/dependency_license"
+            android:id="@+id/header_license"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
             android:autoLink="web"
-            android:text="@{obj.data.licenseString}"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="8dp"
+            android:text="@{obj.licenseString}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dependency_name" />
+            app:layout_constraintTop_toBottomOf="@+id/group_header"
+            app:visibleIfNotEmpty="@{obj.licenseString}"
+            tools:text="Apache 2.0: https://www.apache.org/licenses/LICENSE-2.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
