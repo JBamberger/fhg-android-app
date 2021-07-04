@@ -29,8 +29,8 @@ licensee {
     }
 }
 
-val kotlin_version: String by rootProject.extra
-val hilt_version: String by rootProject.extra
+val kotlinVersion: String by rootProject.extra
+val hiltVersion: String by rootProject.extra
 
 android {
     compileSdkVersion(30)
@@ -116,7 +116,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("androidx.annotation:annotation:1.2.0")
     implementation("androidx.core:core-ktx:1.5.0")
     implementation("androidx.fragment:fragment-ktx:1.3.5")
@@ -133,30 +133,30 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
 
 
-    val okhttp_version = "4.9.1"
-    val glide_version = "4.12.0"
-    val moshi_version = "1.12.0"
-    val retrofit_version = "2.9.0"
+    val okhttpVersion = "4.9.1"
+    val glideVersion = "4.12.0"
+    val moshiVersion = "1.12.0"
+    val retrofitVersion = "2.9.0"
 
-    implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
-    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
+    implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttpVersion")
 
-    implementation("com.squareup.moshi:moshi:$moshi_version")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi_version")
+    implementation("com.squareup.moshi:moshi:$moshiVersion")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
-    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    implementation("com.squareup.retrofit2:converter-scalars:$retrofit_version")
-    implementation("com.squareup.retrofit2:converter-moshi:$retrofit_version")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-scalars:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
 
-    api("com.github.bumptech.glide:glide:$glide_version")
-    kapt("com.github.bumptech.glide:compiler:$glide_version")
+    api("com.github.bumptech.glide:glide:$glideVersion")
+    kapt("com.github.bumptech.glide:compiler:$glideVersion")
 
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-compiler:$hilt_version")
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
 
-    androidTestImplementation("androidx.test:core:1.3.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2")
-    androidTestImplementation("androidx.test:runner:1.3.0")
+    androidTestImplementation("androidx.test:core:1.4.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test:runner:1.4.0")
 }
 
 kapt {
