@@ -94,9 +94,9 @@ class FeedMedia(
 
     @JsonClass(generateAdapter = true)
     data class MediaDetails(
-        val width: Int,
-        val height: Int,
-        val file: String,
+        val width: Int?,
+        val height: Int?,
+        val file: String?,
         val sizes: Map<String, ImageSize>
     )
 
