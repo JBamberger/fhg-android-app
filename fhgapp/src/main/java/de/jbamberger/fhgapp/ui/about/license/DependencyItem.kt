@@ -14,19 +14,15 @@
  *    limitations under the License.
  */
 
-package de.jbamberger.fhgapp.repository
+package de.jbamberger.fhgapp.ui.about.license
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+data class DependencyInformation(
+    val name: String,
+    val licenses: Set<DependencyLicense>,
+    val url: String?
+)
 
-@InstallIn(SingletonComponent::class)
-@Module
-abstract class BindingsModule {
-
-    @Binds
-    @Singleton
-    internal abstract fun bindRepository(impl: RepositoryImpl): Repository
-}
+data class DependencyLicense(
+    val name: String,
+    val url: String?
+)

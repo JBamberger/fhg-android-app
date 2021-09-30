@@ -14,19 +14,25 @@
  *    limitations under the License.
  */
 
-package de.jbamberger.fhgapp.repository
+package de.jbamberger.fhgapp.ui.about.license
 
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import de.jbamberger.fhgapp.R
 
-@InstallIn(SingletonComponent::class)
-@Module
-abstract class BindingsModule {
+sealed interface OssDependencyListItem {
 
-    @Binds
-    @Singleton
-    internal abstract fun bindRepository(impl: RepositoryImpl): Repository
+    val layoutId: Int
+
+    data class Header(
+        val name: String,
+        val licenseString: String? = null
+    ) : OssDependencyListItem {
+        override val layoutId get() = R.layout.oss_list_header
+    }
+
+    data class Library(
+        val name: String,
+        val licenseString: String? = null
+    ) : OssDependencyListItem {
+        override val layoutId get() = R.layout.oss_list_item
+    }
 }

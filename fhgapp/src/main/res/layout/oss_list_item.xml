@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="obj"
+            type="de.jbamberger.fhgapp.ui.about.license.OssDependencyListItem.Library" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dependency_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/group_header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@{obj.name}"
+            app:layout_constraintBottom_toTopOf="@+id/header_license"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dependency Name" />
+
+        <TextView
+            android:id="@+id/header_license"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="8dp"
+            android:text="@{obj.licenseString}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_header"
+            app:visibleIfNotEmpty="@{obj.licenseString}"
+            tools:text="Apache 2.0: https://www.apache.org/licenses/LICENSE-2.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
