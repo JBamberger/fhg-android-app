@@ -28,16 +28,16 @@ licensee {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
 
     defaultConfig {
         // Legacy package name. Should probably be replaced with a domain I own. Cannot be changed
         // without losing user count, ratings and comments due to Google Play Store policies.
         applicationId = "xyz.jbapps.vplan"
-        minSdkVersion(16)
-        targetSdkVersion(30)
-        versionCode = 31
-        versionName = "3.2.0"
+        minSdk = 16
+        targetSdk = 30
+        versionCode = 32
+        versionName = "3.2.1"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -112,23 +112,23 @@ dependencies {
 
     // Manually overwriting older annotations library versions because the older versions declare
     // their license with the wrong url.
-    implementation("org.jetbrains:annotations:21.0.1")
+    implementation("org.jetbrains:annotations:22.0.0")
 
     implementation("androidx.annotation:annotation:1.2.0")
-    implementation("androidx.core:core-ktx:1.5.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.5")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.core:core-ktx:1.6.0")
+    implementation("androidx.fragment:fragment-ktx:1.3.6")
+    implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.preference:preference-ktx:1.1.1")
     implementation("androidx.vectordrawable:vectordrawable:1.1.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.3.1")
-    implementation("androidx.paging:paging-runtime-ktx:3.0.0")
+    implementation("androidx.paging:paging-runtime-ktx:3.0.1")
 
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
     val okhttpVersion = "4.9.1"
     implementation("com.squareup.okhttp3:okhttp:$okhttpVersion")
