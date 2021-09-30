@@ -28,14 +28,14 @@ licensee {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
 
     defaultConfig {
         // Legacy package name. Should probably be replaced with a domain I own. Cannot be changed
         // without losing user count, ratings and comments due to Google Play Store policies.
         applicationId = "xyz.jbapps.vplan"
-        minSdkVersion(16)
-        targetSdkVersion(30)
+        minSdk = 16
+        targetSdk = 30
         versionCode = 31
         versionName = "3.2.0"
 
