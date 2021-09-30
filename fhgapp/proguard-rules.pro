@@ -17,17 +17,25 @@
 # Debugging proguard:
 ###################################################################################################
 
--dontobfuscate
--dontshrink
+#-dontobfuscate
+#-dontshrink
 
 # Uncomment this to preserve the line number information for debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+#-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to hide the original source file name.
--renamesourcefileattribute SourceFile
+#-renamesourcefileattribute SourceFile
 
 
 -dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn "org.conscrypt.Conscrypt$Version"
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE
 
 -dontnote sun.misc.Unsafe
 -dontnote com.google.android.gms.common.**

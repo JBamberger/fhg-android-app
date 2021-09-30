@@ -36,8 +36,8 @@ android {
         applicationId = "xyz.jbapps.vplan"
         minSdk = 16
         targetSdk = 30
-        versionCode = 31
-        versionName = "3.2.0"
+        versionCode = 32
+        versionName = "3.2.1"
 
         vectorDrawables.useSupportLibrary = true
 

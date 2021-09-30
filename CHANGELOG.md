@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 3.2.1 *(2021-10-01)*
+----------------------------
+- Update der About-Sektion in der App
+- Update des FHG-Feeds
+  - Behebt Absturz bei Feedmedien die ohne Größenangabe vom Server geliefert werden
+
 Version 3.2.0 *(2021-06-10)*
 ----------------------------
 - Vorläufige Anpassungen um WebUntis Vertretungsplan anzuzeigen
