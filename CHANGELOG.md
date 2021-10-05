@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 3.2.2 *(2021-10-06)*
+----------------------------
+- Update behebt Absturz der manchmal während einer Rotation des Smartphones auftritt
+
 Version 3.2.1 *(2021-10-01)*
 ----------------------------
 - Update der About-Sektion in der App
