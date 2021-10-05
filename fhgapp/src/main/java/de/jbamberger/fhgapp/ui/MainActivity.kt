@@ -23,13 +23,14 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.ActivityMainBinding
 import de.jbamberger.fhgapp.ui.about.AboutActivity
+import de.jbamberger.fhgapp.ui.contact.ContactFragment
+import de.jbamberger.fhgapp.ui.feed.FeedFragment
 import de.jbamberger.fhgapp.ui.settings.SettingsActivity
+import de.jbamberger.fhgapp.ui.vplan.VPlanFragment
 import de.jbamberger.fhgapp.util.Utils
 
 /**
@@ -37,28 +38,41 @@ import de.jbamberger.fhgapp.util.Utils
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    enum class Page {
+        VPLAN, FEED, CONTACT
+    }
 
     private val viewModel: MainViewModel by viewModels()
-
-    private val navigationListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_vplan -> viewModel.selectedVPlan()
-                R.id.navigation_feed -> viewModel.selectedFeed()
-                R.id.navigation_contact -> viewModel.selectedContact()
-                else -> return@OnNavigationItemSelectedListener false
-            }
-            return@OnNavigationItemSelectedListener true
-        }
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.navigation.setOnNavigationItemSelectedListener(navigationListener)
+        binding.navigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_vplan -> viewModel.selectPage(Page.VPLAN)
+                R.id.navigation_feed -> viewModel.selectPage(Page.FEED)
+                R.id.navigation_contact -> viewModel.selectPage(Page.CONTACT)
+                else -> return@setOnItemSelectedListener false
+            }
+            return@setOnItemSelectedListener true
+        }
 
-        viewModel.getFragment().observe(this, this::showFragment)
+        viewModel.getPage().observe(this) { page ->
+            supportActionBar?.subtitle = null
+
+            val fragment = when (page) {
+                Page.VPLAN -> VPlanFragment()
+                Page.FEED -> FeedFragment()
+                Page.CONTACT -> ContactFragment()
+                null -> VPlanFragment()
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -75,14 +89,6 @@ class MainActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    private fun showFragment(frag: Fragment?) {
-        supportActionBar?.subtitle = null
-        val fragment: Fragment = frag ?: Fragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
     }
 
     fun setSubtitle(subtitle: String) {

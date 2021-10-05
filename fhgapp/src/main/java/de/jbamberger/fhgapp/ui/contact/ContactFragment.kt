@@ -27,7 +27,6 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.databinding.ContactFragmentBinding
