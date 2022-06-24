@@ -10,14 +10,14 @@ Anwendung. Die App wird ohne Kosten und für die Verwendung wie sie ist
 angeboten. Diese Seite soll Besucher über die Richtlinien zur Sammlung,
 Benutzung und Veröffentlichung persönlicher Informationen durch die App
 informieren. Durch die Verwendung der App stimmen Sie der Verarbeitung Ihrer
-Daten entsprechend dieser Richtlinien zu. Die persönlichen Daten die ich sammle
-werden ausschließlich zum Anbieten dieser App verwendet und entsprechend dieser
+Daten entsprechend dieser Richtlinien zu. Die persönlichen Daten werden
+ausschließlich zum Anbieten dieser App verwendet und entsprechend dieser
 Richtlinien verarbeitet.
 
 ## Informationsverarbeitung und Sammlung
 
-Um die Benutzererfahrung zu verbessern werden während der Nutztung einige
-persönliche Daten gesammelt, etwa, aber nicht ausschließlich, die Schulklasse
+Um die Benutzererfahrung zu verbessern werden während der Nutzung einige
+persönliche Daten erfasst, etwa, aber nicht ausschließlich, die Schulklasse
 und besuchte Kurse. Diese Informationen werden lokal auf Ihrem Gerät gespeichert
 und nicht von mir gesammelt.
 
@@ -40,8 +40,8 @@ Datenschutzrichtlinien oder Verhalten und übernehme keine Verantwortung dafür.
 
 Die App richtet sich speziell an Schüler und arbeitet daher mit den Daten von
 Minderjährigen. Alle eingegebenen Daten bleiben Lokal und werden daher nicht
-von mir verarbeitet. Falls Sie Eltern oder Betreuer von Minderjährigen Nutzern
-sind und bedenken haben kontaktieren Sie mich und ich werde mein bestes tun um
+von mir verarbeitet. Falls Sie Eltern oder Betreuer von minderjährigen Nutzern
+sind und bedenken haben kontaktieren Sie mich und ich werde mein Bestes tun um
 Ihnen zu helfen.
 
 ## Änderungen der Datenschutzrichtlinien
@@ -52,7 +52,7 @@ Sie dazu angehießen diese Seite regelmäßig zu besuchen. Ich werde sie über
 Seite veröffentliche. Die Änderungen sind in Kraft sobald sie auf dieser Seite
 veröffentlicht wurden.
 
-## Kontaktieren sie Mich
+## Kontaktieren Sie Mich
 
-Wenn Sie Fragen oder Vorschläge bezüglich meiner Datenschutzrichtlinien haben
-zögern Sie nicht mich unter dev.jbamberger (at) gmail.com zu kontaktieren.
+Falls Sie Fragen oder Vorschläge bezüglich dieser Datenschutzrichtlinien haben
+können Sie mich unter dev.jbamberger (at) gmail.com erreichen.
