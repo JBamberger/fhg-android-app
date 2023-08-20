@@ -16,6 +16,7 @@
 
 package de.jbamberger.fhgapp
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import dagger.hilt.android.HiltAndroidApp
@@ -41,6 +42,7 @@ class App : Application() {
      * A tree which logs important information for crash reporting.
      */
     private class CrashReportingTree : Timber.Tree() {
+        @SuppressLint("LogNotTimber")
         override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return
