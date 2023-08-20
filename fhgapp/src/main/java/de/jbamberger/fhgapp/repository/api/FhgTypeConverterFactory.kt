@@ -34,7 +34,7 @@ import java.io.IOException
 import java.lang.reflect.Type
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 
 /**
@@ -62,12 +62,13 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
         private val originalFormat = SimpleDateFormat("yyyyMMdd", Locale.ROOT)
         private val newFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ROOT)
 
-        override fun convert(value: ResponseBody?): VPlanDay {
-            val response: UntisResponse<UntisVPlanDay> = value?.source()?.use {
+        override fun convert(value: ResponseBody): VPlanDay {
+            val response: UntisResponse<UntisVPlanDay> = value.source().use { source ->
                 try {
-                    adapter.fromJson(it)
+                    adapter.fromJson(source)
                 } catch (e: JsonDataException) {
                     Timber.e(e, "Failed to parse json")
+                    Timber.d(source.readString(Charsets.UTF_8))
                     throw e
                 }
             } ?: throw IOException("Received invalid empty response or failed to parse result!")
@@ -117,18 +118,23 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
             )
         }
 
-        private fun convertDateAndDay(payload: UntisVPlanDay): String {
-            val dateAndDay = StringBuilder()
-            payload.weekDay?.let {
-                dateAndDay.append(it).append(", ")
+        private fun convertDateAndDay(payload: UntisVPlanDay): String? {
+            val parts = MutableList(0) { "" }
+            payload.weekDay?.let { weekDay ->
+                if (weekDay.isNotBlank()) parts.add(weekDay)
             }
-            try {
-                val date = originalFormat.parse(payload.date.toString())
-                dateAndDay.append(newFormat.format(date!!))
-            } catch (e: ParseException) {
-                dateAndDay.append(payload.date.toString())
+            payload.date?.let { date ->
+                try {
+                    val parsed = originalFormat.parse(date.toString())
+                    parts.add(newFormat.format(parsed!!))
+                } catch (e: ParseException) {
+                    parts.add(date.toString())
+                }
             }
-            return dateAndDay.toString()
+
+            if (parts.isEmpty()) return null
+
+            return parts.joinToString(separator = ", ")
         }
 
         private fun convertMessageOfTheDay(payload: UntisVPlanDay): String {

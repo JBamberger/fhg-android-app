@@ -19,7 +19,8 @@ package de.jbamberger.fhgapp.repository.api
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @JsonClass(generateAdapter = true)
 class UntisResponse<Payload> {
@@ -43,18 +44,16 @@ class UntisError {
 class UntisVPlanDay {
 
     @Json(name = "date")
-    var date: Int = 0
+    var date: Int? = 0
 
     @Json(name = "nextDate")
-    var nextDate: Int = 0
-
+    var nextDate: Int? = 0
 
     @Json(name = "rows")
     var rows: List<UntisVPlanRow> = emptyList()
 
     @Json(name = "lastUpdated")
     var lastUpdate: String? = ""
-
 
     @Json(name = "messageData")
     var messageData: UntisMessageData? = null
