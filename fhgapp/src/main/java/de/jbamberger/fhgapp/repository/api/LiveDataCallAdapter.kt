@@ -18,7 +18,11 @@ package de.jbamberger.fhgapp.repository.api
 
 
 import androidx.lifecycle.LiveData
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.CallAdapter
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.concurrent.atomic.AtomicBoolean
@@ -69,8 +73,12 @@ internal class LiveDataCallAdapter<R>(private val responseType: Type) :
             val observableType = getParameterUpperBound(0, returnType as ParameterizedType)
             val rawObservableType = getRawType(observableType)
 
-            require(rawObservableType == ApiResponse::class.java) { "type must be a resource" }
-            require(observableType is ParameterizedType) { "resource must be parametrized" }
+            require(rawObservableType == ApiResponse::class.java) {
+                "LiveData parameter type must be ApiResponse<...>."
+            }
+            require(observableType is ParameterizedType) {
+                "ApiResponse must be parametrized. Ensure that ApiResponse is kept by ProGuard."
+            }
 
             val bodyType = getParameterUpperBound(0, observableType)
             return LiveDataCallAdapter<Any>(bodyType)

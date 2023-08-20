@@ -111,6 +111,9 @@
 # Top-level functions that can only be used by Kotlin.
 -dontwarn retrofit2.-KotlinExtensions
 
+# For use with LiveDataCallAdapter
+-keep class androidx.lifecycle.LiveData { *; }
+-keep class de.jbamberger.fhgapp.repository.api.ApiResponse { *; }
 
 ###################################################################################################
 # OkHttp
