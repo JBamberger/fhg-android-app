@@ -21,6 +21,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import de.jbamberger.fhgapp.repository.data.FeedItem
 import de.jbamberger.fhgapp.repository.data.FeedMedia
+import timber.log.Timber
 import java.io.IOException
 
 internal class FeedDataSource internal constructor(
@@ -40,6 +41,7 @@ internal class FeedDataSource internal constructor(
             val nextKey = if (feed.isNotEmpty()) feed[feed.size - 1].first.date else null
             LoadResult.Page(data = feed, prevKey = null, nextKey = nextKey)
         } catch (e: Exception) {
+            Timber.e(e, "Failed to load feed page.")
             LoadResult.Error(e)
         }
     }
@@ -52,6 +54,7 @@ internal class FeedDataSource internal constructor(
                 val media = endpoint.getFeedMedia2(mediaId)
                 return Pair(item, media)
             } catch (e: IOException) {
+                Timber.e(e, "Could not resolve feed media element for item $item")
             }
         }
         return Pair(item, null)
