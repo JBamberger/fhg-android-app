@@ -16,6 +16,7 @@
 
 package de.jbamberger.fhgapp.ui.vplan
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -120,8 +121,10 @@ class VPlanFragment : Fragment(), MenuProvider {
     private class VPlanAdapter : DataBindingBaseAdapter() {
         private var content: List<VPlanListItem> = emptyList()
 
+        @SuppressLint("NotifyDataSetChanged")
         fun setData(plan: List<VPlanListItem>) {
             content = plan
+            // Everything changes, so we cannot use a more granular notify method.
             notifyDataSetChanged()
         }
 

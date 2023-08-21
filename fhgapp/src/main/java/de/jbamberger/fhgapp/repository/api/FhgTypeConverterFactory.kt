@@ -167,8 +167,8 @@ internal constructor(private val moshi: Moshi) : Converter.Factory() {
     private class FeedConverter(moshi: Moshi) : Converter<ResponseBody, List<FeedItem>> {
         private val adapter = moshi.adapter<List<FeedItem>>(FEED_TYPE)
 
-        override fun convert(value: ResponseBody?): List<FeedItem> {
-            return value?.source()?.use { adapter.fromJson(it) } ?: emptyList()
+        override fun convert(value: ResponseBody): List<FeedItem> {
+            return value.source().use { adapter.fromJson(it) } ?: emptyList()
         }
 
         companion object {
