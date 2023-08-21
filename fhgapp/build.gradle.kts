@@ -38,8 +38,8 @@ android {
         applicationId = "xyz.jbapps.vplan"
         minSdk = 16
         targetSdk = 33
-        versionCode = 33
-        versionName = "3.2.2"
+        versionCode = 34
+        versionName = "3.2.3"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -68,7 +68,7 @@ android {
             )
         }
         getByName("debug") {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"

@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 3.2.3 *(2023-08-21)*
+----------------------------
+- Update behebt Probleme mit VPlan API-Verarbeitung
+- Anpassungen für Android 13
+
+
 Version 3.2.2 *(2021-10-06)*
 ----------------------------
 - Update behebt Absturz der manchmal während einer Rotation des Smartphones auftritt
