@@ -27,9 +27,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import de.jbamberger.fhgapp.databinding.FeedFragmentBinding
-import de.jbamberger.fhgapp.util.GlideApp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -59,7 +59,7 @@ class FeedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val glide = GlideApp.with(this)
+        val glide = Glide.with(this)
         val pagingAdapter = FeedAdapter(glide)
         val refreshStateAdapter = FeedLoadStateAdapter(pagingAdapter::retry)
         val footerStateAdapter = FeedLoadStateAdapter(pagingAdapter::retry)
