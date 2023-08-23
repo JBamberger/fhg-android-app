@@ -1,8 +1,0 @@
-<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <header
-        android:fragment="de.jbamberger.fhgapp.ui.settings.SettingsActivity$VPlanPreferenceFragment"
-        android:summary="@string/settings_header_vplan_summary"
-        android:title="@string/settings_header_vplan_title" />
-
-</preference-headers>

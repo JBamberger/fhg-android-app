@@ -16,9 +16,16 @@
 
 package de.jbamberger.fhgapp.ui.vplan
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -35,7 +42,7 @@ import de.jbamberger.fhgapp.util.Utils
  * @author Jannik Bamberger (dev.jbamberger@gmail.com)
  */
 @AndroidEntryPoint
-class VPlanFragment : Fragment() {
+class VPlanFragment : Fragment(), MenuProvider {
 
     private val viewModel: VPlanViewModel by viewModels()
 
@@ -49,17 +56,14 @@ class VPlanFragment : Fragment() {
             is MainActivity -> activity as MainActivity
             else -> throw IllegalStateException("Parent must be MainActivity.")
         }
+        parent?.addMenuProvider(this)
         super.onAttach(context)
     }
 
     override fun onDetach() {
+        parent?.removeMenuProvider(this)
         parent = null
         super.onDetach()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        this.setHasOptionsMenu(true)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -87,39 +91,40 @@ class VPlanFragment : Fragment() {
         binding.vplanContainer.adapter = adapter
         binding.vplanRefresh.setOnRefreshListener(viewModel::refresh)
 
-        viewModel.plan.observe(viewLifecycleOwner, {
+        viewModel.plan.observe(viewLifecycleOwner) {
             if (it != null) adapter.setData(it)
 //            Timber.d("plan update: %s", it)
-        })
-        viewModel.refreshing.observe(viewLifecycleOwner, {
+        }
+        viewModel.refreshing.observe(viewLifecycleOwner) {
             if (it != null) binding.vplanRefresh.isRefreshing = it
 //            Timber.d("refreshing update: %s", it)
-        })
-        viewModel.title.observe(viewLifecycleOwner, {
+        }
+        viewModel.title.observe(viewLifecycleOwner) {
             if (it != null) parent?.setSubtitle(it)
 //            Timber.d("title update: %s", it)
-        })
+        }
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.vplan, menu)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_show_vplan) {
             Utils.openUrl(requireContext(), R.string.vplan_link)
             return true
         }
-        return super.onOptionsItemSelected(item)
+        return false
     }
 
     private class VPlanAdapter : DataBindingBaseAdapter() {
         private var content: List<VPlanListItem> = emptyList()
 
+        @SuppressLint("NotifyDataSetChanged")
         fun setData(plan: List<VPlanListItem>) {
             content = plan
+            // Everything changes, so we cannot use a more granular notify method.
             notifyDataSetChanged()
         }
 

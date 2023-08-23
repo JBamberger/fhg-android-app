@@ -24,14 +24,14 @@ import android.widget.TextView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import de.jbamberger.fhgapp.R
 import de.jbamberger.fhgapp.repository.data.FeedItem
 import de.jbamberger.fhgapp.repository.data.FeedMedia
 import de.jbamberger.fhgapp.ui.BindingUtils
-import de.jbamberger.fhgapp.util.GlideRequests
 import de.jbamberger.fhgapp.util.Utils
 
-internal class FeedAdapter(private val glide: GlideRequests) :
+internal class FeedAdapter(private val glide: RequestManager) :
     PagingDataAdapter<Pair<FeedItem, FeedMedia?>, FeedAdapter.FeedItemHolder>(POST_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedItemHolder {
@@ -55,7 +55,7 @@ internal class FeedAdapter(private val glide: GlideRequests) :
     }
 
     class FeedItemHolder(
-        private val glide: GlideRequests, view: View
+        private val glide: RequestManager, view: View
     ) : RecyclerView.ViewHolder(view) {
         private val title = view.findViewById<TextView>(R.id.title)
         private val featuredMedia = view.findViewById<ImageView>(R.id.featured_media)
@@ -123,7 +123,7 @@ internal class FeedAdapter(private val glide: GlideRequests) :
         }
 
         companion object {
-            fun create(glide: GlideRequests, parent: ViewGroup): FeedItemHolder {
+            fun create(glide: RequestManager, parent: ViewGroup): FeedItemHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.feed_item, parent, false)
                 return FeedItemHolder(glide, view)

@@ -72,7 +72,7 @@ data class VPlanRow(
 
 @JsonClass(generateAdapter = true)
 data class VPlanHeader(
-    val dateAndDay: String,
+    val dateAndDay: String?,
     val lastUpdated: String,
     val motd: String
 )
